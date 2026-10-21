@@ -11,7 +11,7 @@ DirectoryIndex index.html
 </FilesMatch>
 
 # Deny any file name containing a dot that is not on the allow-list.
-<FilesMatch "^(?!(?:index\.html|api\.php|app\.js|app\.css)$).*\.">
+<FilesMatch "^(?!(?:index\.html|api\.php|app\.js|app\.css|favicon\.svg)$).*\.">
   Require all denied
 </FilesMatch>
 

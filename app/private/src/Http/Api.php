@@ -180,7 +180,8 @@ final class Api
             'provider_mode' => $app->config->isMock() ? 'mock' : 'live',
             'beta' => [
                 'default_target' => BetaScope::DEFAULT_TARGET,
-                'skills' => array_map(fn ($id) => ['skill_id' => $id, 'title' => $app->curriculum->title($id)], BetaScope::SKILLS),
+                'skills' => array_values(array_map(fn ($id) => ['skill_id' => $id, 'title' => $app->curriculum->title($id)],
+                    array_filter(BetaScope::SKILLS, fn ($id) => $app->curriculum->has($id)))),
             ],
             'catalog' => array_map(fn ($e) => [
                 'skill_id' => $e['skill_id'], 'title' => $e['title'], 'curricular_role' => $e['curricular_role'],
@@ -290,7 +291,8 @@ final class Api
             return Response::error(404, 'SESSION_NOT_FOUND', 'There is no active session. Start a new one.');
         }
         $body = $this->decode($req);
-        $errors = $app->schemas->errors($body, 'public-event.schema.json');
+        // Validate the raw object form so {} and [] keep their JSON meaning.
+        $errors = $app->schemas->errors(Json::decodeObject($req->body, 8), 'public-event.schema.json');
         if ($errors !== []) {
             return Response::error(400, 'INVALID_EVENT', 'Invalid request.');
         }

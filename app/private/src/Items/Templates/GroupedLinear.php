@@ -101,7 +101,7 @@ final class GroupedLinear extends AbstractTemplate
 
     public function render(array $p): string
     {
-        return 'Solve ' . $this->display($p) . '. Give the value of x.';
+        return 'Solve ' . $this->display($p) . ' for x.';
     }
 
     public function answerSpec(array $p): array

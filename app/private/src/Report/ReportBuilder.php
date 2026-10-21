@@ -141,6 +141,11 @@ final class ReportBuilder
                     }
                     break;
                 case 'CRITERION_MET':
+                    $stillMet = (bool) array_filter($computed['met'], fn ($m) => $m['skill_id'] === $d['skill_id'] && $m['episode_id'] === $d['episode_id']);
+                    if (!$stillMet) {
+                        $unresolved[] = 'A criterion recorded for ' . $d['skill_id'] . ' was withdrawn after a correction; the recomputed evidence no longer meets it.';
+                        break;
+                    }
                     $criteria[] = ['statement' => $d['skill_id'] . ': ' . $d['status'] . '. ' . ($d['scope'] ?? ''), 'skill_id' => $d['skill_id'],
                         'component_id' => $d['status'] === 'IMMEDIATE_CRITERION_MET' ? 'three_variant_criterion' : 'numeric_component', 'event_ids' => $d['event_ids'],
                         'review_scope' => 'Immediate in-session criterion (POLICY-IMMEDIATE-3); no retention or long-term learning claim.'];

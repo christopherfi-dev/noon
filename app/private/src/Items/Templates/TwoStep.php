@@ -63,7 +63,7 @@ final class TwoStep extends AbstractTemplate
 
     public function render(array $p): string
     {
-        return 'Solve ' . $this->display($p) . '. Give the value of x.';
+        return 'Solve ' . $this->display($p) . ' for x.';
     }
 
     public function display(array $p): string

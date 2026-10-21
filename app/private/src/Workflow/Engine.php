@@ -158,6 +158,37 @@ final class Engine
         return $this->store->latestReport($sessionId) ?? $this->buildReport($row, $this->store->events($sessionId), 'IN_PROGRESS');
     }
 
+    /**
+     * Correction (architecture §12 contradiction protocol): invalidate earlier
+     * events after a demonstrated checker or item conflict. The original
+     * records stay in the ledger; a CORRECTION event is appended and every
+     * dependent count and claim is recomputed from the ledger. Operator-only
+     * in the beta: there is no public endpoint for it.
+     *
+     * @param list<string> $eventIds response or checker-result events to withdraw
+     */
+    public function invalidate(string $sessionId, array $eventIds, string $reason): array
+    {
+        return $this->store->db->transaction(function () use ($sessionId, $eventIds, $reason) {
+            $now = $this->clock->now();
+            $row = $this->store->session($sessionId) ?? throw new EngineError(404, 'SESSION_NOT_FOUND', 'Unknown session.');
+            $known = array_column($this->store->events($sessionId), 'event_id');
+            foreach ($eventIds as $id) {
+                if (!in_array($id, $known, true)) {
+                    throw new \InvalidArgumentException('Cannot invalidate an event that is not in this ledger: ' . $id);
+                }
+            }
+            $turn = new Turn($row['snapshot'], $row['engine'], $now, 'CORRECTION');
+            $turn->event('CORRECTION', ['invalidated_event_ids' => array_values($eventIds), 'reason' => $reason,
+                'note' => 'Original records are preserved; dependent streaks, criteria and claims are recomputed from the ledger.'], $turn->triggerEventId);
+            $turn->eng['messages'] = $row['engine']['messages'];
+            $turn->messages = [['kind' => 'INFORMATION', 'text' => 'An earlier result was corrected. Your progress has been recalculated.']];
+            $turn->reportNeeded = $this->store->latestReport($sessionId) !== null;
+            $op = $this->store->claimOperation($sessionId, $row['revision'], 'correction', $now, $this->config->int('lease_seconds'));
+            return $this->commit($sessionId, $op, $turn, $row['revision'], $sessionId, 'correction-' . $turn->triggerEventId);
+        });
+    }
+
     public function expired(array $row, \DateTimeImmutable $now): bool
     {
         return Time::iso($now) > $row['idle_expires_at'] || Time::iso($now) > $row['absolute_expires_at'];
@@ -171,8 +202,8 @@ final class Engine
         if ($row === null || $this->expired($row, $now)) {
             throw new EngineError(404, 'SESSION_NOT_FOUND', 'This session is no longer available. Start a new session.');
         }
-        if ($row['snapshot']['pending_operation_id'] !== null) {
-            $op = $this->store->operation($row['snapshot']['pending_operation_id']);
+        if ($row['pending_operation_id'] !== null) {
+            $op = $this->store->operation($row['pending_operation_id']);
             if ($op !== null && $op['status'] === 'ACTIVE' && Time::iso($now) < $op['expires_at']) {
                 throw new EngineError(409, 'OPERATION_PENDING', 'The previous request is still being processed. Please wait.');
             }
@@ -180,14 +211,14 @@ final class Engine
                 $this->store->finishOperation($op['operation_id'], 'EXPIRED', $now);
             }
             $this->store->setPendingOperation($sessionId, null);
-            $row['snapshot']['pending_operation_id'] = null;
+            $row['pending_operation_id'] = null;
         }
         return $row;
     }
 
     private function pendingActive(array $row): ?string
     {
-        $id = $row['snapshot']['pending_operation_id'];
+        $id = $row['pending_operation_id'];
         if ($id === null) {
             return null;
         }
@@ -313,7 +344,7 @@ final class Engine
             $this->store->idempotencyPending($sessionId, $req['idempotency_key'], $requestHash, $now);
             $turn = new Turn($row['snapshot'], $row['engine'], $now, 'END_SESSION');
             $turn->event('ACTION_RECEIVED', ['action' => 'END_SESSION'], $turn->triggerEventId);
-            $pending = $row['snapshot']['pending_operation_id'];
+            $pending = $row['pending_operation_id'];
             if ($pending !== null) {
                 $op = $this->store->operation($pending);
                 if ($op !== null && $op['status'] === 'ACTIVE') {
@@ -919,7 +950,8 @@ final class Engine
         $id = Ids::make('hyp');
         $h = [
             'hypothesis_id' => $id, 'skill_id' => $skill, 'branch' => $branch, 'status' => 'PROVISIONAL',
-            'statement' => 'The observed error pattern (' . implode(', ', array_column($sigs, 'label')) . ') may involve ' . $branch . ' (' . $this->curriculum->title($branch) . '). Testable hypothesis only.',
+            'statement' => 'The observed error pattern (' . implode(', ', array_column($sigs, 'label')) . ') may involve ' . $branch
+                . ($this->curriculum->has($branch) ? ' (' . $this->curriculum->title($branch) . ')' : '') . '. Testable hypothesis only.',
             'evidence_event_ids' => [$turn->triggerEventId],
         ];
         $turn->eng['hypotheses'][] = $h;

@@ -53,7 +53,7 @@ final class OneStepMultiply extends AbstractTemplate
 
     public function render(array $p): string
     {
-        return 'Solve ' . Fmt::cx($p['a']) . ' = ' . Fmt::n($p['b']) . '. Give the value of x.';
+        return 'Solve ' . Fmt::cx($p['a']) . ' = ' . Fmt::n($p['b']) . ' for x.';
     }
 
     public function answerSpec(array $p): array
