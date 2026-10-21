@@ -1,0 +1,107 @@
+{
+  "status": "TEST_EXPECTATIONS_NOT_PRODUCTION_CHECKER",
+  "cases": [
+    {
+      "id": "RAT-01",
+      "kind": "rational",
+      "expected": "1/2",
+      "response": "0.5",
+      "verdict": "CORRECT"
+    },
+    {
+      "id": "RAT-02",
+      "kind": "rational",
+      "expected": "-3/4",
+      "response": "-6/8",
+      "verdict": "CORRECT"
+    },
+    {
+      "id": "RAT-03",
+      "kind": "rational",
+      "expected": "7",
+      "response": "8",
+      "verdict": "INCORRECT"
+    },
+    {
+      "id": "RAT-04",
+      "kind": "rational",
+      "expected": "0",
+      "response": "1/0",
+      "verdict": "UNSCORABLE"
+    },
+    {
+      "id": "POLY-01",
+      "kind": "polynomial",
+      "expected": "3*x+6",
+      "response": "3*(x+2)",
+      "verdict": "CORRECT",
+      "scope": "Equivalence only, not requested expanded form."
+    },
+    {
+      "id": "POLY-02",
+      "kind": "polynomial",
+      "expected": "3*x+6",
+      "response": "3*x+2",
+      "verdict": "INCORRECT"
+    },
+    {
+      "id": "ROOT-01",
+      "kind": "solution_set",
+      "task": "x^2=9",
+      "response": [
+        3
+      ],
+      "verdict": "PARTIAL",
+      "scope": "A valid root is missing."
+    },
+    {
+      "id": "ROOT-02",
+      "kind": "solution_set",
+      "task": "x^2=9",
+      "response": [
+        3,
+        -3
+      ],
+      "verdict": "CORRECT"
+    },
+    {
+      "id": "ROOT-03",
+      "kind": "scalar",
+      "task": "sqrt(9)",
+      "response": "-3",
+      "verdict": "INCORRECT"
+    },
+    {
+      "id": "DOMAIN-01",
+      "kind": "domain",
+      "task": "Simplify (x^2-1)/(x-1), preserving domain.",
+      "response": "x+1",
+      "verdict": "PARTIAL",
+      "scope": "Restriction x!=1 not supplied."
+    },
+    {
+      "id": "FORM-01",
+      "kind": "requested_form",
+      "task": "Factor x^2-1",
+      "response": "x^2-1",
+      "verdict": "PARTIAL",
+      "scope": "Equivalent but not factored."
+    },
+    {
+      "id": "INTERVAL-01",
+      "kind": "interval",
+      "task": "x<=3",
+      "response": "(-infinity,3)",
+      "verdict": "INCORRECT",
+      "scope": "Endpoint inclusion wrong."
+    },
+    {
+      "id": "GRAPH-01",
+      "kind": "graph_spec",
+      "task": "Construct a line graph.",
+      "response": "2",
+      "verdict": "UNSCORABLE",
+      "scope": "No actual graph supplied."
+    }
+  ]
+}

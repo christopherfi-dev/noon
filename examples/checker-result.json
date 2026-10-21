@@ -1,0 +1,20 @@
+{
+  "checker_result_id": "example-check-001",
+  "checker_id": "exact-rational",
+  "checker_version": "1.0",
+  "item_id": "example-item-q07-001",
+  "item_version": 1,
+  "event_id": "example-response-001",
+  "response_sha256": "7902699be42c8a8e46fbbb4501726517e86b22c56a189f7625a6da49081b2451",
+  "verdict": "CORRECT",
+  "verification_scope": "Exact numeric solution for the accepted equation; conceptual explanation not assessed.",
+  "provenance": "DETERMINISTIC",
+  "required_components_satisfied": false,
+  "independent_eligible": true,
+  "support_event_ids": [],
+  "observation": "The supplied value solves this equation.",
+  "limitations": [
+    "Numeric component only."
+  ],
+  "created_at": "2026-10-21T02:01:00Z"
+}

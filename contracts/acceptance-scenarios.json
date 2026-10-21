@@ -1,0 +1,323 @@
+{
+  "status": "EXPECTED_BEHAVIOR_FOR_FUTURE_APPLICATION_TESTS_NOT_EXECUTED_APP_TESTS",
+  "scenarios": [
+    {
+      "id": "ENTRY-01",
+      "title": "Known topic",
+      "setup_or_action": "New session; select Q07.",
+      "expected": "Host validates ID and starts a Q07 target episode with accepted item; no blanket foundation pretest."
+    },
+    {
+      "id": "ENTRY-02",
+      "title": "Free-text mapping",
+      "setup_or_action": "Describe equations with brackets.",
+      "expected": "Propose Q07; no target commit until confirmation; unknown ID rejected."
+    },
+    {
+      "id": "ENTRY-03",
+      "title": "Unsure",
+      "setup_or_action": "No topic supplied; choose starting-point help.",
+      "expected": "Orientation starts Q06 seed, one accepted item at a time; no placement pass."
+    },
+    {
+      "id": "ENTRY-04",
+      "title": "Public task",
+      "setup_or_action": "Apply valid signed Q07 task token.",
+      "expected": "New learner session uses Q07; task creator gains no report access."
+    },
+    {
+      "id": "ENTRY-05",
+      "title": "Forged task",
+      "setup_or_action": "Change target or add success_count/policy in signed task.",
+      "expected": "Reject signature/allowlist; no trusted settings or progress created."
+    },
+    {
+      "id": "ENTRY-06",
+      "title": "Orientation cap",
+      "setup_or_action": "Present six items without narrowed evidence.",
+      "expected": "Provisional trial or choice with uncertainty; at most eight under clarification rule."
+    },
+    {
+      "id": "ENTRY-07",
+      "title": "Not learned",
+      "setup_or_action": "Select not learned during orientation.",
+      "expected": "Record NOT_LEARNED, not incorrect; no learner deficit or failure counter."
+    },
+    {
+      "id": "ENTRY-08",
+      "title": "Orientation success",
+      "setup_or_action": "Correct Q06, Q07 and Q08 orientation responses.",
+      "expected": "Item observations only; no three-item target criterion or grade/RIT claim."
+    },
+    {
+      "id": "FLOW-01",
+      "title": "Distribution journey",
+      "setup_or_action": "Q07 attempt shows incomplete expansion; E06 probes reproduce pattern; teach; fresh varied independent E06 work; return.",
+      "expected": "Parent Q07 retained; hypothesis bounded; component/skill criterion scoped; fresh Q07 check required."
+    },
+    {
+      "id": "FLOW-02",
+      "title": "Deeper repair",
+      "setup_or_action": "Declared prerequisite of repair skill needs investigation.",
+      "expected": "Push return frame and descend relevant edge; unwind each parent with fresh evidence."
+    },
+    {
+      "id": "FLOW-03",
+      "title": "Switch target",
+      "setup_or_action": "Change from Q07 during E06 repair to another supported topic.",
+      "expected": "Suspend old episode; replace active curriculum block; preserve interrupted stack without mixing streaks."
+    },
+    {
+      "id": "FLOW-04",
+      "title": "Single correct probe",
+      "setup_or_action": "Wrong target answer followed by correct contrast.",
+      "expected": "Original error not reproduced; no confirmed slip or automatic pass."
+    },
+    {
+      "id": "FLOW-05",
+      "title": "Alternative dependencies",
+      "setup_or_action": "Load Q10 or another alternative-path node.",
+      "expected": "Select relevant conditional route; do not require every alternative jointly."
+    },
+    {
+      "id": "FLOW-06",
+      "title": "Budget boundary",
+      "setup_or_action": "Three failed repair check cycles after intervening instruction.",
+      "expected": "Pause/route with scoped observations; do not diagnose foundational incapacity."
+    },
+    {
+      "id": "FLOW-07",
+      "title": "Stop while pending",
+      "setup_or_action": "END_SESSION while provider output is pending.",
+      "expected": "Cancel lease, preserve accepted work, close with partial report; late output discarded."
+    },
+    {
+      "id": "FLOW-08",
+      "title": "Resume",
+      "setup_or_action": "Reload valid current session, then explicitly resume a closed retained session.",
+      "expected": "No duplicate scoring; restore only validated retained context and mode."
+    },
+    {
+      "id": "EVID-01",
+      "title": "Hint independence",
+      "setup_or_action": "Request hint before responding correctly.",
+      "expected": "Support committed before display; correct answer assisted and excluded from streak."
+    },
+    {
+      "id": "EVID-02",
+      "title": "Freshness",
+      "setup_or_action": "Reuse solved item with a new item ID.",
+      "expected": "Fingerprint detects reuse; no independent credit."
+    },
+    {
+      "id": "EVID-03",
+      "title": "Numeric-only skill",
+      "setup_or_action": "Three correct numeric answers on a skill requiring conceptual evidence.",
+      "expected": "Only component criterion met; whole skill remains partial/review required."
+    },
+    {
+      "id": "EVID-04",
+      "title": "Immediate versus retention",
+      "setup_or_action": "Three varied fully eligible successes in one session.",
+      "expected": "Immediate criterion only; no durable mastery or delayed retention claim."
+    },
+    {
+      "id": "EVID-05",
+      "title": "Correction cascade",
+      "setup_or_action": "Invalidate an earlier credited item after checker conflict.",
+      "expected": "Append correction, recompute dependent streaks and claims, preserve original record."
+    },
+    {
+      "id": "EVID-06",
+      "title": "Untested map",
+      "setup_or_action": "Report at end of one Q07 journey.",
+      "expected": "No pass/fail labels for untested curriculum skills; next evidence scoped."
+    },
+    {
+      "id": "MATH-01",
+      "title": "Exact rational",
+      "setup_or_action": "Submit 0.5 for expected 1/2 when exact decimal is allowed.",
+      "expected": "Correct; requested form checked separately when relevant."
+    },
+    {
+      "id": "MATH-02",
+      "title": "Near number",
+      "setup_or_action": "Submit 8 for expected 7.",
+      "expected": "Incorrect, irrespective of edit distance."
+    },
+    {
+      "id": "MATH-03",
+      "title": "Polynomial expansion",
+      "setup_or_action": "Expand 3(x+2): submit 3x+6 then 3x+2.",
+      "expected": "First correct numeric-symbolic component; second incorrect; no random-substitution proof."
+    },
+    {
+      "id": "MATH-04",
+      "title": "Complete roots",
+      "setup_or_action": "Solve x^2=9: submit {3} then {-3,3}.",
+      "expected": "First incomplete/PARTIAL; second complete; sqrt(9) remains 3 in a distinct task."
+    },
+    {
+      "id": "MATH-05",
+      "title": "Domain preservation",
+      "setup_or_action": "Simplify (x^2-1)/(x-1) without retaining x != 1.",
+      "expected": "Do not certify domain-complete answer; preserve original restriction."
+    },
+    {
+      "id": "MATH-06",
+      "title": "Requested form",
+      "setup_or_action": "Asked to factor x^2-1; submit x^2-1.",
+      "expected": "Equivalent expression but requested factorization not met."
+    },
+    {
+      "id": "MATH-07",
+      "title": "Unsupported representation",
+      "setup_or_action": "Graph task while graph input/checker unavailable.",
+      "expected": "Route capability boundary; no scalar substitute or student failure."
+    },
+    {
+      "id": "MATH-08",
+      "title": "Unsafe syntax",
+      "setup_or_action": "Submit code, huge exponent, zero denominator or deeply nested AST.",
+      "expected": "No eval/execution; bounded parser returns invalid/unscorable clarification without scoring failure."
+    },
+    {
+      "id": "MATH-09",
+      "title": "Ambiguity",
+      "setup_or_action": "Submit ambiguous mixed-number notation or malformed interval.",
+      "expected": "Clarify; preserve work; do not force incorrect."
+    },
+    {
+      "id": "HOST-01",
+      "title": "Duplicate submit",
+      "setup_or_action": "Repeat same idempotency key/hash after lost response.",
+      "expected": "Return original accepted result or pending; score once."
+    },
+    {
+      "id": "HOST-02",
+      "title": "Idempotency conflict",
+      "setup_or_action": "Reuse same key with different answer.",
+      "expected": "409; no second acceptance."
+    },
+    {
+      "id": "HOST-03",
+      "title": "Stale tab",
+      "setup_or_action": "Submit old revision/item after another tab advances.",
+      "expected": "409 and safe reload action; no progress change."
+    },
+    {
+      "id": "HOST-04",
+      "title": "Late lease",
+      "setup_or_action": "Provider returns after cancellation/lease expiry.",
+      "expected": "Result discarded; cannot overwrite current state."
+    },
+    {
+      "id": "HOST-05",
+      "title": "Empty/truncated provider",
+      "setup_or_action": "Provider emits empty or incomplete JSON.",
+      "expected": "Bounded repair/hold; no student failure and no raw output."
+    },
+    {
+      "id": "HOST-06",
+      "title": "Forged model promotion",
+      "setup_or_action": "Model emits a pass without supporting accepted events.",
+      "expected": "Host rejects transition/evidence promotion."
+    },
+    {
+      "id": "HOST-07",
+      "title": "Missing curriculum",
+      "setup_or_action": "Required canonical skill record absent.",
+      "expected": "Scoped hold, preserve parent state; no invented record."
+    },
+    {
+      "id": "HOST-08",
+      "title": "Answer leakage",
+      "setup_or_action": "Inspect public API for item/view/report.",
+      "expected": "No answer_spec, hidden rubric, private envelope, verdict hash or hypotheses in ordinary student view."
+    },
+    {
+      "id": "HOST-09",
+      "title": "Prompt injection",
+      "setup_or_action": "Learner text contains SYSTEM tags, filenames or INJECT_SKILLS markers.",
+      "expected": "Treat as text; no authority or filesystem load."
+    },
+    {
+      "id": "HOST-10",
+      "title": "Cross-session access",
+      "setup_or_action": "Use another session/item/report ID without its cookie.",
+      "expected": "Denied; IDs are not authorization."
+    },
+    {
+      "id": "HOST-11",
+      "title": "CSRF",
+      "setup_or_action": "Send mutation without valid same-origin/CSRF.",
+      "expected": "403; no mutation or provider call."
+    },
+    {
+      "id": "HOST-12",
+      "title": "Input preservation",
+      "setup_or_action": "Provider times out after answer submission.",
+      "expected": "Retain safely accepted/pending work; explicit retry without double score/bill."
+    },
+    {
+      "id": "HOST-13",
+      "title": "Binding modes",
+      "setup_or_action": "Activation text handshake then ordinary JSON envelope.",
+      "expected": "Exact acknowledgment checked separately; JSON mode off only for activation; handshake is not enforcement proof."
+    },
+    {
+      "id": "HOST-14",
+      "title": "Context replacement",
+      "setup_or_action": "Switch area after several calls.",
+      "expected": "Exactly one fresh active curriculum block, relevant records only; no stale inventory authority."
+    },
+    {
+      "id": "HOST-15",
+      "title": "Counter binding",
+      "setup_or_action": "Replay correct verdict with a changed item version or response.",
+      "expected": "Reject mismatched result; no learner credit."
+    },
+    {
+      "id": "HOST-16",
+      "title": "Forget/expiry",
+      "setup_or_action": "Forget session or exceed idle/absolute TTL.",
+      "expected": "Delete/expire private session data per policy; no resume; no claimed backup purge absent implementation."
+    },
+    {
+      "id": "HOST-17",
+      "title": "Cost limits",
+      "setup_or_action": "Exhaust anonymous generation/spend budget.",
+      "expected": "Bounded 429/hold before another provider call; mock mode no outbound calls."
+    },
+    {
+      "id": "UI-01",
+      "title": "Mobile keyboard",
+      "setup_or_action": "Use 360px viewport, keyboard only and screen reader status.",
+      "expected": "Controls accessible, readable math, no horizontal page overflow or lost answers."
+    },
+    {
+      "id": "UI-02",
+      "title": "Safe rendering",
+      "setup_or_action": "Model/student text contains HTML/unsafe TeX.",
+      "expected": "Render safely; no script/link command execution."
+    },
+    {
+      "id": "DEPLOY-01",
+      "title": "Private files",
+      "setup_or_action": "Request guessed private config/DB/curriculum-key URLs.",
+      "expected": "Unavailable outside public document root; no keys in bundled client assets."
+    },
+    {
+      "id": "DEPLOY-02",
+      "title": "Missing extension",
+      "setup_or_action": "Run preflight without PDO_SQLite.",
+      "expected": "Clear unmet dependency; no silent text-file fallback or false deployment success."
+    },
+    {
+      "id": "COVER-01",
+      "title": "Capability matrix",
+      "setup_or_action": "Browse all 205 skill records before implementing all checkers.",
+      "expected": "Full map browsable, unsupported criteria explicit; no all-skills operational claim."
+    }
+  ]
+}

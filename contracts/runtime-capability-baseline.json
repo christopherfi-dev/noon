@@ -1,0 +1,3737 @@
+{
+  "status": "ALL_UNIMPLEMENTED_BASELINE_FOR_CLAUDE_CODE_TO_REPLACE_WITH_TESTED_REGISTRY",
+  "skills": [
+    {
+      "skill_id": "N01",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "ordered_list"
+      ],
+      "required_checker_capabilities": [
+        "ordered_exact_values"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N02",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N03",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N04",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N05",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N06",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N07",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N08",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "fraction"
+      ],
+      "required_checker_capabilities": [
+        "exact_rational_equivalence"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N09",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "fraction"
+      ],
+      "required_checker_capabilities": [
+        "exact_rational_equivalence"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N10",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "fraction"
+      ],
+      "required_checker_capabilities": [
+        "exact_rational_equivalence"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N11",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N12",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N13",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "ordered_list"
+      ],
+      "required_checker_capabilities": [
+        "ordered_exact_values"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N14",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "quantity"
+      ],
+      "required_checker_capabilities": [
+        "numeric_equivalence",
+        "units_and_precision_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N15",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N16",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N17",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N18",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N19",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "N20",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "A01",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "model"
+      ],
+      "required_checker_capabilities": [
+        "model_structure_units_domain_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "A02",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "A03",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "A04",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "A05",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "A06",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "A07",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "A08",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "A09",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "A10",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "model"
+      ],
+      "required_checker_capabilities": [
+        "model_structure_units_domain_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "E01",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "E02",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "E03",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "E04",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "E05",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "E06",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "E07",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "E08",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "E09",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "E10",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "E11",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "E12",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Provide a valid identity proof.",
+        "Produce a counterexample to a false identity.",
+        "Explain why a confirming example alone is insufficient."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "Q01",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "Q02",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "Q03",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "Q04",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "Q05",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "Q06",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "Q07",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "Q08",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "Q09",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "Q10",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "Q11",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "Q12",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "Unique solution.",
+        "No solution.",
+        "All real numbers, with a true constant equality."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "Q13",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "equation"
+      ],
+      "required_checker_capabilities": [
+        "equation_semantics_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "Q14",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Nonzero parameter.",
+        "Zero coefficient and zero constant.",
+        "Zero coefficient and nonzero constant."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "I01",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "I02",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "interval"
+      ],
+      "required_checker_capabilities": [
+        "interval_endpoint_and_union_semantics"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "I03",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "interval"
+      ],
+      "required_checker_capabilities": [
+        "interval_endpoint_and_union_semantics"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "I04",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "interval"
+      ],
+      "required_checker_capabilities": [
+        "interval_endpoint_and_union_semantics"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "I05",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "interval"
+      ],
+      "required_checker_capabilities": [
+        "interval_endpoint_and_union_semantics"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "I06",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "interval"
+      ],
+      "required_checker_capabilities": [
+        "interval_endpoint_and_union_semantics"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "I07",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "interval"
+      ],
+      "required_checker_capabilities": [
+        "interval_endpoint_and_union_semantics"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "I08",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "model"
+      ],
+      "required_checker_capabilities": [
+        "model_structure_units_domain_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "I09",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "graph_spec"
+      ],
+      "required_checker_capabilities": [
+        "graph_renderer_or_reviewable_graph_input",
+        "graph_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C01",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C02",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "ordered_pair"
+      ],
+      "required_checker_capabilities": [
+        "ordered_coordinate_semantics"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C03",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C04",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "table"
+      ],
+      "required_checker_capabilities": [
+        "structured_table_semantics"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C05",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C06",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C07",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C08",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Finite table domain and range.",
+        "Continuous contextual domain.",
+        "Discrete contextual domain and a representation with a restriction."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C09",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C10",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "model"
+      ],
+      "required_checker_capabilities": [
+        "model_structure_units_domain_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C11",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C12",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "graph_spec"
+      ],
+      "required_checker_capabilities": [
+        "graph_renderer_or_reviewable_graph_input",
+        "graph_rubric_review"
+      ],
+      "required_variants": [
+        "Piecewise linear branches.",
+        "A step function.",
+        "Included and excluded branch endpoints."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C13",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C14",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C15",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "ordered_pair"
+      ],
+      "required_checker_capabilities": [
+        "ordered_coordinate_semantics"
+      ],
+      "required_variants": [
+        "Vertical shift of a known graph.",
+        "Horizontal translation of a known graph.",
+        "Simple reflection or vertical scale with input-output tracking."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C16",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "equation"
+      ],
+      "required_checker_capabilities": [
+        "equation_semantics_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C17",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Compare intercepts or initial values.",
+        "Compare rates.",
+        "Compare domain, extrema or other relevant features across representations."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C18",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "graph_spec"
+      ],
+      "required_checker_capabilities": [
+        "graph_renderer_or_reviewable_graph_input",
+        "graph_rubric_review"
+      ],
+      "required_variants": [
+        "Square-root graph and nonnegative input domain.",
+        "Cube-root graph including negative inputs.",
+        "Domain and range of a simple translated root graph."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C19",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Add familiar linear functions.",
+        "Combine a familiar function with a constant.",
+        "Interpret a shifted exponential model after G02 is available."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "C20",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Increasing and decreasing intervals.",
+        "Positive and negative intervals and zeros.",
+        "Extrema and end behavior in a stated model family."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "L01",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "L02",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "L03",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "L04",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "ordered_pair"
+      ],
+      "required_checker_capabilities": [
+        "ordered_coordinate_semantics"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "L05",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "graph_spec"
+      ],
+      "required_checker_capabilities": [
+        "graph_renderer_or_reviewable_graph_input",
+        "graph_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "L06",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "equation"
+      ],
+      "required_checker_capabilities": [
+        "equation_semantics_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "L07",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "equation"
+      ],
+      "required_checker_capabilities": [
+        "equation_semantics_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "L08",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "equation"
+      ],
+      "required_checker_capabilities": [
+        "equation_semantics_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "L09",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "equation"
+      ],
+      "required_checker_capabilities": [
+        "equation_semantics_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "L10",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "L11",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "L12",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "model"
+      ],
+      "required_checker_capabilities": [
+        "model_structure_units_domain_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "L13",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "L14",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "S01",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "S02",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "ordered_pair"
+      ],
+      "required_checker_capabilities": [
+        "ordered_coordinate_semantics"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "S03",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "ordered_pair"
+      ],
+      "required_checker_capabilities": [
+        "ordered_coordinate_semantics"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "S04",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "ordered_pair"
+      ],
+      "required_checker_capabilities": [
+        "ordered_coordinate_semantics"
+      ],
+      "required_variants": [
+        "Explain the equation addition.",
+        "Retain the other equation.",
+        "Explain reversibility of the replacement and verify the original system."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "S05",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "ordered_pair"
+      ],
+      "required_checker_capabilities": [
+        "ordered_coordinate_semantics"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "S06",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "One intersection.",
+        "Distinct parallel lines.",
+        "Coincident lines."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "S07",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "model"
+      ],
+      "required_checker_capabilities": [
+        "model_structure_units_domain_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "S08",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "graph_spec"
+      ],
+      "required_checker_capabilities": [
+        "graph_renderer_or_reviewable_graph_input",
+        "graph_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "S09",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "point_set"
+      ],
+      "required_checker_capabilities": [
+        "complete_intersection_set"
+      ],
+      "required_variants": [
+        "Two real intersections.",
+        "One tangent intersection.",
+        "No real intersection; graphical and symbolic evidence compared."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "X01",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "X02",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "X03",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "X04",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "X05",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "X06",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "X07",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "X08",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "fraction"
+      ],
+      "required_checker_capabilities": [
+        "exact_rational_equivalence"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "X09",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "X10",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "interval"
+      ],
+      "required_checker_capabilities": [
+        "interval_endpoint_and_union_semantics"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "X11",
+      "curricular_role": "FOUNDATION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "P01",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "P02",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "P03",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "P04",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "P05",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "P06",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "P07",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "P08",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "P09",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "P10",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Addition/subtraction closure.",
+        "Multiplication closure by exponent structure.",
+        "Counterexample to division closure."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "F01",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "F02",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "F03",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "F04",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "F05",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "F06",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "F07",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "F08",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "F09",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "solution_set"
+      ],
+      "required_checker_capabilities": [
+        "complete_solution_set_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U01",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U02",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U03",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U04",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U05",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U06",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U07",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "solution_set"
+      ],
+      "required_checker_capabilities": [
+        "complete_solution_set_with_domain"
+      ],
+      "required_variants": [
+        "Positive k with two real solutions.",
+        "k=0 with one real solution.",
+        "Negative k with no real solution."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U08",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "solution_set"
+      ],
+      "required_checker_capabilities": [
+        "complete_solution_set_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U09",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "solution_set"
+      ],
+      "required_checker_capabilities": [
+        "complete_solution_set_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U10",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "equation"
+      ],
+      "required_checker_capabilities": [
+        "equation_semantics_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U11",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "equation"
+      ],
+      "required_checker_capabilities": [
+        "equation_semantics_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U12",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "solution_set"
+      ],
+      "required_checker_capabilities": [
+        "complete_solution_set_with_domain"
+      ],
+      "required_variants": [
+        "Two rational roots.",
+        "Irrational exact roots.",
+        "A repeated root and a no-real-root case, with number system explicit."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U13",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U14",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U15",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Compare at least two valid methods.",
+        "Select an efficient method from expression structure.",
+        "Interpret and check contextual feasibility."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "U16",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Show the completing-the-square identity.",
+        "Include a!=0.",
+        "Retain both branches and the real-discriminant condition."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "G01",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "G02",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "G03",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "G04",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "graph_spec"
+      ],
+      "required_checker_capabilities": [
+        "graph_renderer_or_reviewable_graph_input",
+        "graph_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "G05",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "G06",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "model"
+      ],
+      "required_checker_capabilities": [
+        "model_structure_units_domain_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "G07",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Compare linear and exponential change across equal intervals.",
+        "Compare models across representations.",
+        "Estimate an intersection graphically with a declared tolerance."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "G08",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "G09",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Explicit nth-term rule with stated indexing.",
+        "Recursive rule with initial condition.",
+        "Translate between the two and connect to a linear function."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "G10",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Explicit nth-term rule with stated indexing.",
+        "Recursive rule with initial condition.",
+        "Translate between the two and connect to an exponential function."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "G11",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Compare a specified exponential model with a linear model.",
+        "Compare with a specified quadratic model.",
+        "State the evidence or derivation supporting an eventual-growth claim."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "G12",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Integer changes of the input time scale.",
+        "Interpret the new factor.",
+        "Optional root-based subperiod conversion, explicitly extension-scoped."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "G13",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Derive a constant difference for a linear rule.",
+        "Derive a constant ratio for an exponential rule.",
+        "State the nonzero and positive-base assumptions."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "R01",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "R02",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "R03",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "R04",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "R05",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "expression"
+      ],
+      "required_checker_capabilities": [
+        "symbolic_equivalence_with_domain",
+        "requested_form_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "R06",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "solution_set"
+      ],
+      "required_checker_capabilities": [
+        "complete_solution_set_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "R07",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "solution_set"
+      ],
+      "required_checker_capabilities": [
+        "complete_solution_set_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "R08",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Rational plus rational and rational times rational.",
+        "Rational plus irrational and nonzero rational times irrational.",
+        "Counterexamples to invalid claims about two irrational numbers."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "D01",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "classification"
+      ],
+      "required_checker_capabilities": [
+        "classification_with_required_justification"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "D02",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "graph_spec"
+      ],
+      "required_checker_capabilities": [
+        "graph_renderer_or_reviewable_graph_input",
+        "graph_rubric_review"
+      ],
+      "required_variants": [
+        "Dot plot.",
+        "Histogram with declared bins.",
+        "Box plot with the declared quartile convention."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "D03",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "D04",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "D05",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Compare spread about a common mean.",
+        "Interpret population SD with units.",
+        "Use supplied technology output or compute with declared technology."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "D06",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "D07",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "D08",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "equation"
+      ],
+      "required_checker_capabilities": [
+        "equation_semantics_with_domain"
+      ],
+      "required_variants": [
+        "Fit or interpret an approximate linear model.",
+        "Explain slope and intercept in context.",
+        "Check whether a linear fit is suitable and avoid unsupported extrapolation."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "D09",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Residual sign and magnitude.",
+        "Correlation coefficient from technology.",
+        "Explain that r is not a percent-correct score and does not establish causality."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "D10",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "D11",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Joint frequency.",
+        "Marginal frequency.",
+        "Conditional frequency with the correct reference group."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "M01",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "model"
+      ],
+      "required_checker_capabilities": [
+        "model_structure_units_domain_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "M02",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "model"
+      ],
+      "required_checker_capabilities": [
+        "model_structure_units_domain_review"
+      ],
+      "required_variants": [
+        "Linear contextual model.",
+        "Quadratic contextual model after the relevant skills are available.",
+        "Simple exponential contextual model."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "M03",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "M04",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "interval"
+      ],
+      "required_checker_capabilities": [
+        "interval_endpoint_and_union_semantics"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "M05",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "M06",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "model"
+      ],
+      "required_checker_capabilities": [
+        "model_structure_units_domain_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "M07",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "M08",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "M09",
+      "curricular_role": "CORE",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "quantity"
+      ],
+      "required_checker_capabilities": [
+        "numeric_equivalence",
+        "units_and_precision_review"
+      ],
+      "required_variants": [
+        "Stated decimal-place requirement.",
+        "Precision consistent with measurement limitations.",
+        "Distinguish exact algebra from rounded reported quantities."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "H01",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "solution_set"
+      ],
+      "required_checker_capabilities": [
+        "complete_solution_set_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "H02",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "solution_set"
+      ],
+      "required_checker_capabilities": [
+        "complete_solution_set_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "H03",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "H04",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "reasoning"
+      ],
+      "required_checker_capabilities": [
+        "reasoning_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "H05",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "H06",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "H07",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "solution_set"
+      ],
+      "required_checker_capabilities": [
+        "complete_solution_set_with_domain"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "H08",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "scalar"
+      ],
+      "required_checker_capabilities": [
+        "exact_numeric_or_declared_tolerance"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "H09",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "structured_response"
+      ],
+      "required_checker_capabilities": [
+        "structured_response_rubric_review"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    },
+    {
+      "skill_id": "H10",
+      "curricular_role": "EXTENSION",
+      "runtime_status": "UNAVAILABLE",
+      "required_response_types": [
+        "point_set"
+      ],
+      "required_checker_capabilities": [
+        "complete_intersection_set"
+      ],
+      "required_variants": [
+        "Representative constructed response.",
+        "A diagnostic contrast addressing the stated probe focus.",
+        "A fresh transfer or interpretation task within this node's bounds."
+      ],
+      "implemented_components": [],
+      "test_references": []
+    }
+  ]
+}

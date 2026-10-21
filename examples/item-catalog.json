@@ -1,0 +1,139 @@
+{
+  "status": "SPECIFICATION_NOT_IMPLEMENTED_FACTORY",
+  "templates": [
+    {
+      "template_id": "SIGNED_ADD",
+      "primary_skill_id": "N03",
+      "response_type": "scalar",
+      "algebraic_form": "a+b",
+      "example_parameters": {
+        "a": -7,
+        "b": 4
+      },
+      "example_expected": "-3",
+      "bounds_and_scope": "Signed integer sum; -20..20.",
+      "promotion_limit": "Numeric/expansion component only until all node requirements are implemented and met."
+    },
+    {
+      "template_id": "SIGNED_SUBTRACT",
+      "primary_skill_id": "N04",
+      "response_type": "scalar",
+      "algebraic_form": "a-b",
+      "example_parameters": {
+        "a": -3,
+        "b": -8
+      },
+      "example_expected": "5",
+      "bounds_and_scope": "Signed integer difference; -20..20.",
+      "promotion_limit": "Numeric/expansion component only until all node requirements are implemented and met."
+    },
+    {
+      "template_id": "SIGNED_MULTIPLY",
+      "primary_skill_id": "N05",
+      "response_type": "scalar",
+      "algebraic_form": "a*b",
+      "example_parameters": {
+        "a": -4,
+        "b": 3
+      },
+      "example_expected": "-12",
+      "bounds_and_scope": "Signed integer product; -12..12.",
+      "promotion_limit": "Numeric/expansion component only until all node requirements are implemented and met."
+    },
+    {
+      "template_id": "SIGNED_DIVIDE",
+      "primary_skill_id": "N06",
+      "response_type": "scalar",
+      "algebraic_form": "a/b",
+      "example_parameters": {
+        "a": -18,
+        "b": 3
+      },
+      "example_expected": "-6",
+      "bounds_and_scope": "Nonzero integer divisor; exact rational answer.",
+      "promotion_limit": "Numeric/expansion component only until all node requirements are implemented and met."
+    },
+    {
+      "template_id": "ONE_STEP_ADD",
+      "primary_skill_id": "Q04",
+      "response_type": "scalar",
+      "algebraic_form": "x+a=b",
+      "example_parameters": {
+        "a": 5,
+        "b": 12
+      },
+      "example_expected": "7",
+      "bounds_and_scope": "Integer constants, including signed variants.",
+      "promotion_limit": "Numeric/expansion component only until all node requirements are implemented and met."
+    },
+    {
+      "template_id": "ONE_STEP_MULTIPLY",
+      "primary_skill_id": "Q05",
+      "response_type": "scalar",
+      "algebraic_form": "a*x=b",
+      "example_parameters": {
+        "a": 4,
+        "b": 20
+      },
+      "example_expected": "5",
+      "bounds_and_scope": "a != 0; integer/rational solutions tagged.",
+      "promotion_limit": "Numeric/expansion component only until all node requirements are implemented and met."
+    },
+    {
+      "template_id": "TWO_STEP",
+      "primary_skill_id": "Q06",
+      "response_type": "scalar",
+      "algebraic_form": "a*x+b=c",
+      "example_parameters": {
+        "a": 3,
+        "b": 2,
+        "c": 17
+      },
+      "example_expected": "5",
+      "bounds_and_scope": "a != 0; integer/rational solutions tagged.",
+      "promotion_limit": "Numeric/expansion component only until all node requirements are implemented and met."
+    },
+    {
+      "template_id": "POSITIVE_DISTRIBUTION",
+      "primary_skill_id": "E06",
+      "response_type": "expression",
+      "algebraic_form": "a*(x+b)",
+      "example_parameters": {
+        "a": 3,
+        "b": 2
+      },
+      "example_expected": "3*x+6",
+      "bounds_and_scope": "Positive integer factor; expand every term.",
+      "promotion_limit": "Numeric/expansion component only until all node requirements are implemented and met."
+    },
+    {
+      "template_id": "GROUPED_LINEAR",
+      "primary_skill_id": "Q07",
+      "response_type": "scalar",
+      "algebraic_form": "a*(x+b)=c",
+      "example_parameters": {
+        "a": 3,
+        "b": -2,
+        "c": 15
+      },
+      "example_expected": "7",
+      "bounds_and_scope": "a != 0; one-sided grouping first; variant coverage later includes both sides.",
+      "promotion_limit": "Numeric/expansion component only until all node requirements are implemented and met."
+    },
+    {
+      "template_id": "BOTH_SIDES_LINEAR",
+      "primary_skill_id": "Q08",
+      "response_type": "scalar",
+      "algebraic_form": "a*x+b=c*x+d",
+      "example_parameters": {
+        "a": 5,
+        "b": 2,
+        "c": 2,
+        "d": 17
+      },
+      "example_expected": "5",
+      "bounds_and_scope": "a != c initially; identity/no-solution cases require separately declared capability.",
+      "promotion_limit": "Numeric/expansion component only until all node requirements are implemented and met."
+    }
+  ]
+}

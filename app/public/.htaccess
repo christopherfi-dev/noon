@@ -1,0 +1,26 @@
+# Algebra Engine public folder. Only index.html, api.php and the bundled
+# assets are served; everything else (dotfiles, backups, data) is refused.
+# This is defence in depth: private files must live outside the web root.
+
+Options -Indexes
+DirectoryIndex index.html
+
+# Deny dotfiles (.htaccess, .env, .git ...).
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
+# Deny any file name containing a dot that is not on the allow-list.
+<FilesMatch "^(?!(?:index\.html|api\.php|app\.js|app\.css)$).*\.">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "same-origin"
+  Header always set X-Frame-Options "DENY"
+  <FilesMatch "\.html$">
+    Header set Content-Security-Policy "default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

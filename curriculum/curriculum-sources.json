@@ -1,0 +1,220 @@
+[
+  {
+    "source_id": "CCSS-4-NBT",
+    "title": "Grade 4 base-ten number",
+    "url": "https://www.thecorestandards.org/Math/Content/4/NBT/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "4.NBT",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-4-NF",
+    "title": "Grade 4 fractions",
+    "url": "https://www.thecorestandards.org/Math/Content/4/NF/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "4.NF",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-6-NS",
+    "title": "Grade 6 number system",
+    "url": "https://www.thecorestandards.org/Math/Content/6/NS/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "6.NS",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-6-EE",
+    "title": "Grade 6 expressions and equations",
+    "url": "https://www.thecorestandards.org/Math/Content/6/EE/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "6.EE",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-6-RP",
+    "title": "Grade 6 ratios and rates",
+    "url": "https://www.thecorestandards.org/Math/Content/6/RP/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "6.RP",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-7-NS",
+    "title": "Grade 7 rational-number operations",
+    "url": "https://www.thecorestandards.org/Math/Content/7/NS/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "7.NS",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-7-EE",
+    "title": "Grade 7 expressions and equations",
+    "url": "https://www.thecorestandards.org/Math/Content/7/EE/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "7.EE",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-7-RP",
+    "title": "Grade 7 proportional relationships",
+    "url": "https://www.thecorestandards.org/Math/Content/7/RP/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "7.RP",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-8-EE",
+    "title": "Grade 8 expressions and equations",
+    "url": "https://www.thecorestandards.org/Math/Content/8/EE/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "8.EE",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-8-F",
+    "title": "Grade 8 functions",
+    "url": "https://www.thecorestandards.org/Math/Content/8/F/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "8.F",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-HSA-SSE",
+    "title": "High-school expression structure",
+    "url": "https://www.thecorestandards.org/Math/Content/HSA/SSE/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "HSA.SSE",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-HSA-APR",
+    "title": "High-school polynomial and rational arithmetic",
+    "url": "https://www.thecorestandards.org/Math/Content/HSA/APR/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "HSA.APR",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-HSA-CED",
+    "title": "High-school equation construction",
+    "url": "https://www.thecorestandards.org/Math/Content/HSA/CED/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "HSA.CED",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-HSA-REI",
+    "title": "High-school equation and inequality reasoning",
+    "url": "https://www.thecorestandards.org/Math/Content/HSA/REI/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "HSA.REI",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-HSN-RN",
+    "title": "High-school real-number system",
+    "url": "https://www.thecorestandards.org/Math/Content/HSN/RN/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "HSN.RN",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-HSN-Q",
+    "title": "High-school quantities and units",
+    "url": "https://www.thecorestandards.org/Math/Content/HSN/Q/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "HSN.Q",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-HSF-IF",
+    "title": "High-school function interpretation",
+    "url": "https://www.thecorestandards.org/Math/Content/HSF/IF/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "HSF.IF",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-HSF-BF",
+    "title": "High-school function construction",
+    "url": "https://www.thecorestandards.org/Math/Content/HSF/BF/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "HSF.BF",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-HSF-LE",
+    "title": "High-school linear and exponential modeling",
+    "url": "https://www.thecorestandards.org/Math/Content/HSF/LE/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "HSF.LE",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "CCSS-HSS-ID",
+    "title": "High-school descriptive statistics",
+    "url": "https://www.thecorestandards.org/Math/Content/HSS/ID/",
+    "publisher": "Common Core State Standards Initiative",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CONTENT_STANDARD",
+    "code_prefix": "HSS.ID",
+    "use": "Content reference; course allocation and prerequisite edges are author decisions."
+  },
+  {
+    "source_id": "IM-A1",
+    "title": "Illustrative Mathematics Algebra 1 course narrative",
+    "url": "https://im.kendallhunt.com/HS/teachers/1/narrative.html",
+    "publisher": "Illustrative Mathematics / Kendall Hunt",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_CURRICULUM_REFERENCE",
+    "use": "Scope comparator covering data, equations, functions, exponential and quadratic work. This package uses an original sequence and original anchor items."
+  },
+  {
+    "source_id": "IES-ALGEBRA",
+    "title": "Teaching Strategies for Improving Algebra Knowledge in Middle and High School Students",
+    "url": "https://ies.ed.gov/ncee/wwc/PracticeGuide/20",
+    "publisher": "Institute of Education Sciences, What Works Clearinghouse",
+    "accessed": "2026-10-20",
+    "source_type": "PRIMARY_PRACTICE_GUIDE",
+    "use": "Solved-problem analysis, structure and deliberate strategy choice. Guide evidence ratings: first two recommendations minimal; strategy choice moderate. These do not validate this product or its prerequisite graph."
+  }
+]

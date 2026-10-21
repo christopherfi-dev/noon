@@ -1,0 +1,82 @@
+{
+  "status": "AUTHOR_DESIGNED_ROUTING_NOT_CALIBRATED",
+  "default_seed_skill_id": "Q06",
+  "default_item_budget": 6,
+  "absolute_item_budget": 8,
+  "seeds": [
+    {
+      "skill_id": "Q06",
+      "template_id": "TWO_STEP",
+      "on_correct": [
+        "Q07"
+      ],
+      "on_incorrect": [
+        "Q04",
+        "Q05"
+      ]
+    },
+    {
+      "skill_id": "Q07",
+      "template_id": "GROUPED_LINEAR",
+      "on_correct": [
+        "Q08"
+      ],
+      "on_incorrect": [
+        "E06"
+      ]
+    },
+    {
+      "skill_id": "Q08",
+      "template_id": "BOTH_SIDES_LINEAR",
+      "on_correct": [],
+      "on_incorrect": [
+        "Q06"
+      ]
+    },
+    {
+      "skill_id": "Q04",
+      "template_id": "ONE_STEP_ADD",
+      "on_correct": [
+        "Q05"
+      ],
+      "on_incorrect": [
+        "N03"
+      ]
+    },
+    {
+      "skill_id": "Q05",
+      "template_id": "ONE_STEP_MULTIPLY",
+      "on_correct": [
+        "Q06"
+      ],
+      "on_incorrect": [
+        "N06"
+      ]
+    },
+    {
+      "skill_id": "E06",
+      "template_id": "POSITIVE_DISTRIBUTION",
+      "on_correct": [
+        "Q07"
+      ],
+      "on_incorrect": []
+    },
+    {
+      "skill_id": "N03",
+      "template_id": "SIGNED_ADD",
+      "on_correct": [
+        "Q04"
+      ],
+      "on_incorrect": []
+    },
+    {
+      "skill_id": "N06",
+      "template_id": "SIGNED_DIVIDE",
+      "on_correct": [
+        "Q05"
+      ],
+      "on_incorrect": []
+    }
+  ],
+  "cycle_guard": "At most two probes per skill; no-progress/budget stops; a routing edge is not a curriculum prerequisite assertion."
+}

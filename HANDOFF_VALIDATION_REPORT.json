@@ -1,0 +1,52 @@
+{
+  "delivery_date": "2026-10-21",
+  "status": "PASS_FOR_DECLARED_HANDOFF_CHECKS",
+  "handoff_preflight": {
+    "status": "PASS",
+    "check_groups": 10,
+    "schemas_exercised": 8,
+    "template_examples": 10,
+    "goldens_mathematically_checked": 9,
+    "goldens_semantic_requirements_only": 4,
+    "preflight_mutation_guards": 9,
+    "future_app_scenarios": 53
+  },
+  "curriculum_validation": {
+    "skills": 205,
+    "original_ids_preserved": 185,
+    "new_ids": 20,
+    "role_counts": {
+      "FOUNDATION": 41,
+      "CORE": 148,
+      "EXTENSION": 16
+    },
+    "all_references_resolve": true,
+    "all_dependency_types_acyclic": true,
+    "anchor_additional_dependencies_acyclic": true,
+    "core_unconditional_extension_dependencies": 0,
+    "core_unit_assignments_complete": true,
+    "planning_weeks_including_flex": 36,
+    "unconditional_core_components_scheduled_no_later_than_targets": true,
+    "standard_codes_observed_in_official_sources": 126,
+    "source_count": 22,
+    "project_schema_keyword_subset": "PASS; not a general-purpose Draft 2020-12 conformance certification"
+  },
+  "curriculum_mathematical_scope": {
+    "explicit_checks": 151,
+    "anchor_items_checked": 132,
+    "total_anchor_items": 205,
+    "unit_checkpoints_checked": 10
+  },
+  "curriculum_corruption_guards": 8,
+  "canonical_curriculum_source_bytes_preserved": true,
+  "future_application_scenarios": 53,
+  "future_application_scenarios_executed": false,
+  "not_tested": [
+    "Application runtime: not implemented in this handoff",
+    "Production answer checker: not implemented in this handoff",
+    "Live provider call",
+    "Bluehost deployment",
+    "Real student learning outcomes"
+  ],
+  "php_in_delivery_environment": "Not installed; no PHP application execution is claimed."
+}

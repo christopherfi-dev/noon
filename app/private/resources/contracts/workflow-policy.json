@@ -1,0 +1,109 @@
+{
+  "policy_version": "1.0",
+  "states": [
+    "AWAITING_SESSION_CONTEXT",
+    "TARGET_SELECTION",
+    "STARTING_POINT_ASSESSMENT",
+    "STARTING_POINT_RECOMMENDATION",
+    "TARGET_ASSESSMENT",
+    "DIAGNOSTIC_PROBE",
+    "PREREQUISITE_CHECK",
+    "GUIDED_REPAIR",
+    "INDEPENDENT_CHECK",
+    "RETURN_TO_TARGET",
+    "TRANSFER_CHECK",
+    "REVIEW_CHECK",
+    "SESSION_REPORT",
+    "SESSION_CLOSED"
+  ],
+  "allowed_edges": {
+    "AWAITING_SESSION_CONTEXT": [
+      "TARGET_SELECTION",
+      "TARGET_ASSESSMENT"
+    ],
+    "TARGET_SELECTION": [
+      "STARTING_POINT_ASSESSMENT",
+      "TARGET_ASSESSMENT"
+    ],
+    "STARTING_POINT_ASSESSMENT": [
+      "STARTING_POINT_RECOMMENDATION",
+      "TARGET_SELECTION"
+    ],
+    "STARTING_POINT_RECOMMENDATION": [
+      "TARGET_ASSESSMENT",
+      "TARGET_SELECTION"
+    ],
+    "TARGET_ASSESSMENT": [
+      "DIAGNOSTIC_PROBE",
+      "TRANSFER_CHECK"
+    ],
+    "DIAGNOSTIC_PROBE": [
+      "PREREQUISITE_CHECK",
+      "GUIDED_REPAIR",
+      "TARGET_ASSESSMENT"
+    ],
+    "PREREQUISITE_CHECK": [
+      "GUIDED_REPAIR",
+      "RETURN_TO_TARGET"
+    ],
+    "GUIDED_REPAIR": [
+      "INDEPENDENT_CHECK"
+    ],
+    "INDEPENDENT_CHECK": [
+      "DIAGNOSTIC_PROBE",
+      "GUIDED_REPAIR",
+      "RETURN_TO_TARGET"
+    ],
+    "RETURN_TO_TARGET": [
+      "DIAGNOSTIC_PROBE",
+      "PREREQUISITE_CHECK",
+      "TRANSFER_CHECK"
+    ],
+    "TRANSFER_CHECK": [
+      "DIAGNOSTIC_PROBE",
+      "SESSION_REPORT"
+    ],
+    "REVIEW_CHECK": [
+      "DIAGNOSTIC_PROBE",
+      "SESSION_REPORT"
+    ],
+    "SESSION_REPORT": [
+      "SESSION_CLOSED"
+    ],
+    "SESSION_CLOSED": []
+  },
+  "stay_in_state_allowed": true,
+  "end_session_from_any_active_state": true,
+  "explicit_target_change_from_active_states": [
+    "TARGET_SELECTION",
+    "TARGET_ASSESSMENT"
+  ],
+  "explicit_resume_closed_to": [
+    "TARGET_SELECTION",
+    "TARGET_ASSESSMENT",
+    "PREREQUISITE_CHECK",
+    "GUIDED_REPAIR",
+    "INDEPENDENT_CHECK",
+    "RETURN_TO_TARGET",
+    "REVIEW_CHECK"
+  ],
+  "hold_is_overlay": true,
+  "preconditions": {
+    "TARGET_ASSESSMENT": "Confirmed canonical target; required resources/capability accepted; no implied placement passes.",
+    "PREREQUISITE_CHECK": "Declared relevant edge, current observations and retained parent frame.",
+    "GUIDED_REPAIR": "Supported repair point or explicit bounded instructional trial; no fabricated cause.",
+    "INDEPENDENT_CHECK": "Fresh accepted item and faded support; independent eligibility checked by host.",
+    "RETURN_TO_TARGET": "Retained frame; relevant immediate repair criterion or evidence-supported resumption; parent is retested.",
+    "TRANSFER_CHECK": "Original target declared immediate criterion satisfied; required components included.",
+    "REVIEW_CHECK": "Explicit trusted review event, retained evidence and actual timing.",
+    "SESSION_CLOSED": "Accepted partial/full report; no pending provider can reopen."
+  },
+  "evidence_promotion": {
+    "independent_correct_required": 3,
+    "variation_required": true,
+    "whole_skill_requires_all_declared_components": true,
+    "orientation_counts_toward_streak": false,
+    "assisted_counts_toward_streak": false,
+    "durable_mastery_from_streak": false
+  }
+}

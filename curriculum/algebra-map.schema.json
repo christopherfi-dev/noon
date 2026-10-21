@@ -1,0 +1,561 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ace:algebra-curriculum:1.0",
+  "title": "ACE algebra curriculum map",
+  "description": "Resource schema, not a learner-response schema or a certification of curriculum validity.",
+  "type": "object",
+  "required": [
+    "metadata",
+    "reference_profile",
+    "policies",
+    "sources",
+    "domains",
+    "units",
+    "flex_review_weeks",
+    "skills"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "curriculum_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "curriculum_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "schema_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "architecture_compatibility": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "research_date": {
+          "type": "string",
+          "minLength": 1
+        },
+        "language": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "review_status": {
+          "enum": [
+            "RESEARCH_INFORMED_AUTHOR_DRAFT",
+            "EXTERNALLY_REVIEWED",
+            "EMPIRICALLY_CALIBRATED"
+          ]
+        },
+        "original_skill_ids_preserved": {
+          "type": "integer"
+        },
+        "new_skill_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][0-9]{2}$"
+          },
+          "uniqueItems": true
+        },
+        "skill_count": {
+          "type": "integer"
+        },
+        "domain_count": {
+          "type": "integer"
+        },
+        "role_counts": {
+          "type": "object"
+        },
+        "coverage_claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "not_claimed": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "prerequisite_graph_status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runtime_warning": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "curriculum_id",
+        "curriculum_version",
+        "schema_version",
+        "architecture_compatibility",
+        "title",
+        "research_date",
+        "language",
+        "scope",
+        "review_status",
+        "original_skill_ids_preserved",
+        "new_skill_ids",
+        "skill_count",
+        "domain_count",
+        "role_counts",
+        "coverage_claim",
+        "not_claimed",
+        "prerequisite_graph_status",
+        "runtime_warning"
+      ],
+      "additionalProperties": false
+    },
+    "reference_profile": {
+      "type": "object"
+    },
+    "policies": {
+      "type": "object"
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "source_id",
+          "title",
+          "url",
+          "publisher",
+          "accessed",
+          "source_type",
+          "use"
+        ]
+      }
+    },
+    "domains": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "domain_id",
+          "name"
+        ]
+      }
+    },
+    "units": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "unit_id",
+          "title",
+          "planning_weeks",
+          "primary_skill_ids",
+          "assessment_blueprint"
+        ]
+      }
+    },
+    "flex_review_weeks": {
+      "type": "integer"
+    },
+    "skills": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/skill"
+      }
+    }
+  },
+  "$defs": {
+    "skill": {
+      "type": "object",
+      "properties": {
+        "skill_id": {
+          "type": "string",
+          "pattern": "^[A-Z][0-9]{2}$"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "domain_id": {
+          "enum": [
+            "N",
+            "A",
+            "E",
+            "Q",
+            "I",
+            "C",
+            "L",
+            "S",
+            "X",
+            "P",
+            "F",
+            "U",
+            "G",
+            "R",
+            "D",
+            "M",
+            "H"
+          ]
+        },
+        "domain_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "curricular_role": {
+          "enum": [
+            "FOUNDATION",
+            "CORE",
+            "EXTENSION"
+          ]
+        },
+        "required_in_reference_profile": {
+          "type": "boolean"
+        },
+        "first_instructional_unit": {
+          "enum": [
+            "ON_DEMAND",
+            "OPTIONAL",
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+            "07",
+            "08",
+            "09",
+            "10"
+          ]
+        },
+        "added_in_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "identity_note": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observable_performance": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "object",
+          "properties": {
+            "included": {
+              "type": "string",
+              "minLength": 1
+            },
+            "guardrail": {
+              "type": "string",
+              "minLength": 1
+            },
+            "language_level": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "included",
+            "guardrail",
+            "language_level"
+          ],
+          "additionalProperties": false
+        },
+        "prerequisites": {
+          "type": "object",
+          "properties": {
+            "all_of": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Z][0-9]{2}$"
+              },
+              "uniqueItems": true
+            },
+            "alternative_paths": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "all_of": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[A-Z][0-9]{2}$"
+                    },
+                    "uniqueItems": true
+                  }
+                },
+                "required": [
+                  "path_id",
+                  "all_of"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "conditional": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "when": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "requires": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[A-Z][0-9]{2}$"
+                    },
+                    "uniqueItems": true
+                  },
+                  "rationale": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "status": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "when",
+                  "requires",
+                  "rationale",
+                  "status"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "edge_status": {
+              "type": "string",
+              "minLength": 1
+            },
+            "routing_semantics": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "all_of",
+            "alternative_paths",
+            "conditional",
+            "edge_status",
+            "routing_semantics"
+          ],
+          "additionalProperties": false
+        },
+        "out_of_scope_redirects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "when": {
+                "type": "string",
+                "minLength": 1
+              },
+              "target_skill_id": {
+                "type": "string",
+                "pattern": "^[A-Z][0-9]{2}$"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "when",
+              "target_skill_id",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "alignment": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "standard": {
+                "type": "string",
+                "minLength": 1
+              },
+              "relation": {
+                "enum": [
+                  "PREREQUISITE_COMPONENT",
+                  "CONTRIBUTION",
+                  "RELATED_EXTENSION"
+                ]
+              },
+              "source_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scope_note": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "standard",
+              "relation",
+              "source_id",
+              "scope_note"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "assessment": {
+          "type": "object",
+          "required": [
+            "required_variants",
+            "constructed_performance",
+            "conceptual_evidence",
+            "transfer_requirement",
+            "accepted_response_types",
+            "required_checker_capabilities",
+            "progress_policy_ref",
+            "anchor_item"
+          ],
+          "properties": {
+            "anchor_item": {
+              "type": "object",
+              "required": [
+                "item_id",
+                "primary_skill_id",
+                "role",
+                "prompt",
+                "response_type",
+                "expected_answer",
+                "additional_prerequisites_for_this_anchor",
+                "answer_review_status",
+                "coverage_limit"
+              ],
+              "properties": {
+                "item_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "primary_skill_id": {
+                  "type": "string",
+                  "pattern": "^[A-Z][0-9]{2}$"
+                },
+                "prompt": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "expected_answer": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object"
+                    }
+                  ]
+                },
+                "additional_prerequisites_for_this_anchor": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[A-Z][0-9]{2}$"
+                  },
+                  "uniqueItems": true
+                }
+              }
+            }
+          }
+        },
+        "diagnostic_guidance": {
+          "type": "object",
+          "required": [
+            "status",
+            "probe_focus",
+            "interpretation_rule"
+          ]
+        },
+        "instructional_guidance": {
+          "type": "object",
+          "required": [
+            "bridge",
+            "method_freedom",
+            "repair_return",
+            "research_basis",
+            "status"
+          ]
+        },
+        "implementation_requirements": {
+          "type": "object",
+          "properties": {
+            "graph_evidence_required": {
+              "type": "boolean"
+            },
+            "reasoning_review_required": {
+              "type": "boolean"
+            },
+            "production_scoring_implemented": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "graph_evidence_required",
+            "reasoning_review_required",
+            "production_scoring_implemented"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "skill_id",
+        "statement",
+        "domain_id",
+        "domain_name",
+        "curricular_role",
+        "required_in_reference_profile",
+        "first_instructional_unit",
+        "added_in_version",
+        "identity_note",
+        "observable_performance",
+        "scope",
+        "prerequisites",
+        "out_of_scope_redirects",
+        "alignment",
+        "assessment",
+        "diagnostic_guidance",
+        "instructional_guidance",
+        "implementation_requirements"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

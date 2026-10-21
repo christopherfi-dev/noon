@@ -1,0 +1,27 @@
+{
+    "name": "noon/algebra-engine",
+    "description": "Algebra Engine beta: PHP host enforcing the Algebra Constraint Architecture v1.2.",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.3",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "ext-pdo_sqlite": "*",
+        "opis/json-schema": "2.6.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "11.5.*"
+    },
+    "autoload": {
+        "psr-4": { "AlgebraEngine\\": "private/src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "AlgebraEngine\\Tests\\": "tests/" }
+    },
+    "config": {
+        "vendor-dir": "private/vendor",
+        "sort-packages": true,
+        "platform": { "php": "8.3.6" }
+    }
+}

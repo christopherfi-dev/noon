@@ -1,0 +1,134 @@
+{
+  "contract_version": "1.0",
+  "item_reference_rule": "Both item fields required non-null for item actions; both null for other actions.",
+  "actions": [
+    {
+      "action": "SELECT_TARGET",
+      "required_payload": [
+        "target_skill_id"
+      ],
+      "allowed_payload": [
+        "target_skill_id"
+      ],
+      "requires_active_item": false
+    },
+    {
+      "action": "SUGGEST_TARGET",
+      "required_payload": [
+        "text"
+      ],
+      "allowed_payload": [
+        "text"
+      ],
+      "requires_active_item": false
+    },
+    {
+      "action": "CONFIRM_TARGET",
+      "required_payload": [
+        "suggestion_id",
+        "target_skill_id"
+      ],
+      "allowed_payload": [
+        "suggestion_id",
+        "target_skill_id"
+      ],
+      "requires_active_item": false
+    },
+    {
+      "action": "START_ORIENTATION",
+      "required_payload": [],
+      "allowed_payload": [
+        "text"
+      ],
+      "requires_active_item": false
+    },
+    {
+      "action": "ACCEPT_RECOMMENDATION",
+      "required_payload": [
+        "recommendation_id"
+      ],
+      "allowed_payload": [
+        "recommendation_id"
+      ],
+      "requires_active_item": false
+    },
+    {
+      "action": "SUBMIT_RESPONSE",
+      "required_payload": [
+        "text"
+      ],
+      "allowed_payload": [
+        "text",
+        "working"
+      ],
+      "requires_active_item": true
+    },
+    {
+      "action": "REQUEST_HINT",
+      "required_payload": [],
+      "allowed_payload": [],
+      "requires_active_item": true
+    },
+    {
+      "action": "REQUEST_EXPLANATION",
+      "required_payload": [],
+      "allowed_payload": [],
+      "requires_active_item": true
+    },
+    {
+      "action": "CLARIFY_RESPONSE",
+      "required_payload": [
+        "text"
+      ],
+      "allowed_payload": [
+        "text",
+        "working"
+      ],
+      "requires_active_item": true
+    },
+    {
+      "action": "SKIP_ITEM",
+      "required_payload": [],
+      "allowed_payload": [],
+      "requires_active_item": true
+    },
+    {
+      "action": "NOT_LEARNED",
+      "required_payload": [],
+      "allowed_payload": [],
+      "requires_active_item": true
+    },
+    {
+      "action": "CHANGE_TARGET",
+      "required_payload": [
+        "target_skill_id"
+      ],
+      "allowed_payload": [
+        "target_skill_id"
+      ],
+      "requires_active_item": false
+    },
+    {
+      "action": "END_SESSION",
+      "required_payload": [],
+      "allowed_payload": [],
+      "requires_active_item": false
+    },
+    {
+      "action": "CONTINUE_SESSION",
+      "required_payload": [
+        "continue_minutes"
+      ],
+      "allowed_payload": [
+        "continue_minutes"
+      ],
+      "requires_active_item": false
+    },
+    {
+      "action": "RESUME_SESSION",
+      "required_payload": [],
+      "allowed_payload": [],
+      "requires_active_item": false
+    }
+  ]
+}

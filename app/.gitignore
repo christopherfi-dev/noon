@@ -1,0 +1,6 @@
+private/vendor/
+private/var/*
+!private/var/.htaccess
+!private/var/README.md
+private/config.php
+node_modules/

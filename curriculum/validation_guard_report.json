@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "mutation_guard_count": 8,
+  "cases": [
+    {
+      "guard": "unknown_prerequisite_rejected",
+      "status": "PASS",
+      "outcome": "Deliberately corrupted curriculum was rejected at the expected boundary."
+    },
+    {
+      "guard": "dependency_cycle_rejected",
+      "status": "PASS",
+      "outcome": "Deliberately corrupted curriculum was rejected at the expected boundary."
+    },
+    {
+      "guard": "wrong_mathematical_answer_rejected",
+      "status": "PASS",
+      "outcome": "Deliberately corrupted curriculum was rejected at the expected boundary."
+    },
+    {
+      "guard": "silent_original_identity_change_rejected",
+      "status": "PASS",
+      "outcome": "Deliberately corrupted curriculum was rejected at the expected boundary."
+    },
+    {
+      "guard": "optional_extension_core_gate_rejected",
+      "status": "PASS",
+      "outcome": "Deliberately corrupted curriculum was rejected at the expected boundary."
+    },
+    {
+      "guard": "stale_graph_export_rejected",
+      "status": "PASS",
+      "outcome": "Deliberately corrupted curriculum was rejected at the expected boundary."
+    },
+    {
+      "guard": "unobserved_standard_code_rejected",
+      "status": "PASS",
+      "outcome": "Deliberately corrupted curriculum was rejected at the expected boundary."
+    },
+    {
+      "guard": "wrong_unit_checkpoint_key_rejected",
+      "status": "PASS",
+      "outcome": "Deliberately corrupted curriculum was rejected at the expected boundary."
+    }
+  ],
+  "scope": "Tests data-integrity and mathematical-key rejection paths, not learner outcomes or general grading correctness."
+}

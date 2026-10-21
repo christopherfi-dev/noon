@@ -1,0 +1,2447 @@
+{
+  "mapping_status": "AUTHOR_MAPPED_SCOPED_CONTRIBUTIONS_NOT_EXTERNAL_CERTIFICATION",
+  "standards": [
+    {
+      "standard": "4.NBT.A.1",
+      "source_id": "CCSS-4-NBT",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N20",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "4.NBT.B.4",
+      "source_id": "CCSS-4-NBT",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N17",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "4.NBT.B.5",
+      "source_id": "CCSS-4-NBT",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N18",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "4.NBT.B.6",
+      "source_id": "CCSS-4-NBT",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N18",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "4.NF.A.1",
+      "source_id": "CCSS-4-NF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N08",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "4.NF.B.3",
+      "source_id": "CCSS-4-NF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N19",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "6.EE.A.1",
+      "source_id": "CCSS-6-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N07",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "X01",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "6.EE.A.2",
+      "source_id": "CCSS-6-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "A05",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "6.EE.A.2.a",
+      "source_id": "CCSS-6-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "A08",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "6.EE.A.2.b",
+      "source_id": "CCSS-6-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "A02",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "A03",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "A04",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "A07",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "E01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "6.EE.A.2.c",
+      "source_id": "CCSS-6-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N07",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "A09",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "6.EE.A.3",
+      "source_id": "CCSS-6-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "E02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "E05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "E06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "E10",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "6.EE.A.4",
+      "source_id": "CCSS-6-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "E11",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "6.EE.B.5",
+      "source_id": "CCSS-6-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "A06",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "Q01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "6.EE.B.6",
+      "source_id": "CCSS-6-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "A01",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "6.EE.B.7",
+      "source_id": "CCSS-6-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "Q04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "6.EE.B.8",
+      "source_id": "CCSS-6-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "I01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "I02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "6.EE.C.9",
+      "source_id": "CCSS-6-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "C03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "C04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "6.NS.A.1",
+      "source_id": "CCSS-6-NS",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N09",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "N10",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "6.NS.B.2",
+      "source_id": "CCSS-6-NS",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N18",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "6.NS.B.3",
+      "source_id": "CCSS-6-NS",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N11",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "N20",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "6.NS.C.6.a",
+      "source_id": "CCSS-6-NS",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N02",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "6.NS.C.6.c",
+      "source_id": "CCSS-6-NS",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "C01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "C02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "6.NS.C.7.a",
+      "source_id": "CCSS-6-NS",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N01",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "6.NS.C.7.b",
+      "source_id": "CCSS-6-NS",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N13",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "6.NS.C.7.c",
+      "source_id": "CCSS-6-NS",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N02",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "6.RP.A.1",
+      "source_id": "CCSS-6-RP",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N14",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "6.RP.A.2",
+      "source_id": "CCSS-6-RP",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N14",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "6.RP.A.3.c",
+      "source_id": "CCSS-6-RP",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N12",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "7.EE.A.1",
+      "source_id": "CCSS-7-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "E02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "E03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "E04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "E06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "E07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "E08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "E09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "7.EE.B.4.a",
+      "source_id": "CCSS-7-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "Q04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "7.EE.B.4.b",
+      "source_id": "CCSS-7-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "I02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "I03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "I04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "7.NS.A.1",
+      "source_id": "CCSS-7-NS",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N09",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "7.NS.A.1.b",
+      "source_id": "CCSS-7-NS",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N03",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "7.NS.A.1.c",
+      "source_id": "CCSS-7-NS",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N04",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "7.NS.A.2",
+      "source_id": "CCSS-7-NS",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N10",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "7.NS.A.2.a",
+      "source_id": "CCSS-7-NS",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N05",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "7.NS.A.2.b",
+      "source_id": "CCSS-7-NS",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N06",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "7.NS.A.3",
+      "source_id": "CCSS-7-NS",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N11",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "N13",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "7.RP.A.2.c",
+      "source_id": "CCSS-7-RP",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N16",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "8.EE.A.1",
+      "source_id": "CCSS-8-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "X01",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "X02",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "X03",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "X04",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "X05",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "X06",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "X07",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "X08",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "8.EE.A.2",
+      "source_id": "CCSS-8-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "N15",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "X10",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "X11",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "U07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "R02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "8.EE.A.3",
+      "source_id": "CCSS-8-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "X09",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "8.EE.A.4",
+      "source_id": "CCSS-8-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "X09",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        }
+      ]
+    },
+    {
+      "standard": "8.EE.B.6",
+      "source_id": "CCSS-8-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "L02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "L03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "8.EE.C.7",
+      "source_id": "CCSS-8-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "Q08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "8.EE.C.7.a",
+      "source_id": "CCSS-8-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "Q12",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "8.EE.C.7.b",
+      "source_id": "CCSS-8-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "Q09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q10",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "8.EE.C.8.a",
+      "source_id": "CCSS-8-EE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "S01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "8.F.A.1",
+      "source_id": "CCSS-8-F",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "C04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "C05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "8.F.A.2",
+      "source_id": "CCSS-8-F",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "C10",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "8.F.A.3",
+      "source_id": "CCSS-8-F",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "L01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "L14",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "8.F.B.4",
+      "source_id": "CCSS-8-F",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "L04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "L06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "L10",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.APR.A.1",
+      "source_id": "CCSS-HSA-APR",
+      "scope_note": "Core operations and closure reasoning; longer products are optional P07.",
+      "contributions": [
+        {
+          "skill_id": "P01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "P02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "P03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "P04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "P05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "P06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "P07",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        },
+        {
+          "skill_id": "P08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "P09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "P10",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.APR.B.2",
+      "source_id": "CCSS-HSA-APR",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "H05",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.APR.D.6",
+      "source_id": "CCSS-HSA-APR",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "H05",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.APR.D.7",
+      "source_id": "CCSS-HSA-APR",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "R05",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.CED.A.1",
+      "source_id": "CCSS-HSA-CED",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "A08",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "I08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "M02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.CED.A.2",
+      "source_id": "CCSS-HSA-CED",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "M02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "M06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.CED.A.3",
+      "source_id": "CCSS-HSA-CED",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "I08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "S07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "S08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "M04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "M05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.CED.A.4",
+      "source_id": "CCSS-HSA-CED",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "Q13",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "L09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.REI.A.1",
+      "source_id": "CCSS-HSA-REI",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "A06",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "E12",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "M05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "M07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.REI.A.2",
+      "source_id": "CCSS-HSA-REI",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "R04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "R06",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        },
+        {
+          "skill_id": "R07",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.REI.B.3",
+      "source_id": "CCSS-HSA-REI",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "Q06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q10",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q11",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q12",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "Q14",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "I03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "I04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "I05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "I06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "I07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "H01",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        },
+        {
+          "skill_id": "H02",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.REI.B.4",
+      "source_id": "CCSS-HSA-REI",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "U02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U15",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.REI.B.4.a",
+      "source_id": "CCSS-HSA-REI",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "U10",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U11",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U16",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.REI.B.4.b",
+      "source_id": "CCSS-HSA-REI",
+      "scope_note": "Core profile is real-root work. Complex-root construction is optional H07.",
+      "contributions": [
+        {
+          "skill_id": "F09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U12",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U13",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "R02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "H07",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.REI.C.5",
+      "source_id": "CCSS-HSA-REI",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "S04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "S05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "M07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.REI.C.6",
+      "source_id": "CCSS-HSA-REI",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "S01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "S02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "S03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "S04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "S05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "S06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "S07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.REI.C.7",
+      "source_id": "CCSS-HSA-REI",
+      "scope_note": "Core S09 is one line and one quadratic. H10 is a related broader extension, not an alias.",
+      "contributions": [
+        {
+          "skill_id": "S09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "H10",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.REI.D.10",
+      "source_id": "CCSS-HSA-REI",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "L11",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U14",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.REI.D.11",
+      "source_id": "CCSS-HSA-REI",
+      "scope_note": "Core scope uses linear, quadratic and exponential comparisons/intersections; rational, logarithmic and other advanced families are not all required.",
+      "contributions": [
+        {
+          "skill_id": "S09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "G07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.REI.D.12",
+      "source_id": "CCSS-HSA-REI",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "I09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "S08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.SSE.A.1.a",
+      "source_id": "CCSS-HSA-SSE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "A02",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "A03",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "A04",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "A05",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "E01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "X02",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "P02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.SSE.A.1.b",
+      "source_id": "CCSS-HSA-SSE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "A04",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "G02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.SSE.A.2",
+      "source_id": "CCSS-HSA-SSE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "E04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "E05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "E07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "E09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "E10",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "E11",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "E12",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "P08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "F01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "F02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "F06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "F07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "F08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.SSE.B.3",
+      "source_id": "CCSS-HSA-SSE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "U06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.SSE.B.3.a",
+      "source_id": "CCSS-HSA-SSE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "F03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "F04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "F05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "F06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "F07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.SSE.B.3.b",
+      "source_id": "CCSS-HSA-SSE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "U10",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSA.SSE.B.3.c",
+      "source_id": "CCSS-HSA-SSE",
+      "scope_note": "Core integer time-scale cases; subperiod/root variants require the optional rational-exponent bridge.",
+      "contributions": [
+        {
+          "skill_id": "G12",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.BF.A.1.a",
+      "source_id": "CCSS-HSF-BF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "G06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "M02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.BF.A.1.b",
+      "source_id": "CCSS-HSF-BF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "C19",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.BF.A.1.c",
+      "source_id": "CCSS-HSF-BF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "H03",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.BF.A.2",
+      "source_id": "CCSS-HSF-BF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "G09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "G10",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.BF.B.3",
+      "source_id": "CCSS-HSF-BF",
+      "scope_note": "Core basic familiar-function transformations; broader input scaling and symmetry are extended in H04.",
+      "contributions": [
+        {
+          "skill_id": "C15",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "H04",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.BF.B.4",
+      "source_id": "CCSS-HSF-BF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "H03",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.BF.B.4.a",
+      "source_id": "CCSS-HSF-BF",
+      "scope_note": "Core simple linear inverses and inverse meaning; broader composition and nonlinear inverses remain H03.",
+      "contributions": [
+        {
+          "skill_id": "C16",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.BF.B.5",
+      "source_id": "CCSS-HSF-BF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "H08",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.IF.A.1",
+      "source_id": "CCSS-HSF-IF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "C05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "C06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.IF.A.2",
+      "source_id": "CCSS-HSF-IF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "C06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "C07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "G03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.IF.A.3",
+      "source_id": "CCSS-HSF-IF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "G09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "G10",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.IF.B.4",
+      "source_id": "CCSS-HSF-IF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "C09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "C20",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "L04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U15",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "M03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "M08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.IF.B.5",
+      "source_id": "CCSS-HSF-IF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "C08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "M04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.IF.B.6",
+      "source_id": "CCSS-HSF-IF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "C14",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "L02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "L03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.IF.C.7.a",
+      "source_id": "CCSS-HSF-IF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "L05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "L09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "L11",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.IF.C.7.b",
+      "source_id": "CCSS-HSF-IF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "C11",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "C12",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "C13",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "C18",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "H02",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.IF.C.7.d",
+      "source_id": "CCSS-HSF-IF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "H09",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.IF.C.7.e",
+      "source_id": "CCSS-HSF-IF",
+      "scope_note": "Exponential portion only in the core. Logarithmic and trigonometric graphing are not claimed.",
+      "contributions": [
+        {
+          "skill_id": "G04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.IF.C.8.a",
+      "source_id": "CCSS-HSF-IF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "U06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "U14",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.IF.C.8.b",
+      "source_id": "CCSS-HSF-IF",
+      "scope_note": "Core integer time-scale cases; rational-exponent variants are optional H06/G12 work.",
+      "contributions": [
+        {
+          "skill_id": "G12",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.IF.C.9",
+      "source_id": "CCSS-HSF-IF",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "C10",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "C17",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "L12",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "G07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "M06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.LE.A.1",
+      "source_id": "CCSS-HSF-LE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "L14",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "G07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "M03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.LE.A.1.a",
+      "source_id": "CCSS-HSF-LE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "G01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "G13",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.LE.A.1.b",
+      "source_id": "CCSS-HSF-LE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "L01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "L10",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.LE.A.1.c",
+      "source_id": "CCSS-HSF-LE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "G01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "G05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.LE.A.2",
+      "source_id": "CCSS-HSF-LE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "L06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "L07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "L08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "G02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "G06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "M03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.LE.A.3",
+      "source_id": "CCSS-HSF-LE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "G11",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.LE.A.4",
+      "source_id": "CCSS-HSF-LE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "G08",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        },
+        {
+          "skill_id": "H08",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSF.LE.B.5",
+      "source_id": "CCSS-HSF-LE",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "L13",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "G02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "G05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSN.Q.A.1",
+      "source_id": "CCSS-HSN-Q",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "A10",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "M01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSN.Q.A.2",
+      "source_id": "CCSS-HSN-Q",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "A10",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "M01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "M08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSN.Q.A.3",
+      "source_id": "CCSS-HSN-Q",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "M09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSN.RN.A.1",
+      "source_id": "CCSS-HSN-RN",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "H06",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSN.RN.A.2",
+      "source_id": "CCSS-HSN-RN",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "R03",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        },
+        {
+          "skill_id": "H06",
+          "role": "EXTENSION",
+          "relation": "RELATED_EXTENSION"
+        }
+      ]
+    },
+    {
+      "standard": "HSN.RN.B.3",
+      "source_id": "CCSS-HSN-RN",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "X10",
+          "role": "FOUNDATION",
+          "relation": "PREREQUISITE_COMPONENT"
+        },
+        {
+          "skill_id": "R01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "R08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSS.ID.A.1",
+      "source_id": "CCSS-HSS-ID",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "D01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "D02",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSS.ID.A.2",
+      "source_id": "CCSS-HSS-ID",
+      "scope_note": "Population-SD interpretation/technology and the declared quartile convention; no normal-curve inference.",
+      "contributions": [
+        {
+          "skill_id": "D03",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "D04",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "D05",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSS.ID.A.3",
+      "source_id": "CCSS-HSS-ID",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "D06",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSS.ID.B.5",
+      "source_id": "CCSS-HSS-ID",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "D01",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "D11",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSS.ID.B.6",
+      "source_id": "CCSS-HSS-ID",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "D07",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSS.ID.B.6.a",
+      "source_id": "CCSS-HSS-ID",
+      "scope_note": "D08 supplies linear-fit work; G06 and M03 contribute model-family choice and exponential construction.",
+      "contributions": [
+        {
+          "skill_id": "D08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSS.ID.B.6.b",
+      "source_id": "CCSS-HSS-ID",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "D09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSS.ID.B.6.c",
+      "source_id": "CCSS-HSS-ID",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "D08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSS.ID.C.7",
+      "source_id": "CCSS-HSS-ID",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "L13",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        },
+        {
+          "skill_id": "D08",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSS.ID.C.8",
+      "source_id": "CCSS-HSS-ID",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "D09",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    },
+    {
+      "standard": "HSS.ID.C.9",
+      "source_id": "CCSS-HSS-ID",
+      "scope_note": "Use each linked node's stated scope; a node contributes evidence and does not automatically establish full-standard proficiency.",
+      "contributions": [
+        {
+          "skill_id": "D10",
+          "role": "CORE",
+          "relation": "CONTRIBUTION"
+        }
+      ]
+    }
+  ]
+}

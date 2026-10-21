@@ -1,0 +1,36 @@
+{
+  "report_id": "example-report-001",
+  "session_id": "example-session-001",
+  "state_revision": 3,
+  "architecture_version": "1.1",
+  "curriculum_version": "1.1.0",
+  "status": "INTERRUPTED",
+  "targets_attempted": [
+    "Q07"
+  ],
+  "independent_evidence": [
+    {
+      "statement": "Correct independent numeric solution on one Q07 item.",
+      "skill_id": "Q07",
+      "component_id": "numeric_solution",
+      "event_ids": [
+        "example-response-001"
+      ],
+      "review_scope": "Deterministic numeric component only."
+    }
+  ],
+  "guided_work": [],
+  "repairs_and_returns": [],
+  "immediate_criteria": [],
+  "transfer_evidence": [],
+  "retention_evidence": [],
+  "hypotheses": [],
+  "unresolved_or_untested": [
+    "Further independent variants and conceptual requirements untested."
+  ],
+  "next_evidence_needed": [
+    "Fresh Q07 work and required explanation/transfer components."
+  ],
+  "policy_note": "Three varied independent successes are an immediate criterion; no durable mastery claim.",
+  "created_at": "2026-10-21T02:02:00Z"
+}

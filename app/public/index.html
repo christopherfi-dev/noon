@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'">
+<meta name="referrer" content="same-origin">
+<title>Algebra Engine (beta)</title>
+<link rel="stylesheet" href="assets/app.css">
+<script src="assets/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap">
+    <p class="brand">Algebra Engine <span class="brand-beta">beta</span></p>
+    <p class="mock-badge" data-testid="mock-badge" hidden>Simulated tutor (mock mode)</p>
+  </div>
+</header>
+<main id="main" class="wrap" tabindex="-1">
+  <div id="app" aria-busy="true">
+    <p class="loading">Loading…</p>
+    <noscript><p>This tutor needs JavaScript to run.</p></noscript>
+  </div>
+  <p id="status" class="status" role="status" aria-live="polite" data-testid="status"></p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="privacy-note">Answers and working are kept on this server only for this browser session, to continue and summarise your work. No account or name is needed.</p>
+    <button type="button" class="link-button" id="forget" data-testid="forget">Forget this session</button>
+  </div>
+</footer>
+</body>
+</html>

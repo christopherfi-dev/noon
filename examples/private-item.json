@@ -1,0 +1,44 @@
+{
+  "item_id": "example-item-q07-001",
+  "item_version": 1,
+  "curriculum_id": "ACE-ALGEBRA1",
+  "curriculum_version": "1.1.0",
+  "skill_id": "Q07",
+  "role": "TARGET",
+  "component_id": "numeric_solution",
+  "variant_id": "grouped_one_side_integer",
+  "prompt": "Solve 3(x - 2) = 15. Give the value of x.",
+  "response_type": "scalar",
+  "template_id": "GROUPED_LINEAR",
+  "parameters": {
+    "a": 3,
+    "b": -2,
+    "c": 15
+  },
+  "mathematical_objects": {
+    "equation": "3*(x-2)=15",
+    "variable": "x"
+  },
+  "domain": {
+    "number_system": "REAL",
+    "restrictions": []
+  },
+  "answer_spec": {
+    "kind": "exact_rational",
+    "expected": "7",
+    "requested_form": "value_of_x",
+    "units": null,
+    "tolerance": null,
+    "rubric": []
+  },
+  "checking": {
+    "requested_route": "DETERMINISTIC_TEMPLATE",
+    "required_capabilities": [
+      "exact_numeric_or_declared_tolerance"
+    ],
+    "scope": "Numeric solution only; conceptual reasoning not established."
+  },
+  "representation_requirements": [],
+  "support_already_supplied": [],
+  "independent_eligible_proposal": true
+}

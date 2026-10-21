@@ -1,0 +1,11 @@
+{
+  "idempotency_key": "example-request-00000001",
+  "expected_revision": 2,
+  "action": "SUBMIT_RESPONSE",
+  "item_id": "example-item-q07-001",
+  "item_version": 1,
+  "payload": {
+    "text": "7",
+    "working": ""
+  }
+}

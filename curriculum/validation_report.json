@@ -1,0 +1,1128 @@
+{
+  "curriculum_version": "1.1.0",
+  "status": "PASS",
+  "structural_checks": {
+    "skills": 205,
+    "original_ids_preserved": 185,
+    "new_ids": 20,
+    "role_counts": {
+      "FOUNDATION": 41,
+      "CORE": 148,
+      "EXTENSION": 16
+    },
+    "all_references_resolve": true,
+    "all_dependency_types_acyclic": true,
+    "anchor_additional_dependencies_acyclic": true,
+    "core_unconditional_extension_dependencies": 0,
+    "core_unit_assignments_complete": true,
+    "planning_weeks_including_flex": 36,
+    "unconditional_core_components_scheduled_no_later_than_targets": true,
+    "standard_codes_observed_in_official_sources": 126,
+    "source_count": 22,
+    "project_schema_keyword_subset": "PASS; not a general-purpose Draft 2020-12 conformance certification"
+  },
+  "mathematical_checks": {
+    "check_count": 151,
+    "anchor_items_with_at_least_one_automated_math_check": 132,
+    "anchors_without_automated_math_check": [
+      "N19",
+      "A01",
+      "A02",
+      "A03",
+      "A04",
+      "A05",
+      "A06",
+      "A07",
+      "A08",
+      "A10",
+      "E01",
+      "E05",
+      "E11",
+      "E12",
+      "Q01",
+      "Q02",
+      "Q03",
+      "Q14",
+      "I01",
+      "I08",
+      "I09",
+      "C01",
+      "C02",
+      "C03",
+      "C05",
+      "C06",
+      "C08",
+      "C09",
+      "C10",
+      "C12",
+      "C13",
+      "C15",
+      "C17",
+      "C18",
+      "L01",
+      "L03",
+      "L05",
+      "L10",
+      "L11",
+      "L13",
+      "L14",
+      "S01",
+      "S06",
+      "S08",
+      "X02",
+      "X07",
+      "X10",
+      "P01",
+      "P02",
+      "P10",
+      "F08",
+      "U01",
+      "U06",
+      "G01",
+      "G02",
+      "G04",
+      "G06",
+      "G09",
+      "G10",
+      "R01",
+      "R08",
+      "D01",
+      "D02",
+      "D05",
+      "D07",
+      "D10",
+      "M01",
+      "M02",
+      "M03",
+      "M04",
+      "M05",
+      "M07",
+      "M08"
+    ],
+    "scope": "Exact explicit mathematical obligations for the authored anchors. Passing does not independently establish wording alignment, diagnostic validity, a graph drawing, reasoning quality or classroom effectiveness.",
+    "records": [
+      {
+        "skill_id": "N01",
+        "check": "EXACT_ORDER",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N02",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N02",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N03",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N04",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N05",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N06",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N07",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N08",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N09",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N10",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N11",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N16",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N17",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N18",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "A09",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "C07",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "C11",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "C14",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "L02",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "X01",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "X08",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "X09",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "X11",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "G03",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "G05",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "R02",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "R03",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "H06",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N12",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N12",
+        "check": "PERCENT_EQUIVALENCE",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N13",
+        "check": "EXACT_RATIONAL_ORDER",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N14",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N15",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N15",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N20",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "N20",
+        "check": "DECIMAL_COMPARISON",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "C04",
+        "check": "FUNCTION_TABLE",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "E02",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "E03",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "E04",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "E06",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "E07",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "E08",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "E09",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "E10",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "C19",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "X03",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "X04",
+        "check": "QUOTIENT_IDENTITY_AND_STATED_RESTRICTION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "X05",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "X06",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "P03",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "P04",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "P05",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "P06",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "P07",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "P08",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "P09",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "F01",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "F02",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "F04",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "F05",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "F06",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "F07",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "L06",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "L07",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "L08",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "L09",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "C16",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "Q04",
+        "check": "COMPLETE_LINEAR_SOLUTION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "Q05",
+        "check": "COMPLETE_LINEAR_SOLUTION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "Q06",
+        "check": "COMPLETE_LINEAR_SOLUTION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "Q07",
+        "check": "COMPLETE_LINEAR_SOLUTION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "Q08",
+        "check": "COMPLETE_LINEAR_SOLUTION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "Q09",
+        "check": "COMPLETE_LINEAR_SOLUTION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "Q10",
+        "check": "COMPLETE_LINEAR_SOLUTION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "Q11",
+        "check": "COMPLETE_LINEAR_SOLUTION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "Q12",
+        "check": "IDENTITY_SOLUTION_CLASSIFICATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "Q13",
+        "check": "FORMULA_REARRANGEMENT_IDENTITY",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "L12",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "L12",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "C16",
+        "check": "INVERSE_BOTH_COMPOSITIONS",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "I02",
+        "check": "EXACT_LINEAR_INEQUALITY",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "I03",
+        "check": "EXACT_LINEAR_INEQUALITY",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "I04",
+        "check": "EXACT_LINEAR_INEQUALITY",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "I05",
+        "check": "EXACT_LINEAR_INEQUALITY",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "I06",
+        "check": "EXACT_LINEAR_INEQUALITY",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "I07",
+        "check": "COMPOUND_INEQUALITY_INTERSECTION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "C20",
+        "check": "QUADRATIC_FEATURE_INTERVALS",
+        "scope": "Specified feature intervals derived from this quadratic; actual graph performance is not assessed by this script."
+      },
+      {
+        "skill_id": "F03",
+        "check": "SIGNED_FACTOR_PAIR_CONSTRAINTS",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "L04",
+        "check": "Y_INTERCEPT",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "S02",
+        "check": "UNIQUE_LINEAR_SYSTEM_PAIR",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "S03",
+        "check": "UNIQUE_LINEAR_SYSTEM_PAIR",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "S04",
+        "check": "UNIQUE_LINEAR_SYSTEM_PAIR",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "S05",
+        "check": "UNIQUE_LINEAR_SYSTEM_PAIR",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "S07",
+        "check": "CONTEXTUAL_SYSTEM_COUNTS",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "F09",
+        "check": "COMPLETE_REAL_QUADRATIC_ROOTS",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "U07",
+        "check": "COMPLETE_REAL_QUADRATIC_ROOTS",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "U08",
+        "check": "COMPLETE_REAL_QUADRATIC_ROOTS",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "U09",
+        "check": "COMPLETE_REAL_QUADRATIC_ROOTS",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "U12",
+        "check": "COMPLETE_REAL_QUADRATIC_ROOTS",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "U14",
+        "check": "COMPLETE_REAL_QUADRATIC_ROOTS",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "U15",
+        "check": "COMPLETE_REAL_QUADRATIC_ROOTS",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "U02",
+        "check": "SIGNED_COEFFICIENTS",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "U03",
+        "check": "SECOND_DIFFERENCES",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "U04",
+        "check": "INTERCEPTS",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "U05",
+        "check": "VERTEX_AND_MAXIMUM",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "U10",
+        "check": "EQUIVALENT_QUADRATIC_EQUATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "U11",
+        "check": "EQUIVALENT_QUADRATIC_EQUATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "U13",
+        "check": "DISCRIMINANT",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "U14",
+        "check": "ROOT_INTERCEPT_LINK",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "U16",
+        "check": "COMPLETING_SQUARE_DERIVATION_IDENTITY",
+        "scope": "Exact identity used in the derivation; the full explanatory argument and domain conditions remain author-reviewed."
+      },
+      {
+        "skill_id": "G07",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "G07",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "G07",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "G07",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "G11",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "G11",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "G12",
+        "check": "INTEGER_TIME_SCALE_BASE",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "G08",
+        "check": "COMMON_BASE_EXPONENT_SOLUTION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "H08",
+        "check": "INVERSE_EXPONENT_VALUE",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "G13",
+        "check": "LINEAR_DIFFERENCE_IDENTITY",
+        "scope": "Linear component of the reasoning anchor only; the exponential argument remains author-reviewed."
+      },
+      {
+        "skill_id": "R04",
+        "check": "EXCLUDED_DENOMINATOR",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "R05",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "R05",
+        "check": "ORIGINAL_DOMAIN_METADATA",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "R06",
+        "check": "RATIONAL_SOLUTION_AND_EXCLUSION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "R07",
+        "check": "EXTRANEOUS_ROOT_FILTER",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "D03",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "D03",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "D04",
+        "check": "DECLARED_QUARTILE_CONVENTION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "D06",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "D06",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "D06",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "D06",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "D08",
+        "check": "EXACT_LEAST_SQUARES_LINE",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "D09",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "D11",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "D11",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "D11",
+        "check": "EXACT_CALCULATION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "M06",
+        "check": "MODEL_TABLE_VALUES",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "M09",
+        "check": "DECLARED_PRECISION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "H01",
+        "check": "ABSOLUTE_VALUE_ROOTS",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "H02",
+        "check": "PIECEWISE_DOMAIN_FILTER",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "H03",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "H03",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "H04",
+        "check": "EXACT_RATIONAL_POLYNOMIAL_IDENTITY",
+        "scope": "Formal identity over the common nonzero-denominator domain; domain equivalence and requested form remain separately reviewed."
+      },
+      {
+        "skill_id": "H05",
+        "check": "DIVISION_IDENTITY_AND_RESTRICTION",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "H07",
+        "check": "COMPLETE_COMPLEX_INTEGER_ROOTS",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "H09",
+        "check": "RATIONAL_ASYMPTOTE_METADATA",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "S09",
+        "check": "COMPLETE_REAL_INTERSECTION_SET",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      },
+      {
+        "skill_id": "H10",
+        "check": "COMPLETE_REAL_INTERSECTION_SET",
+        "scope": "Mathematical answer component only; placement, wording, requested form and reasoning remain author-reviewed."
+      }
+    ]
+  },
+  "unit_checkpoint_mathematical_checks": [
+    {
+      "unit_id": "01",
+      "status": "PASS",
+      "scope": "Explicit mathematical key components; wording, model assumptions and learner reasoning are not independently certified."
+    },
+    {
+      "unit_id": "02",
+      "status": "PASS",
+      "scope": "Explicit mathematical key components; wording, model assumptions and learner reasoning are not independently certified."
+    },
+    {
+      "unit_id": "03",
+      "status": "PASS",
+      "scope": "Explicit mathematical key components; wording, model assumptions and learner reasoning are not independently certified."
+    },
+    {
+      "unit_id": "04",
+      "status": "PASS",
+      "scope": "Explicit mathematical key components; wording, model assumptions and learner reasoning are not independently certified."
+    },
+    {
+      "unit_id": "05",
+      "status": "PASS",
+      "scope": "Explicit mathematical key components; wording, model assumptions and learner reasoning are not independently certified."
+    },
+    {
+      "unit_id": "06",
+      "status": "PASS",
+      "scope": "Explicit mathematical key components; wording, model assumptions and learner reasoning are not independently certified."
+    },
+    {
+      "unit_id": "07",
+      "status": "PASS",
+      "scope": "Explicit mathematical key components; wording, model assumptions and learner reasoning are not independently certified."
+    },
+    {
+      "unit_id": "08",
+      "status": "PASS",
+      "scope": "Explicit mathematical key components; wording, model assumptions and learner reasoning are not independently certified."
+    },
+    {
+      "unit_id": "09",
+      "status": "PASS",
+      "scope": "Explicit mathematical key components; wording, model assumptions and learner reasoning are not independently certified."
+    },
+    {
+      "unit_id": "10",
+      "status": "PASS",
+      "scope": "Explicit mathematical key components; wording, model assumptions and learner reasoning are not independently certified."
+    }
+  ],
+  "not_validated": [
+    "Empirical prerequisite ordering",
+    "Diagnostic sensitivity/specificity",
+    "Item difficulty or discrimination",
+    "Production answer-checker behavior",
+    "Independent semantic review of all anchor wording",
+    "Learning gains or durable mastery"
+  ],
+  "topological_order_for_integrity_only": [
+    "A01",
+    "D01",
+    "N19",
+    "N20",
+    "A06",
+    "C03",
+    "D02",
+    "N01",
+    "N17",
+    "C01",
+    "I01",
+    "N02",
+    "N18",
+    "Q01",
+    "C02",
+    "I02",
+    "A02",
+    "D03",
+    "N08",
+    "N14",
+    "X01",
+    "D07",
+    "A03",
+    "N09",
+    "N10",
+    "N12",
+    "N13",
+    "A10",
+    "D11",
+    "A05",
+    "E01",
+    "N15",
+    "P01",
+    "X03",
+    "D10",
+    "N03",
+    "N05",
+    "N16",
+    "D04",
+    "M01",
+    "A04",
+    "A08",
+    "E02",
+    "D05",
+    "X10",
+    "P02",
+    "X05",
+    "X06",
+    "N04",
+    "F03",
+    "N06",
+    "X11",
+    "M09",
+    "I08",
+    "M02",
+    "E03",
+    "D06",
+    "R01",
+    "R02",
+    "U02",
+    "L02",
+    "N07",
+    "N11",
+    "Q03",
+    "R04",
+    "X04",
+    "H06",
+    "E04",
+    "P03",
+    "R08",
+    "R03",
+    "L03",
+    "A07",
+    "A09",
+    "E05",
+    "Q04",
+    "Q05",
+    "Q13",
+    "X07",
+    "L11",
+    "E06",
+    "C04",
+    "Q02",
+    "I03",
+    "Q06",
+    "U07",
+    "X08",
+    "E07",
+    "E08",
+    "E10",
+    "E11",
+    "C05",
+    "C10",
+    "L01",
+    "U01",
+    "C09",
+    "F09",
+    "M05",
+    "S01",
+    "I04",
+    "L08",
+    "Q07",
+    "Q08",
+    "Q10",
+    "Q11",
+    "U09",
+    "X02",
+    "X09",
+    "P05",
+    "E09",
+    "P04",
+    "F01",
+    "E12",
+    "M07",
+    "C06",
+    "C08",
+    "M06",
+    "G01",
+    "L06",
+    "U03",
+    "L04",
+    "U04",
+    "M08",
+    "I05",
+    "U12",
+    "P06",
+    "Q09",
+    "Q12",
+    "P09",
+    "F02",
+    "C07",
+    "G09",
+    "M04",
+    "G02",
+    "L05",
+    "U05",
+    "H07",
+    "U13",
+    "F04",
+    "F08",
+    "P07",
+    "P08",
+    "P10",
+    "I06",
+    "S03",
+    "S04",
+    "Q14",
+    "S06",
+    "C11",
+    "C13",
+    "C14",
+    "C16",
+    "C19",
+    "G03",
+    "G05",
+    "G10",
+    "G12",
+    "G13",
+    "I09",
+    "L07",
+    "L09",
+    "L10",
+    "L13",
+    "L14",
+    "S02",
+    "C15",
+    "F05",
+    "R05",
+    "H05",
+    "F06",
+    "F07",
+    "U06",
+    "U10",
+    "I07",
+    "S05",
+    "C12",
+    "H02",
+    "H03",
+    "G04",
+    "G08",
+    "H08",
+    "G06",
+    "S08",
+    "D08",
+    "L12",
+    "M03",
+    "S07",
+    "C18",
+    "H09",
+    "U08",
+    "U11",
+    "H01",
+    "C17",
+    "C20",
+    "D09",
+    "R06",
+    "R07",
+    "S09",
+    "U14",
+    "U15",
+    "U16",
+    "H04",
+    "G07",
+    "H10",
+    "G11"
+  ]
+}

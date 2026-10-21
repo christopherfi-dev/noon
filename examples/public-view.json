@@ -1,0 +1,37 @@
+{
+  "status": "READY",
+  "revision": 2,
+  "mode": "TARGET_ASSESSMENT",
+  "target": {
+    "skill_id": "Q07",
+    "title": "Solve equations containing parentheses"
+  },
+  "active_item": {
+    "item_id": "example-item-q07-001",
+    "item_version": 1,
+    "prompt": "Solve 3(x - 2) = 15. Give the value of x.",
+    "response_type": "scalar",
+    "input_help": "Enter a number or an exact fraction, for example 7 or 7/2.",
+    "support_status": "INDEPENDENT"
+  },
+  "messages": [],
+  "menu": null,
+  "progress": {
+    "label": "Checking equation-solving performance; other requirements remain untested.",
+    "independent_successes": 0,
+    "criterion_required": 3,
+    "whole_skill_claim": false
+  },
+  "allowed_actions": [
+    "SUBMIT_RESPONSE",
+    "REQUEST_HINT",
+    "REQUEST_EXPLANATION",
+    "SKIP_ITEM",
+    "NOT_LEARNED",
+    "CHANGE_TARGET",
+    "END_SESSION"
+  ],
+  "csrf_token": "example-nonsecret-placeholder",
+  "pending_operation_id": null,
+  "error_code": null
+}

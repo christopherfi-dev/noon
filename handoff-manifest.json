@@ -1,0 +1,17 @@
+{
+  "handoff_version": "1.0.0",
+  "created_date": "2026-10-21",
+  "architecture_version": "1.1",
+  "curriculum_id": "ACE-ALGEBRA1",
+  "curriculum_version": "1.1.0",
+  "compatibility": "Architecture 1.1 preserves curriculum 1.0 contract semantics; original curriculum metadata is unchanged.",
+  "delivery_kind": "IMPLEMENTATION_HANDOFF_NOT_COMPLETED_APPLICATION",
+  "canonical_curriculum": "curriculum/algebra-map.json",
+  "architecture": "architecture/Algebra_Constraint_Architecture_v1.1.md",
+  "intended_runtime": "PHP 8.3+ compatible, vanilla JS, private PDO SQLite, same-origin API",
+  "contains_secrets": false,
+  "contains_student_records": false,
+  "prior_source_bytes_preserved": true,
+  "application_implementation_status": "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+  "research_status": "Curriculum is research-informed author draft; routing/pacing not empirically calibrated."
+}
