@@ -8,6 +8,14 @@ The three result sets come after §5. **No configuration is chosen here**
 
 ## 1. Tests run, with pass/fail counts
 
+**Final gate, 23:19:34Z–23:20:09Z** (after the live runs and the fixes in §2):
+- every step exit 0;
+- PHPUnit **164 passed, 0 failed** (97 unit, 67 integration; 29,017 assertions);
+- browser 5/5;
+- bundle smoke 12/12;
+- key-leak scan 0 hits over 285 tracked files and 672 ZIP entries (key present: yes);
+- 10 more suite runs straight after: all clean.
+
 Pre-live gate, 21:49:19Z–21:49:45Z, on code commit `cead84f`:
 
 | Step | Result |
@@ -88,7 +96,15 @@ The test helper now prints the last rejection reasons when no item is active.
   - In 1 run of 20, B9 raised warnings: `Undefined array key "TRUSTED_CURRICULUM"` (BetaGuardsTest.php:243).
   - B9 read the last message of each provider call. When a random path contained a repair, that message was the repair request, not the trusted context.
   - **Fix:** B9 now finds the single trusted context in every call. That is stricter: it also checks repair calls. B9 then passed 30 of 30 isolated runs.
-- One full-suite run, earlier and before these fixes, reported 1 failure whose test name I did not capture. Since then the suite has run cleanly many times, and 1,000 random journeys all reached the report. Further repeat runs are recorded in `BUILD_LOG.md`.
+- 25 further runs caught the remaining intermittent failure, also in a test:
+  ```
+  1) AlgebraEngine\Tests\Integration\HostTest::testHost16ForgetAndExpiry
+  Failed asserting that 0 is identical to 1.
+  /home/user/noon/app/tests/Integration/HostTest.php:452
+  ```
+  - `Api.php` runs an opportunistic cleanup on a random 1 in 50 requests. HOST-16 made two requests after the session expired, then asserted that its explicit cleanup removed exactly one session. In about 4% of runs the opportunistic cleanup had already removed it.
+  - **Fix:** the test now checks that the session is gone. It checks the cleanup count separately, with no request in between. HOST-16 then passed 150 of 150 runs.
+  - This is probably also the earlier one-off failure whose name I did not capture: one assertion, the same rate.
 
 **Live:** every host rejection of model output and every HOLD is listed with its exact reason and rejected text:
 - in each configuration's `METRICS.md`, under "Every host rejection of model output";

@@ -3,11 +3,11 @@ PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
 Runtime:       PHP 8.3.6
 Configuration: /home/user/noon/app/phpunit.xml
 
-...............................................................  63 / 163 ( 38%)
-............................................................F.. 126 / 163 ( 77%)
-.....................................                           163 / 163 (100%)
+...............................................................  63 / 164 ( 38%)
+............................................................... 126 / 164 ( 76%)
+......................................                          164 / 164 (100%)
 
-Time: 00:14.423, Memory: 32.00 MB
+Time: 00:20.595, Memory: 32.00 MB
 
 Beta Guards (AlgebraEngine\Tests\Integration\BetaGuards)
  ✔ B 5 non prerequisite proposal rejected
@@ -27,6 +27,7 @@ Beta Journey (AlgebraEngine\Tests\Integration\BetaJourney)
  ✔ B 4 beta boundary
  ✔ B 10 stuck step goes directly to its prerequisite
  ✔ B 10 stuck step at a boundary is recorded not failed
+ ✔ Random scripted journeys complete without holds
  ✔ Every beta skill can start and score
 
 Checkers (AlgebraEngine\Tests\Unit\Math\Checkers)
@@ -89,14 +90,7 @@ Expression Parser (AlgebraEngine\Tests\Unit\Math\ExpressionParser)
 
 Flow (AlgebraEngine\Tests\Integration\Flow)
  ✔ Entry 01 known topic
- ✘ Flow 01 distribution journey
-   │
-   │ no active item; view={"status":"HOLD","revision":11,"mode":"RETURN_TO_TARGET","target":{"skill_id":"Q07","title":"Solve equations containing parentheses"},"active_item":null,"messages":[{"kind":"FEEDBACK","text":"Correct."},{"kind":"ERROR","text":"Your work is saved, but the next step could not be prepared right now. You can try again or end the session."}],"menu":null,"progress":{"label":"Back to: Solve equations containing parentheses. Correct in a row without help: 0 of 3 (needs a solve, a step-choice and a new-form question).","independent_successes":0,"criterion_required":3,"whole_skill_claim":false},"allowed_actions":["RESUME_SESSION","CHANGE_TARGET","END_SESSION"],"csrf_token":"e575163e34f68c4e6104f205be730f34bae4f716180e561f99b8d2516e63dd6a","pending_operation_id":null,"error_code":null}
-   │ Failed asserting that null is not null.
-   │
-   │ /home/user/noon/app/tests/Support/Harness.php:155
-   │ /home/user/noon/app/tests/Integration/FlowTest.php:70
-   │
+ ✔ Flow 01 distribution journey
  ✔ Flow 02 deeper repair
  ✔ Flow 03 switch target
  ✔ Flow 04 single correct probe
@@ -219,5 +213,4 @@ Templates (AlgebraEngine\Tests\Unit\Items\Templates)
  ✔ Opening facts never contain a step answer
  ✔ Guided plans are questions that never state their answer
 
-FAILURES!
-Tests: 163, Assertions: 27765, Failures: 1.
+OK (164 tests, 29017 assertions)

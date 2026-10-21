@@ -443,14 +443,23 @@ final class HostTest extends TestCase
         $h->cookies = $oldCookies;
         $this->assertSame(403, $h->request('GET', 'state')->status);
 
-        // Idle expiry.
+        // Idle expiry: the session is unusable, and gone after cleanup. A request may already have run the
+        // 1-in-50 opportunistic cleanup (Api), so this checks the table, not cleanupExpired's count.
         $h2 = new Harness();
         $h2->start('Q07');
         $h2->clock->advance(86400 + 60);
         $this->assertNull($h2->request('GET', 'state')->body['session']);
         $this->assertSame(404, $h2->event('SUBMIT_RESPONSE', ['text' => '1'])->status);
-        $this->assertSame(1, $h2->app->store->cleanupExpired($h2->clock->now()));
+        $h2->app->store->cleanupExpired($h2->clock->now());
+        $this->assertSame(0, (int) $h2->app->store->db->scalar('SELECT COUNT(*) FROM sessions'));
         $h2->cleanup();
+
+        // cleanupExpired itself removes an expired session (no request in between, so no opportunistic cleanup).
+        $h4 = new Harness();
+        $h4->start('Q07');
+        $h4->clock->advance(86400 + 60);
+        $this->assertSame(1, $h4->app->store->cleanupExpired($h4->clock->now()));
+        $h4->cleanup();
 
         // Absolute expiry even while active.
         $h3 = new Harness(['session_absolute_ttl' => 3600]);
