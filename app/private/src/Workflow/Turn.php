@@ -26,6 +26,8 @@ final class Turn
     public ?array $learnerPayload = null;
     public int $modelCalls = 0;
     public bool $reportNeeded = false;
+    /** Host-verified statements of what the last answer did (signature feedback). */
+    public array $facts = [];
 
     /**
      * @param array<string,mixed> $snap session.schema snapshot

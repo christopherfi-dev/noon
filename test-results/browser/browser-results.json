@@ -1,0 +1,74 @@
+{
+  "ran_at": "2026-10-21T13:00:05.488Z",
+  "results": [
+    {
+      "name": "B1 browser journey (mobile 360x740)",
+      "pass": true,
+      "detail": {
+        "modes": [
+          "TARGET_ASSESSMENT",
+          "DIAGNOSTIC_PROBE",
+          "PREREQUISITE_CHECK",
+          "GUIDED_REPAIR",
+          "GUIDED_REPAIR",
+          "INDEPENDENT_CHECK",
+          "RETURN_TO_TARGET",
+          "SESSION_REPORT"
+        ],
+        "maxOverflow": 0,
+        "consoleErrors": [],
+        "smallerPrompt": "What is 7 × 7?"
+      }
+    },
+    {
+      "name": "B1 browser journey (desktop 1280x800)",
+      "pass": true,
+      "detail": {
+        "modes": [
+          "TARGET_ASSESSMENT",
+          "DIAGNOSTIC_PROBE",
+          "PREREQUISITE_CHECK",
+          "GUIDED_REPAIR",
+          "GUIDED_REPAIR",
+          "INDEPENDENT_CHECK",
+          "RETURN_TO_TARGET",
+          "SESSION_REPORT"
+        ],
+        "maxOverflow": 0,
+        "consoleErrors": [],
+        "smallerPrompt": "What is 5 × 11?"
+      }
+    },
+    {
+      "name": "UI-01 mobile keyboard and status (360x740)",
+      "pass": true,
+      "detail": {
+        "reached": true,
+        "focusOnInput": "answer-input",
+        "keptAfterError": "1 1/2",
+        "statusRegion": "polite",
+        "logRegion": "polite",
+        "labelled": true,
+        "focusVisible": true,
+        "overflow": 0,
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "UI-02 safe rendering of model and learner text",
+      "pass": true,
+      "detail": {
+        "injected": {
+          "xss": null,
+          "imgs": 0,
+          "scripts": 0,
+          "anchorsJs": 0,
+          "bold": 0
+        },
+        "shownAsText": true,
+        "dialogs": [],
+        "consoleErrors": []
+      }
+    }
+  ]
+}

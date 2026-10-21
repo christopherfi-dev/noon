@@ -648,6 +648,7 @@ final class Engine
                 $facts[] = $sig['fact'];
             }
         }
+        $turn->facts = $facts;
         $turn->event('ITEM_CLOSED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'reason' => $outcome->verdict]);
         $turn->eng['active'] = null;
         $turn->say('FEEDBACK', $this->verdictSentence($outcome, $active['role'] === 'GUIDED'));
@@ -990,7 +991,8 @@ final class Engine
         $plan = $this->planner->plan($skill, $this->rng, false, ['route' => $route]);
         $turn->eng['guided'] = ['plan' => $plan, 'path' => [$plan['steps'][0]['id']], 'done' => [], 'entered' => [], 'alt' => [], 'problems' => 0, 'clean' => true, 'phrasing' => 'main'];
         $turn->event('REPAIR_STARTED', ['skill_id' => $skill, 'plan_id' => $plan['plan_id'], 'faded' => false, 'route' => $plan['route'], 'reason' => $reason]);
-        $this->presentStep($turn, []);
+        // D1: repair may open by stating what the learner's last answer did.
+        $this->presentStep($turn, $turn->facts);
     }
 
     /** Q07 repairs use the expansion route when the distribution branch was implicated. */

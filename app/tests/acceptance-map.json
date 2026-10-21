@@ -1,0 +1,376 @@
+{
+  "source": "contracts/acceptance-scenarios.json",
+  "scenarios": [
+    {
+      "id": "ENTRY-01",
+      "title": "Known topic",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/FlowTest.php::testEntry01KnownTopic",
+      "note": ""
+    },
+    {
+      "id": "ENTRY-02",
+      "title": "Free-text mapping",
+      "status": "DEFERRED",
+      "test": null,
+      "note": "Deferred: free-text topic mapping (SUGGEST_TARGET/CONFIRM_TARGET) is out of beta scope (addendum \u00a75)."
+    },
+    {
+      "id": "ENTRY-03",
+      "title": "Unsure",
+      "status": "DEFERRED",
+      "test": null,
+      "note": "Deferred: \"help me find a starting point\" orientation is out of beta scope; the UNSURE route answers 422 FEATURE_NOT_IN_BETA."
+    },
+    {
+      "id": "ENTRY-04",
+      "title": "Public task",
+      "status": "DEFERRED",
+      "test": null,
+      "note": "Deferred: teacher task links are out of beta scope; task endpoints answer 422."
+    },
+    {
+      "id": "ENTRY-05",
+      "title": "Forged task",
+      "status": "DEFERRED",
+      "test": null,
+      "note": "Deferred with teacher task links: no task token is accepted at all, so no forged settings can be trusted."
+    },
+    {
+      "id": "ENTRY-06",
+      "title": "Orientation cap",
+      "status": "DEFERRED",
+      "test": null,
+      "note": "Deferred: orientation budget applies only to the orientation route, which is out of beta scope."
+    },
+    {
+      "id": "ENTRY-07",
+      "title": "Not learned",
+      "status": "DEFERRED",
+      "test": null,
+      "note": "Deferred as an orientation scenario. NOT_LEARNED outside orientation is implemented and never counted as incorrect (FlowTest/engine)."
+    },
+    {
+      "id": "ENTRY-08",
+      "title": "Orientation success",
+      "status": "DEFERRED",
+      "test": null,
+      "note": "Deferred: orientation is out of beta scope."
+    },
+    {
+      "id": "FLOW-01",
+      "title": "Distribution journey",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/FlowTest.php::testFlow01DistributionJourney",
+      "note": ""
+    },
+    {
+      "id": "FLOW-02",
+      "title": "Deeper repair",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/FlowTest.php::testFlow02DeeperRepair",
+      "note": ""
+    },
+    {
+      "id": "FLOW-03",
+      "title": "Switch target",
+      "status": "IMPLEMENTED (beyond addendum list)",
+      "test": "tests/Integration/FlowTest.php::testFlow03SwitchTarget",
+      "note": "Implemented although not in the addendum list: CHANGE_TARGET is offered in the beta, so invariant 8 (interrupted work survives topic changes) needs it."
+    },
+    {
+      "id": "FLOW-04",
+      "title": "Single correct probe",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/FlowTest.php::testFlow04SingleCorrectProbe",
+      "note": ""
+    },
+    {
+      "id": "FLOW-05",
+      "title": "Alternative dependencies",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/FlowTest.php::testFlow05AlternativeDependencies",
+      "note": ""
+    },
+    {
+      "id": "FLOW-06",
+      "title": "Budget boundary",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/FlowTest.php::testFlow06BudgetBoundary",
+      "note": ""
+    },
+    {
+      "id": "FLOW-07",
+      "title": "Stop while pending",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/FlowTest.php::testFlow07StopWhilePending",
+      "note": ""
+    },
+    {
+      "id": "FLOW-08",
+      "title": "Resume",
+      "status": "DEFERRED",
+      "test": null,
+      "note": "Deferred: resume across sessions is out of beta scope (RESUME_SESSION of a closed session answers 422). Page reload of the live session is supported via the state endpoint."
+    },
+    {
+      "id": "EVID-01",
+      "title": "Hint independence",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/EvidenceTest.php::testEvid01HintIndependence",
+      "note": ""
+    },
+    {
+      "id": "EVID-02",
+      "title": "Freshness",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/EvidenceTest.php::testEvid02Freshness",
+      "note": ""
+    },
+    {
+      "id": "EVID-03",
+      "title": "Numeric-only skill",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/EvidenceTest.php::testEvid03NumericOnlySkill",
+      "note": ""
+    },
+    {
+      "id": "EVID-04",
+      "title": "Immediate versus retention",
+      "status": "IMPLEMENTED (beyond addendum list)",
+      "test": "tests/Integration/EvidenceTest.php::testEvid04ImmediateVersusRetention",
+      "note": "Implemented although not listed: protects invariant 10 (three successes are an immediate criterion only)."
+    },
+    {
+      "id": "EVID-05",
+      "title": "Correction cascade",
+      "status": "IMPLEMENTED (beyond addendum list)",
+      "test": "tests/Integration/EvidenceTest.php::testEvid05CorrectionCascade",
+      "note": "Implemented although not listed: protects invariants 6 and 9 (results bound to evidence; corrections recompute claims). Operator-only correction, no public endpoint."
+    },
+    {
+      "id": "EVID-06",
+      "title": "Untested map",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/EvidenceTest.php::testEvid06UntestedMap",
+      "note": ""
+    },
+    {
+      "id": "MATH-01",
+      "title": "Exact rational",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/MathScenarioTest.php::testMath01ExactRational",
+      "note": ""
+    },
+    {
+      "id": "MATH-02",
+      "title": "Near number",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/MathScenarioTest.php::testMath02NearNumber",
+      "note": ""
+    },
+    {
+      "id": "MATH-03",
+      "title": "Polynomial expansion",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/MathScenarioTest.php::testMath03PolynomialExpansion",
+      "note": ""
+    },
+    {
+      "id": "MATH-04",
+      "title": "Complete roots",
+      "status": "DEFERRED",
+      "test": null,
+      "note": "Deferred: no beta skill uses solution sets; the solution-set checker is not implemented."
+    },
+    {
+      "id": "MATH-05",
+      "title": "Domain preservation",
+      "status": "DEFERRED",
+      "test": null,
+      "note": "Deferred: no beta skill uses rational expressions; domain-preserving simplification is not implemented."
+    },
+    {
+      "id": "MATH-06",
+      "title": "Requested form",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/MathScenarioTest.php::testMath06RequestedForm",
+      "note": ""
+    },
+    {
+      "id": "MATH-07",
+      "title": "Unsupported representation",
+      "status": "DEFERRED",
+      "test": null,
+      "note": "Deferred: no beta skill needs graphs. The capability boundary itself is enforced: out-of-beta skills are refused (422) and descent to them records \"not available in beta\" (B4)."
+    },
+    {
+      "id": "MATH-08",
+      "title": "Unsafe syntax",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/MathScenarioTest.php::testMath08UnsafeSyntax",
+      "note": ""
+    },
+    {
+      "id": "MATH-09",
+      "title": "Ambiguity",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/MathScenarioTest.php::testMath09Ambiguity",
+      "note": ""
+    },
+    {
+      "id": "HOST-01",
+      "title": "Duplicate submit",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/HostTest.php::testHost01DuplicateSubmit",
+      "note": ""
+    },
+    {
+      "id": "HOST-02",
+      "title": "Idempotency conflict",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/HostTest.php::testHost02IdempotencyConflict",
+      "note": ""
+    },
+    {
+      "id": "HOST-03",
+      "title": "Stale tab",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/HostTest.php::testHost03StaleTab",
+      "note": ""
+    },
+    {
+      "id": "HOST-04",
+      "title": "Late lease",
+      "status": "IMPLEMENTED (beyond addendum list)",
+      "test": "tests/Integration/HostTest.php::testHost04LateLeaseDiscarded",
+      "note": "Implemented although not listed: protects invariant 14 (leases prevent late results from changing state)."
+    },
+    {
+      "id": "HOST-05",
+      "title": "Empty/truncated provider",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/HostTest.php::testHost05EmptyAndTruncatedOutput",
+      "note": ""
+    },
+    {
+      "id": "HOST-06",
+      "title": "Forged model promotion",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/HostTest.php::testHost06ForgedPromotionRejected",
+      "note": ""
+    },
+    {
+      "id": "HOST-07",
+      "title": "Missing curriculum",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/HostTest.php::testHost07MissingCurriculum",
+      "note": ""
+    },
+    {
+      "id": "HOST-08",
+      "title": "Answer leakage",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/HostTest.php::testHost08NoAnswerLeakage",
+      "note": ""
+    },
+    {
+      "id": "HOST-09",
+      "title": "Prompt injection",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/HostTest.php::testHost09PromptInjectionIsData",
+      "note": ""
+    },
+    {
+      "id": "HOST-10",
+      "title": "Cross-session access",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/HostTest.php::testHost10CrossSessionAccessDenied",
+      "note": ""
+    },
+    {
+      "id": "HOST-11",
+      "title": "CSRF",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/HostTest.php::testHost11Csrf",
+      "note": ""
+    },
+    {
+      "id": "HOST-12",
+      "title": "Input preservation",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/HostTest.php::testHost12InputPreservedOnTimeout",
+      "note": ""
+    },
+    {
+      "id": "HOST-13",
+      "title": "Binding modes",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/HostTest.php::testHost13BindingModes",
+      "note": ""
+    },
+    {
+      "id": "HOST-14",
+      "title": "Context replacement",
+      "status": "IMPLEMENTED (beyond addendum list)",
+      "test": "tests/Integration/HostTest.php::testHost14ContextReplacement",
+      "note": "Implemented although not listed: protects invariant 3 (each prompt is built anew; no stale inventory)."
+    },
+    {
+      "id": "HOST-15",
+      "title": "Counter binding",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/HostTest.php::testHost15CounterBinding",
+      "note": ""
+    },
+    {
+      "id": "HOST-16",
+      "title": "Forget/expiry",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/HostTest.php::testHost16ForgetAndExpiry",
+      "note": ""
+    },
+    {
+      "id": "HOST-17",
+      "title": "Cost limits",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/HostTest.php::testHost17CostLimits",
+      "note": ""
+    },
+    {
+      "id": "UI-01",
+      "title": "Mobile keyboard",
+      "status": "IMPLEMENTED",
+      "test": "tests/Browser/run_browser.mjs (UI-01 mobile keyboard and status)",
+      "note": ""
+    },
+    {
+      "id": "UI-02",
+      "title": "Safe rendering",
+      "status": "IMPLEMENTED",
+      "test": "tests/Browser/run_browser.mjs (UI-02 safe rendering)",
+      "note": ""
+    },
+    {
+      "id": "DEPLOY-01",
+      "title": "Private files",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/DeployCoverageTest.php::testDeploy01PrivateFilesNotServed",
+      "note": ""
+    },
+    {
+      "id": "DEPLOY-02",
+      "title": "Missing extension",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/DeployCoverageTest.php::testDeploy02MissingExtension",
+      "note": ""
+    },
+    {
+      "id": "COVER-01",
+      "title": "Capability matrix",
+      "status": "IMPLEMENTED",
+      "test": "tests/Integration/DeployCoverageTest.php::testCover01CapabilityMatrix",
+      "note": ""
+    }
+  ]
+}

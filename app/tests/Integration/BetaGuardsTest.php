@@ -157,6 +157,42 @@ final class BetaGuardsTest extends TestCase
         $this->assertSame('GUIDED_REPAIR', $h->mode());
     }
 
+    /** D1: a hint request or "I don't know" during repair yields a smaller question, never the answer. */
+    public function testD1HintAndIDontKnowGiveSmallerQuestions(): void
+    {
+        $h = $this->h;
+        $this->intoGuidedRepair();
+        $first = $h->active();
+        $this->assertSame("NOT_LEARNED", $h->view['allowed_actions'][3]);
+        $this->assertNotContains('SKIP_ITEM', $h->view['allowed_actions'], 'no skipping guided steps');
+        $h->event('REQUEST_HINT');
+        $second = $h->active();
+        $this->assertNotSame($first['item_id'], $second['item_id']);
+        $this->assertStringStartsWith($first['guided_step']['id'] . '.', $second['guided_step']['id'], 'hint → smaller question');
+        // "I don't know" at the smallest available question (no smaller question or alternate phrasing left):
+        // the guided problem is set aside without showing the answer, and an independent check follows,
+        // because the workflow policy has no GUIDED_REPAIR -> PREREQUISITE_CHECK edge. The implicated
+        // prerequisite is carried forward for the next diagnosis.
+        $this->assertSame([], $second['guided_step']['smaller']);
+        $this->assertNull($second['guided_step']['alt_prompt']);
+        $h->event('NOT_LEARNED');
+        $this->assertSame('INDEPENDENT_CHECK', $h->mode());
+        $abandoned = $h->events('GUIDED_PROBLEM_ABANDONED');
+        $this->assertCount(1, $abandoned);
+        $this->assertSame('N18', $abandoned[0]['data']['implicates']);
+        $this->assertSame('N18', $h->row()['engine']['guided_last_branch']);
+        $closed = array_column(array_column($h->events('ITEM_CLOSED'), 'data'), 'reason');
+        $this->assertContains('STUCK_HINT', $closed);
+        $this->assertContains('I_DONT_KNOW', $closed);
+        foreach ([$first, $second] as $step) {
+            $answer = (string) (is_array($step['answer_spec']['expected']) ? '' : $step['answer_spec']['expected']);
+            foreach ($h->view['messages'] as $m) {
+                $this->assertSame([], \AlgebraEngine\Provider\DisclosureGuard::violations($m['text'], [['answer' => $step['answer_spec'], 'variables' => ['x']]]), $answer);
+            }
+        }
+        $this->assertSame([], array_filter($h->events('CHECKER_RESULT'), fn ($e) => $e['data']['result']['verdict'] === 'INCORRECT' && $e['data']['role'] === 'GUIDED'), 'stuck signals are not scored as wrong');
+    }
+
     /** B9: prompt assembly contains no anchor prompt and no example content (F2). */
     public function testB9PromptsCarryNoAnchorOrExampleContent(): void
     {

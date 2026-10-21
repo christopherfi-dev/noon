@@ -217,11 +217,18 @@ final class HostTest extends TestCase
                 $this->assertStringNotContainsString($needle, $json);
             }
         }
-        // The current key appears nowhere in the view except inside the prompt it was derived from.
+        // The current key is not carried by any public field (it can only appear inside the rendered prompt text).
         $key = $h->correct();
         $view = $h->request('GET', 'state')->body['session'];
+        $this->assertSame(['item_id', 'item_version', 'prompt', 'response_type', 'input_help', 'support_status'], array_keys($view['active_item']));
+        $this->assertSame($h->app->factory->get($h->active()['template_id'])->inputHelp(), $view['active_item']['input_help'], 'input help is static template text');
         unset($view['active_item']['prompt']);
-        $this->assertDoesNotMatchRegularExpression('/(?<![\d.])' . preg_quote($key, '/') . '(?![\d.])/', json_encode($view['active_item']));
+        // Counters and versions are integers by schema; any text field carrying the key would be a leak.
+        array_walk_recursive($view, function ($v, $k) use ($key) {
+            if (is_string($v)) {
+                $this->assertNotSame($key, $v, "field $k carries the key");
+            }
+        });
     }
 
     /** HOST-09: learner text with SYSTEM tags, file names or INJECT markers is treated as data only. */

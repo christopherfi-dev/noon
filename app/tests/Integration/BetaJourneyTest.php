@@ -49,6 +49,8 @@ final class BetaJourneyTest extends TestCase
         $boundary = array_values(array_filter($h->events('BOUNDARY'), fn ($e) => $e['data']['reason'] === 'NOT_AVAILABLE_IN_BETA'));
         $this->assertSame('A07', $boundary[0]['data']['skill_id']);
 
+        $this->assertStringContainsString('Your answer multiplied only the x by', implode(' ', array_column($h->view['messages'], 'text')), 'repair opens with what the answer did');
+
         // D1: a wrong guided step is answered with a smaller question, not the answer.
         $first = $h->active();
         $this->assertSame('GUIDED', $first['role']);

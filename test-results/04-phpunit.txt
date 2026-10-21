@@ -1,0 +1,198 @@
+PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.3.6
+Configuration: /home/user/noon/app/phpunit.xml
+
+...............................................................  63 / 150 ( 42%)
+............................................................... 126 / 150 ( 84%)
+........................                                        150 / 150 (100%)
+
+Time: 00:04.709, Memory: 30.00 MB
+
+Beta Guards (AlgebraEngine\Tests\Integration\BetaGuards)
+ ✔ B 5 non prerequisite proposal rejected
+ ✔ B 6 host key governs and item flagged
+ ✔ B 7 hint makes item assisted
+ ✔ B 8 disclosure guard rejects leak
+ ✔ B 8 repeated leak holds
+ ✔ D 1 hint and i dont know give smaller questions
+ ✔ B 9 prompts carry no anchor or example content
+
+Beta Journey (AlgebraEngine\Tests\Integration\BetaJourney)
+ ✔ B 1 distribution journey
+ ✔ B 2 probe correct no descent
+ ✔ B 3 deep descent and return
+ ✔ B 3 prerequisite success stops descent
+ ✔ B 4 beta boundary
+ ✔ Every beta skill can start and score
+
+Checkers (AlgebraEngine\Tests\Unit\Math\Checkers)
+ ✔ Exact rational
+ ✔ Polynomial equivalence and form
+ ✔ Polynomial checker rejects invalid host key
+ ✔ Classification
+
+Deploy Coverage (AlgebraEngine\Tests\Integration\DeployCoverage)
+ ✔ Cover 01 capability matrix
+ ✔ Deploy 01 private files not served
+ ✔ Deploy 02 missing extension
+
+Engine Units (AlgebraEngine\Tests\Unit\Engine\EngineUnits)
+ ✔ Transition guard follows workflow policy
+ ✔ Criteria require consecutive varied independent successes
+ ✔ Disclosure guard heuristic
+ ✔ Envelope skeleton has placeholders only
+
+Evidence (AlgebraEngine\Tests\Integration\Evidence)
+ ✔ Evid 01 hint independence
+ ✔ Evid 02 freshness
+ ✔ Evid 03 numeric only skill
+ ✔ Evid 04 immediate versus retention
+ ✔ Evid 05 correction cascade
+ ✔ Evid 06 untested map
+
+Expression Parser (AlgebraEngine\Tests\Unit\Math\ExpressionParser)
+ ✔ Unary minus binds looser than power
+ ✔ Implicit multiplication forms
+ ✔ Precedence and associativity
+ ✔ Hostile input fails closed with data set "php call"
+ ✔ Hostile input fails closed with data set "php tag"
+ ✔ Hostile input fails closed with data set "huge exponent"
+ ✔ Hostile input fails closed with data set "negative exponent"
+ ✔ Hostile input fails closed with data set "fractional exponent"
+ ✔ Hostile input fails closed with data set "stacked exponent"
+ ✔ Hostile input fails closed with data set "eval"
+ ✔ Hostile input fails closed with data set "template injection"
+ ✔ Hostile input fails closed with data set "shell"
+ ✔ Hostile input fails closed with data set "ten thousand parens"
+ ✔ Hostile input fails closed with data set "deep but short parens"
+ ✔ Hostile input fails closed with data set "five thousand digits"
+ ✔ Hostile input fails closed with data set "thirteen digits"
+ ✔ Hostile input fails closed with data set "equation"
+ ✔ Hostile input fails closed with data set "unknown variable"
+ ✔ Hostile input fails closed with data set "function word"
+ ✔ Hostile input fails closed with data set "number after variable"
+ ✔ Hostile input fails closed with data set "number after paren"
+ ✔ Hostile input fails closed with data set "two numbers"
+ ✔ Hostile input fails closed with data set "dangling operator"
+ ✔ Hostile input fails closed with data set "empty parens"
+ ✔ Hostile input fails closed with data set "unbalanced"
+ ✔ Hostile input fails closed with data set "empty"
+ ✔ Hostile input fails closed with data set "html"
+ ✔ Hostile input fails closed with data set "many tokens"
+ ✔ Specific error codes
+ ✔ Division by zero parses but polynomial rejects
+ ✔ Equation parser
+
+Flow (AlgebraEngine\Tests\Integration\Flow)
+ ✔ Entry 01 known topic
+ ✔ Flow 01 distribution journey
+ ✔ Flow 02 deeper repair
+ ✔ Flow 03 switch target
+ ✔ Flow 04 single correct probe
+ ✔ Flow 05 alternative dependencies
+ ✔ Flow 06 budget boundary
+ ✔ Flow 07 stop while pending
+
+Form Inspector (AlgebraEngine\Tests\Unit\Math\FormInspector)
+ ✔ Expanded simplified
+ ✔ Factored
+
+Golden Cases (AlgebraEngine\Tests\Unit\Math\GoldenCases)
+ ✔ Rational goldens
+ ✔ Polynomial goldens
+ ✔ Requested form golden
+ ✔ Out of scope goldens are listed not guessed
+
+Host (AlgebraEngine\Tests\Integration\Host)
+ ✔ Host 01 duplicate submit
+ ✔ Concurrent request refused while pending
+ ✔ Host 02 idempotency conflict
+ ✔ Host 03 stale tab
+ ✔ Host 04 late lease discarded
+ ✔ Host 05 empty and truncated output
+ ✔ Host 06 forged promotion rejected
+ ✔ Host 07 missing curriculum
+ ✔ Host 08 no answer leakage
+ ✔ Host 09 prompt injection is data
+ ✔ Host 10 cross session access denied
+ ✔ Host 11 csrf
+ ✔ Host 12 input preserved on timeout
+ ✔ Host 13 binding modes
+ ✔ Host 14 context replacement
+ ✔ Host 15 counter binding
+ ✔ Host 16 forget and expiry
+ ✔ Host 17 cost limits
+
+Linear Equation (AlgebraEngine\Tests\Unit\Math\LinearEquation)
+ ✔ Unique solutions
+ ✔ Degenerate cases
+ ✔ Not linear
+
+Math Scenario (AlgebraEngine\Tests\Integration\MathScenario)
+ ✔ Math 01 exact rational
+ ✔ Math 02 near number
+ ✔ Math 03 polynomial expansion
+ ✔ Math 06 requested form
+ ✔ Math 08 unsafe syntax
+ ✔ Math 09 ambiguity
+
+Polynomial (AlgebraEngine\Tests\Unit\Math\Polynomial)
+ ✔ Distributivity metamorphic
+ ✔ Commutativity and associativity
+ ✔ Square and difference of squares identities
+ ✔ No sampling coincidence
+ ✔ Rational coefficients and constants
+ ✔ Degree and size limits
+
+Rational (AlgebraEngine\Tests\Unit\Math\Rational)
+ ✔ Reduces and normalises sign
+ ✔ Arithmetic
+ ✔ Zero denominator and division by zero
+ ✔ Overflow is checked not silently float
+
+Scalar Parser (AlgebraEngine\Tests\Unit\Math\ScalarParser)
+ ✔ Accepted with data set "integer"
+ ✔ Accepted with data set "negative integer"
+ ✔ Accepted with data set "unicode minus"
+ ✔ Accepted with data set "decimal half"
+ ✔ Accepted with data set "leading-dot decimal"
+ ✔ Accepted with data set "negative decimal"
+ ✔ Accepted with data set "trailing dot"
+ ✔ Accepted with data set "fraction reduces"
+ ✔ Accepted with data set "sign on denominator"
+ ✔ Accepted with data set "double negative fraction"
+ ✔ Accepted with data set "parenthesised negative"
+ ✔ Accepted with data set "spaces around fraction bar"
+ ✔ Accepted with data set "x equals"
+ ✔ Accepted with data set "x equals fraction"
+ ✔ Accepted with data set "plus sign"
+ ✔ Rejected fails closed with data set "empty"
+ ✔ Rejected fails closed with data set "zero denominator"
+ ✔ Rejected fails closed with data set "mixed number"
+ ✔ Rejected fails closed with data set "negative mixed number"
+ ✔ Rejected fails closed with data set "arithmetic expression"
+ ✔ Rejected fails closed with data set "two numbers"
+ ✔ Rejected fails closed with data set "word"
+ ✔ Rejected fails closed with data set "code"
+ ✔ Rejected fails closed with data set "too many digits"
+ ✔ Rejected fails closed with data set "too many decimals"
+ ✔ Rejected fails closed with data set "too long"
+ ✔ Rejected fails closed with data set "x equals without variable allowed"
+ ✔ Rejected fails closed with data set "other variable"
+ ✔ Rejected fails closed with data set "x equals nothing"
+ ✔ Rejected fails closed with data set "malformed interval"
+ ✔ Decimal and fraction are exactly equal
+
+Scenario Map (AlgebraEngine\Tests\Integration\ScenarioMap)
+ ✔ Every scenario is implemented or deferred with a reason
+
+Templates (AlgebraEngine\Tests\Unit\Items\Templates)
+ ✔ Every template generates valid items whose host key checks correct
+ ✔ Parameter bounds are enforced
+ ✔ Grouped linear signatures are distinct and branch correctly
+ ✔ Contrast keys are derived from the displayed equations
+ ✔ Option order is randomised per item
+ ✔ Guided plans are questions that never state their answer
+
+OK (150 tests, 24177 assertions)

@@ -1,0 +1,13 @@
+PASS index.html served
+PASS bootstrap via bundled api.php finds ../../algebra-private  (HTTP 200)
+PASS start Q07 presents a host-accepted item  (HTTP 200)
+PASS hint commits support  (HTTP 200)
+PASS end session  (HTTP 200)
+PASS report is labelled mock  (HTTP 200)
+PASS mutation without CSRF refused  (HTTP 403)
+PASS private path not served: /algebra-private/config.example.php  (HTTP 404)
+PASS private path not served: /algebra/../algebra-private/bootstrap.php  (HTTP 404)
+PASS private path not served: /algebra/config.php  (HTTP 404)
+PASS private path not served: /algebra/src/App.php  (HTTP 404)
+PASS private path not served: /algebra-private/var/README.txt  (HTTP 404)
+BUNDLE SMOKE PASSED
