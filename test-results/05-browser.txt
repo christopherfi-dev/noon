@@ -1,5 +1,5 @@
-PASS  B1 browser journey (mobile 360x740)  {"modes":["TARGET_ASSESSMENT","DIAGNOSTIC_PROBE","PREREQUISITE_CHECK","GUIDED_REPAIR","GUIDED_REPAIR","INDEPENDENT_CHECK","RETURN_TO_TARGET","SESSION_REPORT"],"maxOverflow":0,"consoleErrors":[],"smallerPrompt":"What is 7 × 7?"}
-PASS  B1 browser journey (desktop 1280x800)  {"modes":["TARGET_ASSESSMENT","DIAGNOSTIC_PROBE","PREREQUISITE_CHECK","GUIDED_REPAIR","GUIDED_REPAIR","INDEPENDENT_CHECK","RETURN_TO_TARGET","SESSION_REPORT"],"maxOverflow":0,"consoleErrors":[],"smallerPrompt":"What is 5 × 11?"}
+PASS  B1 browser journey (mobile 360x740)  {"modes":["TARGET_ASSESSMENT","DIAGNOSTIC_PROBE","PREREQUISITE_CHECK","GUIDED_REPAIR","GUIDED_REPAIR","INDEPENDENT_CHECK","RETURN_TO_TARGET","SESSION_REPORT"],"maxOverflow":0,"consoleErrors":[],"smallerPrompt":"What is 9 + 9 + 9 + 9?"}
+PASS  B1 browser journey (desktop 1280x800)  {"modes":["TARGET_ASSESSMENT","DIAGNOSTIC_PROBE","PREREQUISITE_CHECK","GUIDED_REPAIR","GUIDED_REPAIR","INDEPENDENT_CHECK","RETURN_TO_TARGET","SESSION_REPORT"],"maxOverflow":0,"consoleErrors":[],"smallerPrompt":"What is 7 × 7?"}
 PASS  UI-01 mobile keyboard and status (360x740)  {"reached":true,"focusOnInput":"answer-input","keptAfterError":"1 1/2","statusRegion":"polite","logRegion":"polite","labelled":true,"focusVisible":true,"overflow":0,"consoleErrors":[]}
 PASS  UI-02 safe rendering of model and learner text  {"injected":{"xss":null,"imgs":0,"scripts":0,"anchorsJs":0,"bold":0},"shownAsText":true,"dialogs":[],"consoleErrors":[]}
 

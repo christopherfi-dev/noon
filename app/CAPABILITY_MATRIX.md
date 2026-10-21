@@ -4,7 +4,7 @@ Generated from the tested runtime registry (`app/private/src/Capability/Capabili
 
 Runtime status counts: AVAILABLE_SCORED 2, PARTIAL_COMPONENTS 8, UNAVAILABLE 195. No all-skills operational claim is made.
 
-**Live provider smoke test: NOT RUN** — no provider key was supplied. Every result below is from mock mode (simulated model).
+**Live provider smoke test: NOT RUN** — the supplied config.php has an empty provider key. Every result below is from mock mode (simulated model).
 
 ## Beta skills
 
@@ -52,7 +52,7 @@ Runtime status counts: AVAILABLE_SCORED 2, PARTIAL_COMPONENTS 8, UNAVAILABLE 195
 | Model-worded REPORT envelopes | Not used. The report is built by the host from ledger events only. |
 | Solution-set, interval, rational-domain checkers (golden ROOT-*, DOMAIN-01, INTERVAL-01, GRAPH-01) | Not implemented; no beta skill needs them. |
 | MySQL storage adapter | Not implemented; PDO SQLite only (preflight fails clearly without it). |
-| Live provider smoke test | NOT RUN: no provider key was supplied. Only mock-mode behaviour is tested. |
+| Live provider smoke test | NOT RUN: the config.php supplied on 2026-10-21 has an empty provider key. The DeepSeek endpoint is reachable from the build environment (HTTP 401 without a key). Run app/tools/live_smoke.php once a key is supplied. Only mock-mode behaviour is tested; the adapter is tested against a simulated OpenAI-compatible server (LiveAdapterTest). |
 
 ## All 205 curriculum skills
 

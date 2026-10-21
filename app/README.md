@@ -76,3 +76,15 @@ Set in `private/config.php`: `provider => 'openai_compatible'`,
 `provider_api_key`. The adapter makes one text-mode binding call, checks the
 exact v1.2 activation line, then uses JSON mode for envelopes. Answers and
 working are sent to that provider. No live call has been made in this build.
+
+Live smoke test (confirms network and adapter compatibility only), with the
+key in a config file kept outside the repository:
+
+```bash
+ALGEBRA_CONFIG=/path/outside/repo/config.php php tools/live_smoke.php
+```
+
+For DeepSeek as configured in the owner's other app: `provider_base_url`
+`https://api.deepseek.com/v1` (the adapter appends `/chat/completions`) and
+`provider_model` `deepseek-v4-flash`. That model name comes from the owner's
+configuration and has not been verified against the provider.

@@ -5,7 +5,7 @@ Session start 2026-10-21T11:39:36Z; Beta Gate passed 2026-10-21T13:00:08Z
 (elapsed 1 h 20 min 32 s, computed from `BUILD_LOG.md`). Nothing was deployed.
 All results are **mock mode** (simulated model). No live provider test ran.
 
-## 1. Tests run, with pass/fail counts (final gate run, 12:59:50Z–13:00:08Z)
+## 1. Tests run, with pass/fail counts (latest gate run, 13:04:51Z–13:05:09Z)
 
 Raw output for every step is in `test-results/` (`SUMMARY.md` has start and
 finish times and exit codes).
@@ -16,7 +16,7 @@ finish times and exit codes).
 | `tools/validate_handoff.py` | PASS (10 check groups, 53 future scenarios listed) |
 | `curriculum/validate_curriculum.py`, `test_validation_guards.py` | PASS (205 skills, 493 edges; 8 mutation guards) |
 | App preflight `app/private/bin/preflight.php` | PASS: 15 PASS, 2 WARN (PHP 8.3 rather than 8.4/8.5; no `config.php`, so defaults) |
-| PHPUnit unit + integration | **150 passed, 0 failed** (95 unit, 55 integration; 24,177 assertions) |
+| PHPUnit unit + integration | **152 passed, 0 failed** (95 unit, 57 integration; 24,206 assertions). The gate itself passed at 13:00:08Z with 150; two live-adapter tests were added afterwards. |
 | Browser, Playwright + Chromium, mock mode | **4 passed, 0 failed**: B1 at 360×740, B1 at 1280×800, UI-01, UI-02 |
 | Bundle build + smoke test in the two-folder deployment layout | PASS, 12/12 smoke checks |
 
@@ -134,7 +134,7 @@ session. The raw messages are as they appeared.
 - No solution-set, interval or domain checkers.
 - No MySQL adapter.
 - No purge from backups.
-- **Live provider smoke test: NOT RUN (no key).**
+- **Live provider smoke test: NOT RUN.** The `config.php` supplied after the build has an empty provider key. DeepSeek is reachable from the build environment (HTTP 401 without a key). The adapter is tested against a simulated OpenAI-compatible server (`LiveAdapterTest`). Once a key exists, `app/tools/live_smoke.php` runs the check in one command.
 
 ## 5. Conflicts with the addendum or the package, and decisions for review
 

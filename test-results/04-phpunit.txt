@@ -3,11 +3,11 @@ PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
 Runtime:       PHP 8.3.6
 Configuration: /home/user/noon/app/phpunit.xml
 
-...............................................................  63 / 150 ( 42%)
-............................................................... 126 / 150 ( 84%)
-........................                                        150 / 150 (100%)
+...............................................................  63 / 152 ( 41%)
+............................................................... 126 / 152 ( 82%)
+..........................                                      152 / 152 (100%)
 
-Time: 00:04.709, Memory: 30.00 MB
+Time: 00:04.849, Memory: 30.00 MB
 
 Beta Guards (AlgebraEngine\Tests\Integration\BetaGuards)
  ✔ B 5 non prerequisite proposal rejected
@@ -129,6 +129,10 @@ Linear Equation (AlgebraEngine\Tests\Unit\Math\LinearEquation)
  ✔ Degenerate cases
  ✔ Not linear
 
+Live Adapter (AlgebraEngine\Tests\Integration\LiveAdapter)
+ ✔ Adapter request format and full journey start
+ ✔ Live provider requires explicit settings and https
+
 Math Scenario (AlgebraEngine\Tests\Integration\MathScenario)
  ✔ Math 01 exact rational
  ✔ Math 02 near number
@@ -195,4 +199,4 @@ Templates (AlgebraEngine\Tests\Unit\Items\Templates)
  ✔ Option order is randomised per item
  ✔ Guided plans are questions that never state their answer
 
-OK (150 tests, 24177 assertions)
+OK (152 tests, 24206 assertions)

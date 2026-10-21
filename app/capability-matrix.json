@@ -1,5 +1,5 @@
 {
-    "generated_at": "2026-10-21T12:59:50Z",
+    "generated_at": "2026-10-21T13:04:40Z",
     "curriculum": "ACE-ALGEBRA1 1.1.0",
     "architecture": "1.2",
     "counts": {
@@ -7,7 +7,7 @@
         "PARTIAL_COMPONENTS": 8,
         "AVAILABLE_SCORED": 2
     },
-    "live_provider_smoke_test": "NOT RUN: no provider key was supplied.",
+    "live_provider_smoke_test": "NOT RUN: the supplied config.php has an empty provider key. Command ready: app/tools/live_smoke.php.",
     "skills": [
         {
             "skill_id": "N01",
@@ -4277,7 +4277,7 @@
         {
             "item": "Live provider smoke test",
             "status": "NOT IMPLEMENTED",
-            "note": "NOT RUN: no provider key was supplied. Only mock-mode behaviour is tested."
+            "note": "NOT RUN: the config.php supplied on 2026-10-21 has an empty provider key. The DeepSeek endpoint is reachable from the build environment (HTTP 401 without a key). Run app/tools/live_smoke.php once a key is supplied. Only mock-mode behaviour is tested; the adapter is tested against a simulated OpenAI-compatible server (LiveAdapterTest)."
         }
     ],
     "heuristics": [

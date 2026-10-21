@@ -31,3 +31,8 @@ Factual entries only: UTC time, action, result. Durations are computed from reco
 | 2026-10-21T13:00:08Z | Gate item 3: `app/CAPABILITY_MATRIX.md` lists all 10 beta skills with variants and checkers, all 10 deferred items, 205 skills | PASS (checked by COVER-01) |
 | 2026-10-21T13:00:08Z | Gate item 5: live provider smoke test | NOT RUN — no key supplied; stated in the capability matrix |
 | 2026-10-21T13:00:08Z | **Beta Gate (§8) passed** (finish of the last gate step) | Elapsed since session start 11:39:36Z: 1 h 20 min 32 s |
+| 2026-10-21T13:03Z (approx., not command-stamped) | Owner uploaded a `config.php` from another app (dashboard constants). Inspected: provider URL `https://api.deepseek.com/v1/chat/completions`, model `deepseek-v4-flash`, **provider key empty**. File not copied into the repository | Live smoke test cannot run: no key |
+| 2026-10-21T13:03Z (approx., not command-stamped) | Reachability check to `api.deepseek.com` with no credentials and an empty body | HTTP 401 on `/v1/models` and `/v1/chat/completions` (endpoint reachable; nothing sent but `{}`) |
+| 2026-10-21T13:03Z (approx., not command-stamped) | Added `LiveAdapterTest` (adapter vs simulated OpenAI-compatible server) and `app/tools/live_smoke.php` (refuses to run without a key; exit 2 verified) | PASS — 2 tests |
+| 2026-10-21T13:04:51Z | Gate run 3: `app/tools/run_all_tests.sh` after the additions | PASS — every step exit 0; PHPUnit 152 tests (24206 assertions); browser 4/4; bundle smoke 12/12 |
+| 2026-10-21T13:05:09Z | Gate item 5 status | Still NOT RUN (empty key); stated in the capability matrix |
