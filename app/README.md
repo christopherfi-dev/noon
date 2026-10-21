@@ -98,9 +98,22 @@ It writes one transcript per session (learner text, tutor text, mode, verdict
 per turn, every host rejection with the rejected text) and `METRICS.md`
 (binding, repairs per operation, HOLDs, rejections, latency, tokens).
 
-`provider_reasoning_effort` (e.g. `'high'`) is sent as `reasoning_effort` only
-when set. Its effect depends on the provider; the DeepSeek docs could not be
-reached from the build environment to confirm it.
+Thinking settings (round 3 ruling) are required for the live provider and are
+never left to the provider default:
+
+- `provider_thinking`: `'disabled'` or `'enabled'`, sent as
+  `"thinking": {"type": ...}` on every call.
+- `provider_reasoning_effort`: `'low'`, `'high'` or `'max'`, sent only when
+  thinking is enabled (empty otherwise).
+- `temperature` is sent only when thinking is disabled (it has no effect in
+  thinking mode).
+- `provider_max_tokens`: set per configuration; with thinking enabled the
+  hidden reasoning counts against it.
+
+Reasoning text (`reasoning_content`) is never read, stored, shown or sent back.
+`model_calls` keeps only each call's finish reason, token counts (including
+reasoning tokens) and duration. Preflight fails when the thinking settings are
+missing or inconsistent.
 
 `ALGEBRA_TRANSPORT_LOG=/path` adds a log of response metadata (HTTP status,
 finish reason, token counts, the first 400 characters of content). Request
