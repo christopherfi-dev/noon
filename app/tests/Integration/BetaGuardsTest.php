@@ -239,7 +239,10 @@ final class BetaGuardsTest extends TestCase
                 $this->assertStringNotContainsString($f, $text, 'prompt contains forbidden content: ' . $f);
             }
             if ($call['json']) {
-                $context = Json::decode(substr(end($call['messages'])['content'], 5), 64);
+                // The trusted context is the first JSON user message; a repair call appends a REPAIR_REQUEST after it.
+                $contexts = array_values(array_filter($call['messages'], fn ($m) => $m['role'] === 'user' && str_starts_with($m['content'], 'JSON ') && str_contains($m['content'], '"TRUSTED_OUTPUT_ALLOCATION"')));
+                $this->assertCount(1, $contexts, 'exactly one trusted context per call');
+                $context = Json::decode(substr($contexts[0]['content'], 5), 64);
                 foreach ($context['TRUSTED_CURRICULUM']['records'] as $rec) {
                     $this->assertArrayNotHasKey('anchor_item', $rec['assessment']);
                 }

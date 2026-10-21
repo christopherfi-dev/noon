@@ -83,6 +83,13 @@ These two only fail on some random paths. A sweep of hundreds of random journeys
 
 The test helper now prints the last rejection reasons when no item is active.
 
+**Repeat runs:**
+- 20 more full-suite runs found one more intermittent problem, in a test.
+  - In 1 run of 20, B9 raised warnings: `Undefined array key "TRUSTED_CURRICULUM"` (BetaGuardsTest.php:243).
+  - B9 read the last message of each provider call. When a random path contained a repair, that message was the repair request, not the trusted context.
+  - **Fix:** B9 now finds the single trusted context in every call. That is stricter: it also checks repair calls. B9 then passed 30 of 30 isolated runs.
+- One full-suite run, earlier and before these fixes, reported 1 failure whose test name I did not capture. Since then the suite has run cleanly many times, and 1,000 random journeys all reached the report. Further repeat runs are recorded in `BUILD_LOG.md`.
+
 **Live:** every host rejection of model output and every HOLD is listed with its exact reason and rejected text:
 - in each configuration's `METRICS.md`, under "Every host rejection of model output";
 - in place, in the transcripts.
