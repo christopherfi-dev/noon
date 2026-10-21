@@ -105,6 +105,31 @@ final class TemplatesTest extends TestCase
     }
 
     /** D1: every guided step asks one question, its key checks correct, and its own prompt does not contain its answer. */
+    /** Round 2 ruling 8: every guided step names the skill it exercises: the repair skill or a declared prerequisite. */
+    public function testEveryGuidedStepIsTaggedWithTheSkillItExercises(): void
+    {
+        $curriculum = \AlgebraEngine\Curriculum\CurriculumRepository::fromFile(ALGEBRA_APP_ROOT . '/private/resources/curriculum/algebra-map.json');
+        $planner = new SocraticPlanner(new ItemFactory());
+        $seen = [];
+        foreach (['N03', 'N04', 'N05', 'N06', 'N18', 'Q04', 'Q05', 'Q06', 'Q07', 'E06'] as $skill) {
+            $allowed = array_merge([$skill], $curriculum->declaredPrerequisites($skill));
+            foreach ([false, true] as $faded) {
+                foreach ($skill === 'Q07' ? ['divide', 'expand'] : ['divide'] as $route) {
+                    for ($i = 0; $i < 20; $i++) {
+                        $plan = $planner->plan($skill, RandomSource::seeded("tag$skill$i$route" . (int) $faded), $faded, ['route' => $route]);
+                        foreach ($planner->flatten($plan['steps']) as $step) {
+                            $this->assertContains($step['exercises'], $allowed, "$skill {$step['id']}");
+                            $seen[$skill][$step['exercises']] = true;
+                        }
+                    }
+                }
+            }
+        }
+        $this->assertArrayHasKey('N18', $seen['E06']);
+        $this->assertArrayHasKey('A07', $seen['E06']);
+        $this->assertArrayHasKey('E06', $seen['E06']);
+    }
+
     public function testGuidedPlansAreQuestionsThatNeverStateTheirAnswer(): void
     {
         $f = new ItemFactory();

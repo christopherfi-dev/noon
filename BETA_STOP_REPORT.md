@@ -1,5 +1,7 @@
 # Algebra Engine beta — stop report (Conductor Addendum Beta v1, §9)
 
+> Round 2 (`CONDUCTOR_ROUND_2.md`) is reported separately in `ROUND_2_REPORT.md`.
+
 Repository `christopherfi-dev/noon`, branch `claude/elegant-volta-blu3uj`.
 Session start 2026-10-21T11:39:36Z; Beta Gate passed 2026-10-21T13:00:08Z
 (elapsed 1 h 20 min 32 s, computed from `BUILD_LOG.md`). Nothing was deployed.

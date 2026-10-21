@@ -1,5 +1,5 @@
 {
-  "ran_at": "2026-10-21T21:07:48.591Z",
+  "ran_at": "2026-10-21T21:36:30.948Z",
   "results": [
     {
       "name": "B1 browser journey (mobile 360x740)",
@@ -17,7 +17,7 @@
         ],
         "maxOverflow": 0,
         "consoleErrors": [],
-        "smallerPrompt": "What is 9 × 11?"
+        "smallerPrompt": "What is 8 × 3?"
       }
     },
     {
@@ -36,7 +36,7 @@
         ],
         "maxOverflow": 0,
         "consoleErrors": [],
-        "smallerPrompt": "What is 5 × 6?"
+        "smallerPrompt": "What is 4 + 4 + 4?"
       }
     },
     {
@@ -50,6 +50,45 @@
         "logRegion": "polite",
         "labelled": true,
         "focusVisible": true,
+        "overflow": 0,
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "UI-03 skill map shows the 10 beta skills by default; full map on request",
+      "pass": true,
+      "detail": {
+        "defaultView": {
+          "count": 10,
+          "ids": [
+            "E06",
+            "N03",
+            "N04",
+            "N05",
+            "N06",
+            "N18",
+            "Q04",
+            "Q05",
+            "Q06",
+            "Q07"
+          ],
+          "pressed": "false",
+          "text": "Show full map",
+          "labels": [
+            "Partial: numeric part only",
+            "Available in this beta"
+          ]
+        },
+        "fullView": {
+          "count": 205,
+          "pressed": "true",
+          "labels": [
+            "Available in this beta",
+            "Not available in this beta",
+            "Partial: numeric part only"
+          ]
+        },
+        "back": 10,
         "overflow": 0,
         "consoleErrors": []
       }

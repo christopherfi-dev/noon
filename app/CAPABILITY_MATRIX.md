@@ -4,7 +4,7 @@ Generated from the tested runtime registry (`app/private/src/Capability/Capabili
 
 Runtime status counts: AVAILABLE_SCORED 2, PARTIAL_COMPONENTS 8, UNAVAILABLE 195. No all-skills operational claim is made.
 
-**Live provider smoke test:** RUN 2026-10-21 against DeepSeek model deepseek-flash (owner to confirm the model). The last run, on the final code, PASSED: binding, Q07 item, probe, hint, report, and a --journey path into Socratic repair with the disclosure guard active. Earlier runs 1, 2 and 4 failed and led to fixes. Output: test-results/08-live-smoke.txt. This confirms network access and adapter compatibility only, not teaching quality, learning or deployment. Every other result in this matrix is from mock mode (simulated model).
+**Live provider smoke test:** Round 2 (2026-10-21): smoke test PASSED against DeepSeek with the owner's model deepseek-v4-flash and reasoning_effort high (test-results/live/00-smoke-and-model-check.md). The provider accepts that name but does not list it (listed: deepseek-flash, deepseek-v4-pro), so the scripted live sessions were not run (Round 2 §4.1); the owner must confirm the model. Beta-round smoke runs used deepseek-flash (test-results/08-live-smoke.txt). This confirms network access and adapter compatibility only, not teaching quality, learning or deployment. Every other result in this matrix is from mock mode (simulated model).
 
 ## Beta skills
 
@@ -27,6 +27,7 @@ Runtime status counts: AVAILABLE_SCORED 2, PARTIAL_COMPONENTS 8, UNAVAILABLE 195
 |---|---|
 | Answer-disclosure guard (D1) | HEURISTIC. Rejects model text containing the active or a remaining guided step's answer as a standalone number, number word, equivalent polynomial span or the key option's text. The word "one" used as a determiner or pronoun ("one way", "on one side") is not read as the value 1 unless a value cue precedes it ("x is one"). Paraphrases (e.g. "dividing by 3" for the option "Divide by 3") are not detected. |
 | Internal vocabulary | Learner-facing model text that mentions the host or keys is rejected and repaired (word match on "host", "key", "keys"). |
+| Guided-step skill tags | Each guided step names the skill it exercises (the repair skill or a declared prerequisite); being stuck at the smallest step checks that prerequisite directly (Round 2 ruling 8). The tags are authored per template, not inferred. |
 | One action per message | HEURISTIC. Model text may not contain "?"; the only question shown is the host-rendered item prompt. |
 | Error signatures | Deterministic value matching of known error patterns. A match is recorded as an observation, never a confirmed cause, and only selects the probe/descent branch. |
 

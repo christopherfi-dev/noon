@@ -14,7 +14,10 @@ Source: `contracts/acceptance-scenarios.json` (53 scenarios). Map file: `app/tes
 | B6 | Model expected_answer disagrees → host key governs; item flagged | `tests/Integration/BetaGuardsTest.php::testB6HostKeyGovernsAndItemFlagged` |
 | B7 | Hint during an independent item → assisted; streak does not advance | `tests/Integration/BetaGuardsTest.php::testB7HintMakesItemAssisted` |
 | B8 | Disclosure guard rejects a repair message containing the answer | `tests/Integration/BetaGuardsTest.php::testB8DisclosureGuardRejectsLeak, ::testB8RepeatedLeakHolds` |
-| B9 | Prompt assembly contains no anchor or example content | `tests/Integration/BetaGuardsTest.php::testB9PromptsCarryNoAnchorOrExampleContent` |
+| B9 | Prompt assembly contains no anchor or example content, and no reference to `examples/model-question.json` (extended in Round 2, ruling 4) | `tests/Integration/BetaGuardsTest.php::testB9PromptsCarryNoAnchorOrExampleContent` |
+| B10 | Round 2 ruling 8: stuck at the smallest guided question → PREREQUISITE_CHECK on the declared prerequisite it exercises, with no independent check or probe first; if that skill is outside the beta or not a declared prerequisite → boundary recorded as in B4 | `tests/Integration/BetaJourneyTest.php::testB10StuckStepGoesDirectlyToItsPrerequisite, ::testB10StuckStepAtABoundaryIsRecordedNotFailed` |
+| UI-03 | Round 2 §3: the skill map shows the 10 beta skills by default; "Show full map" shows all 205 with unchanged runtime status labels | `tests/Browser/run_browser.mjs` (UI-03, 360x740) |
+| Key leak | Round 2 §1.2: no tracked file or upload ZIP entry contains `sk-[A-Za-z0-9]{20,}` or the configured key | `tests/Integration/KeyLeakTest.php`; also `tools/key_leak_scan.php` after each bundle build |
 
 ## Package scenarios
 

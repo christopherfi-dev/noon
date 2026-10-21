@@ -3,15 +3,19 @@ PASS  PDO                  loaded
 PASS  PDO_SQLITE           loaded
 PASS  JSON                 loaded
 PASS  MBSTRING             loaded
-WARN  CONFIG               No config.php; defaults apply (mock provider). Copy config.example.php to config.php.
-PASS  PROVIDER             mock provider (no outbound calls). Live provider not configured.
+PASS  CONFIG               config.php found
+PASS  PROVIDER_CONFIG      provider_base_url set
+PASS  PROVIDER_CONFIG      provider_model set
+PASS  PROVIDER_CONFIG      provider_api_key set
+PASS  CURL                 loaded (live provider calls use HTTPS with certificate verification)
+PASS  OPENSSL              loaded
 PASS  FILE                 resources/architecture/Algebra_Constraint_Architecture_v1.2.md
 PASS  FILE                 resources/curriculum/algebra-map.json
 PASS  FILE                 resources/contracts/model-envelope.schema.json
 PASS  FILE                 resources/contracts/workflow-policy.json
 PASS  FILE                 migrations/001_init.sql
 PASS  FILE                 vendor/autoload.php
-PASS  ARCHITECTURE_HASH    v1.2 8997b6b88067ebfae26abcbe84beb4b6cdcfc55091a9e86128fc020eb5cca772
+PASS  ARCHITECTURE_HASH    v1.2 ef03667dabf7152be63009ec6c1e327a83340b4fff65eef303e3eeb326291390
 PASS  STORAGE_DIR          writable: /home/user/noon/app/private/var
 PASS  SQLITE_OPEN          database opened and writable
 PASS  LAYOUT               private folder is outside the public folder

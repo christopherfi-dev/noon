@@ -89,7 +89,7 @@ foreach ($expected as $rel) {
 $arch = $privateDir . '/resources/architecture/Algebra_Constraint_Architecture_v1.2.md';
 if (is_file($arch)) {
     $sha = hash_file('sha256', $arch);
-    $sha === '8997b6b88067ebfae26abcbe84beb4b6cdcfc55091a9e86128fc020eb5cca772'
+    $sha === 'ef03667dabf7152be63009ec6c1e327a83340b4fff65eef303e3eeb326291390' // v1.2 after Conductor Round 2 rulings 2 and 3
         ? $add('PASS', 'ARCHITECTURE_HASH', 'v1.2 ' . $sha)
         : $add('FAIL', 'ARCHITECTURE_HASH', 'Architecture file differs from the reviewed v1.2 (' . $sha . ').');
 }

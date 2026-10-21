@@ -21,7 +21,7 @@ final class TransitionGuard
     }
 
     /**
-     * @param array{explicit_target_change?:bool,end_session?:bool} $ctx
+     * @param array{explicit_target_change?:bool,end_session?:bool,trigger?:string} $ctx
      */
     public function allowed(string $from, string $to, array $ctx = []): bool
     {
@@ -42,6 +42,12 @@ final class TransitionGuard
         }
         if (($ctx['explicit_target_change'] ?? false) && in_array($to, $this->policy['explicit_target_change_from_active_states'], true)) {
             return true;
+        }
+        // Edges restricted to one host trigger (runtime policy copy, Round 2 ruling 8).
+        foreach ($this->policy['trigger_edges'] ?? [] as $edge) {
+            if ($edge['from'] === $from && $edge['to'] === $to && ($ctx['trigger'] ?? null) === $edge['trigger']) {
+                return true;
+            }
         }
         return false;
     }

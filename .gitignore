@@ -1,1 +1,8 @@
 dist/stage/
+# Round 2 §1: secrets never enter the repository
+config.php
+**/config.php
+*.env
+.env*
+config.local.php
+!app/private/config.example.php

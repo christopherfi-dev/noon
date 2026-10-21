@@ -3,11 +3,11 @@ PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
 Runtime:       PHP 8.3.6
 Configuration: /home/user/noon/app/phpunit.xml
 
-...............................................................  63 / 154 ( 40%)
-............................................................... 126 / 154 ( 81%)
-............................                                    154 / 154 (100%)
+...............................................................  63 / 160 ( 39%)
+............................................................... 126 / 160 ( 78%)
+..................................                              160 / 160 (100%)
 
-Time: 00:06.118, Memory: 30.00 MB
+Time: 00:05.232, Memory: 30.00 MB
 
 Beta Guards (AlgebraEngine\Tests\Integration\BetaGuards)
  ✔ B 5 non prerequisite proposal rejected
@@ -24,6 +24,8 @@ Beta Journey (AlgebraEngine\Tests\Integration\BetaJourney)
  ✔ B 3 deep descent and return
  ✔ B 3 prerequisite success stops descent
  ✔ B 4 beta boundary
+ ✔ B 10 stuck step goes directly to its prerequisite
+ ✔ B 10 stuck step at a boundary is recorded not failed
  ✔ Every beta skill can start and score
 
 Checkers (AlgebraEngine\Tests\Unit\Math\Checkers)
@@ -125,6 +127,10 @@ Host (AlgebraEngine\Tests\Integration\Host)
  ✔ Host 16 forget and expiry
  ✔ Host 17 cost limits
 
+Key Leak (AlgebraEngine\Tests\Integration\KeyLeak)
+ ✔ No tracked file or zip entry contains a key
+ ✔ Scanner detects planted keys
+
 Linear Equation (AlgebraEngine\Tests\Unit\Math\LinearEquation)
  ✔ Unique solutions
  ✔ Degenerate cases
@@ -133,6 +139,7 @@ Linear Equation (AlgebraEngine\Tests\Unit\Math\LinearEquation)
 Live Adapter (AlgebraEngine\Tests\Integration\LiveAdapter)
  ✔ Adapter request format and full journey start
  ✔ Empty content and internal words are repaired not shown
+ ✔ Reasoning effort is sent only when configured
  ✔ Live provider requires explicit settings and https
 
 Math Scenario (AlgebraEngine\Tests\Integration\MathScenario)
@@ -199,6 +206,7 @@ Templates (AlgebraEngine\Tests\Unit\Items\Templates)
  ✔ Grouped linear signatures are distinct and branch correctly
  ✔ Contrast keys are derived from the displayed equations
  ✔ Option order is randomised per item
+ ✔ Every guided step is tagged with the skill it exercises
  ✔ Guided plans are questions that never state their answer
 
-OK (154 tests, 24230 assertions)
+OK (160 tests, 25933 assertions)

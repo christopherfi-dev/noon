@@ -143,6 +143,7 @@ final class HostTest extends TestCase
         $this->assertSame($calls + 1, $h->mock->calls, 'no second call was started');
         $failure = $h->events('PROVIDER_FAILURE')[0]['data']['failure'];
         $this->assertSame(['BUDGET', 'LEASE_TIME_INSUFFICIENT'], [$failure['type'], $failure['detail']]);
+        $this->assertSame('PROVIDER_UNAVAILABLE', $h->row()['snapshot']['issue']['type'], 'a budget stop is not a verification failure');
         $this->assertCount(1, $h->events('CHECKER_RESULT'), 'the answer was kept and scored once');
         $h->event('RESUME_SESSION');
         $this->assertSame('READY', $h->view['status']);
@@ -329,6 +330,9 @@ final class HostTest extends TestCase
         $this->assertSame(200, $r->status);
         $this->assertSame('HOLD', $h->view['status']);
         $this->assertSame(['RESUME_SESSION', 'CHANGE_TARGET', 'END_SESSION'], $h->view['allowed_actions']);
+        // Round 2 ruling 6: a timeout is a provider issue, not a verification failure; learner text is unchanged.
+        $this->assertSame('PROVIDER_UNAVAILABLE', $h->row()['snapshot']['issue']['type']);
+        $this->assertContains('Your work is saved, but the next step could not be prepared right now. You can try again or end the session.', array_column($h->view['messages'], 'text'));
         $this->assertSame(1, $this->checkerCount());
         $this->assertSame($answer, $h->events('RESPONSE_SUBMITTED')[0]['data']['text']);
         // Replaying the same request returns the stored outcome; nothing is rescored or re-billed.

@@ -15,6 +15,8 @@ use AlgebraEngine\Support\RandomSource;
  * into steps; every step is a question asking for one learner action. Each
  * step may hold smaller questions that are used only when the learner is
  * stuck. No step states a worked example, a full solution or an answer.
+ * Every step is tagged with the skill it exercises (`exercises`): the repair
+ * skill itself or one of its declared prerequisites (Round 2 ruling 8).
  */
 final class SocraticPlanner
 {
@@ -150,13 +152,13 @@ final class SocraticPlanner
                 $this->rename($sign, 's2'),
                 $this->scalar('s3', 'What is the difference between ' . abs($a) . ' and ' . abs($b) . '?', abs(abs($a) - abs($b)), 'N17',
                     [$this->scalar('s3.1', 'Count up from ' . min(abs($a), abs($b)) . ' to ' . max(abs($a), abs($b)) . '. How many steps is that?', abs(abs($a) - abs($b)), 'N17')]),
-                $this->scalar('s4', 'What is ' . $disp . '?', $sum, 'N02', [], 'Use the sign you chose and the difference you found. What is ' . $disp . '?', true),
+                $this->scalar('s4', 'What is ' . $disp . '?', $sum, 'N03', [], 'Use the sign you chose and the difference you found. What is ' . $disp . '?', true),
             ];
         } else {
             $steps = [
                 $this->rename($this->signStep('s1', 'Both numbers in ' . $disp . ' are negative. Is their sum positive or negative?', $sum, 'N02', $rng), 's1'),
                 $this->scalar('s2', 'What is ' . abs($a) . ' + ' . abs($b) . '?', abs($a) + abs($b), 'N17'),
-                $this->scalar('s3', 'What is ' . $disp . '?', $sum, 'N02', [], 'Use the sign and the total you found. What is ' . $disp . '?', true),
+                $this->scalar('s3', 'What is ' . $disp . '?', $sum, 'N03', [], 'Use the sign and the total you found. What is ' . $disp . '?', true),
             ];
         }
         return [$disp, 'What is ' . $disp . '?', $steps];
@@ -169,7 +171,7 @@ final class SocraticPlanner
         $steps = [
             $this->scalar('s1', 'Subtracting a number gives the same result as adding its opposite. What is the opposite of ' . Fmt::n($b) . '?', -$b, 'N02', [],
                 'What number is the same distance from 0 as ' . Fmt::n($b) . ', on the other side of 0?'),
-            $this->scalar('s2', 'What is ' . $disp . '?', $a - $b, 'N03',
+            $this->scalar('s2', 'What is ' . $disp . '?', $a - $b, 'N04',
                 [$this->scalar('s2.1', 'What is ' . Fmt::n($a) . ' + ' . Fmt::p(-$b) . '?', $a - $b, 'N03')],
                 'Rewrite it as an addition first. What is ' . $disp . '?', true),
         ];
@@ -184,8 +186,8 @@ final class SocraticPlanner
         $steps = [
             $this->scalar('s1', 'Leave the signs aside for a moment. What is ' . abs($a) . ' × ' . abs($b) . '?', abs($a * $b), 'N18', [],
                 'What is ' . abs($b) . ' × ' . abs($a) . '?'),
-            $this->signStep('s2', ($negatives === 2 ? 'Both numbers are negative. ' : 'Exactly one of the numbers is negative. ') . 'Is ' . $disp . ' positive or negative?', $a * $b, 'N02', $rng),
-            $this->scalar('s3', 'What is ' . $disp . '?', $a * $b, 'N02', [], 'Use the size and the sign you found. What is ' . $disp . '?', true),
+            $this->signStep('s2', ($negatives === 2 ? 'Both numbers are negative. ' : 'Exactly one of the numbers is negative. ') . 'Is ' . $disp . ' positive or negative?', $a * $b, 'N05', $rng),
+            $this->scalar('s3', 'What is ' . $disp . '?', $a * $b, 'N05', [], 'Use the size and the sign you found. What is ' . $disp . '?', true),
         ];
         return [$disp, 'What is ' . $disp . '?', $steps];
     }
@@ -199,7 +201,7 @@ final class SocraticPlanner
             $this->scalar('s1', 'Leave the signs aside for a moment. What is ' . abs($a) . ' ÷ ' . abs($b) . '?', abs($q), 'N18',
                 [$this->scalar('s1.1', abs($b) . ' times what number is ' . abs($a) . '?', abs($q), 'N18')]),
             $this->signStep('s2', 'Is ' . $disp . ' positive or negative?', $q, 'N05', $rng),
-            $this->scalar('s3', 'What is ' . $disp . '?', $q, 'N05', [], 'Use the size and the sign you found. What is ' . $disp . '?', true),
+            $this->scalar('s3', 'What is ' . $disp . '?', $q, 'N06', [], 'Use the size and the sign you found. What is ' . $disp . '?', true),
         ];
         return [$disp, 'What is ' . $disp . '?', $steps];
     }
@@ -211,9 +213,9 @@ final class SocraticPlanner
             $n = $a * $b;
             $disp = $n . ' ÷ ' . $b;
             $steps = [
-                $this->scalar('s1', 'Division asks a missing-factor question. ' . $b . ' times what number makes ' . $n . '?', $a, 'N17',
+                $this->scalar('s1', 'Division asks a missing-factor question. ' . $b . ' times what number makes ' . $n . '?', $a, 'N18',
                     [$this->scalar('s1.1', 'Count by ' . $b . 's, starting at ' . $b . '. How many numbers do you say to reach ' . $n . '?', $a, 'N17')]),
-                $this->scalar('s2', 'What is ' . $disp . '?', $a, 'N17', [], null, true),
+                $this->scalar('s2', 'What is ' . $disp . '?', $a, 'N18', [], null, true),
             ];
             return [$disp, 'What is ' . $disp . '?', $steps];
         }
@@ -222,15 +224,15 @@ final class SocraticPlanner
         if ($l < 3) {
             $steps = [
                 $this->scalar('s1', 'What is ' . $s . ' + ' . $s . '?', 2 * $s, 'N17'),
-                $this->scalar('s2', 'What is ' . $disp . '?', $a * $b, 'N17', [], null, true),
+                $this->scalar('s2', 'What is ' . $disp . '?', $a * $b, 'N18', [], null, true),
             ];
             return [$disp, 'What is ' . $disp . '?', $steps];
         }
         $k = $l > 10 ? 10 : ($l >= 6 ? 5 : 2);
         $steps = [
-            $this->scalar('s1', 'What is ' . $s . ' × ' . $k . '?', $s * $k, 'N17'),
-            $this->scalar('s2', 'What is ' . $s . ' × ' . ($l - $k) . '?', $s * ($l - $k), 'N17'),
-            $this->scalar('s3', $l . ' is ' . $k . ' + ' . ($l - $k) . ', so ' . $s . ' × ' . $l . ' is ' . $s . ' × ' . $k . ' plus ' . $s . ' × ' . ($l - $k) . '. What is ' . $disp . '?', $a * $b, 'N17',
+            $this->scalar('s1', 'What is ' . $s . ' × ' . $k . '?', $s * $k, 'N18'),
+            $this->scalar('s2', 'What is ' . $s . ' × ' . ($l - $k) . '?', $s * ($l - $k), 'N18'),
+            $this->scalar('s3', $l . ' is ' . $k . ' + ' . ($l - $k) . ', so ' . $s . ' × ' . $l . ' is ' . $s . ' × ' . $k . ' plus ' . $s . ' × ' . ($l - $k) . '. What is ' . $disp . '?', $a * $b, 'N18',
                 [$this->scalar('s3.1', 'Add your two results. What is their total?', $a * $b, 'N17')], null, true),
         ];
         return [$disp, 'What is ' . $disp . '?', $steps];
@@ -252,7 +254,7 @@ final class SocraticPlanner
         $arith = ($a > 0 ? Fmt::n($b) . ' ' . Fmt::MINUS . ' ' . $a : Fmt::n($b) . ' + ' . (-$a));
         $steps = [
             $this->choice('s1', 'Which operation, done to both sides of ' . $eq . ', leaves x by itself?', $ops, 'Q03', 'That operation does not leave x by itself.', 'select_one'),
-            $this->scalar('s2', 'Undo the ' . Fmt::n($a) . ' on both sides, so x is alone on the left. What is x?', $b - $a, 'N03',
+            $this->scalar('s2', 'Undo the ' . Fmt::n($a) . ' on both sides, so x is alone on the left. What is x?', $b - $a, 'Q04',
                 [$this->scalar('s2.1', 'What is ' . $arith . '?', $b - $a, 'N03')], null, true),
         ];
         return [$eq, 'Solve ' . $eq . '. What is x?', $steps];
@@ -272,7 +274,7 @@ final class SocraticPlanner
         $ops = $this->markOps($ops, "($a)*x", 'x');
         $steps = [
             $this->choice('s1', 'Which operation, done to both sides of ' . $eq . ', leaves x by itself?', $ops, 'Q03', 'That operation does not leave x by itself.', 'select_one'),
-            $this->scalar('s2', 'Divide both sides by ' . Fmt::p($a) . '. What is x?', $s, 'N06', [
+            $this->scalar('s2', 'Divide both sides by ' . Fmt::p($a) . '. What is x?', $s, 'Q05', [
                 $this->scalar('s2.1', 'Leave the signs aside for a moment. What is ' . abs($b) . ' ÷ ' . abs($a) . '?', abs($s), 'N06'),
                 $this->signStep('s2.2', 'Is ' . Fmt::n($b) . ' ÷ ' . Fmt::p($a) . ' positive or negative?', $s, 'N06', $rng),
             ], null, true),
@@ -367,7 +369,7 @@ final class SocraticPlanner
                 [$this->scalar('s1.1', $repeated, $a * $b, 'N18')]),
             $this->expression('s2', 'How many x\'s are in all ' . $a . ' groups? Write them as one term.', "$a*x", ['x'], 'A07',
                 [$this->scalar('s2.1', 'If x were 10, what would ' . $a . ' groups of x be worth?', 10 * $a, 'N18')]),
-            $this->expression('s3', 'How do you write ' . $disp . ' without parentheses?', "$a*x+" . ($a * $b), ['x'], 'A07', [
+            $this->expression('s3', 'How do you write ' . $disp . ' without parentheses?', "$a*x+" . ($a * $b), ['x'], 'E06', [
                 $this->choice('s3.1', 'Your x-part and your number part are added together inside the parentheses. Which sign joins them in the answer?', $rng->shuffle([
                     ['code' => 'PLUS', 'text' => '+', 'valid' => true],
                     ['code' => 'MINUS', 'text' => Fmt::MINUS, 'valid' => false],
@@ -379,28 +381,28 @@ final class SocraticPlanner
 
     // ---------------------------------------------------------------- step constructors
 
-    private function scalar(string $id, string $prompt, int|Rational $expected, ?string $implicates, array $smaller = [], ?string $alt = null, bool $final = false): array
+    private function scalar(string $id, string $prompt, int|Rational $expected, ?string $exercises, array $smaller = [], ?string $alt = null, bool $final = false): array
     {
         $value = $expected instanceof Rational ? $expected : Rational::fromInt($expected);
         return [
             'id' => $id, 'prompt' => $prompt, 'alt_prompt' => $alt, 'response_type' => 'scalar',
             'answer' => ['kind' => 'exact_rational', 'expected' => $value->toString(), 'requested_form' => 'single_number', 'units' => null, 'tolerance' => null, 'rubric' => []],
-            'variables' => ['x'], 'options' => null, 'implicates' => $implicates, 'smaller' => $smaller, 'final' => $final, 'wrong_choice_fact' => null,
+            'variables' => ['x'], 'options' => null, 'exercises' => $exercises, 'smaller' => $smaller, 'final' => $final, 'wrong_choice_fact' => null,
         ];
     }
 
-    private function expression(string $id, string $prompt, string $expected, array $vars, ?string $implicates, array $smaller = [], ?string $alt = null, bool $final = false): array
+    private function expression(string $id, string $prompt, string $expected, array $vars, ?string $exercises, array $smaller = [], ?string $alt = null, bool $final = false): array
     {
         $canonical = Polynomial::fromNode(ExpressionParser::parse($expected, $vars))->toString();
         return [
             'id' => $id, 'prompt' => $prompt, 'alt_prompt' => $alt, 'response_type' => 'expression',
             'answer' => ['kind' => 'polynomial', 'expected' => $canonical, 'requested_form' => 'expanded', 'units' => null, 'tolerance' => null, 'rubric' => []],
-            'variables' => $vars, 'options' => null, 'implicates' => $implicates, 'smaller' => $smaller, 'final' => $final, 'wrong_choice_fact' => null,
+            'variables' => $vars, 'options' => null, 'exercises' => $exercises, 'smaller' => $smaller, 'final' => $final, 'wrong_choice_fact' => null,
         ];
     }
 
     /** @param list<array{code:string,text:string,valid:bool}> $options */
-    private function choice(string $id, string $stem, array $options, ?string $implicates, ?string $wrongFact, string $form): array
+    private function choice(string $id, string $stem, array $options, ?string $exercises, ?string $wrongFact, string $form): array
     {
         $lettered = CS::letter($options);
         $key = [];
@@ -412,16 +414,16 @@ final class SocraticPlanner
         return [
             'id' => $id, 'prompt' => CS::promptLines($stem, $lettered), 'alt_prompt' => null, 'response_type' => 'classification',
             'answer' => CS::spec($key, $form),
-            'variables' => [], 'options' => $lettered, 'implicates' => $implicates, 'smaller' => [], 'final' => false, 'wrong_choice_fact' => $wrongFact,
+            'variables' => [], 'options' => $lettered, 'exercises' => $exercises, 'smaller' => [], 'final' => false, 'wrong_choice_fact' => $wrongFact,
         ];
     }
 
-    private function signStep(string $id, string $stem, int $value, ?string $implicates, RandomSource $rng): array
+    private function signStep(string $id, string $stem, int $value, ?string $exercises, RandomSource $rng): array
     {
         return $this->choice($id, $stem, $rng->shuffle([
             ['code' => 'POS', 'text' => 'Positive', 'valid' => $value > 0],
             ['code' => 'NEG', 'text' => 'Negative', 'valid' => $value < 0],
-        ]), $implicates, null, 'select_one');
+        ]), $exercises, null, 'select_one');
     }
 
     private function rename(array $step, string $id): array

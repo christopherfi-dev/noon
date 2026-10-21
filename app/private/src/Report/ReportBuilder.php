@@ -134,6 +134,11 @@ final class ReportBuilder
                         $unresolved[] = $d['skill_id'] . ' (' . $this->curriculum->title($d['skill_id']) . ') was implicated from ' . $d['from_skill'] . ' but is not available in beta. That branch is unresolved; it is not a learner failure.';
                         $touch($d['from_skill']);
                         $perSkill[$d['from_skill']]['boundary_notes'][] = $d['skill_id'] . ': not available in beta (branch unresolved)';
+                    } elseif ($d['reason'] === 'NOT_A_DECLARED_PREREQUISITE') {
+                        $unresolved[] = 'At ' . $d['from_skill'] . ', the learner was stuck at the smallest guided question, which exercises '
+                            . ($d['skill_id'] === $d['from_skill'] ? $d['from_skill'] . ' itself' : $d['skill_id']) . '; there was no declared prerequisite to check. That breakdown is unresolved; it is not a learner failure.';
+                        $touch($d['from_skill']);
+                        $perSkill[$d['from_skill']]['boundary_notes'][] = 'stuck at the smallest guided question; no declared prerequisite to check (unresolved)';
                     } elseif ($d['reason'] === 'NO_IMPLICATED_BRANCH') {
                         $unresolved[] = 'At ' . $d['from_skill'] . ', no observed error pattern implicated a specific prerequisite; the cause remains unresolved.';
                     } else {

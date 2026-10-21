@@ -19,6 +19,7 @@ final class Config
         'provider_connect_timeout' => 10,
         'provider_timeout' => 45,
         'provider_max_tokens' => 4096,      // reasoning models spend part of this on hidden reasoning
+        'provider_reasoning_effort' => '',  // sent as reasoning_effort when set (e.g. 'high'); omitted when empty
         'lease_seconds' => 90,
         'session_idle_ttl' => 86400,
         'session_absolute_ttl' => 604800,

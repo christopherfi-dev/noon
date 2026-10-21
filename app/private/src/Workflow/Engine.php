@@ -871,8 +871,7 @@ final class Engine
 
     private function startDiagnosis(Turn $turn, string $skill, string $fromMode, array $sigs, array $item): void
     {
-        $branch = self::branchOf($sigs) ?? ($turn->eng['guided_last_branch'] ?? null);
-        $turn->eng['guided_last_branch'] = null;
+        $branch = self::branchOf($sigs);
         $turn->eng['diagnosis'] = [
             'trigger_event_id' => $turn->triggerEventId,
             'from_mode' => $fromMode,
@@ -889,10 +888,23 @@ final class Engine
         $this->presentItem($turn, 'DIAGNOSTIC', $skill, 'constructed', $avoid);
     }
 
-    /** D2: descend one declared edge along the implicated branch, or repair here at a boundary. */
-    private function descend(Turn $turn, string $skill, ?string $branch, string $triggerEvent): void
+    /**
+     * D2: descend one declared edge along the implicated branch, or repair here at a boundary.
+     * With $stuckStep (Round 2 ruling 8) the branch is the skill exercised by the guided step
+     * the learner is stuck at, and descent leaves GUIDED_REPAIR directly.
+     */
+    private function descend(Turn $turn, string $skill, ?string $branch, string $triggerEvent, bool $stuckStep = false): void
     {
         if ($branch === null || !$this->curriculum->isDeclaredPrerequisite($skill, $branch)) {
+            if ($stuckStep) {
+                $note = $branch === $skill
+                    ? 'The stuck question exercises ' . $skill . ' itself; there is no declared prerequisite to check. The breakdown is unresolved; this is not a learner failure.'
+                    : 'The stuck question exercises ' . $branch . ', which is not a declared prerequisite of ' . $skill . '. The breakdown is unresolved; this is not a learner failure.';
+                $turn->event('BOUNDARY', ['skill_id' => $branch, 'from_skill' => $skill, 'reason' => 'NOT_A_DECLARED_PREREQUISITE', 'trigger_event_id' => $triggerEvent, 'note' => $note]);
+                $turn->eng['boundaries'][] = ['skill_id' => $branch, 'from_skill' => $skill, 'event_id' => $triggerEvent];
+                $this->continueAfterStuck($turn, $skill, 'Stuck question exercises no declared prerequisite of ' . $skill . '.');
+                return;
+            }
             $turn->event('BOUNDARY', ['skill_id' => $branch, 'from_skill' => $skill, 'reason' => 'NO_IMPLICATED_BRANCH', 'trigger_event_id' => $triggerEvent,
                 'note' => 'No error pattern implicated a declared prerequisite; uncertainty preserved.']);
             $this->beginRepair($turn, $skill, 'No discriminating branch; bounded instructional trial at ' . $skill . '.', [$triggerEvent]);
@@ -902,6 +914,10 @@ final class Engine
             $turn->event('BOUNDARY', ['skill_id' => $branch, 'from_skill' => $skill, 'reason' => 'NOT_AVAILABLE_IN_BETA', 'trigger_event_id' => $triggerEvent,
                 'note' => $branch . ' is not available in beta. The branch is unresolved; this is not a learner failure.']);
             $turn->eng['boundaries'][] = ['skill_id' => $branch, 'from_skill' => $skill, 'event_id' => $triggerEvent];
+            if ($stuckStep) {
+                $this->continueAfterStuck($turn, $skill, 'Stuck question exercises ' . $branch . ', which is not available in beta.');
+                return;
+            }
             $this->beginRepair($turn, $skill, 'Implicated prerequisite ' . $branch . ' is not available in beta; repair at ' . $skill . '.', [$triggerEvent]);
             return;
         }
@@ -909,6 +925,10 @@ final class Engine
         $onPath = array_merge([$turn->snap['original_target_skill_id']], array_column($turn->snap['return_stack'], 'parent_skill_id'), [$skill]);
         if (count($turn->snap['return_stack']) >= self::MAX_DEPTH || in_array($branch, $onPath, true)) {
             $turn->event('BOUNDARY', ['skill_id' => $branch, 'from_skill' => $skill, 'reason' => count($turn->snap['return_stack']) >= self::MAX_DEPTH ? 'DEPTH_LIMIT' : 'ALREADY_ON_PATH', 'trigger_event_id' => $triggerEvent]);
+            if ($stuckStep) {
+                $this->continueAfterStuck($turn, $skill, 'Descent bounded.');
+                return;
+            }
             $this->beginRepair($turn, $skill, 'Descent bounded; repair at ' . $skill . '.', [$triggerEvent]);
             return;
         }
@@ -922,9 +942,15 @@ final class Engine
             'target_episode_id' => $turn->snap['target_episode_id'],
         ];
         $turn->event('DESCENT', ['from_skill' => $skill, 'to_skill' => $branch, 'edge_type' => $edge['edge_type'], 'edge_condition' => $edge['edge_condition'],
-            'trigger_event_id' => $triggerEvent, 'depth' => count($turn->snap['return_stack'])]);
+            'trigger_event_id' => $triggerEvent, 'depth' => count($turn->snap['return_stack']), 'trigger' => $stuckStep ? 'STUCK_AT_SMALLEST_GUIDED_STEP' : 'CONFIRMED_BREAKDOWN']);
         $turn->eng['path'][] = $branch;
-        $this->transition($turn, 'PREREQUISITE_CHECK', 'Breakdown confirmed at ' . $skill . '; check declared prerequisite ' . $branch . ' implicated by the observed error.', [$triggerEvent]);
+        if ($stuckStep) {
+            $turn->eng['guided'] = null;
+            $this->transition($turn, 'PREREQUISITE_CHECK', 'Stuck at the smallest guided question, which exercises ' . $branch . ', a declared prerequisite of ' . $skill . '; check ' . $branch . ' directly.',
+                [$triggerEvent], ['trigger' => 'STUCK_AT_SMALLEST_GUIDED_STEP']);
+        } else {
+            $this->transition($turn, 'PREREQUISITE_CHECK', 'Breakdown confirmed at ' . $skill . '; check declared prerequisite ' . $branch . ' implicated by the observed error.', [$triggerEvent]);
+        }
         $turn->snap['current_skill_id'] = $branch;
         $this->presentItem($turn, 'PREREQUISITE', $branch, 'constructed');
     }
@@ -1097,15 +1123,29 @@ final class Engine
             $this->presentStep($turn, $facts, null, 'alt');
             return;
         }
-        // The smallest available question is still stuck: record and move on.
+        // Round 2 ruling 8: still stuck at the smallest available question. Set the
+        // problem aside (no answer shown) and check the declared prerequisite that
+        // the step exercises directly, or record the boundary.
         $g['problems']++;
-        $problems = $g['problems'];
         $plan = $g['plan'];
         unset($g);
-        $turn->eng['guided_last_branch'] = $step['implicates'] !== null && $this->curriculum->isDeclaredPrerequisite($turn->skill(), $step['implicates']) ? $step['implicates'] : null;
-        $turn->event('GUIDED_PROBLEM_ABANDONED', ['skill_id' => $turn->skill(), 'plan_id' => $plan['plan_id'], 'step_id' => $id, 'implicates' => $step['implicates'],
+        $turn->event('GUIDED_PROBLEM_ABANDONED', ['skill_id' => $turn->skill(), 'plan_id' => $plan['plan_id'], 'step_id' => $id, 'exercises' => $step['exercises'],
             'note' => 'Stuck at the smallest available question; no answer was shown.']);
-        $this->startIndependentCheck($turn, $turn->skill(), 'Guided problem could not be completed at its smallest step; an independent check will locate the breakdown.');
+        $this->descend($turn, $turn->skill(), $step['exercises'], $turn->triggerEventId, true);
+    }
+
+    /** After a boundary at a stuck question: a fresh guided problem at the same skill, within the problem budget. */
+    private function continueAfterStuck(Turn $turn, string $skill, string $reason): void
+    {
+        $g = $turn->eng['guided'];
+        if ($g['problems'] >= self::MAX_GUIDED_PROBLEMS) {
+            $this->startIndependentCheck($turn, $skill, $reason . ' Guided problem budget reached; check independently.');
+            return;
+        }
+        $plan = $this->planner->plan($skill, $this->rng, false, ['route' => $g['plan']['route']]);
+        $turn->eng['guided'] = ['plan' => $plan, 'path' => [$plan['steps'][0]['id']], 'done' => [], 'entered' => [], 'alt' => [], 'problems' => $g['problems'], 'clean' => true, 'phrasing' => 'main'];
+        $turn->event('REPAIR_STARTED', ['skill_id' => $skill, 'plan_id' => $plan['plan_id'], 'faded' => false, 'route' => $plan['route'], 'reason' => $reason . ' A new guided problem with different numbers.']);
+        $this->presentStep($turn, []);
     }
 
     private function startIndependentCheck(Turn $turn, string $skill, string $reason): void
@@ -1422,6 +1462,8 @@ final class Engine
             $this->hold($turn, $gen, $result['failure']);
             return;
         }
+        // Audit record: which operation was accepted and after how many attempts.
+        $turn->event('MODEL_OUTPUT_ACCEPTED', ['operation' => $gen['operation'], 'attempts' => count($result['repairs']) + 1]);
         foreach ($result['proposals'] as $p) {
             $turn->event($p['status'] === 'REJECTED' ? 'MODEL_PROPOSAL_REJECTED' : 'MODEL_PROPOSAL', $p);
         }
@@ -1480,9 +1522,11 @@ final class Engine
 
     private function hold(Turn $turn, array $gen, array $failure): void
     {
+        // Round 2 ruling 6: a provider timeout, HTTP error or budget stop is not a verification failure.
         $type = match ($failure['type']) {
             'BINDING_NOT_ESTABLISHED' => 'CONTRACT_CONFLICT',
             'INVALID_OUTPUT' => 'INVALID_ITEM',
+            'PROVIDER_UNAVAILABLE', 'BUDGET' => 'PROVIDER_UNAVAILABLE',
             default => 'ITEM_VERIFICATION_UNAVAILABLE',
         };
         $issue = [

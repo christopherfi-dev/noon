@@ -170,17 +170,15 @@ final class BetaGuardsTest extends TestCase
         $this->assertNotSame($first['item_id'], $second['item_id']);
         $this->assertStringStartsWith($first['guided_step']['id'] . '.', $second['guided_step']['id'], 'hint → smaller question');
         // "I don't know" at the smallest available question (no smaller question or alternate phrasing left):
-        // the guided problem is set aside without showing the answer, and an independent check follows,
-        // because the workflow policy has no GUIDED_REPAIR -> PREREQUISITE_CHECK edge. The implicated
-        // prerequisite is carried forward for the next diagnosis.
+        // the guided problem is set aside without showing the answer, and the declared prerequisite the
+        // step exercises is checked directly (Round 2 ruling 8; see B10).
         $this->assertSame([], $second['guided_step']['smaller']);
         $this->assertNull($second['guided_step']['alt_prompt']);
         $h->event('NOT_LEARNED');
-        $this->assertSame('INDEPENDENT_CHECK', $h->mode());
+        $this->assertSame(['PREREQUISITE_CHECK', 'N18'], [$h->mode(), $h->skill()]);
         $abandoned = $h->events('GUIDED_PROBLEM_ABANDONED');
         $this->assertCount(1, $abandoned);
-        $this->assertSame('N18', $abandoned[0]['data']['implicates']);
-        $this->assertSame('N18', $h->row()['engine']['guided_last_branch']);
+        $this->assertSame('N18', $abandoned[0]['data']['exercises']);
         $closed = array_column(array_column($h->events('ITEM_CLOSED'), 'data'), 'reason');
         $this->assertContains('STUCK_HINT', $closed);
         $this->assertContains('I_DONT_KNOW', $closed);
@@ -193,7 +191,7 @@ final class BetaGuardsTest extends TestCase
         $this->assertSame([], array_filter($h->events('CHECKER_RESULT'), fn ($e) => $e['data']['result']['verdict'] === 'INCORRECT' && $e['data']['role'] === 'GUIDED'), 'stuck signals are not scored as wrong');
     }
 
-    /** B9: prompt assembly contains no anchor prompt and no example content (F2). */
+    /** B9: prompt assembly contains no anchor prompt, no example content (F2) and no reference to examples/model-question.json (Round 2 ruling 4). */
     public function testB9PromptsCarryNoAnchorOrExampleContent(): void
     {
         $h = $this->h;
@@ -213,6 +211,8 @@ final class BetaGuardsTest extends TestCase
 
         foreach ($h->mock->log as $call) {
             $text = implode("\n", array_column($call['messages'], 'content'));
+            // Round 2 ruling 4: no assembled prompt points at the package example file.
+            $this->assertStringNotContainsString('examples/model-question.json', $text);
             foreach ($forbidden as $f) {
                 $this->assertStringNotContainsString($f, $text, 'prompt contains forbidden content: ' . $f);
             }

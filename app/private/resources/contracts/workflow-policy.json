@@ -105,5 +105,14 @@
     "orientation_counts_toward_streak": false,
     "assisted_counts_toward_streak": false,
     "durable_mastery_from_streak": false
-  }
+  },
+  "trigger_edges": [
+    {
+      "from": "GUIDED_REPAIR",
+      "to": "PREREQUISITE_CHECK",
+      "trigger": "STUCK_AT_SMALLEST_GUIDED_STEP",
+      "condition": "The learner is stuck at the smallest guided question, and the skill that step exercises is a declared prerequisite of the current repair skill and available in this deployment. Host-only; a model proposal cannot use this edge.",
+      "source": "Conductor Round 2, ruling 8 (runtime copy only; the package policy is unchanged)"
+    }
+  ]
 }

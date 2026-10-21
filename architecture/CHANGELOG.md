@@ -29,7 +29,19 @@ Created as a copy of v1.1 with exactly three changes; v1.1 is unmodified.
 - Section 18: the activation handshake is now
   `ACE_BOUND: architecture=1.2 | first_principle=truth_over_approval | scope=algebra | state=AWAITING_SESSION_CONTEXT`.
 
-The document's title line and status header still read "v1.1" because the
-addendum permits only the three changes above. The runtime binds this file and
-records its SHA-256 content hash with each binding. Curriculum ACE-ALGEBRA1
-1.1.0 is unchanged and keeps the evidence semantics declared for 1.1.
+Conductor Round 2 rulings 2 and 3 (same version, 1.2):
+
+- Title line: "v1.1" → "v1.2". Status header, Compatibility line: now reads
+  "v1.2. Retains v1.0 evidence and curriculum semantics and the v1.1 entry and
+  orientation modes; guided repair teaches through questions only."
+- Section 10.D: deleted "Use concise explanations when they bridge an actual
+  conceptual gap." (line 568).
+- Learner-facing output: removed "a concise explanation, " from the list of
+  permitted learner-facing content (line 723).
+
+The runtime binds this file and records its SHA-256 content hash with each
+binding. Hash after round 2:
+`ef03667dabf7152be63009ec6c1e327a83340b4fff65eef303e3eeb326291390`
+(beta hash was `8997b6b88067ebfae26abcbe84beb4b6cdcfc55091a9e86128fc020eb5cca772`).
+Curriculum ACE-ALGEBRA1 1.1.0 is unchanged and keeps the evidence semantics
+declared for 1.1.

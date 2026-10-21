@@ -141,6 +141,29 @@ try {
     await ctx.close();
   }
 
+  // ------------------------------------------------- UI-03 skill map default (Round 2 §3)
+  {
+    const { ctx, page, errors } = await newPage(browser, 360, 740);
+    await page.goto(base);
+    await page.getByTestId('browse-skills').click();
+    const count = async () => Number((await page.locator('.count').textContent()).split(' ')[0]);
+    const ids = async () => page.locator('.catalog-row .skill-id').allTextContents();
+    const labels = async () => page.locator('.catalog-row .tag[class*="avail-"]').allTextContents();
+    const toggle = page.getByTestId('toggle-full-map');
+    const defaultView = { count: await count(), ids: (await ids()).sort(), pressed: await toggle.getAttribute('aria-pressed'), text: (await toggle.textContent()).trim(), labels: [...new Set(await labels())] };
+    await toggle.click();
+    const fullView = { count: await count(), pressed: await page.getByTestId('toggle-full-map').getAttribute('aria-pressed'), labels: [...new Set(await labels())].sort() };
+    const ov = await overflow(page);
+    await page.screenshot({ path: path.join(outDir, 'ui03-full-map-mobile.png') });
+    await page.getByTestId('toggle-full-map').click();
+    const back = await count();
+    const beta = ['E06', 'N03', 'N04', 'N05', 'N06', 'N18', 'Q04', 'Q05', 'Q06', 'Q07'];
+    const pass = defaultView.count === 10 && JSON.stringify(defaultView.ids) === JSON.stringify(beta) && defaultView.pressed === 'false' && defaultView.text === 'Show full map'
+      && fullView.count === 205 && fullView.pressed === 'true' && fullView.labels.length === 3 && back === 10 && ov <= 0 && errors.length === 0;
+    record('UI-03 skill map shows the 10 beta skills by default; full map on request', pass, { defaultView, fullView, back, overflow: ov, consoleErrors: errors });
+    await ctx.close();
+  }
+
   // ------------------------------------------------- UI-02 safe rendering
   {
     const { ctx, page, errors, dialogs } = await newPage(browser, 1280, 800);

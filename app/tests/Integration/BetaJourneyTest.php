@@ -6,7 +6,7 @@ namespace AlgebraEngine\Tests\Integration;
 use AlgebraEngine\Tests\Support\Harness;
 use PHPUnit\Framework\TestCase;
 
-/** Addendum §6 beta tests B1–B4 and the per-skill start check. */
+/** Addendum §6 beta tests B1–B4, Round 2 test B10 and the per-skill start check. */
 final class BetaJourneyTest extends TestCase
 {
     private Harness $h;
@@ -212,6 +212,117 @@ final class BetaJourneyTest extends TestCase
         $this->assertTrue((bool) array_filter($report['report']['unresolved_or_untested'], fn ($s) => str_starts_with($s, 'Q03') && str_contains($s, 'not a learner failure')));
         foreach ($report['per_skill'] as $p) {
             $this->assertNotSame('Q03', $p['skill_id']);
+        }
+    }
+
+    /** Into guided repair at E06 on the B1 path (A07 boundary), at step s1. */
+    private function intoE06Repair(): void
+    {
+        $h = $this->h;
+        $h->start('Q07');
+        $h->submit($h->wrong('DIST_X_ONLY'));
+        $h->submit($h->wrong('DIST_X_ONLY'));
+        $h->submit($h->wrong('FIRST_TERM_ONLY'));
+        $this->assertSame(['GUIDED_REPAIR', 'E06', 's1'], [$h->mode(), $h->skill(), $h->active()['guided_step']['id']]);
+    }
+
+    /**
+     * B10 (Round 2 ruling 8), case 1: stuck at the smallest guided question, whose skill is a declared
+     * prerequisite in the beta → PREREQUISITE_CHECK on that skill directly, with no independent check
+     * or probe in between; the interrupted parents survive and repair resumes at E06 afterwards.
+     */
+    public function testB10StuckStepGoesDirectlyToItsPrerequisite(): void
+    {
+        $h = $this->h;
+        $this->intoE06Repair();
+        $this->assertSame('N18', $h->active()['guided_step']['exercises']);
+        $h->submit($h->plainWrong());
+        $smallest = $h->active();
+        $this->assertSame(['s1.1', 'N18'], [$smallest['guided_step']['id'], $smallest['guided_step']['exercises']]);
+        $this->assertSame([], $smallest['guided_step']['smaller']);
+        $this->assertNull($smallest['guided_step']['alt_prompt']);
+        $transitions = count($h->events('TRANSITION'));
+        $h->submit($h->plainWrong());
+
+        $this->assertSame(['PREREQUISITE_CHECK', 'N18'], [$h->mode(), $h->skill()]);
+        $new = array_slice($h->events('TRANSITION'), $transitions);
+        $this->assertSame([['GUIDED_REPAIR', 'PREREQUISITE_CHECK']], array_map(fn ($e) => [$e['data']['from'], $e['data']['to']], $new), 'no independent check or probe first');
+        $descent = $h->events('DESCENT');
+        $last = end($descent)['data'];
+        $this->assertSame(['E06', 'N18', 'STUCK_AT_SMALLEST_GUIDED_STEP'], [$last['from_skill'], $last['to_skill'], $last['trigger']]);
+        $stack = $h->row()['snapshot']['return_stack'];
+        $this->assertSame(['Q07', 'E06'], array_column($stack, 'parent_skill_id'), 'interrupted parents survive');
+        $this->assertSame('GUIDED_REPAIR', $stack[1]['parent_mode']);
+        $this->assertSame('PREREQUISITE', $h->active()['role']);
+        foreach ($h->view['messages'] as $m) {
+            $this->assertSame([], \AlgebraEngine\Provider\DisclosureGuard::violations($m['text'], [['answer' => $smallest['answer_spec'], 'variables' => ['x']]]), 'no answer shown');
+        }
+        // The policy edge exists only for this host trigger.
+        $guard = new \AlgebraEngine\Workflow\TransitionGuard(ALGEBRA_APP_ROOT . '/private/resources/contracts/workflow-policy.json');
+        $this->assertFalse($guard->allowed('GUIDED_REPAIR', 'PREREQUISITE_CHECK'));
+
+        // Success at N18 returns to E06, where repair resumes with a fresh guided problem.
+        $h->answerCorrect();
+        $this->assertSame(['GUIDED_REPAIR', 'E06'], [$h->mode(), $h->skill()]);
+        $this->assertSame(['Q07'], array_column($h->row()['snapshot']['return_stack'], 'parent_skill_id'));
+    }
+
+    /**
+     * B10 (Round 2 ruling 8), case 2: the stuck question exercises a skill that is outside the beta
+     * (A07) or is not a declared prerequisite (the repair skill itself) → the boundary is recorded as in
+     * B4: not a learner failure, no frame pushed, reported as unresolved; repair continues at E06.
+     */
+    public function testB10StuckStepAtABoundaryIsRecordedNotFailed(): void
+    {
+        $h = $this->h;
+        $this->intoE06Repair();
+        $h->answerCorrect();                                   // s1
+        $h->answerCorrect();                                   // s2
+        $this->assertSame(['s3', 'E06'], [$h->active()['guided_step']['id'], $h->active()['guided_step']['exercises']]);
+        $h->submit($h->plainWrong());                          // s3 → smaller s3.1
+        $this->assertSame(['s3.1', 'A07'], [$h->active()['guided_step']['id'], $h->active()['guided_step']['exercises']]);
+        $h->submit($h->plainWrong());                          // stuck at the smallest question: A07 is outside the beta
+
+        $b = array_values(array_filter($h->events('BOUNDARY'), fn ($e) => $e['data']['from_skill'] === 'E06'));
+        $last = end($b)['data'];
+        $this->assertSame(['A07', 'NOT_AVAILABLE_IN_BETA'], [$last['skill_id'], $last['reason']]);
+        $this->assertStringContainsString('not a learner failure', $last['note']);
+        $this->assertSame(['GUIDED_REPAIR', 'E06'], [$h->mode(), $h->skill()]);
+        $this->assertSame(['Q07'], array_column($h->row()['snapshot']['return_stack'], 'parent_skill_id'), 'no frame is pushed at a boundary');
+        $this->assertSame('s1', $h->active()['guided_step']['id'], 'a new guided problem at E06');
+
+        // Second guided problem: stuck at s3 itself, which exercises E06 (the repair skill), not a declared prerequisite.
+        $h->answerCorrect();
+        $h->answerCorrect();
+        $h->submit($h->plainWrong());                          // s3 → s3.1
+        $h->answerCorrect();                                   // s3.1 → back to s3
+        $this->assertSame('s3', $h->active()['guided_step']['id']);
+        $h->submit($h->plainWrong());                          // s3 → alternate phrasing
+        $h->submit($h->plainWrong());                          // stuck at s3 with nothing smaller left
+        $b = array_values(array_filter($h->events('BOUNDARY'), fn ($e) => $e['data']['reason'] === 'NOT_A_DECLARED_PREREQUISITE'));
+        $this->assertCount(1, $b);
+        $this->assertSame(['E06', 'E06'], [$b[0]['data']['skill_id'], $b[0]['data']['from_skill']]);
+        $this->assertStringContainsString('not a learner failure', $b[0]['data']['note']);
+        $this->assertSame(['GUIDED_REPAIR', 'E06'], [$h->mode(), $h->skill()]);
+        $this->assertSame(['Q07'], array_column($h->row()['snapshot']['return_stack'], 'parent_skill_id'));
+        $this->assertCount(2, $h->events('GUIDED_PROBLEM_ABANDONED'));
+        $this->assertSame([], array_filter($h->events('DESCENT'), fn ($e) => ($e['data']['trigger'] ?? null) === 'STUCK_AT_SMALLEST_GUIDED_STEP'));
+
+        // A third boundary uses up the guided-problem budget (3 per cycle): an independent check follows.
+        $h->answerCorrect();
+        $h->answerCorrect();
+        $h->event('NOT_LEARNED');                              // s3 → s3.1
+        $h->event('NOT_LEARNED');                              // stuck at s3.1 (A07) again
+        $this->assertCount(3, $h->events('GUIDED_PROBLEM_ABANDONED'));
+        $this->assertSame(['INDEPENDENT_CHECK', 'E06'], [$h->mode(), $h->skill()]);
+
+        $h->event('END_SESSION');
+        $report = $h->request('GET', 'report')->body;
+        $unresolved = $report['report']['unresolved_or_untested'];
+        $this->assertTrue((bool) array_filter($unresolved, fn ($s) => str_starts_with($s, 'A07') && str_contains($s, 'not a learner failure')));
+        $this->assertTrue((bool) array_filter($unresolved, fn ($s) => str_contains($s, 'E06 itself') && str_contains($s, 'not a learner failure')));
+        foreach ($report['per_skill'] as $p) {
+            $this->assertNotSame('A07', $p['skill_id']);
         }
     }
 

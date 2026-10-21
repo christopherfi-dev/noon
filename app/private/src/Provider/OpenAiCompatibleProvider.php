@@ -43,6 +43,9 @@ final class OpenAiCompatibleProvider implements ProviderAdapter
         if ($jsonMode) {
             $body['response_format'] = ['type' => 'json_object'];
         }
+        if ($this->config->string('provider_reasoning_effort') !== '') {
+            $body['reasoning_effort'] = $this->config->string('provider_reasoning_effort');
+        }
         $url = rtrim($this->config->string('provider_base_url'), '/') . '/chat/completions';
         $result = $this->transport->post(
             $url,

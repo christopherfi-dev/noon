@@ -361,6 +361,7 @@
                 "UNSUPPORTED_RESPONSE_TYPE",
                 "REPRESENTATION_UNAVAILABLE",
                 "ITEM_VERIFICATION_UNAVAILABLE",
+                "PROVIDER_UNAVAILABLE",
                 "INVALID_ITEM",
                 "VERIFICATION_CONFLICT",
                 "STATE_CONFLICT",

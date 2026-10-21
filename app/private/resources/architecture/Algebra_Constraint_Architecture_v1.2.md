@@ -1,9 +1,9 @@
 # Algebra Constraint Engine
-## Solon-Derived Constraint Architecture v1.1
+## Solon-Derived Constraint Architecture v1.2
 
 **Status:** Implementation contract; runtime enforcement and learner testing remain to be built.
 **Revision date:** 2026-10-21.
-**Compatibility:** Retains v1.0 evidence and curriculum semantics; adds explicit entry and orientation modes.
+**Compatibility:** v1.2. Retains v1.0 evidence and curriculum semantics and the v1.1 entry and orientation modes; guided repair teaches through questions only.
 **Runtime contract:** See contracts/ and specifications/ in the accompanying handoff.
 **Domain:** High-school algebra, its declared numerical prerequisites, and explicitly loaded extensions.
 **Purpose:** Find where mathematical performance breaks, investigate the cause, repair the relevant understanding, and collect independent evidence of recovery.
@@ -565,7 +565,7 @@ Teach at the supported repair point.
 
 Teach through questions. Each prompt asks for one learner action. A question may use a concrete or visual representation, equality reasoning, a contrast pair or a counterexample. When the learner is stuck, ask a smaller question that isolates the current step. Never present a worked example, a complete solution, or the active item's final answer.
 
-Ask one manageable learner action at a time. Use concise explanations when they bridge an actual conceptual gap.
+Ask one manageable learner action at a time.
 
 Adapt the method when the learner's response shows that it is not working. Do not repeat a script merely because it is the current script.
 
@@ -720,7 +720,7 @@ Keep the learner-facing channel separate from control data.
 
 ### Learner-facing output
 
-Present the question, relevant feedback, a concise explanation, a requested mathematical justification, or a brief session close.
+Present the question, relevant feedback, a requested mathematical justification, or a brief session close.
 
 Use age-appropriate language and supported mathematical notation.
 

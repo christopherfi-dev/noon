@@ -90,6 +90,7 @@ final class LiveAdapterTest extends TestCase
             $this->assertFalse($binding['body']['stream']);
             $this->assertArrayNotHasKey('response_format', $binding['body'], 'JSON mode off for the activation call');
             $this->assertArrayNotHasKey('tools', $binding['body']);
+            $this->assertArrayNotHasKey('reasoning_effort', $binding['body'], 'sent only when configured');
             $this->assertSame(['type' => 'json_object'], $envelope['body']['response_format']);
             $this->assertStringContainsString('JSON', end($envelope['body']['messages'])['content']);
             $this->assertSame('openai_compatible', $h->row()['snapshot']['binding']['provider']);
@@ -105,6 +106,7 @@ final class LiveAdapterTest extends TestCase
             $server->script = ['HTTP_500'];
             $h->event('REQUEST_HINT');
             $this->assertSame('HOLD', $h->view['status']);
+            $this->assertSame('PROVIDER_UNAVAILABLE', $h->row()['snapshot']['issue']['type']);
             $server->script = ['TIMEOUT'];
             $h->event('RESUME_SESSION');
             $this->assertSame('HOLD', $h->view['status']);
@@ -136,6 +138,14 @@ final class LiveAdapterTest extends TestCase
         } finally {
             $h->cleanup();
         }
+    }
+
+    public function testReasoningEffortIsSentOnlyWhenConfigured(): void
+    {
+        $server = self::fakeServer();
+        $provider = new OpenAiCompatibleProvider(Config::fromArray(['provider_reasoning_effort' => 'high'] + self::LIVE, ALGEBRA_APP_ROOT . '/private'), $server);
+        $provider->complete([['role' => 'user', 'content' => 'CONTROL']], false);
+        $this->assertSame('high', $server->requests[0]['body']['reasoning_effort']);
     }
 
     public function testLiveProviderRequiresExplicitSettingsAndHttps(): void

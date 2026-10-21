@@ -31,6 +31,7 @@
     screen: 'welcome',      // welcome | pick | browse | workspace | summary
     report: null,
     search: '',
+    fullMap: false,         // skill map: the beta skills by default; the full 205-skill map on request
     picker: false,
     busy: false,
     error: null,
@@ -319,7 +320,7 @@
         button('Start: ' + def.title, 'start-default', () => startSession(def.skill_id), { className: 'primary wide' }),
         el('div', { className: 'row' },
           button('Choose another skill', 'choose-skill', () => { state.screen = 'pick'; render(); }),
-          button('Browse all ' + boot.catalog.length + ' skills', 'browse-skills', () => { state.screen = 'browse'; render(); })),
+          button('Browse skills', 'browse-skills', () => { state.screen = 'browse'; render(); })),
       ),
       el('div', { className: 'notices' },
         el('h2', { text: 'Before you start' }),
@@ -348,7 +349,9 @@
   function renderBrowse() {
     const q = state.search.trim().toLowerCase();
     const groups = new Map();
-    for (const s of state.boot.catalog) {
+    const betaIds = new Set(state.boot.beta.skills.map((s) => s.skill_id));
+    const shown = state.fullMap ? state.boot.catalog : state.boot.catalog.filter((s) => betaIds.has(s.skill_id));
+    for (const s of shown) {
       if (q && !(s.skill_id.toLowerCase().includes(q) || s.title.toLowerCase().includes(q))) continue;
       if (!groups.has(s.domain)) groups.set(s.domain, []);
       groups.get(s.domain).push(s);
@@ -371,9 +374,12 @@
       ));
     }
     return el('section', { className: 'screen', 'aria-labelledby': 'browse-heading' },
-      el('h1', { id: 'browse-heading', text: 'All ' + state.boot.catalog.length + ' curriculum skills' }),
-      el('p', { text: 'The full map is shown for reference. Only skills marked as available can be practised in this beta; the rest are not yet supported and are never treated as gaps in your knowledge.' }),
+      el('h1', { id: 'browse-heading', text: state.fullMap ? 'All ' + state.boot.catalog.length + ' curriculum skills' : 'The ' + betaIds.size + ' beta skills' }),
+      el('p', { text: state.fullMap
+        ? 'The full map is shown for reference. Only skills marked as available can be practised in this beta; the rest are not yet supported and are never treated as gaps in your knowledge.'
+        : 'These are the skills you can practise in this beta. The full curriculum map has ' + state.boot.catalog.length + ' skills.' }),
       errorBanner(),
+      button(state.fullMap ? 'Show beta skills only' : 'Show full map', 'toggle-full-map', () => { state.fullMap = !state.fullMap; render(); }, { 'aria-pressed': state.fullMap ? 'true' : 'false' }),
       el('label', { for: searchId, text: 'Search by title or ID' }),
       el('input', {
         id: searchId, type: 'search', testid: 'skill-search', value: state.search, autocomplete: 'off',

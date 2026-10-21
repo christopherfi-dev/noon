@@ -24,7 +24,10 @@ final class EngineUnitsTest extends TestCase
         $this->assertTrue($g->allowed('DIAGNOSTIC_PROBE', 'PREREQUISITE_CHECK'));
         $this->assertTrue($g->allowed('PREREQUISITE_CHECK', 'PREREQUISITE_CHECK'), 'staying in a state is permitted');
         $this->assertFalse($g->allowed('TARGET_ASSESSMENT', 'GUIDED_REPAIR'));
-        $this->assertFalse($g->allowed('GUIDED_REPAIR', 'PREREQUISITE_CHECK'));
+        $this->assertFalse($g->allowed('GUIDED_REPAIR', 'PREREQUISITE_CHECK'), 'not a general edge');
+        $this->assertTrue($g->allowed('GUIDED_REPAIR', 'PREREQUISITE_CHECK', ['trigger' => 'STUCK_AT_SMALLEST_GUIDED_STEP']), 'Round 2 ruling 8: this trigger only');
+        $this->assertFalse($g->allowed('DIAGNOSTIC_PROBE', 'INDEPENDENT_CHECK', ['trigger' => 'STUCK_AT_SMALLEST_GUIDED_STEP']));
+        $this->assertFalse($g->allowed('GUIDED_REPAIR', 'PREREQUISITE_CHECK', ['trigger' => 'OTHER']));
         $this->assertFalse($g->allowed('TARGET_ASSESSMENT', 'SESSION_CLOSED'));
         $this->assertFalse($g->allowed('SESSION_CLOSED', 'TARGET_ASSESSMENT'));
         $this->assertTrue($g->allowed('GUIDED_REPAIR', 'SESSION_REPORT', ['end_session' => true]));

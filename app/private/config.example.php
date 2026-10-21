@@ -14,6 +14,7 @@ return [
     'provider_api_key' => '',             // secret; server-side only
     'provider_timeout' => 45,
     'provider_connect_timeout' => 10,
+    'provider_reasoning_effort' => '',    // optional, e.g. 'high'; sent only when set and only if the provider documents it
 
     // 'db_path' => '/home/ACCOUNT/algebra-private/var/algebra.sqlite',
     // 'base_path' => '/algebra/',        // cookie path; defaults to the api.php folder
