@@ -152,7 +152,8 @@ final class Harness
     public function active(): array
     {
         $a = $this->row()['engine']['active'];
-        Assert::assertNotNull($a, 'no active item; view=' . json_encode($this->view));
+        $rejections = array_slice(array_map(fn ($e) => $e['data']['operation'] . ': ' . implode(' | ', $e['data']['errors']), $this->events('MODEL_OUTPUT_REJECTED')), -3);
+        Assert::assertNotNull($a, 'no active item; view=' . json_encode($this->view) . '; last rejections: ' . json_encode($rejections));
         return $a;
     }
 

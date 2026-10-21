@@ -130,6 +130,22 @@ final class TemplatesTest extends TestCase
         $this->assertArrayHasKey('E06', $seen['E06']);
     }
 
+    /** Regression (found by the round 3 gate): no step answer may equal a number in the facts shown with the opening step. */
+    public function testOpeningFactsNeverContainAStepAnswer(): void
+    {
+        $planner = new SocraticPlanner(new ItemFactory());
+        for ($i = 0; $i < 200; $i++) {
+            $factor = 2 + $i % 8;
+            $facts = "Your answer multiplied only the x by $factor.";
+            $plan = $planner->plan('E06', RandomSource::seeded("facts$i"), false, ['avoid_text' => $facts]);
+            foreach ($planner->flatten($plan['steps']) as $step) {
+                if ($step['answer']['kind'] === 'exact_rational') {
+                    $this->assertNotSame((string) $factor, $step['answer']['expected'], "seed $i {$step['id']}");
+                }
+            }
+        }
+    }
+
     public function testGuidedPlansAreQuestionsThatNeverStateTheirAnswer(): void
     {
         $f = new ItemFactory();

@@ -110,7 +110,9 @@ final class MockProvider implements ProviderAdapter
         $alloc = $ctx['TRUSTED_OUTPUT_ALLOCATION'];
         $item = null;
         if ($alloc['required_message_type'] === 'QUESTION') {
-            $item = $this->draftItem($alloc);
+            // Like a cooperative model, propose different numbers after each repair request.
+            $repairs = count(array_filter($messages, fn ($m) => $m['role'] === 'user' && str_contains($m['content'], '"REPAIR_REQUEST"')));
+            $item = $this->draftItem($alloc, $repairs);
         }
         $planned = $alloc['host_planned_transition'] ?? null;
         return [
@@ -134,7 +136,7 @@ final class MockProvider implements ProviderAdapter
         ];
     }
 
-    private function draftItem(array $alloc): array
+    private function draftItem(array $alloc, int $repairs = 0): array
     {
         $templateId = $alloc['allowed_templates'][0]['template_id'];
         $expected = null;
@@ -143,7 +145,7 @@ final class MockProvider implements ProviderAdapter
             $params = $alloc['fixed_parameters'];
         } else {
             $template = $this->factory->get($templateId);
-            $params = $template->generate(RandomSource::seeded('mock:' . $alloc['item_id']), $alloc['avoid_parameters'] ?? null);
+            $params = $template->generate(RandomSource::seeded('mock:' . $alloc['item_id'] . ($repairs > 0 ? ':repair' . $repairs : '')), $alloc['avoid_parameters'] ?? null);
             $expected = $template->answerSpec($params)['expected'];
         }
         return [

@@ -326,6 +326,31 @@ final class BetaJourneyTest extends TestCase
         }
     }
 
+    /**
+     * Regression (round 3 gate): across many random B1 and B3 journeys with the simulated provider, every
+     * session reaches the report without a HOLD. Two causes were found and fixed: an opening feedback fact
+     * that matched a guided step answer, and a simulated model that re-proposed rejected numbers on repair.
+     */
+    public function testRandomScriptedJourneysCompleteWithoutHolds(): void
+    {
+        for ($i = 0; $i < 40; $i++) {
+            $h = new Harness([], null, null, null, null, "journey$i");
+            try {
+                $h->start('Q07');
+                $wrong = $i % 2 ? ['DIST_X_ONLY', 'DIST_X_ONLY', 'FIRST_TERM_ONLY'] : ['SIGN_ERROR_B', 'SIGN_ERROR_B', 'MULTIPLY_INSTEAD_OF_DIVIDE', 'QUOTIENT_SIGN', 'NO_SIGNATURE'];
+                foreach ($wrong as $code) {
+                    $h->submit($h->wrong($code));
+                }
+                for ($n = 0; $n < 40 && $h->view['status'] === 'READY' && $h->mode() !== 'SESSION_REPORT'; $n++) {
+                    $h->answerCorrect();
+                }
+                $this->assertSame(['READY', 'SESSION_REPORT'], [$h->view['status'], $h->mode()], "seed journey$i: " . json_encode(array_slice(array_column(array_column($h->events('MODEL_OUTPUT_REJECTED'), 'data'), 'errors'), -3)));
+            } finally {
+                $h->cleanup();
+            }
+        }
+    }
+
     /** Every beta skill can be started, presents a host-accepted item and scores a correct answer. */
     public function testEveryBetaSkillCanStartAndScore(): void
     {

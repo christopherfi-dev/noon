@@ -25,7 +25,7 @@ final class SocraticPlanner
     }
 
     /**
-     * @param array{route?:string,avoid?:?array} $opts
+     * @param array{route?:string,avoid?:?array,avoid_text?:string} $opts avoid_text: text shown with the opening step (feedback facts)
      * @return array<string,mixed>
      */
     public function plan(string $skillId, RandomSource $rng, bool $faded = false, array $opts = []): array
@@ -36,7 +36,7 @@ final class SocraticPlanner
         for ($i = 0; $i < 60; $i++) {
             $params = $template->generate($rng, $opts['avoid'] ?? null);
             $plan = $this->build($skillId, $params, $rng, $route);
-            if ($this->answersAbsentFromProblem($plan)) {
+            if ($this->answersAbsentFromProblem($plan, $opts['avoid_text'] ?? '')) {
                 break;
             }
         }
@@ -51,12 +51,15 @@ final class SocraticPlanner
 
     /**
      * D1: no step may print its own answer. Guided problems are regenerated
-     * until no numeric step answer appears in the problem text or in that
-     * step's own question (main or alternate phrasing).
+     * until no numeric step answer appears in the problem text, in that
+     * step's own question (main or alternate phrasing), or in the feedback
+     * facts shown with the opening step. A fact such as "Your answer
+     * multiplied only the x by 8" is about the previous item, but when a step
+     * answer is also 8 the disclosure guard cannot tell them apart.
      */
-    private function answersAbsentFromProblem(array $plan): bool
+    private function answersAbsentFromProblem(array $plan, string $shownWithOpening = ''): bool
     {
-        $problem = self::numbers($plan['problem']);
+        $problem = self::numbers($plan['problem'] . ' ' . $shownWithOpening);
         foreach ($this->flatten($plan['steps']) as $step) {
             if ($step['answer']['kind'] !== 'exact_rational') {
                 continue;

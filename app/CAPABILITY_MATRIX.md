@@ -4,7 +4,7 @@ Generated from the tested runtime registry (`app/private/src/Capability/Capabili
 
 Runtime status counts: AVAILABLE_SCORED 2, PARTIAL_COMPONENTS 8, UNAVAILABLE 195. No all-skills operational claim is made.
 
-**Live provider smoke test:** Round 2 (2026-10-21): smoke test PASSED against DeepSeek with the owner's model deepseek-v4-flash and reasoning_effort high (test-results/live/00-smoke-and-model-check.md). The provider accepts that name but does not list it (listed: deepseek-flash, deepseek-v4-pro), so the scripted live sessions were not run (Round 2 §4.1); the owner must confirm the model. Beta-round smoke runs used deepseek-flash (test-results/08-live-smoke.txt). This confirms network access and adapter compatibility only, not teaching quality, learning or deployment. Every other result in this matrix is from mock mode (simulated model).
+**Live provider smoke test:** Round 3 (2026-10-21): scripted live runs (5 B1 + 3 B3) against DeepSeek deepseek-flash in three configurations: thinking disabled, enabled at low effort and enabled at high effort; all 24 sessions completed. Results: test-results/live/round3/ and ROUND_3_REPORT.md. The owner chooses the configuration. Earlier smoke runs: test-results/08-live-smoke.txt and test-results/live/00-smoke-and-model-check.md. These runs use scripted learners: they confirm provider compatibility and host gating, not teaching quality, learning or deployment. Every other result in this matrix is from mock mode (simulated model).
 
 ## Beta skills
 

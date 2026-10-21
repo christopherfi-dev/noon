@@ -1015,7 +1015,8 @@ final class Engine
         $this->transition($turn, 'GUIDED_REPAIR', $reason, $evidence);
         $turn->snap['current_skill_id'] = $skill;
         $route = $this->implicatedRoute($turn, $skill);
-        $plan = $this->planner->plan($skill, $this->rng, false, ['route' => $route]);
+        // The opening step is shown with the feedback facts, so no step answer may coincide with a number in them.
+        $plan = $this->planner->plan($skill, $this->rng, false, ['route' => $route, 'avoid_text' => implode(' ', $turn->facts)]);
         $turn->eng['guided'] = ['plan' => $plan, 'path' => [$plan['steps'][0]['id']], 'done' => [], 'entered' => [], 'alt' => [], 'problems' => 0, 'clean' => true, 'phrasing' => 'main'];
         $turn->event('REPAIR_STARTED', ['skill_id' => $skill, 'plan_id' => $plan['plan_id'], 'faded' => false, 'route' => $plan['route'], 'reason' => $reason]);
         // D1: repair may open by stating what the learner's last answer did.

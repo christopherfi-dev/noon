@@ -389,6 +389,12 @@ foreach ($plan as $n => $path) {
             $tx[] = sprintf('- Provider call %d: %s, HTTP %s%s, model returned %s, %s s, finish %s, tokens in %s / out %s (reasoning %s)', $i + 1, $c['json_mode'] ? 'JSON' : 'text', $c['status'],
                 $c['error'] ? ' ' . $c['error'] : '', $c['response_model'] ?? '-', $c['seconds'], $c['finish_reason'] ?? '-', $u['prompt_tokens'] ?? '-', $u['completion_tokens'] ?? '-', $u['completion_tokens_details']['reasoning_tokens'] ?? '-');
         }
+        foreach ($tn['calls'] as $i => $c) {
+            if (!$c['json_mode']) {
+                // Binding replies are short and are the only text-mode output; a non-exact reply is a host rejection.
+                $tx[] = '- Binding reply (call ' . ($i + 1) . '): `' . str_replace("\n", ' / ', (string) $c['content']) . '`';
+            }
+        }
         foreach ($tn['rejections'] as $x) {
             $tx[] = "- **Host rejected model output** ({$x['operation']}, attempt {$x['attempt']}): " . implode(' | ', $x['errors']);
             $tx[] = '';

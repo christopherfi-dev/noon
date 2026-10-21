@@ -191,6 +191,28 @@ final class BetaGuardsTest extends TestCase
         $this->assertSame([], array_filter($h->events('CHECKER_RESULT'), fn ($e) => $e['data']['result']['verdict'] === 'INCORRECT' && $e['data']['role'] === 'GUIDED'), 'stuck signals are not scored as wrong');
     }
 
+    /**
+     * Regression (round 3 gate, browser B1 failed in about 2 % of random paths): the host's own opening fact
+     * ("Your answer multiplied only the x by 8") collided with a guided step answer of 8, so the disclosure
+     * guard rejected every attempt and the session held. Across many random B1 paths the repair now opens.
+     */
+    public function testRepairOpeningNeverHoldsOnItsOwnFacts(): void
+    {
+        for ($i = 0; $i < 150; $i++) {
+            $h = new Harness([], null, null, null, null, "opening$i");
+            try {
+                $h->start('Q07');
+                $h->submit($h->wrong('DIST_X_ONLY'));
+                $h->submit($h->wrong('DIST_X_ONLY'));
+                $h->submit($h->wrong('FIRST_TERM_ONLY'));
+                $this->assertSame(['READY', 'GUIDED_REPAIR'], [$h->view['status'], $h->mode()], "seed opening$i");
+                $this->assertSame([], $h->events('MODEL_OUTPUT_REJECTED'), "seed opening$i");
+            } finally {
+                $h->cleanup();
+            }
+        }
+    }
+
     /** B9: prompt assembly contains no anchor prompt, no example content (F2) and no reference to examples/model-question.json (Round 2 ruling 4). */
     public function testB9PromptsCarryNoAnchorOrExampleContent(): void
     {
