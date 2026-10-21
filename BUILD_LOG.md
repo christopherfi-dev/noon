@@ -15,3 +15,4 @@ Factual entries only: UTC time, action, result. Durations are computed from reco
 | 2026-10-21T11:40:06Z | Re-ran both manifests after curriculum validators | Root: only `HANDOFF_PREFLIGHT_REPORT.json` differs (expected); `curriculum/MANIFEST.sha256`: all OK |
 | 2026-10-21T11:53:13Z | Created `architecture/Algebra_Constraint_Architecture_v1.2.md` (3 changes per addendum §3; v1.1 untouched) and added v1.2 entry to `architecture/CHANGELOG.md`. v1.2 SHA-256 8997b6b88067ebfae26abcbe84beb4b6cdcfc55091a9e86128fc020eb5cca772 | Done |
 | 2026-10-21T12:37:12Z | Engine core, provider layer, API and item layer written; BetaJourneyTest (B1, B2, B3 x2, B4, every-beta-skill) run | PASS — 6 tests, 237 assertions |
+| 2026-10-21T12:37:37Z | Restored original `HANDOFF_PREFLIGHT_REPORT.json` (regenerated copy saved to `test-results/`); re-ran root manifest | 71/72 OK; only `architecture/CHANGELOG.md` differs — required by addendum §3 (v1.2 entry). curriculum manifest all OK |
