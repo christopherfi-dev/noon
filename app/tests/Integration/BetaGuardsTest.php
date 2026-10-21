@@ -228,6 +228,9 @@ final class BetaGuardsTest extends TestCase
             }
             return;
         }
+        if ($v === []) {
+            return;
+        }
         self::assertContains($v, ['<string>', '<integer>', '<number>', '<boolean>', null]);
     }
 }

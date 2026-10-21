@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace AlgebraEngine\Provider;
 
 use AlgebraEngine\Math\ExpressionParser;
+use AlgebraEngine\Math\FormInspector;
 use AlgebraEngine\Math\MathInputError;
 use AlgebraEngine\Math\Normalizer;
 use AlgebraEngine\Math\Polynomial;
@@ -64,14 +65,16 @@ final class DisclosureGuard
             return false;
         }
         // Standalone signed numbers and simple fractions in the message.
-        if (preg_match_all('/(?<![\w.\/])(-?\s?\d+(?:\.\d+)?(?:\s?\/\s?\d+)?)(?![\w.\/]|\d)/', $text, $m)) {
-            foreach ($m[1] as $token) {
-                try {
-                    if (ScalarParser::parse(str_replace(' ', '', $token))->equals($value)) {
-                        return true;
-                    }
-                } catch (MathInputError) {
+        foreach (self::numberTokens($text) as $token) {
+            // For a whole-number answer, "80 ÷ 10" is a division to do, not the answer written down.
+            if ($value->isInteger() && str_contains($token, '/')) {
+                continue;
+            }
+            try {
+                if (ScalarParser::parse($token)->equals($value)) {
+                    return true;
                 }
+            } catch (MathInputError) {
             }
         }
         if ($value->isInteger()) {
@@ -83,14 +86,51 @@ final class DisclosureGuard
                     return true;
                 }
             }
-            if ($n < 0 && preg_match('/\b(minus|negative)\s+' . abs($n) . '(?![\d.\/])/', $text)) {
+            if ($n < 0 && preg_match('/\b(minus|negative)\s+' . abs($n) . '(?![\d\/]|\.\d)/', $text)) {
                 return true;
             }
         }
         return false;
     }
 
-    /** Any maximal run of math characters that parses to the expected polynomial. */
+    /**
+     * Numbers written in the text. A minus sign counts as a negative sign
+     * only when it is not acting as subtraction: "x − 4" and "x−4" give 4,
+     * while "is −8" and "(−6)" give −8 and −6.
+     *
+     * @return list<string>
+     */
+    private static function numberTokens(string $text): array
+    {
+        $out = [];
+        if (!preg_match_all('/(-\s?)?\d+(?:\.\d+)?(?:\s?\/\s?\d+)?/', $text, $m, PREG_OFFSET_CAPTURE)) {
+            return [];
+        }
+        foreach ($m[0] as [$token, $offset]) {
+            $before = $offset > 0 ? $text[$offset - 1] : '';
+            if ($before !== '' && (ctype_alnum($before) || $before === '.' || $before === '/')) {
+                continue; // part of a longer word or number
+            }
+            $after = $text[$offset + strlen($token)] ?? '';
+            if ($after !== '' && (ctype_alnum($after) || $after === '/' || ($after === '.' && ctype_digit($text[$offset + strlen($token) + 1] ?? '')))) {
+                continue;
+            }
+            $token = str_replace(' ', '', $token);
+            if (str_starts_with($token, '-')) {
+                $prev = rtrim(substr($text, 0, $offset));
+                $last = $prev === '' ? '' : $prev[strlen($prev) - 1];
+                $spacedOperator = ($text[$offset + 1] ?? '') === ' ';
+                $attached = $before !== '' && $before !== ' ';
+                if (($attached && (ctype_alnum($before) || $before === ')')) || ($spacedOperator && ($last !== '' && (ctype_alnum($last) || $last === ')')))) {
+                    $token = substr($token, 1);
+                }
+            }
+            $out[] = $token;
+        }
+        return $out;
+    }
+
+    /** Any maximal run of math characters that is the expected polynomial written in expanded form. */
     private static function expressionHit(string $text, string $expected, array $vars): bool
     {
         try {
@@ -109,7 +149,10 @@ final class DisclosureGuard
             }
             foreach (self::subspans($span) as $candidate) {
                 try {
-                    if (Polynomial::fromNode(ExpressionParser::parse($candidate, $vars))->equals($target)) {
+                    $node = ExpressionParser::parse($candidate, $vars);
+                    // Only the answer as it would be written counts: the grouped
+                    // problem expression is equal but is the question, not the answer.
+                    if (FormInspector::expandedSimplified($node) === null && Polynomial::fromNode($node)->equals($target)) {
                         return true;
                     }
                 } catch (MathInputError) {

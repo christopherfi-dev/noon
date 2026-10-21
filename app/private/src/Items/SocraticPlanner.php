@@ -47,21 +47,35 @@ final class SocraticPlanner
         return $plan;
     }
 
-    /** Guided problems avoid step answers that already appear in the problem text. */
+    /**
+     * D1: no step may print its own answer. Guided problems are regenerated
+     * until no numeric step answer appears in the problem text or in that
+     * step's own question (main or alternate phrasing).
+     */
     private function answersAbsentFromProblem(array $plan): bool
     {
-        $numbers = [];
-        $text = str_replace(Fmt::MINUS, '-', $plan['problem']);
-        preg_match_all('/(?<![\d.])-?\d+(?:\/\d+)?/', $text, $m);
-        foreach ($m[0] as $n) {
-            $numbers[$n] = true;
-        }
+        $problem = self::numbers($plan['problem']);
         foreach ($this->flatten($plan['steps']) as $step) {
-            if ($step['answer']['kind'] === 'exact_rational' && isset($numbers[$step['answer']['expected']])) {
+            if ($step['answer']['kind'] !== 'exact_rational') {
+                continue;
+            }
+            $own = self::numbers($step['prompt'] . ' ' . ($step['alt_prompt'] ?? ''));
+            if (isset($problem[$step['answer']['expected']]) || isset($own[$step['answer']['expected']])) {
                 return false;
             }
         }
         return true;
+    }
+
+    /** @return array<string,true> signed integers and simple fractions written in a text */
+    private static function numbers(string $text): array
+    {
+        $out = [];
+        preg_match_all('/(?<![\d.])-?\d+(?:\/\d+)?/', str_replace(Fmt::MINUS, '-', $text), $m);
+        foreach ($m[0] as $n) {
+            $out[$n] = true;
+        }
+        return $out;
     }
 
     /** @return list<array<string,mixed>> */
@@ -198,7 +212,7 @@ final class SocraticPlanner
             $disp = $n . ' ÷ ' . $b;
             $steps = [
                 $this->scalar('s1', 'Division asks a missing-factor question. ' . $b . ' times what number makes ' . $n . '?', $a, 'N17',
-                    [$this->scalar('s1.1', 'Count by ' . $b . 's: ' . $b . ', ' . (2 * $b) . ', ' . (3 * $b) . ', and so on. How many numbers do you say to reach ' . $n . '?', $a, 'N17')]),
+                    [$this->scalar('s1.1', 'Count by ' . $b . 's, starting at ' . $b . '. How many numbers do you say to reach ' . $n . '?', $a, 'N17')]),
                 $this->scalar('s2', 'What is ' . $disp . '?', $a, 'N17', [], null, true),
             ];
             return [$disp, 'What is ' . $disp . '?', $steps];
@@ -329,7 +343,7 @@ final class SocraticPlanner
         $s = intdiv($rest, $a);
         $arith = $ab > 0 ? Fmt::n($c) . ' ' . Fmt::MINUS . ' ' . $ab : Fmt::n($c) . ' + ' . (-$ab);
         $steps = [
-            $this->expression('s1', 'Rewrite the left side, ' . $a . '(' . $inner . '), without parentheses.', "$a*x+($ab)", ['x'], 'E06', [
+            $this->expression('s1', 'How do you write the left side, ' . $a . '(' . $inner . '), without parentheses?', "$a*x+($ab)", ['x'], 'E06', [
                 $this->scalar('s1.1', 'What is ' . $a . ' × ' . Fmt::p($b) . '?', $ab, 'E06'),
                 $this->expression('s1.2', 'What is ' . $a . ' times x, written as one term?', "$a*x", ['x'], 'E06'),
             ]),
@@ -353,14 +367,14 @@ final class SocraticPlanner
                 [$this->scalar('s1.1', $repeated, $a * $b, 'N18')]),
             $this->expression('s2', 'How many x\'s are in all ' . $a . ' groups? Write them as one term.', "$a*x", ['x'], 'A07',
                 [$this->scalar('s2.1', 'If x were 10, what would ' . $a . ' groups of x be worth?', 10 * $a, 'N18')]),
-            $this->expression('s3', 'Write ' . $disp . ' without parentheses.', "$a*x+" . ($a * $b), ['x'], 'A07', [
+            $this->expression('s3', 'How do you write ' . $disp . ' without parentheses?', "$a*x+" . ($a * $b), ['x'], 'A07', [
                 $this->choice('s3.1', 'Your x-part and your number part are added together inside the parentheses. Which sign joins them in the answer?', $rng->shuffle([
                     ['code' => 'PLUS', 'text' => '+', 'valid' => true],
                     ['code' => 'MINUS', 'text' => Fmt::MINUS, 'valid' => false],
                 ]), 'A07', null, 'select_one'),
-            ], 'Put the x-part and the number part together. Write ' . $disp . ' without parentheses.', true),
+            ], 'Using your x-part and your number part, how do you write ' . $disp . ' without parentheses?', true),
         ];
-        return [$disp, 'Write ' . $disp . ' without parentheses.', $steps];
+        return [$disp, 'How do you write ' . $disp . ' without parentheses?', $steps];
     }
 
     // ---------------------------------------------------------------- step constructors

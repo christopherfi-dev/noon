@@ -1,0 +1,4297 @@
+{
+    "generated_at": "2026-10-21T12:47:45Z",
+    "curriculum": "ACE-ALGEBRA1 1.1.0",
+    "architecture": "1.2",
+    "counts": {
+        "UNAVAILABLE": 195,
+        "PARTIAL_COMPONENTS": 8,
+        "AVAILABLE_SCORED": 2
+    },
+    "live_provider_smoke_test": "NOT RUN: no provider key was supplied.",
+    "skills": [
+        {
+            "skill_id": "N01",
+            "title": "Order signed integers on a number line",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "ordered_list"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "N02",
+            "title": "Understand opposites and absolute value",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "N03",
+            "title": "Add positive and negative numbers",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "PARTIAL_COMPONENTS",
+            "implemented_variants": [
+                "constructed (SIGNED_ADD, scalar)"
+            ],
+            "checkers": [
+                "exact rational"
+            ],
+            "remaining": [
+                "Conceptual evidence (explain or reject an invalid method) not implemented.",
+                "Transfer variant not implemented.",
+                "Criterion reported as COMPONENT_CRITERION_MET only."
+            ],
+            "test_references": [
+                "tests/Unit/Items/TemplatesTest.php",
+                "tests/Integration/BetaJourneyTest.php::testEveryBetaSkillCanStartAndScore"
+            ]
+        },
+        {
+            "skill_id": "N04",
+            "title": "Subtract signed numbers",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "PARTIAL_COMPONENTS",
+            "implemented_variants": [
+                "constructed (SIGNED_SUBTRACT, scalar)"
+            ],
+            "checkers": [
+                "exact rational"
+            ],
+            "remaining": [
+                "Conceptual evidence (explain or reject an invalid method) not implemented.",
+                "Transfer variant not implemented.",
+                "Criterion reported as COMPONENT_CRITERION_MET only."
+            ],
+            "test_references": [
+                "tests/Unit/Items/TemplatesTest.php",
+                "tests/Integration/BetaJourneyTest.php::testEveryBetaSkillCanStartAndScore"
+            ]
+        },
+        {
+            "skill_id": "N05",
+            "title": "Multiply signed numbers",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "PARTIAL_COMPONENTS",
+            "implemented_variants": [
+                "constructed (SIGNED_MULTIPLY, scalar)"
+            ],
+            "checkers": [
+                "exact rational"
+            ],
+            "remaining": [
+                "Conceptual evidence (explain or reject an invalid method) not implemented.",
+                "Transfer variant not implemented.",
+                "Criterion reported as COMPONENT_CRITERION_MET only."
+            ],
+            "test_references": [
+                "tests/Unit/Items/TemplatesTest.php",
+                "tests/Integration/BetaJourneyTest.php::testEveryBetaSkillCanStartAndScore"
+            ]
+        },
+        {
+            "skill_id": "N06",
+            "title": "Divide signed numbers",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "PARTIAL_COMPONENTS",
+            "implemented_variants": [
+                "constructed (SIGNED_DIVIDE, scalar)"
+            ],
+            "checkers": [
+                "exact rational"
+            ],
+            "remaining": [
+                "Conceptual evidence (explain or reject an invalid method) not implemented.",
+                "Transfer variant not implemented.",
+                "Criterion reported as COMPONENT_CRITERION_MET only."
+            ],
+            "test_references": [
+                "tests/Integration/BetaJourneyTest.php::testB3DeepDescentAndReturn"
+            ]
+        },
+        {
+            "skill_id": "N07",
+            "title": "Apply order of operations and brackets",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "N08",
+            "title": "Recognize equivalent fractions",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "fraction"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "N09",
+            "title": "Add and subtract fractions",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "fraction"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "N10",
+            "title": "Multiply and divide fractions",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "fraction"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "N11",
+            "title": "Calculate with signed decimals",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "N12",
+            "title": "Convert fractions, decimals, and percentages",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "N13",
+            "title": "Compare and order rational numbers",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "ordered_list"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "N14",
+            "title": "Understand ratios and unit rates",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "quantity"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "N15",
+            "title": "Evaluate powers and perfect-square roots",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "N16",
+            "title": "Solve simple proportions",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "N17",
+            "title": "Add and subtract whole numbers using place value",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "N18",
+            "title": "Multiply and divide whole numbers",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "PARTIAL_COMPONENTS",
+            "implemented_variants": [
+                "constructed (WHOLE_MULTIPLY_DIVIDE, scalar)"
+            ],
+            "checkers": [
+                "exact rational"
+            ],
+            "remaining": [
+                "Conceptual evidence (explain or reject an invalid method) not implemented.",
+                "Transfer variant not implemented.",
+                "Criterion reported as COMPONENT_CRITERION_MET only."
+            ],
+            "test_references": [
+                "tests/Unit/Items/TemplatesTest.php",
+                "tests/Integration/BetaJourneyTest.php::testEveryBetaSkillCanStartAndScore"
+            ]
+        },
+        {
+            "skill_id": "N19",
+            "title": "Represent fractions as quantities and equal units",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "N20",
+            "title": "Interpret base-ten place value and decimal magnitude",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "A01",
+            "title": "Understand variables as unknown or changing quantities",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "model"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "A02",
+            "title": "Identify terms, including their signs",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "A03",
+            "title": "Identify coefficients and constants, including implied coefficients",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "A04",
+            "title": "Distinguish terms from factors",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "A05",
+            "title": "Interpret algebraic notation such as 3x, x^2, and x/3",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "A06",
+            "title": "Distinguish expressions, equations, identities, and inequalities",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "A07",
+            "title": "Understand grouping with parentheses",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "A08",
+            "title": "Translate verbal descriptions into expressions",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "A09",
+            "title": "Substitute values into expressions",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "A10",
+            "title": "Define variables and units in context",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "model"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "E01",
+            "title": "Recognize like and unlike terms",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "E02",
+            "title": "Combine like terms with nonnegative coefficients",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "E03",
+            "title": "Combine like terms with signed coefficients",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "E04",
+            "title": "Simplify expressions containing constants and variable terms",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "E05",
+            "title": "Use commutative and associative properties",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "E06",
+            "title": "Apply the distributive property with positive factors",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "AVAILABLE_SCORED",
+            "implemented_variants": [
+                "constructed (POSITIVE_DISTRIBUTION, expression)",
+                "contrast (DISTRIBUTION_CONTRAST, classification)",
+                "transfer (DISTRIBUTION_TRANSFER, expression)"
+            ],
+            "checkers": [
+                "polynomial identity + expanded form",
+                "exact option set"
+            ],
+            "remaining": [
+                "Written explanations are not assessed; the contrast item checks rejection of invalid methods by selection only."
+            ],
+            "test_references": [
+                "tests/Integration/BetaJourneyTest.php::testB1DistributionJourney",
+                "tests/Unit/Items/TemplatesTest.php"
+            ]
+        },
+        {
+            "skill_id": "E07",
+            "title": "Distribute negative and fractional factors",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "E08",
+            "title": "Handle a minus sign before parentheses",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "E09",
+            "title": "Simplify multistep expressions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "E10",
+            "title": "Factor out common factors",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "E11",
+            "title": "Identify and create equivalent expressions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "E12",
+            "title": "Justify equivalence or find a counterexample",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Provide a valid identity proof.",
+                "Produce a counterexample to a false identity.",
+                "Explain why a confirming example alone is insufficient."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "Q01",
+            "title": "Understand equality and balance",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "Q02",
+            "title": "Check solutions by substitution",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "Q03",
+            "title": "Apply inverse operations while maintaining equality",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "Q04",
+            "title": "Solve one-step addition/subtraction equations",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "PARTIAL_COMPONENTS",
+            "implemented_variants": [
+                "constructed (ONE_STEP_ADD, scalar)"
+            ],
+            "checkers": [
+                "exact rational"
+            ],
+            "remaining": [
+                "Conceptual evidence (explain or reject an invalid method) not implemented.",
+                "Transfer variant not implemented.",
+                "Criterion reported as COMPONENT_CRITERION_MET only."
+            ],
+            "test_references": [
+                "tests/Unit/Items/TemplatesTest.php",
+                "tests/Integration/BetaJourneyTest.php::testEveryBetaSkillCanStartAndScore"
+            ]
+        },
+        {
+            "skill_id": "Q05",
+            "title": "Solve one-step multiplication/division equations",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "PARTIAL_COMPONENTS",
+            "implemented_variants": [
+                "constructed (ONE_STEP_MULTIPLY, scalar)"
+            ],
+            "checkers": [
+                "exact rational"
+            ],
+            "remaining": [
+                "Conceptual evidence (explain or reject an invalid method) not implemented.",
+                "Transfer variant not implemented.",
+                "Criterion reported as COMPONENT_CRITERION_MET only."
+            ],
+            "test_references": [
+                "tests/Integration/BetaJourneyTest.php::testB3DeepDescentAndReturn"
+            ]
+        },
+        {
+            "skill_id": "Q06",
+            "title": "Solve two-step equations",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "PARTIAL_COMPONENTS",
+            "implemented_variants": [
+                "constructed (TWO_STEP, scalar)"
+            ],
+            "checkers": [
+                "exact rational"
+            ],
+            "remaining": [
+                "Conceptual evidence (explain or reject an invalid method) not implemented.",
+                "Transfer variant not implemented.",
+                "Criterion reported as COMPONENT_CRITERION_MET only."
+            ],
+            "test_references": [
+                "tests/Integration/BetaJourneyTest.php::testB3DeepDescentAndReturn",
+                "tests/Integration/EvidenceTest.php::testEvid03NumericOnlySkill"
+            ]
+        },
+        {
+            "skill_id": "Q07",
+            "title": "Solve equations containing parentheses",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "AVAILABLE_SCORED",
+            "implemented_variants": [
+                "constructed (GROUPED_LINEAR, scalar)",
+                "contrast (GROUPED_FIRST_STEP_CONTRAST, classification)",
+                "transfer (GROUPED_LINEAR_TRANSFER, scalar)"
+            ],
+            "checkers": [
+                "exact rational",
+                "exact option set"
+            ],
+            "remaining": [
+                "Written explanations are not assessed; the contrast item checks rejection of invalid methods by selection only."
+            ],
+            "test_references": [
+                "tests/Integration/BetaJourneyTest.php::testB1DistributionJourney",
+                "tests/Integration/BetaJourneyTest.php::testB2ProbeCorrectNoDescent",
+                "tests/Unit/Items/TemplatesTest.php"
+            ]
+        },
+        {
+            "skill_id": "Q08",
+            "title": "Solve equations with variables on both sides",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "Q09",
+            "title": "Solve multistep equations requiring simplification",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "Q10",
+            "title": "Solve equations with fractional or decimal coefficients",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "Q11",
+            "title": "Clear denominators correctly",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "Q12",
+            "title": "Recognize one, no, or infinitely many solutions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "Unique solution.",
+                "No solution.",
+                "All real numbers, with a true constant equality."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "Q13",
+            "title": "Rearrange simple formulas",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "equation"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "Q14",
+            "title": "Solve linear equations with literal coefficients and parameter cases",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Nonzero parameter.",
+                "Zero coefficient and zero constant.",
+                "Zero coefficient and nonzero constant."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "I01",
+            "title": "Interpret inequality symbols",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "I02",
+            "title": "Represent inequalities on number lines",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "interval"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "I03",
+            "title": "Solve inequalities using addition/subtraction",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "interval"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "I04",
+            "title": "Solve inequalities using positive multiplication/division",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "interval"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "I05",
+            "title": "Reverse inequality direction when multiplying/dividing by negatives",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "interval"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "I06",
+            "title": "Solve multistep inequalities",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "interval"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "I07",
+            "title": "Solve and graph compound inequalities",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "interval"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "I08",
+            "title": "Translate restrictions into inequalities",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "model"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "I09",
+            "title": "Graph two-variable linear inequalities",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "graph_spec"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C01",
+            "title": "Understand the coordinate plane",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C02",
+            "title": "Plot and read ordered pairs",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "ordered_pair"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C03",
+            "title": "Identify independent and dependent variables",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C04",
+            "title": "Construct and interpret input-output tables",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "table"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C05",
+            "title": "Determine whether a relation is a function",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C06",
+            "title": "Understand function notation",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C07",
+            "title": "Evaluate functions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C08",
+            "title": "Determine domain and range",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Finite table domain and range.",
+                "Continuous contextual domain.",
+                "Discrete contextual domain and a representation with a restriction."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C09",
+            "title": "Identify intercepts and zeros",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C10",
+            "title": "Connect tables, graphs, equations, and words",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "model"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C11",
+            "title": "Evaluate piecewise-defined functions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C12",
+            "title": "Graph piecewise and step functions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "graph_spec"
+            ],
+            "required_variants": [
+                "Piecewise linear branches.",
+                "A step function.",
+                "Included and excluded branch endpoints."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C13",
+            "title": "Interpret basic absolute-value functions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C14",
+            "title": "Calculate average rates of change",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C15",
+            "title": "Interpret basic transformations of familiar functions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "ordered_pair"
+            ],
+            "required_variants": [
+                "Vertical shift of a known graph.",
+                "Horizontal translation of a known graph.",
+                "Simple reflection or vertical scale with input-output tracking."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C16",
+            "title": "Reverse simple functions and find linear inverses",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "equation"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C17",
+            "title": "Compare functions presented in different representations",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Compare intercepts or initial values.",
+                "Compare rates.",
+                "Compare domain, extrema or other relevant features across representations."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C18",
+            "title": "Graph basic square-root and cube-root functions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "graph_spec"
+            ],
+            "required_variants": [
+                "Square-root graph and nonnegative input domain.",
+                "Cube-root graph including negative inputs.",
+                "Domain and range of a simple translated root graph."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C19",
+            "title": "Combine familiar function models using arithmetic",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Add familiar linear functions.",
+                "Combine a familiar function with a constant.",
+                "Interpret a shifted exponential model after G02 is available."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "C20",
+            "title": "Interpret key features and intervals of functions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Increasing and decreasing intervals.",
+                "Positive and negative intervals and zeros.",
+                "Extrema and end behavior in a stated model family."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "L01",
+            "title": "Recognize constant additive change",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "L02",
+            "title": "Calculate slope between two points",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "L03",
+            "title": "Interpret positive, negative, zero, and undefined slopes",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "L04",
+            "title": "Identify y-intercepts",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "ordered_pair"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "L05",
+            "title": "Graph y=mx+b",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "graph_spec"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "L06",
+            "title": "Write linear equations from tables",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "equation"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "L07",
+            "title": "Write linear equations from graphs",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "equation"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "L08",
+            "title": "Write linear equations from two points",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "equation"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "L09",
+            "title": "Convert between forms of linear equations",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "equation"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "L10",
+            "title": "Distinguish proportional and nonproportional linear relationships",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "L11",
+            "title": "Recognize horizontal and vertical lines",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "L12",
+            "title": "Compare two linear models",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "model"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "L13",
+            "title": "Interpret slope and intercept with units",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "L14",
+            "title": "Determine whether a relationship is linear",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "S01",
+            "title": "Understand simultaneous solutions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "S02",
+            "title": "Solve systems graphically",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "ordered_pair"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "S03",
+            "title": "Solve systems using substitution",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "ordered_pair"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "S04",
+            "title": "Solve systems using elimination",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "ordered_pair"
+            ],
+            "required_variants": [
+                "Explain the equation addition.",
+                "Retain the other equation.",
+                "Explain reversibility of the replacement and verify the original system."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "S05",
+            "title": "Scale equations before elimination",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "ordered_pair"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "S06",
+            "title": "Identify one, no, or infinitely many solutions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "One intersection.",
+                "Distinct parallel lines.",
+                "Coincident lines."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "S07",
+            "title": "Construct and interpret contextual systems",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "model"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "S08",
+            "title": "Solve systems of linear inequalities graphically",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "graph_spec"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "S09",
+            "title": "Solve and interpret linear-quadratic intersections",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "point_set"
+            ],
+            "required_variants": [
+                "Two real intersections.",
+                "One tangent intersection.",
+                "No real intersection; graphical and symbolic evidence compared."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "X01",
+            "title": "Interpret exponent notation",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "X02",
+            "title": "Distinguish negative bases and negative exponents",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "X03",
+            "title": "Multiply powers with common bases",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "X04",
+            "title": "Divide powers with common bases",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "X05",
+            "title": "Apply the power-of-a-power rule",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "X06",
+            "title": "Apply powers to products and quotients",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "X07",
+            "title": "Understand zero exponents",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "X08",
+            "title": "Interpret negative exponents",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "fraction"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "X09",
+            "title": "Work with scientific notation",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "X10",
+            "title": "Understand exact and approximate square roots",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "interval"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "X11",
+            "title": "Evaluate and interpret real cube roots",
+            "curricular_role": "FOUNDATION",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "P01",
+            "title": "Classify polynomial expressions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "P02",
+            "title": "Determine degree and leading coefficient",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "P03",
+            "title": "Add polynomials",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "P04",
+            "title": "Subtract polynomials",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "P05",
+            "title": "Multiply monomials by polynomials",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "P06",
+            "title": "Multiply binomials",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "P07",
+            "title": "Multiply larger polynomial expressions",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "P08",
+            "title": "Expand special products",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "P09",
+            "title": "Simplify polynomials without combining unlike powers",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "P10",
+            "title": "Explain polynomial closure and its limits",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Addition/subtraction closure.",
+                "Multiplication closure by exponent structure.",
+                "Counterexample to division closure."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "F01",
+            "title": "Factor out the greatest common factor",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "F02",
+            "title": "Factor using negative common factors",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "F03",
+            "title": "Identify factor pairs",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "F04",
+            "title": "Factor monic trinomials",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "F05",
+            "title": "Factor nonmonic trinomials",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "F06",
+            "title": "Factor differences of squares",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "F07",
+            "title": "Factor perfect-square trinomials",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "F08",
+            "title": "Verify factorization by expanding",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "F09",
+            "title": "Apply the zero-product property",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "solution_set"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U01",
+            "title": "Recognize quadratic relationships",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U02",
+            "title": "Identify coefficients in standard quadratic form",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U03",
+            "title": "Recognize quadratic patterns through second differences",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U04",
+            "title": "Interpret parabolas and their intercepts",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U05",
+            "title": "Identify vertex, symmetry, maxima, and minima",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U06",
+            "title": "Interpret standard, factored, and vertex forms",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U07",
+            "title": "Solve equations of the form x^2=k",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "solution_set"
+            ],
+            "required_variants": [
+                "Positive k with two real solutions.",
+                "k=0 with one real solution.",
+                "Negative k with no real solution."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U08",
+            "title": "Solve quadratics by factoring",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "solution_set"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U09",
+            "title": "Solve using square roots from vertex form",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "solution_set"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U10",
+            "title": "Complete the square for monic quadratics",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "equation"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U11",
+            "title": "Complete the square for nonmonic quadratics",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "equation"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U12",
+            "title": "Apply the quadratic formula",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "solution_set"
+            ],
+            "required_variants": [
+                "Two rational roots.",
+                "Irrational exact roots.",
+                "A repeated root and a no-real-root case, with number system explicit."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U13",
+            "title": "Interpret the discriminant",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U14",
+            "title": "Connect quadratic roots to x-intercepts",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U15",
+            "title": "Choose an appropriate solving method and interpret results",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Compare at least two valid methods.",
+                "Select an efficient method from expression structure.",
+                "Interpret and check contextual feasibility."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "U16",
+            "title": "Derive and justify the quadratic formula",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Show the completing-the-square identity.",
+                "Include a!=0.",
+                "Retain both branches and the real-discriminant condition."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "G01",
+            "title": "Distinguish additive from multiplicative growth",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "G02",
+            "title": "Understand y=ab^x",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "G03",
+            "title": "Evaluate exponential functions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "G04",
+            "title": "Graph exponential growth and decay",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "graph_spec"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "G05",
+            "title": "Interpret growth/decay multipliers and percentages",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "G06",
+            "title": "Construct exponential models",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "model"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "G07",
+            "title": "Compare linear and exponential models",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Compare linear and exponential change across equal intervals.",
+                "Compare models across representations.",
+                "Estimate an intersection graphically with a declared tolerance."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "G08",
+            "title": "Solve simple exponential equations with common bases",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "G09",
+            "title": "Write arithmetic sequence rules",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Explicit nth-term rule with stated indexing.",
+                "Recursive rule with initial condition.",
+                "Translate between the two and connect to a linear function."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "G10",
+            "title": "Write geometric sequence rules",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Explicit nth-term rule with stated indexing.",
+                "Recursive rule with initial condition.",
+                "Translate between the two and connect to an exponential function."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "G11",
+            "title": "Compare eventual exponential and polynomial growth",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Compare a specified exponential model with a linear model.",
+                "Compare with a specified quadratic model.",
+                "State the evidence or derivation supporting an eventual-growth claim."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "G12",
+            "title": "Rewrite exponential expressions across time intervals",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Integer changes of the input time scale.",
+                "Interpret the new factor.",
+                "Optional root-based subperiod conversion, explicitly extension-scoped."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "G13",
+            "title": "Justify equal-difference and equal-factor growth laws",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Derive a constant difference for a linear rule.",
+                "Derive a constant ratio for an exponential rule.",
+                "State the nonzero and positive-base assumptions."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "R01",
+            "title": "Distinguish rational and irrational numbers",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "R02",
+            "title": "Simplify square roots",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "R03",
+            "title": "Perform basic operations with radicals",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "R04",
+            "title": "Understand restrictions caused by division by zero",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "R05",
+            "title": "Simplify rational algebraic expressions",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "expression"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "R06",
+            "title": "Solve rational equations and check restrictions",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "solution_set"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "R07",
+            "title": "Solve elementary radical equations and check extraneous solutions",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "solution_set"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "R08",
+            "title": "Justify rational and irrational number-operation claims",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Rational plus rational and rational times rational.",
+                "Rational plus irrational and nonzero rational times irrational.",
+                "Counterexamples to invalid claims about two irrational numbers."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "D01",
+            "title": "Distinguish data types and statistical questions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "classification"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "D02",
+            "title": "Interpret and construct statistical displays",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "graph_spec"
+            ],
+            "required_variants": [
+                "Dot plot.",
+                "Histogram with declared bins.",
+                "Box plot with the declared quartile convention."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "D03",
+            "title": "Calculate and interpret mean and median",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "D04",
+            "title": "Interpret quartiles and interquartile range",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "D05",
+            "title": "Understand standard deviation",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Compare spread about a common mean.",
+                "Interpret population SD with units.",
+                "Use supplied technology output or compute with declared technology."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "D06",
+            "title": "Describe distributions, skewness, and outliers",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "D07",
+            "title": "Interpret scatter plots and associations",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "D08",
+            "title": "Construct and interpret linear trend models",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "equation"
+            ],
+            "required_variants": [
+                "Fit or interpret an approximate linear model.",
+                "Explain slope and intercept in context.",
+                "Check whether a linear fit is suitable and avoid unsupported extrapolation."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "D09",
+            "title": "Interpret residuals and correlation coefficients",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Residual sign and magnitude.",
+                "Correlation coefficient from technology.",
+                "Explain that r is not a percent-correct score and does not establish causality."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "D10",
+            "title": "Distinguish correlation and causation",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "D11",
+            "title": "Interpret two-way tables and conditional proportions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Joint frequency.",
+                "Marginal frequency.",
+                "Conditional frequency with the correct reference group."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "M01",
+            "title": "Identify quantities, unknowns, and units",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "model"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "M02",
+            "title": "Translate situations into algebraic models",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "model"
+            ],
+            "required_variants": [
+                "Linear contextual model.",
+                "Quadratic contextual model after the relevant skills are available.",
+                "Simple exponential contextual model."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "M03",
+            "title": "Select appropriate linear, quadratic, or exponential models",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "M04",
+            "title": "Identify realistic domain restrictions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "interval"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "M05",
+            "title": "Verify and evaluate solutions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "M06",
+            "title": "Connect multiple representations",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "model"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "M07",
+            "title": "Explain valid algebraic transformations",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "M08",
+            "title": "Evaluate assumptions, limitations, and conclusions",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "M09",
+            "title": "Choose and communicate appropriate measurement precision",
+            "curricular_role": "CORE",
+            "required_response_types": [
+                "quantity"
+            ],
+            "required_variants": [
+                "Stated decimal-place requirement.",
+                "Precision consistent with measurement limitations.",
+                "Distinguish exact algebra from rounded reported quantities."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "H01",
+            "title": "Solve absolute-value equations and inequalities",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "solution_set"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "H02",
+            "title": "Solve equations involving piecewise functions",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "solution_set"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "H03",
+            "title": "Work with function composition and inverses",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "H04",
+            "title": "Transform functions",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "reasoning"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "H05",
+            "title": "Perform polynomial division",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "H06",
+            "title": "Understand rational exponents",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "H07",
+            "title": "Solve quadratics with complex solutions",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "solution_set"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "H08",
+            "title": "Interpret logarithms",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "scalar"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "H09",
+            "title": "Analyze rational functions and asymptotes",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "structured_response"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        },
+        {
+            "skill_id": "H10",
+            "title": "Solve elementary nonlinear systems",
+            "curricular_role": "EXTENSION",
+            "required_response_types": [
+                "point_set"
+            ],
+            "required_variants": [
+                "Representative constructed response.",
+                "A diagnostic contrast addressing the stated probe focus.",
+                "A fresh transfer or interpretation task within this node's bounds."
+            ],
+            "runtime_status": "UNAVAILABLE",
+            "implemented_variants": [],
+            "checkers": [],
+            "remaining": [
+                "Not in the beta skill list."
+            ],
+            "test_references": []
+        }
+    ],
+    "deferred": [
+        {
+            "item": "Teacher task links (create_task / task endpoints, signed public settings)",
+            "status": "NOT IMPLEMENTED",
+            "behaviour": "Endpoints return 422 FEATURE_NOT_IN_BETA."
+        },
+        {
+            "item": "\"Help me find a starting point\" orientation (START_ORIENTATION, recommendation)",
+            "status": "NOT IMPLEMENTED",
+            "behaviour": "start with entry_route UNSURE returns 422 FEATURE_NOT_IN_BETA."
+        },
+        {
+            "item": "Free-text topic mapping (SUGGEST_TARGET / CONFIRM_TARGET)",
+            "status": "NOT IMPLEMENTED",
+            "behaviour": "Actions are not offered; the learner picks from the beta list."
+        },
+        {
+            "item": "Resume across sessions (RESUME_SESSION of a closed session)",
+            "status": "NOT IMPLEMENTED",
+            "behaviour": "Returns 422 FEATURE_NOT_IN_BETA. RESUME_SESSION is used only to retry a held generation inside a live session."
+        },
+        {
+            "item": "Review and retention checks (REVIEW_CHECK)",
+            "status": "NOT IMPLEMENTED",
+            "behaviour": "Never entered; reports state that no retention evidence exists."
+        },
+        {
+            "item": "Transfer checks outside Q07 and E06 (TRANSFER_CHECK mode)",
+            "status": "NOT IMPLEMENTED",
+            "behaviour": "Q07/E06 transfer variants are part of their criterion; no separate transfer mode."
+        },
+        {
+            "item": "Graph, table and reasoning-rubric inputs and checkers",
+            "status": "NOT IMPLEMENTED",
+            "behaviour": "Not implemented; no beta skill uses them."
+        },
+        {
+            "item": "All 195 skills outside the beta list",
+            "status": "NOT IMPLEMENTED",
+            "behaviour": "Browsable only; runtime_status UNAVAILABLE; descent to them records \"not available in beta\"."
+        },
+        {
+            "item": "Localisation",
+            "status": "NOT IMPLEMENTED",
+            "behaviour": "English only."
+        },
+        {
+            "item": "Accounts",
+            "status": "NOT IMPLEMENTED",
+            "behaviour": "Account-free; browser-session ownership only."
+        }
+    ],
+    "other_gaps": [
+        {
+            "item": "Bundled math renderer (spec 01)",
+            "status": "NOT IMPLEMENTED",
+            "note": "Not bundled. Math is shown as plain text with Unicode signs; no TeX is interpreted anywhere, so unsafe TeX cannot execute."
+        },
+        {
+            "item": "Model-worded REPORT envelopes",
+            "status": "NOT IMPLEMENTED",
+            "note": "Not used. The report is built by the host from ledger events only."
+        },
+        {
+            "item": "Solution-set, interval, rational-domain checkers (golden ROOT-*, DOMAIN-01, INTERVAL-01, GRAPH-01)",
+            "status": "NOT IMPLEMENTED",
+            "note": "Not implemented; no beta skill needs them."
+        },
+        {
+            "item": "MySQL storage adapter",
+            "status": "NOT IMPLEMENTED",
+            "note": "Not implemented; PDO SQLite only (preflight fails clearly without it)."
+        },
+        {
+            "item": "Live provider smoke test",
+            "status": "NOT IMPLEMENTED",
+            "note": "NOT RUN: no provider key was supplied. Only mock-mode behaviour is tested."
+        }
+    ],
+    "heuristics": [
+        {
+            "item": "Answer-disclosure guard (D1)",
+            "note": "HEURISTIC. Rejects model text containing the active or a remaining guided step's answer as a standalone number, number word, equivalent polynomial span or the key option's text. Paraphrases (e.g. \"dividing by 3\" for the option \"Divide by 3\") are not detected."
+        },
+        {
+            "item": "One action per message",
+            "note": "HEURISTIC. Model text may not contain \"?\"; the only question shown is the host-rendered item prompt."
+        },
+        {
+            "item": "Error signatures",
+            "note": "Deterministic value matching of known error patterns. A match is recorded as an observation, never a confirmed cause, and only selects the probe/descent branch."
+        }
+    ]
+}
