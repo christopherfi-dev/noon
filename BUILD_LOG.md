@@ -78,3 +78,16 @@ Separate interval from the beta interval above.
 | ~21:35:40Z (not command-stamped) | Key scan: added a second pattern for prefixed keys (`sk-proj-`, `sk-svcacct-`, `sk-admin-`), which the ruled pattern misses; planted-key test extended | Checked against the three keys pasted in the conversation (yes/no only): ruled pattern misses the OpenAI-style key; scanner now detects all three |
 | 2026-10-21T21:36:14Z–21:36:33Z | §5 final gate rerun | PASS — every step exit 0; PHPUnit 160 (96 unit, 64 integration; 25933 assertions); browser 5/5; bundle smoke 12/12; key-leak scan 0 hits over 252 tracked files and 671 ZIP entries (key present: yes) |
 | 2026-10-21T21:37:00Z (approx.) | **Round 2 end** (report written: `ROUND_2_REPORT.md`). Live run stopped at §4.1 (model not listed); everything else complete. Not deployed | Round 2 interval 21:10:29Z to about 21:37Z |
+
+## Round 3 — reasoning settings ruling (`CONDUCTOR_ROUND_3_REASONING.md`)
+
+Separate interval from the beta and round 2.
+
+| UTC time | Action | Result |
+|---|---|---|
+| 2026-10-21T21:38:48Z | **Round 3 start**. Ruling recorded in `CONDUCTOR_ROUND_3_REASONING.md` | Recorded |
+| 2026-10-21T21:38:48Z | Checked the architect's §1 note: `git show origin/claude/elegant-volta-blu3uj:.gitignore` | 8 lines; all §1 patterns present since `0adde50` (pushed ~21:37Z). §1 is complete |
+| ~21:40Z–21:45Z (not command-stamped) | Ruling 1–4: config keys `provider_thinking` (`disabled`/`enabled`, required) and `provider_reasoning_effort` (`low`/`high`/`max`, only with thinking enabled); `thinking` sent on every call; `temperature` only with thinking disabled; `reasoning_content` never read, stored, shown or sent back; per-call finish reason, token counts (incl. reasoning) and duration logged in `model_calls` (migration 002); preflight FAILs on missing or inconsistent thinking settings | PHPUnit 161 PASS (new: explicit-settings test; reasoning-content-never-kept and truncation-recorded test) |
+| ~21:45Z (not command-stamped) | Session runner: per-call time, empty responses, `finish_reason=length` count, model name returned per call; `--label`; seeded host random source per session | Mock dry run OK (not a live result) |
+| ~21:47Z (not command-stamped) | Owner's answer: use `deepseek-flash` for all three runs (`deepseek-v4-flash` is a retired alias of the same model); record the model returned in each response | Three private configs written outside the repository (key present: yes): thinking disabled / max_tokens 4096; enabled low / 8192; enabled high / 16384. Preflight PASS for each |
+| 2026-10-21T21:49:19Z–21:49:45Z | Pre-live gate: full runner with the thinking-disabled private config | PASS — every step exit 0; PHPUnit 161; browser 5/5; bundle smoke 12/12; preflight THINKING PASS; key-leak scan 0 hits (key present: yes) |

@@ -14,7 +14,9 @@ return [
     'provider_api_key' => '',             // secret; server-side only
     'provider_timeout' => 45,
     'provider_connect_timeout' => 10,
-    'provider_reasoning_effort' => '',    // optional, e.g. 'high'; sent only when set and only if the provider documents it
+    'provider_thinking' => '',            // live provider: 'disabled' or 'enabled' (required; sent on every call)
+    'provider_reasoning_effort' => '',    // 'low', 'high' or 'max' when thinking is enabled; empty when disabled
+    'provider_max_tokens' => 4096,        // output limit per call; with thinking enabled, reasoning counts against it
 
     // 'db_path' => '/home/ACCOUNT/algebra-private/var/algebra.sqlite',
     // 'base_path' => '/algebra/',        // cookie path; defaults to the api.php folder

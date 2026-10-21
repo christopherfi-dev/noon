@@ -3,11 +3,11 @@ PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
 Runtime:       PHP 8.3.6
 Configuration: /home/user/noon/app/phpunit.xml
 
-...............................................................  63 / 160 ( 39%)
-............................................................... 126 / 160 ( 78%)
-..................................                              160 / 160 (100%)
+...............................................................  63 / 161 ( 39%)
+............................................................... 126 / 161 ( 78%)
+...................................                             161 / 161 (100%)
 
-Time: 00:05.232, Memory: 30.00 MB
+Time: 00:05.751, Memory: 30.00 MB
 
 Beta Guards (AlgebraEngine\Tests\Integration\BetaGuards)
  ✔ B 5 non prerequisite proposal rejected
@@ -139,7 +139,8 @@ Linear Equation (AlgebraEngine\Tests\Unit\Math\LinearEquation)
 Live Adapter (AlgebraEngine\Tests\Integration\LiveAdapter)
  ✔ Adapter request format and full journey start
  ✔ Empty content and internal words are repaired not shown
- ✔ Reasoning effort is sent only when configured
+ ✔ Thinking settings are explicit
+ ✔ Reasoning content is never kept and truncation is recorded
  ✔ Live provider requires explicit settings and https
 
 Math Scenario (AlgebraEngine\Tests\Integration\MathScenario)
@@ -209,4 +210,4 @@ Templates (AlgebraEngine\Tests\Unit\Items\Templates)
  ✔ Every guided step is tagged with the skill it exercises
  ✔ Guided plans are questions that never state their answer
 
-OK (160 tests, 25933 assertions)
+OK (161 tests, 25966 assertions)

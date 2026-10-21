@@ -17,6 +17,7 @@ use AlgebraEngine\Items\ItemFactory;
 use AlgebraEngine\Items\SocraticPlanner;
 use AlgebraEngine\Math\ScalarParser;
 use AlgebraEngine\Provider\ModelCoordinator;
+use AlgebraEngine\Provider\ProviderResponse;
 use AlgebraEngine\Provider\SchemaValidator;
 use AlgebraEngine\Report\ReportBuilder;
 use AlgebraEngine\Storage\Store;
@@ -1421,9 +1422,13 @@ final class Engine
             return null;
         };
         $provider = $this->model->provider();
-        $log = function (string $kind, string $outcome) use ($sessionId, $provider, $turn): void {
+        $log = function (string $kind, string $outcome, ?ProviderResponse $resp = null) use ($sessionId, $provider, $turn): void {
             $turn->modelCalls++;
-            $this->store->logModelCall($sessionId, null, $kind, $provider->name(), $provider->model(), $outcome, $this->clock->now());
+            // Metadata only (round 3 ruling 3–4): finish reason, token counts, duration. Never reasoning text.
+            $this->store->logModelCall($sessionId, null, $kind, $provider->name(), $provider->model(), $outcome, $this->clock->now(), $resp === null ? [] : [
+                'finish_reason' => $resp->finishReason, 'duration_ms' => $resp->durationMs,
+                'prompt_tokens' => $resp->usage['prompt_tokens'] ?? null, 'completion_tokens' => $resp->usage['completion_tokens'] ?? null, 'reasoning_tokens' => $resp->usage['reasoning_tokens'] ?? null,
+            ]);
         };
 
         $binding = $turn->snap['binding'];

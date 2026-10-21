@@ -66,6 +66,18 @@ if ($provider === 'openai_compatible') {
     if (!str_starts_with((string) ($config['provider_base_url'] ?? ''), 'https://')) {
         $add('FAIL', 'PROVIDER_HTTPS', 'provider_base_url must use https://');
     }
+    // Round 3 ruling 1: thinking is set explicitly; the provider default is never relied on.
+    $thinking = (string) ($config['provider_thinking'] ?? '');
+    $effort = (string) ($config['provider_reasoning_effort'] ?? '');
+    if (!in_array($thinking, ['disabled', 'enabled'], true)) {
+        $add('FAIL', 'THINKING', "provider_thinking must be 'disabled' or 'enabled'; the provider default is never relied on.");
+    } elseif ($thinking === 'enabled' && !in_array($effort, ['low', 'high', 'max'], true)) {
+        $add('FAIL', 'THINKING', "provider_reasoning_effort must be 'low', 'high' or 'max' when thinking is enabled.");
+    } elseif ($thinking === 'disabled' && $effort !== '') {
+        $add('FAIL', 'THINKING', "provider_reasoning_effort applies only when thinking is enabled; leave it empty.");
+    } else {
+        $add('PASS', 'THINKING', 'thinking ' . $thinking . ($thinking === 'enabled' ? ', reasoning_effort ' . $effort : '') . ', max_tokens ' . (int) ($config['provider_max_tokens'] ?? 4096));
+    }
     extension_loaded('curl')
         ? $add('PASS', 'CURL', 'loaded (live provider calls use HTTPS with certificate verification)')
         : $add('FAIL', 'CURL', 'MISSING. cURL is required for the live provider.');
@@ -81,6 +93,7 @@ $expected = [
     'resources/contracts/model-envelope.schema.json',
     'resources/contracts/workflow-policy.json',
     'migrations/001_init.sql',
+    'migrations/002_model_call_usage.sql',
     'vendor/autoload.php',
 ];
 foreach ($expected as $rel) {

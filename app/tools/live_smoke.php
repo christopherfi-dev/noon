@@ -30,7 +30,7 @@ if (($settings['provider'] ?? 'mock') !== 'openai_compatible' || trim((string) (
 }
 $db = sys_get_temp_dir() . '/ae_live_smoke_' . bin2hex(random_bytes(4)) . '.sqlite';
 // Optional diagnostics: ALGEBRA_TRANSPORT_LOG=/path logs response metadata (status, finish reason,
-// token usage, content length, reasoning presence). Request bodies and headers are never logged.
+// token usage, content length). Request bodies, headers and reasoning text are never logged.
 $transport = null;
 $logPath = getenv('ALGEBRA_TRANSPORT_LOG') ?: '';
 if ($logPath !== '') {
@@ -52,7 +52,7 @@ if ($logPath !== '') {
             file_put_contents($this->path, json_encode([
                 'json_mode' => isset($req['response_format']), 'status' => $r['status'], 'error' => $r['error'], 'seconds' => round(microtime(true) - $t, 1),
                 'finish_reason' => $d['choices'][0]['finish_reason'] ?? null, 'usage' => $d['usage'] ?? null,
-                'content_chars' => strlen((string) ($msg['content'] ?? '')), 'reasoning_chars' => strlen((string) ($msg['reasoning_content'] ?? '')),
+                'content_chars' => strlen((string) ($msg['content'] ?? '')), // reasoning_content is not read (round 3 ruling 3); usage has its token count
                 'content_head' => substr((string) ($msg['content'] ?? ''), 0, 400), 'error_body' => $r['status'] >= 400 ? substr($r['body'], 0, 300) : null,
             ]) . "\n", FILE_APPEND);
             return $r;

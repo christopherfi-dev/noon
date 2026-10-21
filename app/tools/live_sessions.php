@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Scripted sessions for Conductor Round 2 §4.2–4.3: the B1 and B3 paths with
  * a scripted learner, against the configured provider.
  *
- *   ALGEBRA_CONFIG=/private/config.php php app/tools/live_sessions.php --out=DIR [--b1=5] [--b3=3] [--accept-unlisted-model]
+ *   ALGEBRA_CONFIG=/private/config.php php app/tools/live_sessions.php --out=DIR [--b1=5] [--b3=3] [--label=NAME] [--accept-unlisted-model]
  *
  * With provider 'openai_compatible' it first lists the provider's models and
  * stops (exit 3) when the configured model is not listed (§4.1), unless
@@ -18,6 +18,11 @@ declare(strict_types=1);
  * the rejected text. METRICS.md holds the per-session and total metrics. The
  * scripted learner reads keys from this script's own throwaway database. The
  * key is never printed or written; provider error bodies are not recorded.
+ * Reasoning text (reasoning_content) is never read or written; only its
+ * token count is reported (round 3 ruling 3). The scripted learner's inputs
+ * (which error, at which mode and skill) are the same in every run, and each
+ * session seeds the host random source the same way; item numbers the model
+ * proposes still differ, so items are not identical across runs.
  */
 
 require dirname(__DIR__) . '/private/vendor/autoload.php';
@@ -26,8 +31,9 @@ use AlgebraEngine\App;
 use AlgebraEngine\Config;
 use AlgebraEngine\Http\Api;
 use AlgebraEngine\Http\Request;
+use AlgebraEngine\Support\RandomSource;
 
-$opts = getopt('', ['out:', 'b1::', 'b3::', 'accept-unlisted-model', 'max-turns::']);
+$opts = getopt('', ['out:', 'b1::', 'b3::', 'accept-unlisted-model', 'max-turns::', 'label::']);
 $out = $opts['out'] ?? '';
 $file = getenv('ALGEBRA_CONFIG') ?: '';
 if ($out === '' || $file === '' || !is_file($file)) {
@@ -47,8 +53,11 @@ if (!is_dir($out) && !mkdir($out, 0777, true)) {
     fwrite(STDERR, "Cannot create $out\n");
     exit(2);
 }
-$label = $live ? 'LIVE' : 'MOCK (simulated provider; dry run of this script, not a live result)';
-$runLog = ["# Scripted sessions — run log", '', "Mode: $label", 'Started (UTC): ' . gmdate('Y-m-d\TH:i:s\Z')];
+$label = ($live ? 'LIVE' : 'MOCK (simulated provider; dry run of this script, not a live result)') . (isset($opts['label']) ? ' — configuration ' . $opts['label'] : '');
+$config = Config::fromArray($settings, dirname(__DIR__) . '/private');
+$runLog = ["# Scripted sessions — run log", '', "Mode: $label", 'Started (UTC): ' . gmdate('Y-m-d\TH:i:s\Z'),
+    'Settings: thinking ' . ($config->string('provider_thinking') ?: '(not set)') . ', reasoning_effort ' . ($config->string('provider_reasoning_effort') ?: '(not sent)')
+    . ', max_tokens ' . $config->int('provider_max_tokens') . ', provider_timeout ' . $config->int('provider_timeout') . ' s, lease ' . $config->int('lease_seconds') . ' s'];
 
 // ------------------------------------------------------------ §4.1 model-list gate
 if ($live) {
@@ -63,7 +72,6 @@ if ($live) {
     $listed = in_array($settings['provider_model'], $ids, true);
     $runLog[] = "Model list: GET $url → HTTP $status; listed: " . ($ids ? implode(', ', $ids) : '(none)');
     $runLog[] = "Configured model `{$settings['provider_model']}` listed: " . ($listed ? 'yes' : 'no');
-    $runLog[] = 'reasoning_effort: ' . (($settings['provider_reasoning_effort'] ?? '') !== '' ? $settings['provider_reasoning_effort'] : '(not sent)');
     if (!$listed && !isset($opts['accept-unlisted-model'])) {
         $runLog[] = 'STOPPED before any session (Round 2 §4.1): the configured model is not listed. No sessions were run.';
         file_put_contents("$out/RUN_LOG.md", implode("\n", $runLog) . "\n");
@@ -107,8 +115,8 @@ if ($live) {
     };
 }
 $db = sys_get_temp_dir() . '/ae_live_sessions_' . bin2hex(random_bytes(4)) . '.sqlite';
-$app = new App(Config::fromArray(['db_path' => $db] + $settings, dirname(__DIR__) . '/private'), null, null, null, null, $transport);
-$api = new Api($app);
+$appConfig = Config::fromArray(['db_path' => $db] + $settings, dirname(__DIR__) . '/private');
+$app = new App($appConfig, null, null, null, null, $transport);
 $runLog[] = 'Provider / model: ' . $app->provider->name() . ' / ' . $app->provider->model();
 
 // ------------------------------------------------------------ scripted learner
@@ -177,6 +185,9 @@ $allRejections = [];
 $allLatencies = [];
 foreach ($plan as $n => $path) {
     $name = sprintf('%02d-%s', $n + 1, $path);
+    // Same host random source per session in every run (same scripted inputs, same host-chosen numbers).
+    $app = new App($appConfig, null, null, null, RandomSource::seeded('live-sessions-' . $name), $transport);
+    $api = new Api($app);
     $cookies = [];
     $csrf = null;
     $view = null;
@@ -334,6 +345,7 @@ foreach ($plan as $n => $path) {
     }
     $latencies = array_map(fn ($tn) => $tn['seconds'], $turns);
     $allLatencies = array_merge($allLatencies, $latencies);
+    $callTimes = array_map(fn ($c) => $c['seconds'], $sessionCalls);
     $m = [
         'session' => $name, 'path' => $path, 'started' => $started, 'ended' => $ended, 'turns' => count($turns),
         'final_mode' => $view['mode'] ?? '?', 'report_status' => $report->body['report']['status'] ?? '?',
@@ -343,6 +355,9 @@ foreach ($plan as $n => $path) {
         'guard_rejections' => count(array_filter($allRejections, fn ($x) => $x['session'] === $name && $x['guard'])),
         'other_rejections' => count(array_filter($allRejections, fn ($x) => $x['session'] === $name && !$x['guard'])),
         'latency_median' => $median($latencies), 'latency_max' => $latencies ? max($latencies) : null,
+        'empty' => count(array_filter($sessionCalls, fn ($c) => $c['error'] === null && $c['status'] === 200 && ($c['content'] ?? '') === '')),
+        'length' => count(array_filter($sessionCalls, fn ($c) => $c['finish_reason'] === 'length')),
+        'call_median' => $median($callTimes), 'call_max' => $callTimes ? max($callTimes) : null,
         'tokens' => $usageSum($sessionCalls), 'response_models' => array_values(array_unique(array_filter(array_column($sessionCalls, 'response_model')))),
     ];
     $metrics[] = $m;
@@ -371,8 +386,8 @@ foreach ($plan as $n => $path) {
         }
         foreach ($tn['calls'] as $i => $c) {
             $u = $c['usage'] ?? [];
-            $tx[] = sprintf('- Provider call %d: %s, HTTP %s%s, %s s, finish %s, tokens in %s / out %s (reasoning %s)', $i + 1, $c['json_mode'] ? 'JSON' : 'text', $c['status'],
-                $c['error'] ? ' ' . $c['error'] : '', $c['seconds'], $c['finish_reason'] ?? '-', $u['prompt_tokens'] ?? '-', $u['completion_tokens'] ?? '-', $u['completion_tokens_details']['reasoning_tokens'] ?? '-');
+            $tx[] = sprintf('- Provider call %d: %s, HTTP %s%s, model returned %s, %s s, finish %s, tokens in %s / out %s (reasoning %s)', $i + 1, $c['json_mode'] ? 'JSON' : 'text', $c['status'],
+                $c['error'] ? ' ' . $c['error'] : '', $c['response_model'] ?? '-', $c['seconds'], $c['finish_reason'] ?? '-', $u['prompt_tokens'] ?? '-', $u['completion_tokens'] ?? '-', $u['completion_tokens_details']['reasoning_tokens'] ?? '-');
         }
         foreach ($tn['rejections'] as $x) {
             $tx[] = "- **Host rejected model output** ({$x['operation']}, attempt {$x['attempt']}): " . implode(' | ', $x['errors']);
@@ -397,9 +412,10 @@ foreach ($plan as $n => $path) {
 // ------------------------------------------------------------ metrics file
 $fmt = fn ($v) => $v === null ? '-' : (is_float($v) ? number_format($v, 1) : (string) $v);
 $mx = ["# Scripted sessions — metrics", '', implode("\n", array_slice($runLog, 2)), '',
-    '| Session | Path | Final mode | Report | Turns | Binding 1st try | Provider calls | Repairs by operation (accepted generations) | HOLDs | Guard rejections | Other rejections | Turn latency median / slowest (s) | Tokens in | Tokens out (reasoning) | Cache hit / miss | Cost |',
-    '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|'];
-$tot = ['turns' => 0, 'calls' => 0, 'holds' => 0, 'guard' => 0, 'other' => 0, 'lat' => [], 'in' => 0, 'out' => 0, 'reasoning' => 0, 'hit' => 0, 'miss' => 0, 'first' => 0, 'ops' => [], 'rep' => []];
+    '| Session | Path | Final mode | Report | Turns | Binding 1st try | Provider calls | Repairs by operation (accepted generations) | HOLDs | Guard rejections | Other rejections | Empty responses | finish=length | Call time median / slowest (s) | Turn latency median / slowest (s) | Tokens in | Tokens out (reasoning) | Cache hit / miss | Cost |',
+    '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|'];
+$tot = ['turns' => 0, 'calls' => 0, 'holds' => 0, 'guard' => 0, 'other' => 0, 'empty' => 0, 'length' => 0, 'in' => 0, 'out' => 0, 'reasoning' => 0, 'hit' => 0, 'miss' => 0, 'first' => 0, 'ops' => [], 'rep' => []];
+$allCallTimes = $transport !== null ? array_map(fn ($c) => $c['seconds'], $transport->calls) : [];
 foreach ($metrics as $i => $m) {
     $ops = [];
     foreach ($m['ops_accepted'] + $m['repairs_by_op'] as $op => $_) {
@@ -409,13 +425,15 @@ foreach ($metrics as $i => $m) {
     }
     $tk = $m['tokens'];
     $mx[] = "| {$m['session']} | {$m['path']} | {$m['final_mode']} | {$m['report_status']} | {$m['turns']} | {$m['binding_first_try']} | {$m['provider_calls']} | " . implode('; ', $ops)
-        . " | {$m['holds']} | {$m['guard_rejections']} | {$m['other_rejections']} | " . $fmt($m['latency_median']) . ' / ' . $fmt($m['latency_max'])
+        . " | {$m['holds']} | {$m['guard_rejections']} | {$m['other_rejections']} | " . ($live ? $m['empty'] . ' | ' . $m['length'] . ' | ' . $fmt($m['call_median']) . ' / ' . $fmt($m['call_max']) : 'n/a | n/a | n/a') . ' | ' . $fmt($m['latency_median']) . ' / ' . $fmt($m['latency_max'])
         . ($live ? " | {$tk['in']} | {$tk['out']} ({$tk['reasoning']}) | {$tk['cache_hit']} / {$tk['cache_miss']} | " . ($tk['cost'] === null ? 'not reported by provider' : $tk['cost']) : ' | n/a (mock) | n/a | n/a | n/a') . ' |';
     $tot['turns'] += $m['turns'];
     $tot['calls'] += $m['provider_calls'];
     $tot['holds'] += $m['holds'];
     $tot['guard'] += $m['guard_rejections'];
     $tot['other'] += $m['other_rejections'];
+    $tot['empty'] += $m['empty'];
+    $tot['length'] += $m['length'];
     $tot['first'] += $m['binding_first_try'] === 'yes' ? 1 : 0;
     foreach (['in', 'out', 'reasoning'] as $k) {
         $tot[$k] += $tk[$k];
@@ -428,12 +446,14 @@ foreach ($tot['ops'] + $tot['rep'] as $op => $_) {
     $ops[] = "$op " . ($tot['rep'][$op] ?? 0) . ' (' . ($tot['ops'][$op] ?? 0) . ')';
 }
 $mx[] = '| **Total** | ' . count($metrics) . ' sessions | | | ' . $tot['turns'] . ' | ' . $tot['first'] . '/' . count($metrics) . ' | ' . $tot['calls'] . ' | ' . implode('; ', $ops) . ' | ' . $tot['holds'] . ' | ' . $tot['guard'] . ' | ' . $tot['other']
+    . ' | ' . ($live ? $tot['empty'] . ' | ' . $tot['length'] . ' | ' . $fmt($median($allCallTimes)) . ' / ' . $fmt($allCallTimes ? max($allCallTimes) : null) : 'n/a | n/a | n/a')
     . ' | ' . $fmt($median($allLatencies)) . ' / ' . $fmt($allLatencies ? max($allLatencies) : null) . ' | ' . ($live ? $tot['in'] . ' | ' . $tot['out'] . ' (' . $tot['reasoning'] . ') | ' . $tot['hit'] . ' / ' . $tot['miss'] . ' | not reported by provider' : 'n/a | n/a | n/a | n/a') . ' |';
 $mx[] = '';
-$mx[] = 'Repairs by operation: bounded repair requests per operation, with accepted generations in brackets. Turn latency is the wall time of one API request (provider calls included).';
+$mx[] = 'Repairs by operation: bounded repair requests per operation, with accepted generations in brackets. Call time: one provider call. Turn latency: the wall time of one API request (all provider calls in it included). Empty responses: HTTP 200 with empty content.';
 if ($live) {
     $mx[] = '';
-    $mx[] = 'Model names reported in provider responses: ' . (implode(', ', array_unique(array_merge(...array_map(fn ($m) => $m['response_models'], $metrics)))) ?: '(none)') . '.';
+    $counts = array_count_values(array_map(fn ($c) => (string) ($c['response_model'] ?? '(none)'), $transport->calls));
+    $mx[] = 'Model name returned in each response (count of calls): ' . implode(', ', array_map(fn ($k, $v) => "$k ($v)", array_keys($counts), $counts)) . '. Each call\'s value is in the transcripts.';
 }
 $mx[] = '';
 $mx[] = '## Every host rejection of model output';

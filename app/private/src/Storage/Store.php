@@ -276,10 +276,12 @@ final class Store
 
     // ------------------------------------------------------------- call log
 
-    public function logModelCall(?string $sessionId, ?string $operationId, string $kind, string $provider, string $model, string $outcome, \DateTimeImmutable $now): void
+    /** @param array{finish_reason?:?string,duration_ms?:?int,prompt_tokens?:?int,completion_tokens?:?int,reasoning_tokens?:?int} $meta */
+    public function logModelCall(?string $sessionId, ?string $operationId, string $kind, string $provider, string $model, string $outcome, \DateTimeImmutable $now, array $meta = []): void
     {
-        $this->db->exec('INSERT INTO model_calls (call_id, session_id, operation_id, kind, provider, model, outcome, created_at) VALUES (?,?,?,?,?,?,?,?)',
-            [Ids::make('call'), $sessionId, $operationId, $kind, $provider, $model, $outcome, Time::iso($now)]);
+        $this->db->exec('INSERT INTO model_calls (call_id, session_id, operation_id, kind, provider, model, outcome, created_at, finish_reason, prompt_tokens, completion_tokens, reasoning_tokens, duration_ms) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            [Ids::make('call'), $sessionId, $operationId, $kind, $provider, $model, $outcome, Time::iso($now),
+                $meta['finish_reason'] ?? null, $meta['prompt_tokens'] ?? null, $meta['completion_tokens'] ?? null, $meta['reasoning_tokens'] ?? null, $meta['duration_ms'] ?? null]);
     }
 
     public function modelCallCount(string $sessionId): int

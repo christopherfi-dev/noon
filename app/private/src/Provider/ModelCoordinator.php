@@ -60,7 +60,7 @@ final class ModelCoordinator
      * activation repair. The acknowledgement is not enforcement evidence.
      *
      * @param callable():?string $budget returns null when a call may proceed, else a failure code
-     * @param callable(string,string):void $log kind, outcome
+     * @param callable(string,string,?ProviderResponse):void $log kind, outcome, response metadata
      */
     public function bind(callable $budget, callable $log): array
     {
@@ -72,12 +72,12 @@ final class ModelCoordinator
             }
             $resp = $this->provider->complete($messages, false);
             if ($resp->error !== null) {
-                $log('binding', 'TRANSPORT_' . $resp->error);
+                $log('binding', 'TRANSPORT_' . $resp->error, $resp);
                 return ['ok' => false, 'failure' => ['type' => 'PROVIDER_UNAVAILABLE', 'detail' => $resp->error]];
             }
             $text = trim((string) $resp->content);
             if ($text === $this->handshake) {
-                $log('binding', 'ACCEPTED');
+                $log('binding', 'ACCEPTED', $resp);
                 return ['ok' => true, 'binding' => [
                     'provider' => $this->provider->name(),
                     'model' => $this->provider->model(),
@@ -85,7 +85,7 @@ final class ModelCoordinator
                     'acknowledged' => true,
                 ], 'attempts' => $attempt + 1];
             }
-            $log('binding', 'REJECTED');
+            $log('binding', 'REJECTED', $resp);
             $messages[] = ['role' => 'assistant', 'content' => mb_substr($text, 0, 2000)];
             $messages[] = ['role' => 'user', 'content' => 'CONTROL: That reply is not the exact activation line. Respond with only the exact line from Section 18, or the exact halt line.'];
         }
@@ -109,7 +109,7 @@ final class ModelCoordinator
             }
             $resp = $this->provider->complete($messages, true);
             if ($resp->error !== null) {
-                $log('envelope', 'TRANSPORT_' . $resp->error);
+                $log('envelope', 'TRANSPORT_' . $resp->error, $resp);
                 return self::failure('PROVIDER_UNAVAILABLE', $resp->error, $repairs);
             }
             [$envelope, $raw, $errors] = $this->parse($resp);
@@ -119,10 +119,10 @@ final class ModelCoordinator
                 $errors = $result['errors'];
             }
             if ($errors === []) {
-                $log('envelope', $attempt === 0 ? 'ACCEPTED' : 'ACCEPTED_AFTER_REPAIR');
+                $log('envelope', $attempt === 0 ? 'ACCEPTED' : 'ACCEPTED_AFTER_REPAIR', $resp);
                 return ['ok' => true, 'repairs' => $repairs] + $result;
             }
-            $log('envelope', 'REJECTED');
+            $log('envelope', 'REJECTED', $resp);
             $repairs[] = ['attempt' => $attempt, 'errors' => $errors];
             if ($attempt < self::MAX_REPAIRS) {
                 $messages = $this->assembler->repairMessages($messages, $resp->content, $errors, self::MAX_REPAIRS - $attempt - 1);

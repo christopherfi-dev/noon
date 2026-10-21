@@ -24,7 +24,11 @@ final class LiveAdapterTest extends TestCase
         'provider_base_url' => 'https://api.example.test/v1',
         'provider_model' => 'operator-confirmed-model',
         'provider_api_key' => 'test-key-not-real',
+        'provider_thinking' => 'disabled',
     ];
+
+    /** Reasoning text the fake server returns; it must never be stored, shown or sent back. */
+    public const REASONING = 'REASONING-TEXT-MARKER-7f3a';
 
     /** A fake server whose answers come from the mock model, wrapped as chat completions. */
     private static function fakeServer(): HttpTransport
@@ -65,7 +69,10 @@ final class LiveAdapterTest extends TestCase
                     $env->student_message = 'That step is done, and the host matched it to the key.';
                     $content = json_encode($env);
                 }
-                return ['status' => 200, 'body' => json_encode(['choices' => [['message' => ['role' => 'assistant', 'content' => $content], 'finish_reason' => $finish]]]), 'error' => null];
+                return ['status' => 200, 'body' => json_encode([
+                    'choices' => [['message' => ['role' => 'assistant', 'content' => $content, 'reasoning_content' => LiveAdapterTest::REASONING], 'finish_reason' => $finish]],
+                    'usage' => ['prompt_tokens' => 900, 'completion_tokens' => 300, 'completion_tokens_details' => ['reasoning_tokens' => 120]],
+                ]), 'error' => null];
             }
         };
     }
@@ -90,7 +97,11 @@ final class LiveAdapterTest extends TestCase
             $this->assertFalse($binding['body']['stream']);
             $this->assertArrayNotHasKey('response_format', $binding['body'], 'JSON mode off for the activation call');
             $this->assertArrayNotHasKey('tools', $binding['body']);
-            $this->assertArrayNotHasKey('reasoning_effort', $binding['body'], 'sent only when configured');
+            // Round 3 ruling 1–2: thinking is explicit on every call; temperature only without thinking.
+            $this->assertSame(['type' => 'disabled'], $binding['body']['thinking']);
+            $this->assertSame(['type' => 'disabled'], $envelope['body']['thinking']);
+            $this->assertArrayHasKey('temperature', $envelope['body']);
+            $this->assertArrayNotHasKey('reasoning_effort', $envelope['body'], 'sent only when thinking is enabled');
             $this->assertSame(['type' => 'json_object'], $envelope['body']['response_format']);
             $this->assertStringContainsString('JSON', end($envelope['body']['messages'])['content']);
             $this->assertSame('openai_compatible', $h->row()['snapshot']['binding']['provider']);
@@ -140,12 +151,75 @@ final class LiveAdapterTest extends TestCase
         }
     }
 
-    public function testReasoningEffortIsSentOnlyWhenConfigured(): void
+    /** Round 3 ruling 1–2: explicit, consistent thinking settings; temperature only when thinking is disabled. */
+    public function testThinkingSettingsAreExplicit(): void
     {
         $server = self::fakeServer();
-        $provider = new OpenAiCompatibleProvider(Config::fromArray(['provider_reasoning_effort' => 'high'] + self::LIVE, ALGEBRA_APP_ROOT . '/private'), $server);
+        $provider = new OpenAiCompatibleProvider(Config::fromArray(['provider_thinking' => 'enabled', 'provider_reasoning_effort' => 'low'] + self::LIVE, ALGEBRA_APP_ROOT . '/private'), $server);
         $provider->complete([['role' => 'user', 'content' => 'CONTROL']], false);
-        $this->assertSame('high', $server->requests[0]['body']['reasoning_effort']);
+        $body = $server->requests[0]['body'];
+        $this->assertSame(['type' => 'enabled'], $body['thinking']);
+        $this->assertSame('low', $body['reasoning_effort']);
+        $this->assertArrayNotHasKey('temperature', $body, 'no effect in thinking mode, so not sent');
+        $bad = [
+            ['provider_thinking' => ''],                                              // never the provider default
+            ['provider_thinking' => 'auto'],
+            ['provider_thinking' => 'enabled'],                                       // effort missing
+            ['provider_thinking' => 'enabled', 'provider_reasoning_effort' => 'medium'],
+            ['provider_thinking' => 'enabled', 'provider_reasoning_effort' => 'none'],
+            ['provider_thinking' => 'disabled', 'provider_reasoning_effort' => 'high'],
+        ];
+        foreach ($bad as $settings) {
+            try {
+                new OpenAiCompatibleProvider(Config::fromArray($settings + self::LIVE, ALGEBRA_APP_ROOT . '/private'), $server);
+                $this->fail('accepted ' . json_encode($settings));
+            } catch (\InvalidArgumentException $e) {
+                $this->assertMatchesRegularExpression('/provider_(thinking|reasoning_effort)/', $e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Round 3 ruling 3–4: reasoning_content is never stored, shown or sent back; only token counts are logged,
+     * and every finish_reason=length is recorded.
+     */
+    public function testReasoningContentIsNeverKeptAndTruncationIsRecorded(): void
+    {
+        $server = self::fakeServer();
+        $h = new Harness(self::LIVE, null, null);
+        $app = new \AlgebraEngine\App($h->app->config, $h->clock, null, null, null, $server);
+        $h->app = $app;
+        $h->api = new \AlgebraEngine\Http\Api($app);
+        try {
+            $h->bootstrap();
+            $h->start('Q07');
+            $server->script = ['LENGTH', 'EMPTY'];                 // two rejected outputs → two repair requests
+            $h->submit($h->wrong('DIST_X_ONLY'));
+            $this->assertSame('READY', $h->view['status']);
+            $h->event('END_SESSION');
+            $report = $h->request('GET', 'report')->body;
+
+            foreach ($server->requests as $r) {
+                $this->assertStringNotContainsString(self::REASONING, json_encode($r['body']), 'never sent back to the API');
+            }
+            $pdo = new \PDO('sqlite:' . $app->config->string('db_path'));
+            $dump = '';
+            foreach ($pdo->query("SELECT name FROM sqlite_master WHERE type = 'table'")->fetchAll(\PDO::FETCH_COLUMN) as $table) {
+                $dump .= json_encode($pdo->query("SELECT * FROM $table")->fetchAll(\PDO::FETCH_ASSOC));
+            }
+            $this->assertStringNotContainsString(self::REASONING, $dump, 'never stored');
+            $this->assertStringNotContainsString(self::REASONING, json_encode($h->view) . json_encode($report), 'never in a public payload');
+
+            $calls = $pdo->query('SELECT kind, outcome, finish_reason, prompt_tokens, completion_tokens, reasoning_tokens, duration_ms FROM model_calls ORDER BY rowid')->fetchAll(\PDO::FETCH_ASSOC);
+            $this->assertNotEmpty($calls);
+            foreach ($calls as $c) {
+                $this->assertSame([900, 300, 120], [(int) $c['prompt_tokens'], (int) $c['completion_tokens'], (int) $c['reasoning_tokens']], 'token counts are logged');
+                $this->assertNotNull($c['duration_ms']);
+            }
+            $this->assertCount(1, array_filter($calls, fn ($c) => $c['finish_reason'] === 'length'), 'finish_reason=length recorded');
+        } finally {
+            $h->cleanup();
+        }
     }
 
     public function testLiveProviderRequiresExplicitSettingsAndHttps(): void

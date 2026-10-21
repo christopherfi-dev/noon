@@ -7,6 +7,7 @@ PASS  CONFIG               config.php found
 PASS  PROVIDER_CONFIG      provider_base_url set
 PASS  PROVIDER_CONFIG      provider_model set
 PASS  PROVIDER_CONFIG      provider_api_key set
+PASS  THINKING             thinking disabled, max_tokens 4096
 PASS  CURL                 loaded (live provider calls use HTTPS with certificate verification)
 PASS  OPENSSL              loaded
 PASS  FILE                 resources/architecture/Algebra_Constraint_Architecture_v1.2.md
@@ -14,6 +15,7 @@ PASS  FILE                 resources/curriculum/algebra-map.json
 PASS  FILE                 resources/contracts/model-envelope.schema.json
 PASS  FILE                 resources/contracts/workflow-policy.json
 PASS  FILE                 migrations/001_init.sql
+PASS  FILE                 migrations/002_model_call_usage.sql
 PASS  FILE                 vendor/autoload.php
 PASS  ARCHITECTURE_HASH    v1.2 ef03667dabf7152be63009ec6c1e327a83340b4fff65eef303e3eeb326291390
 PASS  STORAGE_DIR          writable: /home/user/noon/app/private/var
