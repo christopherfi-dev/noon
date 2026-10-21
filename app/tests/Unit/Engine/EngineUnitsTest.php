@@ -72,6 +72,13 @@ final class EngineUnitsTest extends TestCase
         $this->assertNotSame([], DisclosureGuard::violations('It is 3.5', [$s('7/2')]));
         $this->assertSame([], DisclosureGuard::violations('There are 120 of them.', [$s('12')]));
         $this->assertSame([], DisclosureGuard::violations('The opposite of −8 matters here.', [$s('8')]));
+        // "One" as a determiner or pronoun is not the value 1 (seen in the live run); a value cue still counts.
+        $this->assertSame([], DisclosureGuard::violations('One way to check your work is to look at each line. Keep x on one side, then try each one.', [$s('1')]));
+        foreach (['So x is one.', 'x equals one when you finish', 'Then x = one', 'The answer is one', 'It comes to one.', 'You should get one'] as $leak) {
+            $this->assertNotSame([], DisclosureGuard::violations($leak, [$s('1')]), $leak);
+        }
+        $this->assertNotSame([], DisclosureGuard::violations('It is minus one groups', [$s('-1')]), 'negatives are not relaxed');
+        $this->assertNotSame([], DisclosureGuard::violations('There are two ways', [$s('2')]), 'only "one" is relaxed');
         $p = ['answer' => ['kind' => 'polynomial', 'expected' => '3*x+12'], 'variables' => ['x']];
         $this->assertNotSame([], DisclosureGuard::violations('So it is 12 + 3x.', [$p]));
         $this->assertSame([], DisclosureGuard::violations('Look at 3(x + 4) again.', [$p]));

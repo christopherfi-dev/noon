@@ -40,4 +40,6 @@ step "Bundle build" 06-bundle-build.txt php tools/build_bundle.php
 step "Bundle smoke (deploy layout)" 07-bundle-smoke.txt php tools/bundle_smoke.php "$REPO/dist/stage"
 echo "" >> "$SUMMARY"
 echo "Note: the F1 manifest check after preflight is expected to list architecture/CHANGELOG.md (edited per addendum §3) and HANDOFF_PREFLIGHT_REPORT.json is restored after the preflight rewrites it; see BUILD_LOG.md." >> "$SUMMARY"
+echo "" >> "$SUMMARY"
+echo "The live provider smoke test needs a key and is not part of this runner. Its runs are recorded separately in \`08-live-smoke.txt\` (network and adapter compatibility only)." >> "$SUMMARY"
 exit $overall

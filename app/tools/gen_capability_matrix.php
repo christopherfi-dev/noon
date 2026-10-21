@@ -35,10 +35,10 @@ $otherGaps = [
     ['Model-worded REPORT envelopes', 'Not used. The report is built by the host from ledger events only.'],
     ['Solution-set, interval, rational-domain checkers (golden ROOT-*, DOMAIN-01, INTERVAL-01, GRAPH-01)', 'Not implemented; no beta skill needs them.'],
     ['MySQL storage adapter', 'Not implemented; PDO SQLite only (preflight fails clearly without it).'],
-    ['Live provider smoke test', 'NOT RUN: the config.php supplied on 2026-10-21 has an empty provider key. The DeepSeek endpoint is reachable from the build environment (HTTP 401 without a key). Run app/tools/live_smoke.php once a key is supplied. Only mock-mode behaviour is tested; the adapter is tested against a simulated OpenAI-compatible server (LiveAdapterTest).'],
 ];
 $heuristics = [
-    ['Answer-disclosure guard (D1)', 'HEURISTIC. Rejects model text containing the active or a remaining guided step\'s answer as a standalone number, number word, equivalent polynomial span or the key option\'s text. Paraphrases (e.g. "dividing by 3" for the option "Divide by 3") are not detected.'],
+    ['Answer-disclosure guard (D1)', 'HEURISTIC. Rejects model text containing the active or a remaining guided step\'s answer as a standalone number, number word, equivalent polynomial span or the key option\'s text. The word "one" used as a determiner or pronoun ("one way", "on one side") is not read as the value 1 unless a value cue precedes it ("x is one"). Paraphrases (e.g. "dividing by 3" for the option "Divide by 3") are not detected.'],
+    ['Internal vocabulary', 'Learner-facing model text that mentions the host or keys is rejected and repaired (word match on "host", "key", "keys").'],
     ['One action per message', 'HEURISTIC. Model text may not contain "?"; the only question shown is the host-rendered item prompt.'],
     ['Error signatures', 'Deterministic value matching of known error patterns. A match is recorded as an observation, never a confirmed cause, and only selects the probe/descent branch.'],
 ];
@@ -49,7 +49,7 @@ $json = [
     'curriculum' => 'ACE-ALGEBRA1 1.1.0',
     'architecture' => '1.2',
     'counts' => $counts,
-    'live_provider_smoke_test' => 'NOT RUN: the supplied config.php has an empty provider key. Command ready: app/tools/live_smoke.php.',
+    'live_provider_smoke_test' => 'RUN 2026-10-21 against DeepSeek model deepseek-flash (owner to confirm the model). The last run, on the final code, PASSED: binding, Q07 item, probe, hint, report, and a --journey path into Socratic repair with the disclosure guard active. Earlier runs 1, 2 and 4 failed and led to fixes. Output: test-results/08-live-smoke.txt. This confirms network access and adapter compatibility only, not teaching quality, learning or deployment. Every other result in this matrix is from mock mode (simulated model).',
     'skills' => $entries,
     'deferred' => array_map(fn ($d) => ['item' => $d[0], 'status' => 'NOT IMPLEMENTED', 'behaviour' => $d[1]], $deferred),
     'other_gaps' => array_map(fn ($d) => ['item' => $d[0], 'status' => 'NOT IMPLEMENTED', 'note' => $d[1]], $otherGaps),
@@ -62,7 +62,7 @@ $md .= "Generated from the tested runtime registry (`app/private/src/Capability/
     . "Curriculum ACE-ALGEBRA1 1.1.0 (205 skills, all browsable); architecture 1.2.\n\n";
 $md .= "Runtime status counts: AVAILABLE_SCORED " . ($counts['AVAILABLE_SCORED'] ?? 0) . ", PARTIAL_COMPONENTS " . ($counts['PARTIAL_COMPONENTS'] ?? 0)
     . ", UNAVAILABLE " . ($counts['UNAVAILABLE'] ?? 0) . ". No all-skills operational claim is made.\n\n";
-$md .= "**Live provider smoke test: NOT RUN** — the supplied config.php has an empty provider key. Every result below is from mock mode (simulated model).\n\n";
+$md .= "**Live provider smoke test:** " . $json['live_provider_smoke_test'] . "\n\n";
 $md .= "## Beta skills\n\n| Skill | Title | Status | Implemented variants (template, response type) | Checkers | Criterion | Remaining | Tests |\n|---|---|---|---|---|---|---|---|\n";
 foreach ($entries as $e) {
     if ($e['runtime_status'] === 'UNAVAILABLE') {

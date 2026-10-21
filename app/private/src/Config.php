@@ -18,7 +18,7 @@ final class Config
         'provider_model' => '',
         'provider_connect_timeout' => 10,
         'provider_timeout' => 45,
-        'provider_max_tokens' => 1500,
+        'provider_max_tokens' => 4096,      // reasoning models spend part of this on hidden reasoning
         'lease_seconds' => 90,
         'session_idle_ttl' => 86400,
         'session_absolute_ttl' => 604800,

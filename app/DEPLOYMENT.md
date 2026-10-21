@@ -47,7 +47,8 @@ no file-based fallback.
    `openai_compatible`, `provider_base_url` (https only), `provider_model`
    (confirmed with the provider), `provider_api_key`, and keep the spend
    ceiling `global_provider_calls_per_day`. Keys stay in this private file and
-   never reach the browser.
+   never reach the browser. For a reasoning model keep `provider_max_tokens`
+   at 4096 or more (see README, "Live provider").
 
 ## 4. Run the preflight
 

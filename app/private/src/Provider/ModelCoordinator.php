@@ -19,6 +19,8 @@ final class ModelCoordinator
 {
     public const MAX_REPAIRS = 2;
     private const BANNED_WORDS = '/\b(master(ed|y|ing)?|hypothes[ie]s|verified|criterion met|passed)\b/i';
+    // Internal machinery is not learner-facing (seen in the live run: "the host matched it to the key").
+    private const INTERNAL_WORDS = '/\b(host|keys?)\b/i';
 
     private string $handshake;
 
@@ -133,11 +135,12 @@ final class ModelCoordinator
     private function parse(ProviderResponse $resp): array
     {
         $content = $resp->content;
-        if ($content === null || trim($content) === '') {
-            return [null, null, ['empty content']];
-        }
+        // Check truncation first: a reasoning model that hits the token limit returns empty content.
         if ($resp->finishReason === 'length') {
             return [null, null, ['output was truncated (finish_reason=length); return a shorter complete JSON object']];
+        }
+        if ($content === null || trim($content) === '') {
+            return [null, null, ['empty content']];
         }
         if (strlen($content) > $this->maxBytes) {
             return [null, null, ['output exceeds the size limit']];
@@ -192,6 +195,9 @@ final class ModelCoordinator
         }
         if (preg_match(self::BANNED_WORDS, $message)) {
             $errors[] = 'student_message must not make mastery, verification or hypothesis claims';
+        }
+        if (preg_match(self::INTERNAL_WORDS, $message)) {
+            $errors[] = 'student_message must speak to the learner directly and must not mention the host or keys';
         }
         if ($expect['disclosure_guard']) {
             foreach (DisclosureGuard::violations($message, $expect['protected_answers']) as $v) {

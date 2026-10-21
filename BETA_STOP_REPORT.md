@@ -3,9 +3,11 @@
 Repository `christopherfi-dev/noon`, branch `claude/elegant-volta-blu3uj`.
 Session start 2026-10-21T11:39:36Z; Beta Gate passed 2026-10-21T13:00:08Z
 (elapsed 1 h 20 min 32 s, computed from `BUILD_LOG.md`). Nothing was deployed.
-All results are **mock mode** (simulated model). No live provider test ran.
+All results in §1–§5 are **mock mode** (simulated model). A live provider
+smoke test ran later, at 20:50Z–21:04Z, once the owner supplied a key; see §6.
+It confirms network access and adapter compatibility only.
 
-## 1. Tests run, with pass/fail counts (latest gate run, 13:04:51Z–13:05:09Z)
+## 1. Tests run, with pass/fail counts (latest full run, 21:07:26Z–21:07:51Z)
 
 Raw output for every step is in `test-results/` (`SUMMARY.md` has start and
 finish times and exit codes).
@@ -16,7 +18,7 @@ finish times and exit codes).
 | `tools/validate_handoff.py` | PASS (10 check groups, 53 future scenarios listed) |
 | `curriculum/validate_curriculum.py`, `test_validation_guards.py` | PASS (205 skills, 493 edges; 8 mutation guards) |
 | App preflight `app/private/bin/preflight.php` | PASS: 15 PASS, 2 WARN (PHP 8.3 rather than 8.4/8.5; no `config.php`, so defaults) |
-| PHPUnit unit + integration | **152 passed, 0 failed** (95 unit, 57 integration; 24,206 assertions). The gate itself passed at 13:00:08Z with 150; two live-adapter tests were added afterwards. |
+| PHPUnit unit + integration | **154 passed, 0 failed** (95 unit, 59 integration; 24,230 assertions). The gate itself passed at 13:00:08Z with 150. Four tests were added afterwards: two live-adapter tests, then two after the live runs (§6). |
 | Browser, Playwright + Chromium, mock mode | **4 passed, 0 failed**: B1 at 360×740, B1 at 1280×800, UI-01, UI-02 |
 | Bundle build + smoke test in the two-folder deployment layout | PASS, 12/12 smoke checks |
 
@@ -72,7 +74,7 @@ session. The raw messages are as they appeared.
   - one text-mode binding call, which must return the exact v1.2 line, with one bounded activation repair allowed
   - then JSON envelope calls validated by full JSON Schema (opis/json-schema, local `$ref`) and host semantic checks
   - at most 2 bounded repairs per operation, then a HOLD the learner can retry
-- **Adapters:** a mock provider (default; no network code) and a configurable OpenAI-compatible adapter (HTTPS only, certificate verification, size cap). DeepSeek is the intended live provider and is not yet chosen.
+- **Adapters:** a mock provider (default; no network code) and a configurable OpenAI-compatible adapter (HTTPS only, certificate verification, size cap). DeepSeek is the default live provider (see §6 for the live smoke test).
 - **F2:**
   - The output-shape example is a skeleton generated from the envelope schema, with type placeholders only.
   - `anchor_item` is stripped from every skill record sent to the model.
@@ -134,7 +136,6 @@ session. The raw messages are as they appeared.
 - No solution-set, interval or domain checkers.
 - No MySQL adapter.
 - No purge from backups.
-- **Live provider smoke test: NOT RUN.** The `config.php` supplied after the build has an empty provider key. DeepSeek is reachable from the build environment (HTTP 401 without a key). The adapter is tested against a simulated OpenAI-compatible server (`LiveAdapterTest`). Once a key exists, `app/tools/live_smoke.php` runs the check in one command.
 
 ## 5. Conflicts with the addendum or the package, and decisions for review
 
@@ -169,3 +170,82 @@ session. The raw messages are as they appeared.
 
 The architecture and the curriculum's mathematical facts gave no conflict
 that blocked the build.
+
+## 6. Live provider smoke test (after the stop, 2026-10-21T20:49Z–21:04Z)
+
+Raw output of every run: `test-results/08-live-smoke.txt`. These runs confirm
+network access and adapter compatibility only. They are not evidence of teaching
+quality, learner effectiveness or deployment. Nothing was deployed.
+
+**Setup.**
+- The owner supplied a temporary key file. Only the DeepSeek key was used. It
+  was written to a private config outside the repository (mode 600).
+- The key does not appear in any output, log, commit or the upload ZIP.
+- Throwaway database per run.
+
+**Model name (needs your confirmation).**
+- The owner's other app names `deepseek-v4-flash`.
+- The key's `/v1/models` list offers only `deepseek-flash` and `deepseek-v4-pro`.
+- I used `deepseek-flash`.
+
+**Runs.**
+
+| Run | Mode | Time (UTC) | Result | Cause or finding |
+|---|---|---|---|---|
+| 1 | basic | 20:50:19–20:50:43 | FAIL | Enum values guessed; empty content; wrong message type → HOLD |
+| 2 | basic | ~20:51 | FAIL | Reasoning model used all 1500 `max_tokens` on hidden reasoning (`finish_reason=length`) |
+| 3 | basic | 20:52:59–20:53:23 | PASS | 4 calls, every envelope accepted first time |
+| 4 | journey | 20:55:47–20:57:22 | FAIL (1 step) | Answer was 1; guard read "One way to check…" as the answer → HOLD |
+| 5 | journey | 20:59:47–21:01:31 | PASS | Learner text said "the host matched it to the key" |
+| 6 | journey | 21:02:35–21:04:14 | PASS | Final code. 15 calls, no rejected output |
+
+The journey runs follow the B1 path live: Q07 wrong with the
+distribution-to-x-only pattern, probe, E06 check, guided repair. In repair, one
+step is answered wrongly, then the remaining steps correctly. In every journey
+run the wrong step led to a smaller question and then back to the step above.
+Runs 5 and 6 went on to an independent E06 check (run 4 stopped earlier by
+design of the script).
+
+**Fixes made because of the live runs** (all covered by tests; PHPUnit 154 pass):
+1. `provider_max_tokens` default 1500 → 4096. A truncated reply is reported as
+   truncation, not as "empty content".
+2. The output contract lists the allowed values of every enumerated field. The
+   allocation carries `host_item_fields` (curriculum, domain, checking route)
+   for the model to copy.
+3. A provider call that could outlast the lease is not started; the turn holds
+   with `LEASE_TIME_INSUFFICIENT` (`testSlowProviderHoldsBeforeLeaseRunsOut`).
+4. Disclosure guard: the word "one" used as a determiner or pronoun ("one way",
+   "on one side", "each one") is no longer read as the value 1. A value cue
+   still counts ("x is one", "= one", "equals one"). Only "one" is relaxed.
+5. Learner text that mentions the host or keys is rejected and repaired.
+   Adapter rule 5 says so.
+
+**Decisions for the architect.**
+
+16. **Empty content counts as a repair attempt.**
+    - DeepSeek JSON mode sometimes returns empty content with
+      `finish_reason=stop`: 2 of 14 JSON calls in run 4, none in runs 5 and 6.
+    - Spec 03 says to reject empty content, so each one spends one of the two
+      bounded repairs.
+    - In run 4 this turned a recoverable hint into a HOLD.
+    - Option: one immediate re-request that does not count as a repair.
+17. **Token headroom.** Answered JSON calls used 594–3,254 completion tokens
+    against the 4096 cap. Raising the cap costs nothing unless it is used.
+18. **"Host" and "key" are blocked as words.** A sentence like "the key idea"
+    will now cost one repair.
+19. **Proposals the host rejected, in every journey run:**
+    - a transition naming E06 as its own prerequisite;
+    - promotion or verification claims;
+    - hypothesis status changes without accepted evidence.
+
+    They had no effect on state. They show the model reaching for decisions
+    that the host owns.
+20. **Wording quality (not validated).**
+    - Some guided messages were wordy or slightly off the question shown. For
+      example, after a smaller question the model said "look at the whole
+      group" while the re-asked question was about the constants only.
+    - No learner testing has been done.
+
+**Before any wider use:** revoke the temporary keys that were shared in this
+conversation, and issue a new key that is stored only in the server's private
+`config.php`.

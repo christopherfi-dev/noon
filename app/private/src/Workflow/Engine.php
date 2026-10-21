@@ -1363,7 +1363,13 @@ final class Engine
             return;
         }
         $sessionId = $turn->snap['session_id'];
-        $budget = function () use ($sessionId): ?string {
+        // Never start a provider call that could outlive this operation's lease:
+        // a slow provider then produces a retryable hold, not a discarded result.
+        $leaseEnds = $turn->now->getTimestamp() + $this->config->int('lease_seconds') - 5;
+        $budget = function () use ($sessionId, $leaseEnds): ?string {
+            if ($this->clock->now()->getTimestamp() + $this->config->int('provider_timeout') > $leaseEnds) {
+                return 'LEASE_TIME_INSUFFICIENT';
+            }
             if ($this->store->modelCallCount($sessionId) >= $this->config->int('max_model_calls_per_session')) {
                 return 'SESSION_MODEL_CALL_BUDGET';
             }
@@ -1545,6 +1551,14 @@ final class Engine
             return $alloc;
         }
         $alloc['template_ids'] = $gen['template_ids'];
+        $alloc['host_item_fields'] = [
+            'curriculum_id' => CurriculumRepository::CURRICULUM_ID,
+            'curriculum_version' => CurriculumRepository::CURRICULUM_VERSION,
+            'domain' => ['number_system' => 'RATIONAL', 'restrictions' => []],
+            'checking' => ['requested_route' => 'DETERMINISTIC_TEMPLATE', 'required_capabilities' => [], 'scope' => 'Set by the host.'],
+            'representation_requirements' => [],
+            'support_already_supplied' => [],
+        ];
         if ($gen['operation'] === 'GUIDED_STEP') {
             $g = $turn->eng['guided'];
             $step = $this->currentStep($g);

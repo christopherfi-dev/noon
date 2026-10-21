@@ -3,11 +3,11 @@ PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
 Runtime:       PHP 8.3.6
 Configuration: /home/user/noon/app/phpunit.xml
 
-...............................................................  63 / 152 ( 41%)
-............................................................... 126 / 152 ( 82%)
-..........................                                      152 / 152 (100%)
+...............................................................  63 / 154 ( 40%)
+............................................................... 126 / 154 ( 81%)
+............................                                    154 / 154 (100%)
 
-Time: 00:04.849, Memory: 30.00 MB
+Time: 00:06.118, Memory: 30.00 MB
 
 Beta Guards (AlgebraEngine\Tests\Integration\BetaGuards)
  ✔ B 5 non prerequisite proposal rejected
@@ -110,6 +110,7 @@ Host (AlgebraEngine\Tests\Integration\Host)
  ✔ Host 02 idempotency conflict
  ✔ Host 03 stale tab
  ✔ Host 04 late lease discarded
+ ✔ Slow provider holds before lease runs out
  ✔ Host 05 empty and truncated output
  ✔ Host 06 forged promotion rejected
  ✔ Host 07 missing curriculum
@@ -131,6 +132,7 @@ Linear Equation (AlgebraEngine\Tests\Unit\Math\LinearEquation)
 
 Live Adapter (AlgebraEngine\Tests\Integration\LiveAdapter)
  ✔ Adapter request format and full journey start
+ ✔ Empty content and internal words are repaired not shown
  ✔ Live provider requires explicit settings and https
 
 Math Scenario (AlgebraEngine\Tests\Integration\MathScenario)
@@ -199,4 +201,4 @@ Templates (AlgebraEngine\Tests\Unit\Items\Templates)
  ✔ Option order is randomised per item
  ✔ Guided plans are questions that never state their answer
 
-OK (152 tests, 24206 assertions)
+OK (154 tests, 24230 assertions)

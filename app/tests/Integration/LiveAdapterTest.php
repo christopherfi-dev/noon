@@ -57,6 +57,14 @@ final class LiveAdapterTest extends TestCase
                     $content = substr((string) $content, 0, 40);
                     $finish = 'length';
                 }
+                if ($next === 'EMPTY') {
+                    $content = ''; // seen live: JSON mode occasionally returns empty content with finish_reason stop
+                }
+                if ($next === 'INTERNAL_WORDS') {
+                    $env = json_decode((string) $content); // objects kept as objects
+                    $env->student_message = 'That step is done, and the host matched it to the key.';
+                    $content = json_encode($env);
+                }
                 return ['status' => 200, 'body' => json_encode(['choices' => [['message' => ['role' => 'assistant', 'content' => $content], 'finish_reason' => $finish]]]), 'error' => null];
             }
         };
@@ -103,6 +111,28 @@ final class LiveAdapterTest extends TestCase
             $h->event('RESUME_SESSION');
             $this->assertSame('READY', $h->view['status']);
             $this->assertCount(1, $h->events('CHECKER_RESULT'), 'the learner answer was scored once');
+        } finally {
+            $h->cleanup();
+        }
+    }
+
+    public function testEmptyContentAndInternalWordsAreRepairedNotShown(): void
+    {
+        $server = self::fakeServer();
+        $h = new Harness(self::LIVE, null, null);
+        $app = new \AlgebraEngine\App($h->app->config, $h->clock, null, null, null, $server);
+        $h->app = $app;
+        $h->api = new \AlgebraEngine\Http\Api($app);
+        try {
+            $h->bootstrap();
+            $h->start('Q07');
+            $server->script = ['EMPTY', 'INTERNAL_WORDS'];
+            $h->submit($h->wrong('DIST_X_ONLY'));
+            $this->assertSame('READY', $h->view['status']);
+            $errors = array_map(fn ($e) => $e['data']['errors'][0], $h->events('MODEL_OUTPUT_REJECTED'));
+            $this->assertSame('empty content', $errors[0]);
+            $this->assertStringContainsString('must not mention the host or keys', $errors[1]);
+            $this->assertStringNotContainsString('host', strtolower(json_encode($h->view['messages'])));
         } finally {
             $h->cleanup();
         }

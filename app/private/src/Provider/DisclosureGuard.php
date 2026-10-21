@@ -82,8 +82,12 @@ final class DisclosureGuard
             $word = self::WORDS[abs($n)] ?? null;
             if ($word !== null) {
                 $pattern = $n < 0 ? '/\b(minus|negative)\s+' . $word . '\b/' : '/(?<!minus |negative )\b' . $word . '\b/';
-                if (preg_match($pattern, $text)) {
-                    return true;
+                if (preg_match_all($pattern, $text, $m, PREG_OFFSET_CAPTURE)) {
+                    foreach ($m[0] as [$found, $offset]) {
+                        if ($n !== 1 || !self::oneAsDeterminer($text, $offset, $offset + strlen($found))) {
+                            return true;
+                        }
+                    }
                 }
             }
             if ($n < 0 && preg_match('/\b(minus|negative)\s+' . abs($n) . '(?![\d\/]|\.\d)/', $text)) {
@@ -91,6 +95,23 @@ final class DisclosureGuard
             }
         }
         return false;
+    }
+
+    /**
+     * "One" is also an English determiner and pronoun ("one way to check",
+     * "on one side", "each one"). Those uses are not the value 1. A value cue
+     * before it ("x is one", "equals one", "= one") always counts as the value.
+     */
+    private static function oneAsDeterminer(string $text, int $start, int $end): bool
+    {
+        $before = substr($text, 0, $start);
+        if (preg_match('/(\b(is|was|be|equals|equal to|comes to|get|gets|got|give|gives|make|makes|answer|value)|=)\s*$/', $before)) {
+            return false;
+        }
+        if (preg_match('/\b(each|this|that|no|which|every|any)\s+$/', $before)) {
+            return true;
+        }
+        return (bool) preg_match('/^\s+[a-z]/', substr($text, $end));
     }
 
     /**

@@ -41,7 +41,9 @@ final class DeployCoverageTest extends TestCase
             $matrix = json_decode((string) file_get_contents(ALGEBRA_APP_ROOT . '/capability-matrix.json'), true);
             $this->assertCount(205, $matrix['skills']);
             $this->assertSame(array_column($registry->all(), 'runtime_status', 'skill_id'), array_column($matrix['skills'], 'runtime_status', 'skill_id'));
-            $this->assertStringContainsString('NOT RUN', $matrix['live_provider_smoke_test']);
+            // The live result is stated with its limits; mock success is never reported as live validation.
+            $this->assertStringContainsString('adapter compatibility only', $matrix['live_provider_smoke_test']);
+            $this->assertStringContainsString('mock mode', $matrix['live_provider_smoke_test']);
             $this->assertCount(10, $matrix['deferred']);
         } finally {
             $h->cleanup();

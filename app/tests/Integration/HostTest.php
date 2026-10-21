@@ -129,6 +129,25 @@ final class HostTest extends TestCase
         $this->assertSame(1, $this->checkerCount());
     }
 
+    /** A slow provider never starts a repair call that could outlive the lease: the operation holds (retryable) instead of being discarded. */
+    public function testSlowProviderHoldsBeforeLeaseRunsOut(): void
+    {
+        $h = $this->h;
+        $h->start('Q07');
+        $h->mock->faults[] = ['type' => 'INVALID_JSON'];
+        $h->mock->onCall = fn () => $h->clock->advance(50); // 50 s spent; another 45 s call would pass the 90 s lease
+        $calls = $h->mock->calls;
+        $r = $h->submit($h->correct());
+        $this->assertSame(200, $r->status);
+        $this->assertSame('HOLD', $h->view['status']);
+        $this->assertSame($calls + 1, $h->mock->calls, 'no second call was started');
+        $failure = $h->events('PROVIDER_FAILURE')[0]['data']['failure'];
+        $this->assertSame(['BUDGET', 'LEASE_TIME_INSUFFICIENT'], [$failure['type'], $failure['detail']]);
+        $this->assertCount(1, $h->events('CHECKER_RESULT'), 'the answer was kept and scored once');
+        $h->event('RESUME_SESSION');
+        $this->assertSame('READY', $h->view['status']);
+    }
+
     /** HOST-05: empty or truncated provider output → bounded repair or hold; no learner failure; no raw output shown. */
     public function testHost05EmptyAndTruncatedOutput(): void
     {

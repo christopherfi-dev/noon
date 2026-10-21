@@ -68,23 +68,41 @@ The browser tests use the globally installed Playwright and Chromium. The
 browser "oracle" (`tests/Browser/oracle.php`) reads the private test database
 to answer like a scripted learner; it is never deployed.
 
-## Live provider (not yet run)
+## Live provider
 
 Set in `private/config.php`: `provider => 'openai_compatible'`,
 `provider_base_url` (e.g. the DeepSeek base URL from its current docs),
 `provider_model` (confirm the model name with the provider), and
 `provider_api_key`. The adapter makes one text-mode binding call, checks the
 exact v1.2 activation line, then uses JSON mode for envelopes. Answers and
-working are sent to that provider. No live call has been made in this build.
+working are sent to that provider.
 
 Live smoke test (confirms network and adapter compatibility only), with the
 key in a config file kept outside the repository:
 
 ```bash
-ALGEBRA_CONFIG=/path/outside/repo/config.php php tools/live_smoke.php
+ALGEBRA_CONFIG=/path/outside/repo/config.php php tools/live_smoke.php            # 4 steps, about 4 calls
+ALGEBRA_CONFIG=/path/outside/repo/config.php php tools/live_smoke.php --journey  # adds a Socratic repair path, about 15 calls
 ```
 
-For DeepSeek as configured in the owner's other app: `provider_base_url`
-`https://api.deepseek.com/v1` (the adapter appends `/chat/completions`) and
-`provider_model` `deepseek-v4-flash`. That model name comes from the owner's
-configuration and has not been verified against the provider.
+`ALGEBRA_TRANSPORT_LOG=/path` adds a log of response metadata (HTTP status,
+finish reason, token counts, the first 400 characters of content). Request
+bodies and headers, including the key, are never logged.
+
+Result on 2026-10-21 (`../test-results/08-live-smoke.txt`): DeepSeek,
+`provider_base_url` `https://api.deepseek.com/v1` (the adapter appends
+`/chat/completions`), model `deepseek-flash`. The last run, on the final code,
+passed (the basic steps plus the journey). This is not evidence of teaching
+quality or learning.
+
+- The owner's other app names `deepseek-v4-flash`. The supplied key's
+  `/v1/models` list offered only `deepseek-flash` and `deepseek-v4-pro`, so
+  `deepseek-flash` was used. The owner should confirm the model.
+- `deepseek-flash` is a reasoning model: hidden reasoning counts against
+  `max_tokens`. At 1500 tokens it returned empty content with
+  `finish_reason=length`; the default is now 4096. Across the runs, each
+  answered JSON call took 3.6–15.4 s (average about 7 s) and used 594–3,254
+  completion tokens, so 4096 leaves limited headroom.
+- JSON mode occasionally returned empty content with `finish_reason=stop`
+  (2 of 14 JSON calls in run 4; none in runs 5 and 6). The host rejects it
+  and spends one bounded repair attempt, as the spec requires.
