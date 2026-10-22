@@ -128,6 +128,24 @@ final class BetaGuardsTest extends TestCase
         $this->assertSame($next['id'], $h->active()['guided_step']['id'], 'the repaired output was accepted');
     }
 
+    /** R5-B: model text with internal vocabulary goes to the bounded repair path and is never shown. */
+    public function testInternalVocabularyIsRepairedNotShown(): void
+    {
+        $h = $this->h;
+        $this->intoGuidedRepair();
+        $text = 'That quotient matched the expected value, and it was a guided step.';
+        $h->mock->faults[] = ['type' => 'STUDENT_MESSAGE', 'text' => $text];
+        $h->answerCorrect();
+        $this->assertSame(['READY', 'GUIDED_REPAIR'], [$h->view['status'], $h->mode()]);
+        $rejected = $h->events('MODEL_OUTPUT_REJECTED');
+        $this->assertCount(1, $rejected);
+        $this->assertSame('GUIDED_STEP', $rejected[0]['data']['operation']);
+        $this->assertStringContainsString('uses internal terms: "expected value", "guided step"', implode(' ', $rejected[0]['data']['errors']));
+        foreach ($h->view['messages'] as $m) {
+            $this->assertSame([], \AlgebraEngine\Support\LearnerText::internalTerms($m['text']), $m['text']);
+        }
+    }
+
     /** B8 (bounded): when every repair still leaks, the operation is held; nothing leaks and nothing is scored as failure. */
     public function testB8RepeatedLeakHolds(): void
     {

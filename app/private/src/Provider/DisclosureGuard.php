@@ -26,6 +26,11 @@ use AlgebraEngine\Math\ScalarParser;
  *     negative") are not read as choosing one of them;
  * (b) a value that is the learner's own answer to an already-completed step
  *     is not protected, except as the answer of the step being asked now.
+ *
+ * Round 5 ruling 2: the option words positive, negative, plus and minus
+ * (and their plurals) are still checked, except when immediately followed by
+ * an operand noun ("the negative sign", "a negative divisor"), which names a
+ * number in the problem rather than the answer.
  */
 final class DisclosureGuard
 {
@@ -257,9 +262,17 @@ final class DisclosureGuard
         return (string) preg_replace('/\b(options?|choices?|letters?)\s+\(?[a-d]\)?(?:\s*(?:,\s*or|,|\/|\bor\b)\s*\(?[a-d]\)?)+/', ' ', $text);
     }
 
+    /** Round 5 ruling 2: a sign word that describes an operand ("the negative sign", "a negative divisor") is not a choice. */
+    private const OPERAND_NOUNS = 'sign|signs|divisor|dividend|number|numbers|factor|term|constant|coefficient';
+
+    private static function withoutOperandSignWords(string $text): string
+    {
+        return (string) preg_replace('/\b(?:positive|negative|plus|minus)s?(?=\s+(?:' . self::OPERAND_NOUNS . ')\b)/', ' ', $text);
+    }
+
     private static function classificationHit(string $text, array $letters, array $options): bool
     {
-        $text = self::withoutAlternatives($text, $options);
+        $text = self::withoutOperandSignWords(self::withoutAlternatives($text, $options));
         foreach ($letters as $letter) {
             $l = strtolower((string) $letter);
             if (preg_match('/\b(option|choice|answer|letter)\s*(is\s*)?\(?' . $l . '\)?(?![a-z])/', $text) || preg_match('/(?<![a-z])' . $l . '\)/', $text)) {

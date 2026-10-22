@@ -80,8 +80,33 @@ final class Harness
         $this->last = $r;
         if ($r->status === 200 && isset($r->body['revision'])) {
             $this->view = $r->body;
+            $this->checkB14();
         }
         return $r;
+    }
+
+    /** Independent item presentations checked by B14 in this harness. */
+    public int $b14Checked = 0;
+
+    /**
+     * B14 (round 5): no INDEPENDENT item is shown in the same turn as model-written
+     * text. Checked after every successful request of every integration test.
+     */
+    private function checkB14(): void
+    {
+        if (!isset($this->cookies['ae_sid'])) {
+            return;
+        }
+        $sid = $this->app->store->db->scalar('SELECT current_session_id FROM containers WHERE cookie_hash = ?', [hash('sha256', $this->cookies['ae_sid'])]);
+        $row = $sid === null || $sid === false ? null : $this->app->store->session((string) $sid);
+        $a = $row['engine']['active'] ?? null;
+        if ($a === null || $a['role'] === 'GUIDED' || $a['support_status'] !== 'INDEPENDENT' || $row['snapshot']['mode'] === 'SESSION_CLOSED') {
+            return;
+        }
+        $this->b14Checked++;
+        foreach ($row['engine']['messages'] as $m) {
+            Assert::assertSame('HOST', $m['source'] ?? 'UNKNOWN', 'B14: independent item ' . $a['item_id'] . ' shown with non-host text: ' . $m['text']);
+        }
     }
 
     public function bootstrap(): Response

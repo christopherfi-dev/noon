@@ -337,7 +337,7 @@ final class Api
             }
             $app->store->deleteContainer($container['container_id']);
         });
-        $resp = new Response(200, ['forgotten' => true, 'note' => 'This session, its answers, items, results, operations and reports were deleted from application storage. Server backups, if any, follow the host\'s own retention.']);
+        $resp = new Response(200, ['forgotten' => true, 'note' => 'This session, its answers, items, results, operations and reports were deleted from application storage. Server backups, if any, follow the hosting provider\'s own retention.']);
         $resp->cookies[] = $this->cookie($req, 'deleted', 0);
         return $resp;
     }

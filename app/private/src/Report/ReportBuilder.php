@@ -69,7 +69,7 @@ final class ReportBuilder
                 continue;
             }
             $p['items_attempted']++;
-            $independent = $r['independent_eligible'] && !isset($support[$r['item_id']]);
+            $independent = $r['independent_eligible'] && !isset($support[$r['item_id']]) && !($item['model_text_shown'] ?? false);
             $independent ? $p['independent']++ : $p['assisted']++;
             $p['verdicts'][] = ['event_id' => $r['event_id'], 'role' => $item['role'], 'variant_id' => $item['variant_id'], 'verdict' => $r['verdict'],
                 'independent' => $independent, 'checking_scope' => $r['verification_scope']];

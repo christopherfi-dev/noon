@@ -142,12 +142,14 @@ final class LiveAdapterTest extends TestCase
         try {
             $h->bootstrap();
             $h->start('Q07');
+            // A hint is model-written learner text (an independent item's framing is host-only since round 5).
             $server->script = ['EMPTY', 'INTERNAL_WORDS'];
-            $h->submit($h->wrong('DIST_X_ONLY'));
+            $r = $h->event('REQUEST_HINT');
+            $this->assertSame(200, $r->status);
             $this->assertSame('READY', $h->view['status']);
             $errors = array_map(fn ($e) => $e['data']['errors'][0], $h->events('MODEL_OUTPUT_REJECTED'));
             $this->assertSame('empty content', $errors[0]);
-            $this->assertStringContainsString('must not mention the host or keys', $errors[1]);
+            $this->assertStringContainsString('uses internal terms: "host"', $errors[1]);
             $this->assertStringNotContainsString('host', strtolower(json_encode($h->view['messages'])));
         } finally {
             $h->cleanup();

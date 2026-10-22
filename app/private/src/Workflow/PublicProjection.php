@@ -6,6 +6,7 @@ namespace AlgebraEngine\Workflow;
 use AlgebraEngine\Curriculum\BetaScope;
 use AlgebraEngine\Curriculum\CurriculumRepository;
 use AlgebraEngine\Provider\SchemaValidator;
+use AlgebraEngine\Support\LearnerText;
 
 /**
  * The only session data the browser receives. It is built from accepted
@@ -116,8 +117,8 @@ final class PublicProjection
             'TARGET_SELECTION', 'AWAITING_SESSION_CONTEXT' => 'Choose a skill to start.',
             'TARGET_ASSESSMENT', 'DIAGNOSTIC_PROBE' => 'Checking: ' . $title . '.',
             'PREREQUISITE_CHECK' => 'Checking a skill this builds on: ' . $title . '.',
-            'GUIDED_REPAIR' => 'Working step by step with help: ' . $title . '. Guided steps are practice, not independent evidence.',
-            'INDEPENDENT_CHECK' => 'On your own: ' . $title . '.',
+            'GUIDED_REPAIR' => 'Working step by step with help: ' . $title . '. Practice with help is not counted as independent work.',
+            'INDEPENDENT_CHECK' => 'Checking again: ' . $title . '.',
             'RETURN_TO_TARGET' => 'Back to: ' . $title . '.',
             'SESSION_REPORT' => 'Session summary ready.',
             'SESSION_CLOSED' => 'Session ended.',
@@ -126,6 +127,9 @@ final class PublicProjection
         if ($skill !== null && !in_array($snap['mode'], ['SESSION_REPORT', 'SESSION_CLOSED', 'GUIDED_REPAIR'], true)) {
             $label .= ' Correct in a row without help: ' . min($streak, 3) . ' of 3'
                 . (BetaScope::threeVariant($skill) ? ' (needs a solve, a step-choice and a new-form question).' : '.');
+        }
+        if (($terms = LearnerText::internalTerms($label)) !== []) {
+            throw new \LogicException('Progress label uses internal terms (' . implode(', ', $terms) . ')'); // R5-B
         }
         return ['label' => $label, 'independent_successes' => $streak, 'criterion_required' => 3, 'whole_skill_claim' => $whole];
     }

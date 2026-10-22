@@ -47,6 +47,9 @@ final class Engine
 
     private const ITEM_ACTIONS = ['SUBMIT_RESPONSE', 'REQUEST_HINT', 'REQUEST_EXPLANATION', 'CLARIFY_RESPONSE', 'SKIP_ITEM', 'NOT_LEARNED'];
 
+    /** R5-A: the only text shown with an independent item. It states what is asked, never a method. */
+    public const INDEPENDENT_LEAD = 'Here is one to try on your own.';
+
     private RandomSource $rng;
 
     public function __construct(
@@ -602,7 +605,19 @@ final class Engine
         $turn->learnerPayload = ['text' => $text, 'working' => $working];
         $this->remember($turn, 'learner', $responseEvent, $text);
 
-        $outcome = $this->check($active, $text);
+        // R5-C: stuck and off-task entries. None of them is ever scored as incorrect.
+        $entry = EntryInterpreter::interpret($text, $active, fn (string $t): bool => $this->check($active, $t)->verdict !== 'UNSCORABLE');
+        if ($entry['kind'] !== 'ANSWER') {
+            $turn->event('ENTRY_INTERPRETED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'response_event_id' => $responseEvent,
+                'kind' => $entry['kind'], 'normalised' => $entry['normalised'], 'read_as' => $entry['read_as'],
+                'note' => in_array($entry['kind'], ['TRAILING_QUESTION_MARK', 'CAPITAL_X'], true) ? 'Read and scored as written in read_as (round 5, R5-C).' : 'Not an answer; not scored (round 5, R5-C).']);
+        }
+        if (in_array($entry['kind'], ['STUCK', 'ASK_FOR_ANSWER'], true)) {
+            $this->onStuckEntry($turn, $entry['kind'], $responseEvent);
+            return;
+        }
+        $readAs = $entry['read_as'] ?? $text;
+        $outcome = $this->check($active, $readAs);
         $independent = $active['role'] !== 'GUIDED' && $active['support_status'] === 'INDEPENDENT' && $active['independent_eligible'];
         $supportEvents = $active['support_event_ids'] ?? [];
         $result = [
@@ -620,7 +635,8 @@ final class Engine
             'independent_eligible' => $independent,
             'support_event_ids' => $supportEvents,
             'observation' => $outcome->observation,
-            'limitations' => array_values(array_merge($outcome->limitations, $active['role'] === 'GUIDED' ? ['Guided step: assisted work, not independent evidence.'] : [])),
+            'limitations' => array_values(array_merge($outcome->limitations, $active['role'] === 'GUIDED' ? ['Guided step: assisted work, not independent evidence.'] : [],
+                $readAs !== $text ? ['The response was read as "' . $readAs . '" (' . strtolower(str_replace('_', ' ', $entry['kind'])) . ').'] : [])),
             'created_at' => Time::iso($turn->now),
         ];
         $errors = $this->schemas->errors($result, 'checker-result.schema.json');
@@ -634,7 +650,11 @@ final class Engine
 
         if ($outcome->verdict === 'UNSCORABLE') {
             $turn->eng['active']['unscorable'] = true;
-            $turn->say('ERROR', $outcome->clarification ?? 'That answer could not be read. Please check the format and try again.');
+            $turn->say('ERROR', match ($entry['kind']) {
+                'QUESTION_TO_TUTOR' => EntryInterpreter::LINE_QUESTION,
+                'NUMBER_WORD' => EntryInterpreter::LINE_NUMBER_WORD,
+                default => $outcome->clarification ?? 'That answer could not be read. Please check the format and try again.',
+            });
             return;
         }
 
@@ -1243,12 +1263,33 @@ final class Engine
 
     // ------------------------------------------------- support, skip, not learned
 
-    private function onSupport(Turn $turn, string $action): void
+    /**
+     * R5-C rows 1–2: "idk" and similar, or asking for the answer. In guided repair: a smaller
+     * question (D1). On an independent item: the existing hint path; the item becomes assisted.
+     */
+    private function onStuckEntry(Turn $turn, string $kind, string $responseEvent): void
+    {
+        $active = $turn->eng['active'];
+        if ($kind === 'ASK_FOR_ANSWER') {
+            $turn->say('INFORMATION', EntryInterpreter::LINE_ASK_FOR_ANSWER);
+        }
+        if ($turn->mode() === 'GUIDED_REPAIR') {
+            $turn->event('ITEM_CLOSED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'reason' => 'STUCK_ENTRY',
+                'note' => 'The learner typed that they are stuck or asked for the answer; not an incorrect attempt.']);
+            $turn->eng['active'] = null;
+            $this->stuck($turn, []);
+            return;
+        }
+        $this->onSupport($turn, 'REQUEST_HINT', $responseEvent);
+    }
+
+    private function onSupport(Turn $turn, string $action, ?string $entryEvent = null): void
     {
         $active = $turn->eng['active'];
         $kind = $action === 'REQUEST_HINT' ? 'HINT' : 'EXPLANATION';
         $supportEvent = $turn->event('SUPPORT_GIVEN', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'kind' => $kind,
-            'committed_before_display' => true], $turn->triggerEventId);
+            'committed_before_display' => true] + ($entryEvent === null ? [] : ['trigger' => 'STUCK_ENTRY', 'entry_event_id' => $entryEvent]),
+            $entryEvent === null ? $turn->triggerEventId : null);
         $turn->snap['budgets']['instructional_turns']++;
         if ($turn->mode() === 'GUIDED_REPAIR') {
             $turn->event('ITEM_CLOSED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'reason' => 'STUCK_' . $kind]);
@@ -1496,6 +1537,7 @@ final class Engine
             'mode' => $turn->mode(),
             'current_skill' => $turn->skill(),
             'disclosure_guard' => in_array($gen['operation'], ['GUIDED_STEP', 'HINT', 'EXPLANATION'], true),
+            'learner_text_shown' => !self::hostLeadOnly($gen),
             'protected_answers' => $this->protectedAnswers($turn, $gen),
             'completed_answers' => $this->completedAnswers($turn, $gen),
             'planned_transition' => $this->plannedTransition($turn),
@@ -1522,11 +1564,23 @@ final class Engine
     private function presentGenerated(Turn $turn, array $gen, array $result, string $sessionId): void
     {
         $turn->generation = null;
-        if ($result['student_message'] !== '') {
-            $turn->say('INFORMATION', $result['student_message']);
+        $hostLead = self::hostLeadOnly($gen);
+        if ($hostLead) {
+            // R5-A: an independent item is never shown with model-written text. The model's
+            // learner text from this call is discarded (not shown, not kept); the host line
+            // states only what is asked.
+            if (($result['discarded_message_chars'] ?? 0) > 0) {
+                $turn->event('MODEL_TEXT_DISCARDED', ['operation' => $gen['operation'], 'role' => $gen['role'], 'characters' => $result['discarded_message_chars'],
+                    'note' => 'Model text proposed with an independent item is never shown (round 5, R5-A).']);
+            }
+            $turn->say('INFORMATION', self::INDEPENDENT_LEAD);
+            $lead = self::INDEPENDENT_LEAD;
+        } else {
+            $turn->say('INFORMATION', $result['student_message'], 'MODEL');
+            $lead = $result['student_message'];
         }
         if ($gen['message_type'] === 'FEEDBACK') {
-            $this->remember($turn, 'tutor', $turn->triggerEventId, $result['student_message']);
+            $this->remember($turn, 'tutor', $turn->triggerEventId, $lead);
             return;
         }
         $record = $result['record'];
@@ -1541,6 +1595,7 @@ final class Engine
             'variant_id' => $record['variant_id'], 'component_id' => $record['component_id'], 'template_id' => $record['template_id'],
             'episode_id' => $turn->snap['target_episode_id'], 'fingerprint' => $result['fingerprint'], 'independent_eligible' => $independentEligible,
             'host_generated_parameters' => $result['host_generated'], 'mode' => $turn->mode(), 'prompt' => $record['prompt'],
+            'model_text_shown' => !$hostLead && trim($result['student_message']) !== '',
         ]);
         $active = [
             'item_id' => $record['item_id'], 'item_version' => $record['item_version'], 'role' => $record['role'], 'skill_id' => $record['skill_id'],
@@ -1559,7 +1614,13 @@ final class Engine
         $turn->eng['active'] = $active;
         $turn->snap['active_item_id'] = $record['item_id'];
         $turn->snap['active_item_version'] = $record['item_version'];
-        $this->remember($turn, 'tutor', $turn->triggerEventId, trim($result['student_message'] . ' ' . $record['prompt']));
+        $this->remember($turn, 'tutor', $turn->triggerEventId, trim($lead . ' ' . $record['prompt']));
+    }
+
+    /** R5-A: every presentation of an independent item (target, probe, prerequisite check, independent check, return). */
+    private static function hostLeadOnly(array $gen): bool
+    {
+        return $gen['message_type'] === 'QUESTION' && $gen['role'] !== 'GUIDED';
     }
 
     private function inputHelp(array $record): string
@@ -1667,6 +1728,9 @@ final class Engine
             $alloc['host_question'] = $gen['fixed_parameters']['phrasing'] === 'alt' && $step['alt_prompt'] !== null ? $step['alt_prompt'] : $step['prompt'];
             $alloc['representation_hint'] = $this->representationHint($turn->skill());
             return $alloc;
+        }
+        if (self::hostLeadOnly($gen)) {
+            $alloc['student_message'] = 'Not shown: this is independent work, so the learner sees only a host line and the item. Return an empty string.';
         }
         $alloc['allowed_templates'] = array_map(fn ($id) => [
             'template_id' => $id,

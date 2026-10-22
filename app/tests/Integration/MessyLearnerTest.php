@@ -7,9 +7,10 @@ use AlgebraEngine\Tests\Support\Harness;
 use PHPUnit\Framework\TestCase;
 
 /**
- * B11 (round 4 §4), offline: realistic learner inputs. Records the current
- * behaviour input by input; the parser and prompts are not changed here
- * (proposals go to the report). Unreadable input is never scored as wrong.
+ * B11 (round 4 §4), offline: realistic learner inputs, input by input, with
+ * the round 5 (R5-C) handling of stuck and off-task entries. Unreadable input
+ * is never scored as wrong. Every row of the R5-C table is covered by B15
+ * (StuckEntryTest).
  */
 final class MessyLearnerTest extends TestCase
 {
@@ -36,12 +37,11 @@ final class MessyLearnerTest extends TestCase
         $h = self::q07(3, 2, 15, 'b11-unreadable');                      // Solve 3(x + 2) = 15: x = 3
         try {
             $item = $h->active()['item_id'];
+            // "idk" and "can you just tell me the answer" take the hint path (B15), so they are not on this item.
             $expected = [
-                'idk' => 'That entry contains words or function names this question cannot read.',
                 '' => 'Nothing was entered. Type your answer in the box.',
-                'can you just tell me the answer' => 'That entry contains words or function names this question cannot read.',
-                'is this on the test?' => 'That entry contains a symbol this question cannot read.',
-                'three' => 'That entry contains words or function names this question cannot read.',
+                'is this on the test?' => 'This box is for your answer. If you\'re stuck, type help.',
+                'three' => 'Write the number with digits.',
                 '3]' => 'That entry contains a symbol this question cannot read.',      // typo …
             ];
             foreach ($expected as $text => $message) {
@@ -71,12 +71,15 @@ final class MessyLearnerTest extends TestCase
                 $h->cleanup();
             }
         }
-        // Current limit, proposed for the architect (not changed in round 4): a capital X is not read.
-        $h = self::q07(3, 2, 15, 'b11-capital');
-        try {
-            $this->assertSame('UNSCORABLE', self::submit($h, 'X=3')[0]);
-        } finally {
-            $h->cleanup();
+        // Round 5 (R5-C): a capital X on a one-variable item in x is read as x; a trailing "?" is removed.
+        foreach ([[3, 2, 15, 'X=3'], [3, 2, 15, 'X = 3'], [3, 2, 15, 'x = 3?'], [3, 5, 6, '-3?'], [3, 5, 6, 'X = -3?']] as [$a, $b, $c, $text]) {
+            $h = self::q07($a, $b, $c, 'b11-' . $text);
+            try {
+                $this->assertSame('CORRECT', self::submit($h, $text)[0], $text);
+                $this->assertSame(1, $h->view['progress']['independent_successes'], $text);
+            } finally {
+                $h->cleanup();
+            }
         }
     }
 }

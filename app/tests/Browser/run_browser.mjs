@@ -171,10 +171,13 @@ try {
     await page.getByTestId('start-default').click();
     await page.getByTestId('workspace').waitFor();
     await idle(page);
-    const hostile = '<img src=x onerror="window.__xss=1"><script>window.__xss=2</script><a href="javascript:window.__xss=3">link</a> \\href{javascript:alert(1)}{click} $\\unicode{x41}$';
-    fs.writeFileSync(faultFile, JSON.stringify([{ type: 'STUDENT_MESSAGE', text: hostile }]));
+    // Markers carry no digits, so the answer-disclosure guard cannot reject the hostile text by chance.
+    const hostile = '<img src=x onerror="window.__xss=\'img\'"><script>window.__xss=\'script\'</script><a href="javascript:window.__xss=\'link\'">link</a> \\href{javascript:alert(\'a\')}{click} $\\unicode{x41}$';
     await answer(page, '<b onmouseover="window.__xss=4">7</b>');
-    await answer(page, correct());
+    // Model text reaches the learner in a hint (an independent item's framing is host-only since round 5).
+    fs.writeFileSync(faultFile, JSON.stringify([{ type: 'STUDENT_MESSAGE', text: hostile }]));
+    await page.getByTestId('hint').click();
+    await idle(page);
     const injected = await page.evaluate(() => ({
       xss: window.__xss ?? null,
       imgs: document.querySelectorAll('#app img').length,

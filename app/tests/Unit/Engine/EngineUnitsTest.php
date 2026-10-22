@@ -7,6 +7,7 @@ use AlgebraEngine\Evidence\CriteriaCalculator;
 use AlgebraEngine\Provider\DisclosureGuard;
 use AlgebraEngine\Provider\PromptAssembler;
 use AlgebraEngine\Provider\SchemaValidator;
+use AlgebraEngine\Support\LearnerText;
 use AlgebraEngine\Workflow\TransitionGuard;
 use PHPUnit\Framework\TestCase;
 
@@ -94,7 +95,7 @@ final class EngineUnitsTest extends TestCase
         $this->assertSame([], DisclosureGuard::violations('Is it positive, or negative?', [$sign]));
         $this->assertSame([], DisclosureGuard::violations('Pick option A or B.', [$sign]));
         $this->assertNotSame([], DisclosureGuard::violations('The result is negative.', [$sign]));
-        $this->assertNotSame([], DisclosureGuard::violations('Put the negative sign back on the divisor.', [$sign]), 'not an alternatives list: still checked');
+        $this->assertNotSame([], DisclosureGuard::violations('Put the negative back on the divisor.', [$sign]), 'not an alternatives list: still checked');
         // Round 4 ruling 1(b): the learner's own answer to a completed step is not protected, except as the active step's answer.
         $smaller = ['answer' => ['kind' => 'exact_rational', 'expected' => '3'], 'active' => false];
         $done = [['kind' => 'exact_rational', 'expected' => '3']];
@@ -109,6 +110,105 @@ final class EngineUnitsTest extends TestCase
         ], [['kind' => 'exact_rational', 'expected' => '25']]));
         // Documented limit: a paraphrase is not detected.
         $this->assertSame([], DisclosureGuard::violations('Try dividing by 3.', [$c]));
+    }
+
+    /**
+     * Round 5 ruling 2: a sign word followed by an operand noun is exempt; every other use is still checked.
+     * The 8 messages rejected in round 4 (06-B3, turns 7–9, step "Is 12 ÷ (−3) positive or negative?") now pass.
+     */
+    public function testGuardOperandNounExemption(): void
+    {
+        $protected = [
+            ['answer' => ['kind' => 'classification', 'expected' => ['A']], 'options' => [['letter' => 'A', 'text' => 'Negative'], ['letter' => 'B', 'text' => 'Positive']], 'active' => true],
+            ['answer' => ['kind' => 'exact_rational', 'expected' => '-4'], 'variables' => ['x'], 'options' => null, 'active' => false],
+        ];
+        $completed = [['kind' => 'exact_rational', 'expected' => '4']];
+        $round4 = [
+            'Good, 12 ÷ 3 is 4. Now bring the negative sign back in. Work with the sizes of the numbers first, then decide the sign.',
+            'You handled the sizes of the numbers well. Now bring the negative sign back in. Work with the sizes first, then decide the sign.',
+            'Now bring the negative sign back in. Work with the sizes of the numbers first, then decide the sign.',
+            'You found that 12 ÷ 3 is 4. Now bring the negative sign back in and decide the sign of the quotient.',
+            'You found that 12 ÷ 3 is 4. Now bring the negative sign back in and think about what a negative divisor does to the sign of the quotient.',
+            'You found that 12 ÷ 3 is 4. Now look at the same division with a negative divisor and choose the sign of the result.',
+            'You found that 12 ÷ 3 is 4. Now bring the negative sign back in and decide the sign of the quotient.',
+            'You found that 12 ÷ 3 is 4. Now bring the negative sign back in and decide what sign the quotient has.',
+        ];
+        foreach ($round4 as $m) {
+            $this->assertSame([], DisclosureGuard::violations($m, $protected, $completed), $m);
+        }
+        foreach (['the quotient is negative', 'the answer will be negative', 'it comes out negative', 'two negatives make a positive'] as $m) {
+            $this->assertNotSame([], DisclosureGuard::violations($m, $protected, $completed), $m);
+        }
+        $positive = [['answer' => ['kind' => 'classification', 'expected' => ['B']], 'options' => [['letter' => 'A', 'text' => 'Negative'], ['letter' => 'B', 'text' => 'Positive']], 'active' => true]];
+        $this->assertNotSame([], DisclosureGuard::violations('two negatives make a positive', $positive));
+        // Every listed operand noun, singular and plural sign words; any other following word is still checked.
+        foreach (['sign', 'signs', 'divisor', 'dividend', 'number', 'numbers', 'factor', 'term', 'constant', 'coefficient'] as $noun) {
+            $this->assertSame([], DisclosureGuard::violations('Look at the negative ' . $noun . ' here.', $protected), $noun);
+            $this->assertSame([], DisclosureGuard::violations('Count the negatives ' . $noun . ' here.', $protected), 'plural before ' . $noun);
+        }
+        foreach (['Negative, because the divisor is negative.', 'It is negative overall.', 'Think negative results.', 'The negative one.', 'negative-sign'] as $m) {
+            $this->assertNotSame([], DisclosureGuard::violations($m, $protected), $m);
+        }
+        $plusMinus = [['answer' => ['kind' => 'classification', 'expected' => ['A']], 'options' => [['letter' => 'A', 'text' => 'Minus'], ['letter' => 'B', 'text' => 'Plus']], 'active' => true]];
+        $this->assertSame([], DisclosureGuard::violations('The minus sign belongs to the second term.', $plusMinus));
+        $this->assertNotSame([], DisclosureGuard::violations('It needs a minus.', $plusMinus));
+    }
+
+    /** R5-B: each internal term is found as a whole word or phrase, in any case; near misses are not. */
+    public function testInternalVocabulary(): void
+    {
+        $cases = [
+            'expected value' => 'That quotient matched the Expected Value.',
+            'expected answer' => 'Compare with the expected answer.',
+            'answer key' => 'The answer key says so.',
+            'matched the key' => 'Your number matched the key.',
+            'guided step' => 'It was a guided step.',
+            'host' => 'The HOST checked it.',
+            'assisted' => 'This one was assisted.',
+            'verdict' => 'The verdict is in.',
+            'criterion' => 'You met the criterion.',
+        ];
+        foreach ($cases as $term => $text) {
+            $this->assertSame([$term], LearnerText::internalTerms($text), $text);
+        }
+        $this->assertSame(array_keys(LearnerText::INTERNAL_TERMS), array_keys($cases), 'every listed term is tested');
+        // Plurals of the listed nouns count; line breaks inside a phrase do too.
+        foreach (['Two guided steps remain.', 'the hosts', 'both verdicts', 'the criteria', "the expected\nvalues"] as $text) {
+            $this->assertNotSame([], LearnerText::internalTerms($text), $text);
+        }
+        foreach (['A ghost story.', 'This is the key step.', 'Here is the key idea.', 'Keys open doors.', 'hosting', 'unassisted', 'the expected sign', 'matched the keys'] as $text) {
+            $this->assertSame([], LearnerText::internalTerms($text), $text);
+        }
+    }
+
+    /** R5-B: host-written learner lines pass the same check (static scan; Turn::say also enforces it at run time). */
+    public function testHostLinesUseNoInternalVocabulary(): void
+    {
+        $src = ALGEBRA_APP_ROOT . '/private/src';
+        $literals = [];
+        // Every literal in an Engine say() call, in a re-ask lead passed to presentStep(), and in the verdict sentences.
+        $engine = (string) file_get_contents($src . '/Workflow/Engine.php');
+        preg_match_all('/->say\(\s*\'[A-Z]+\'\s*,(.*?)\);\n/s', $engine, $calls);
+        preg_match_all('/->presentStep\((.*?)\);\n/s', $engine, $leads);
+        preg_match('/function verdictSentence\(.*?\n    \}\n/s', $engine, $verdicts);
+        foreach (array_merge($calls[1], $leads[1], $verdicts) as $args) {
+            preg_match_all("/'((?:[^'\\\\]|\\\\.)*)'/", $args, $m);
+            array_push($literals, ...$m[1]);
+        }
+        $this->assertGreaterThan(20, count($literals));
+        // Items, plans and input clarifications are shown to the learner verbatim.
+        $files = array_merge(glob($src . '/Items/Templates/*.php'), [$src . '/Items/SocraticPlanner.php', $src . '/Math/MathInputError.php']);
+        foreach ($files as $f) {
+            foreach (token_get_all((string) file_get_contents($f)) as $t) {
+                if (is_array($t) && $t[0] === T_CONSTANT_ENCAPSED_STRING) {
+                    $literals[] = $t[1];
+                }
+            }
+        }
+        $literals[] = \AlgebraEngine\Workflow\Engine::INDEPENDENT_LEAD;
+        foreach ($literals as $text) {
+            $this->assertSame([], LearnerText::internalTerms($text), $text);
+        }
     }
 
     public function testEnvelopeSkeletonHasPlaceholdersOnly(): void

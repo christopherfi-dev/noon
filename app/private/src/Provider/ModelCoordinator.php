@@ -7,6 +7,7 @@ use AlgebraEngine\Curriculum\CurriculumRepository;
 use AlgebraEngine\Items\AcceptanceGate;
 use AlgebraEngine\Support\Json;
 use AlgebraEngine\Support\JsonSyntax;
+use AlgebraEngine\Support\LearnerText;
 use AlgebraEngine\Support\RandomSource;
 use AlgebraEngine\Workflow\TransitionGuard;
 
@@ -20,8 +21,6 @@ final class ModelCoordinator
 {
     public const MAX_REPAIRS = 2;
     private const BANNED_WORDS = '/\b(master(ed|y|ing)?|hypothes[ie]s|verified|criterion met|passed)\b/i';
-    // Internal machinery is not learner-facing (seen in the live run: "the host matched it to the key").
-    private const INTERNAL_WORDS = '/\b(host|keys?)\b/i';
 
     private string $handshake;
 
@@ -202,25 +201,29 @@ final class ModelCoordinator
             $errors[] = 'teacher_report must be null for this operation';
         }
         $message = $env['student_message'];
-        if (str_contains($message, '?')) {
+        $shown = $expect['learner_text_shown'] ?? true;
+        // R5-A: text proposed with an independent item is discarded unread, so learner-text rules do not apply to it.
+        if ($shown && str_contains($message, '?')) {
             $errors[] = 'student_message must not contain a question; the host shows the single question from the accepted item';
         }
-        if (mb_strlen($message) > 1200) {
+        if ($shown && mb_strlen($message) > 1200) {
             $errors[] = 'student_message is too long (limit 1200 characters)';
         }
-        foreach ($this->guard->states() as $state) {
+        foreach ($shown ? $this->guard->states() : [] as $state) {
             if (str_contains($message, $state)) {
                 $errors[] = 'student_message must not name internal states';
                 break;
             }
         }
-        if (preg_match(self::BANNED_WORDS, $message)) {
+        if ($shown && preg_match(self::BANNED_WORDS, $message)) {
             $errors[] = 'student_message must not make mastery, verification or hypothesis claims';
         }
-        if (preg_match(self::INTERNAL_WORDS, $message)) {
-            $errors[] = 'student_message must speak to the learner directly and must not mention the host or keys';
+        // R5-B: internal vocabulary, as whole words or phrases.
+        $terms = $shown ? LearnerText::internalTerms($message) : [];
+        if ($terms !== []) {
+            $errors[] = 'student_message must speak to the learner in plain words; it uses internal terms: ' . implode(', ', array_map(fn ($t) => '"' . $t . '"', $terms));
         }
-        if ($expect['disclosure_guard']) {
+        if ($shown && $expect['disclosure_guard']) {
             foreach (DisclosureGuard::violations($message, $expect['protected_answers'], $expect['completed_answers'] ?? []) as $v) {
                 $errors[] = $v;
             }
@@ -238,7 +241,8 @@ final class ModelCoordinator
         }
         $out['errors'] = $errors;
         if ($errors === []) {
-            $out['student_message'] = $message;
+            $out['student_message'] = $shown ? $message : '';
+            $out['discarded_message_chars'] = $shown ? 0 : mb_strlen(trim($message));
             $out['proposals'] = $this->reviewProposals($env, $expect);
         }
         return $out;

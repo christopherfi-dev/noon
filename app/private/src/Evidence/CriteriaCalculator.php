@@ -9,8 +9,9 @@ use AlgebraEngine\Curriculum\BetaScope;
  * Recomputes immediate criteria from the accepted ledger every time; counters
  * are never decremented in place. A checker result counts only when it is
  * bound to the exact response event, item version and response hash, the
- * item was presented in an independent role, no support was given before the
- * response, the item was not a reused instance, and nothing invalidated it.
+ * item was presented in an independent role without model-written text, no
+ * support was given before the response, the item was not a reused instance,
+ * and nothing invalidated it.
  */
 final class CriteriaCalculator
 {
@@ -66,7 +67,9 @@ final class CriteriaCalculator
                     $key = $item['episode_id'] . '|' . $item['skill_id'];
                     $state[$key] ??= self::entry($item['skill_id'], $item['episode_id']);
                     $runs[$key] ??= [];
+                    // Round 5 (B14b): an item shown with model-written text is never counted as work without help.
                     $eligible = $item['independent_eligible'] && $r['independent_eligible'] && !isset($supportedBefore[$ikey])
+                        && !($item['model_text_shown'] ?? false)
                         && !isset($invalid[$r['event_id']]) && !isset($invalid[$e['event_id']]);
                     $scored[] = ['skill_id' => $item['skill_id'], 'episode_id' => $item['episode_id'], 'event_id' => $r['event_id'], 'verdict' => $r['verdict'], 'eligible' => $eligible, 'variant_id' => $item['variant_id']];
                     if (!$eligible || !in_array($r['verdict'], ['CORRECT', 'INCORRECT'], true)) {

@@ -182,12 +182,9 @@ final class MockProvider implements ProviderAdapter
                 $parts[] = $alloc['representation_hint'];
             }
         } else {
-            $parts[] = match ($alloc['role']) {
-                'DIAGNOSTIC' => 'Here is another question of a similar kind.',
-                'PREREQUISITE' => 'Here is a question on a skill this topic builds on.',
-                'INDEPENDENT' => 'Try this one on your own.',
-                default => 'Here is a question on this topic.',
-            };
+            // Like the live model in rounds 3–4, add a strategy cue even though the allocation says the
+            // text is not shown with an independent item; the host must discard it (round 5, R5-A).
+            $parts[] = 'Work out the sizes first, then settle the sign.';
         }
         return implode(' ', $parts);
     }

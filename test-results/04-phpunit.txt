@@ -3,17 +3,19 @@ PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
 Runtime:       PHP 8.3.6
 Configuration: /home/user/noon/app/phpunit.xml
 
-...............................................................  63 / 174 ( 36%)
-............................................................... 126 / 174 ( 72%)
-................................................                174 / 174 (100%)
+...............................................................  63 / 189 ( 33%)
+............................................................... 126 / 189 ( 66%)
+............................................................... 189 / 189 (100%)
 
-Time: 00:16.111, Memory: 32.00 MB
+
+Time: 00:28.714, Memory: 32.00 MB
 
 Beta Guards (AlgebraEngine\Tests\Integration\BetaGuards)
  ✔ B 5 non prerequisite proposal rejected
  ✔ B 6 host key governs and item flagged
  ✔ B 7 hint makes item assisted
  ✔ B 8 disclosure guard rejects leak
+ ✔ Internal vocabulary is repaired not shown
  ✔ B 8 repeated leak holds
  ✔ D 1 hint and i dont know give smaller questions
  ✔ Repair opening never holds on its own facts
@@ -47,6 +49,9 @@ Engine Units (AlgebraEngine\Tests\Unit\Engine\EngineUnits)
  ✔ Transition guard follows workflow policy
  ✔ Criteria require consecutive varied independent successes
  ✔ Disclosure guard heuristic
+ ✔ Guard operand noun exemption
+ ✔ Internal vocabulary
+ ✔ Host lines use no internal vocabulary
  ✔ Envelope skeleton has placeholders only
 
 Evidence (AlgebraEngine\Tests\Integration\Evidence)
@@ -130,6 +135,12 @@ Host (AlgebraEngine\Tests\Integration\Host)
  ✔ Host 15 counter binding
  ✔ Host 16 forget and expiry
  ✔ Host 17 cost limits
+
+Independent Evidence (AlgebraEngine\Tests\Integration\IndependentEvidence)
+ ✔ B 14 independent items show host line only
+ ✔ B 14 discarded text is not stored
+ ✔ B 14b hint means no without help message
+ ✔ B 14b item shown with model text is not counted
 
 Json Syntax (AlgebraEngine\Tests\Unit\Support\JsonSyntax)
  ✔ Position of the round 3 extra brace
@@ -215,6 +226,15 @@ Scalar Parser (AlgebraEngine\Tests\Unit\Math\ScalarParser)
 Scenario Map (AlgebraEngine\Tests\Integration\ScenarioMap)
  ✔ Every scenario is implemented or deferred with a reason
 
+Stuck Entry (AlgebraEngine\Tests\Integration\StuckEntry)
+ ✔ Stuck and ask for answer in guided repair
+ ✔ Stuck and ask for answer on independent item
+ ✔ Off task question and number words
+ ✔ Capital x is read as x
+ ✔ Trailing question mark is scored normally
+ ✔ Normalisation
+ ✔ Stuck entry flow in each independent mode
+
 Templates (AlgebraEngine\Tests\Unit\Items\Templates)
  ✔ Every template generates valid items whose host key checks correct
  ✔ Parameter bounds are enforced
@@ -227,4 +247,4 @@ Templates (AlgebraEngine\Tests\Unit\Items\Templates)
  ✔ Opening facts never contain a step answer
  ✔ Guided plans are questions that never state their answer
 
-OK (174 tests, 32485 assertions)
+OK (189 tests, 38528 assertions)

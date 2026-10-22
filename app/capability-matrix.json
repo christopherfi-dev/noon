@@ -1,5 +1,5 @@
 {
-    "generated_at": "2026-10-22T00:31:38Z",
+    "generated_at": "2026-10-22T07:23:17Z",
     "curriculum": "ACE-ALGEBRA1 1.1.0",
     "architecture": "1.2",
     "counts": {
@@ -4278,11 +4278,19 @@
     "heuristics": [
         {
             "item": "Answer-disclosure guard (D1)",
-            "note": "HEURISTIC. Rejects model text containing the active or a remaining guided step's answer as a standalone number, number word, equivalent polynomial span or the key option's text. The word \"one\" used as a determiner or pronoun (\"one way\", \"on one side\") is not read as the value 1 unless a value cue precedes it (\"x is one\"). Paraphrases (e.g. \"dividing by 3\" for the option \"Divide by 3\") are not detected."
+            "note": "HEURISTIC. Rejects model text containing the active or a remaining guided step's answer as a standalone number, number word, equivalent polynomial span or the key option's text. The word \"one\" used as a determiner or pronoun (\"one way\", \"on one side\") is not read as the value 1 unless a value cue precedes it (\"x is one\"). Paraphrases (e.g. \"dividing by 3\" for the option \"Divide by 3\") are not detected. Not read as a choice: options named together as alternatives (\"positive or negative\"); the learner's own answer to a completed step (never the active step's); positive, negative, plus or minus (or a plural) directly followed by an operand noun (\"the negative sign\", \"a negative divisor\"; round 5 ruling 2)."
         },
         {
-            "item": "Internal vocabulary",
-            "note": "Learner-facing model text that mentions the host or keys is rejected and repaired (word match on \"host\", \"key\", \"keys\")."
+            "item": "Internal vocabulary (R5-B)",
+            "note": "Learner-facing model text containing expected value, expected answer, answer key, matched the key, guided step, host, assisted, verdict or criterion (whole words or phrases, any case, plurals included) is rejected and repaired; host lines pass the same check. Other internal wording is not detected. The session report keeps its defined evidence terms (criterion, assisted) and is outside this check."
+        },
+        {
+            "item": "Independent items (R5-A)",
+            "note": "Every independent item (target, probe, prerequisite check, independent check, return) is shown with the host line \"Here is one to try on your own.\" only. The model still proposes the item's parameters through the same gate; any learner text it writes with them is discarded unread. Model-written learner text remains in guided steps, hints and explanations."
+        },
+        {
+            "item": "Stuck and off-task entries (R5-C)",
+            "note": "Fixed lists, matched after normalising (lowercase, trimmed, spaces collapsed, apostrophes removed, trailing . ! ? stripped): stuck phrases and \"?\" give a smaller question in guided repair or the hint path on an independent item; asking for the answer adds \"I won't give the answer, but here is a smaller step.\"; other words ending in \"?\" and number words zero to twenty get a host line; a readable answer with a trailing \"?\" and \"X = 3\" on an item in x are scored normally. Other phrasings keep the clarification for unreadable input. None is scored as incorrect."
         },
         {
             "item": "Guided-step skill tags",

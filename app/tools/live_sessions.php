@@ -9,9 +9,15 @@ declare(strict_types=1);
  *
  * B11 (round 4 §4) follows the B3 script with a messy learner: free-text and
  * unreadable entries, and correct answers written loosely (x = 3, 3.0, 6/2,
- * a Unicode minus, a typo then its correction). Each input is listed in
- * METRICS.md with the checker verdict and scope, what the tutor showed and
- * any host rejection.
+ * a Unicode minus, a typo then its correction). Round 5 adds "-2?", "idk",
+ * "IDK." and "i dont know" (stuck entries in guided repair and on an
+ * independent check) and one Explain request, so every kind of model-written
+ * learner text has a live example. Each input is listed in METRICS.md with
+ * the checker verdict and scope, what the tutor showed and any host rejection.
+ *
+ * Round 5 metrics: independent items shown with model-written text (B14),
+ * internal-vocabulary hits in learner-visible text (R5-B), guard rejections
+ * on sign steps, provider calls per session and learner wait.
  *
  * With provider 'openai_compatible' it first lists the provider's models and
  * stops (exit 3) when the configured model is not listed (§4.1), unless
@@ -37,6 +43,7 @@ use AlgebraEngine\App;
 use AlgebraEngine\Config;
 use AlgebraEngine\Http\Api;
 use AlgebraEngine\Http\Request;
+use AlgebraEngine\Support\LearnerText;
 use AlgebraEngine\Support\RandomSource;
 
 $opts = getopt('', ['out:', 'b1::', 'b3::', 'b11::', 'accept-unlisted-model', 'max-turns::', 'label::']);
@@ -111,12 +118,20 @@ if ($live) {
             $req = json_decode($body, true);
             $d = json_decode($r['body'], true);
             $msg = is_array($d) ? ($d['choices'][0]['message'] ?? []) : [];
+            $alloc = [];
+            foreach ($req['messages'] ?? [] as $m) {
+                if ($m['role'] === 'user' && str_starts_with((string) $m['content'], 'JSON ')) {
+                    $alloc = json_decode(substr($m['content'], 5), true)['TRUSTED_OUTPUT_ALLOCATION'] ?? [];
+                    break;
+                }
+            }
             $this->calls[] = [
                 'context' => $this->context, 'json_mode' => isset($req['response_format']), 'status' => $r['status'], 'error' => $r['error'],
                 'seconds' => round(microtime(true) - $t, 2), 'finish_reason' => is_array($d) ? ($d['choices'][0]['finish_reason'] ?? null) : null,
                 'usage' => is_array($d) ? ($d['usage'] ?? null) : null, 'response_model' => is_array($d) ? ($d['model'] ?? null) : null,
                 'content' => is_string($msg['content'] ?? null) ? $msg['content'] : null,
                 'diagnostics' => $r['diagnostics'] ?? null,
+                'operation' => $alloc['operation'] ?? null, 'host_question' => $alloc['host_question'] ?? null,
             ];
             return $r;
         }
@@ -195,7 +210,10 @@ $plan = array_merge(array_fill(0, $b1, 'B1'), array_fill(0, $b3, 'B3'), array_fi
 /**
  * B11 messy inputs, in order. phase 'any': submitted on the next scalar item, before scripted errors
  * (expected to be unreadable). phase 'correct': used when the item is answered correctly anyway.
+ * phase 'guided': on the next guided step that has a smaller question and has not had a stuck entry.
+ * phase 'independent_check': on the next item in INDEPENDENT_CHECK.
  * needs: 'x' = an item asking for the value of x; 'int' = an integer key; 'neg' = a negative key.
+ * action: REQUEST_EXPLANATION instead of a typed entry.
  */
 $words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
 $messyList = [
@@ -204,6 +222,9 @@ $messyList = [
     ['label' => 'can you just tell me the answer', 'phase' => 'any', 'needs' => null, 'text' => fn ($v) => 'can you just tell me the answer'],
     ['label' => 'is this on the test?', 'phase' => 'any', 'needs' => null, 'text' => fn ($v) => 'is this on the test?'],
     ['label' => 'number word ("three")', 'phase' => 'any', 'needs' => null, 'text' => fn ($v) => preg_match('/^\d+$/', $v) && (int) $v <= 20 ? $words[(int) $v] : 'three'],
+    // Round 5: stuck entries in guided repair, on a step that has a smaller question (listed before the 'correct' entries so they take that step).
+    ['label' => 'idk (guided repair)', 'phase' => 'guided', 'needs' => null, 'text' => fn ($v) => 'idk'],
+    ['label' => 'IDK. (guided repair)', 'phase' => 'guided', 'needs' => null, 'text' => fn ($v) => 'IDK.'],
     ['label' => 'x = 3 form', 'phase' => 'correct', 'needs' => 'x', 'text' => fn ($v) => 'x = ' . $v],
     ['label' => 'x=3 form', 'phase' => 'correct', 'needs' => 'x', 'text' => fn ($v) => 'x=' . $v],
     ['label' => '"3 " with spaces', 'phase' => 'correct', 'needs' => null, 'text' => fn ($v) => '  ' . $v . ' '],
@@ -211,6 +232,10 @@ $messyList = [
     ['label' => '6/2 form', 'phase' => 'correct', 'needs' => 'int', 'text' => fn ($v) => (2 * (int) $v) . '/2'],
     ['label' => 'Unicode minus', 'phase' => 'correct', 'needs' => 'neg', 'text' => fn ($v) => "\u{2212}" . ltrim($v, '-')],
     ['label' => 'typo', 'phase' => 'correct', 'needs' => null, 'text' => fn ($v) => $v . ']'],
+    // Round 5 additions.
+    ['label' => '"-2?" (correct answer with a trailing ?)', 'phase' => 'correct', 'needs' => 'neg', 'text' => fn ($v) => $v . '?'],
+    ['label' => 'i dont know (independent check)', 'phase' => 'independent_check', 'needs' => null, 'text' => fn ($v) => 'i dont know'],
+    ['label' => 'Explain button (independent check)', 'phase' => 'independent_check', 'needs' => null, 'action' => 'REQUEST_EXPLANATION', 'text' => fn ($v) => ''],
 ];
 $correction = ['label' => 'correction after the typo', 'text' => fn ($v) => $v];   // submitted on the same item right after the typo
 $xTemplates = ['ONE_STEP_ADD', 'ONE_STEP_MULTIPLY', 'TWO_STEP', 'GROUPED_LINEAR', 'GROUPED_LINEAR_TRANSFER'];
@@ -251,6 +276,7 @@ foreach ($plan as $n => $path) {
     $script = $scripts[$path];
     $messy = $path === 'B11' ? $messyList : [];
     $pendingCorrection = null;   // item id that was answered with the typo
+    $stuckSteps = [];            // guided steps that already had a stuck entry
     $seenEvents = 0;
     $sid = null;
     $consecutiveHolds = 0;
@@ -287,7 +313,15 @@ foreach ($plan as $n => $path) {
                 $code = null;
                 $entry = null;
                 $expected = is_array($active['answer_spec']['expected']) ? null : (string) $active['answer_spec']['expected'];
-                $fits = function (array $e) use ($active, $expected, $xTemplates): bool {
+                $mode = $view['mode'] ?? '';
+                $stepKey = $active['role'] === 'GUIDED' ? ($active['params']['plan_id'] ?? '') . '/' . ($active['guided_step']['id'] ?? '') : null;
+                $fits = function (array $e) use ($active, $expected, $xTemplates, $mode, $stepKey, &$stuckSteps): bool {
+                    if ($e['phase'] === 'guided') {
+                        return $mode === 'GUIDED_REPAIR' && $stepKey !== null && ($active['guided_step']['smaller'] ?? []) !== [] && !isset($stuckSteps[$stepKey]);
+                    }
+                    if ($e['phase'] === 'independent_check') {
+                        return $mode === 'INDEPENDENT_CHECK' && $active['role'] !== 'GUIDED' && $active['support_status'] === 'INDEPENDENT';
+                    }
                     if ($active['answer_spec']['kind'] !== 'exact_rational' || $expected === null) {
                         return false;
                     }
@@ -303,7 +337,7 @@ foreach ($plan as $n => $path) {
                     $entry = $correction;
                 } else {
                     foreach ($messy as $i => $e) {
-                        if (($e['phase'] === 'any' && $fits($e)) || ($e['phase'] === 'correct' && !$due && $fits($e))) {
+                        if (in_array($e['phase'], ['any', 'guided', 'independent_check'], true) && $fits($e) || ($e['phase'] === 'correct' && !$due && $fits($e))) {
                             $entry = $e;
                             array_splice($messy, $i, 1);
                             break;
@@ -311,7 +345,12 @@ foreach ($plan as $n => $path) {
                     }
                 }
                 $pendingCorrection = ($entry['label'] ?? null) === 'typo' ? $active['item_id'] : null;
-                if ($entry !== null) {
+                if ($entry !== null && ($entry['phase'] ?? '') === 'guided') {
+                    $stuckSteps[$stepKey] = true;
+                }
+                if ($entry !== null && isset($entry['action'])) {
+                    $action = $entry['action'] . ' (messy input: ' . $entry['label'] . ')';
+                } elseif ($entry !== null) {
                     $learner = ($entry['text'])($expected);
                     $action = 'SUBMIT_RESPONSE (messy input: ' . $entry['label'] . ')';
                 } else {
@@ -321,7 +360,7 @@ foreach ($plan as $n => $path) {
                     $learner = $answerFor($active, $code);
                     $action = 'SUBMIT_RESPONSE' . ($code !== null ? " (scripted error: $code)" : ' (correct)');
                 }
-                [$r, $secs] = $evt('SUBMIT_RESPONSE', ['text' => $learner], true);
+                [$r, $secs] = isset($entry['action']) ? $evt($entry['action'], [], true) : $evt('SUBMIT_RESPONSE', ['text' => $learner], true);
             } else {
                 $action = 'END_SESSION (no active item)';
                 [$r, $secs] = $evt('END_SESSION');
@@ -343,7 +382,24 @@ foreach ($plan as $n => $path) {
             'messages' => $r->body['messages'] ?? [], 'item' => $r->body['active_item']['prompt'] ?? null, 'support' => $r->body['active_item']['support_status'] ?? null,
             'seconds' => $secs, 'calls' => $calls, 'verdicts' => [], 'scopes' => [], 'rejections' => [], 'notes' => [], 'accepted' => [], 'holds' => 0,
             'item_before' => $t === 1 ? null : ($active['prompt'] ?? null),
+            'sources' => [], 'independent_presented' => 0, 'independent_with_model_text' => 0, 'vocab' => [], 'discarded' => [],
         ];
+        // Round 5: who wrote each message (host or model), B14 and internal vocabulary, from the committed turn.
+        if ($r->status === 200) {
+            $engNow = json_decode((string) $app->store->db->scalar('SELECT engine_json FROM sessions WHERE session_id = ?', [$sid]), true);
+            $turn['sources'] = array_map(fn ($m) => $m['source'] ?? 'UNKNOWN', $engNow['messages'] ?? []);
+            $a = $engNow['active'] ?? null;
+            if ($a !== null && $a['role'] !== 'GUIDED' && $a['support_status'] === 'INDEPENDENT' && ($view['mode'] ?? '') !== 'SESSION_CLOSED'
+                && array_filter($turn['sources'], fn ($x) => $x !== 'HOST')) {
+                $turn['independent_with_model_text'] = 1;
+            }
+            $visible = array_merge(array_column($r->body['messages'] ?? [], 'text'), [$r->body['progress']['label'] ?? '', $r->body['active_item']['prompt'] ?? '']);
+            foreach ($visible as $text) {
+                foreach (LearnerText::internalTerms($text) as $term) {
+                    $turn['vocab'][] = $term . ': ' . $text;
+                }
+            }
+        }
         foreach ($new as $e) {
             $d = $e['data'];
             switch ($e['type']) {
@@ -353,13 +409,31 @@ foreach ($plan as $n => $path) {
                     break;
                 case 'MODEL_OUTPUT_REJECTED':
                     $text = $jsonCalls[$d['attempt']]['content'] ?? null;
+                    $question = $jsonCalls[$d['attempt']]['host_question'] ?? null;
+                    $guard = (bool) array_filter($d['errors'], fn ($x) => str_contains($x, 'expected answer'));
                     $rej = ['session' => $name, 'turn' => $t, 'operation' => $d['operation'], 'attempt' => $d['attempt'], 'errors' => $d['errors'],
-                        'guard' => (bool) array_filter($d['errors'], fn ($x) => str_contains($x, 'expected answer')), 'text' => $text];
+                        'guard' => $guard, 'sign_step' => $guard && is_string($question) && preg_match('/positive or negative/i', $question) === 1,
+                        'vocab' => (bool) array_filter($d['errors'], fn ($x) => str_contains($x, 'internal terms')), 'question' => $question, 'text' => $text];
                     $turn['rejections'][] = $rej;
                     $allRejections[] = $rej;
                     break;
                 case 'MODEL_OUTPUT_ACCEPTED':
                     $turn['accepted'][] = $d;
+                    break;
+                case 'ITEM_PRESENTED':
+                    if ($d['role'] !== 'GUIDED') {
+                        $turn['independent_presented']++;
+                    }
+                    break;
+                case 'MODEL_TEXT_DISCARDED':
+                    $turn['discarded'][] = $d['characters'];
+                    $turn['notes'][] = 'Model text proposed with the independent item was discarded unread (' . $d['characters'] . ' characters; R5-A)';
+                    break;
+                case 'ENTRY_INTERPRETED':
+                    $turn['notes'][] = 'Entry interpreted as ' . $d['kind'] . ($d['read_as'] !== null ? ' (read as `' . $d['read_as'] . '`)' : '') . ' (R5-C)';
+                    break;
+                case 'SUPPORT_GIVEN':
+                    $turn['notes'][] = 'Support given: ' . $d['kind'] . (isset($d['trigger']) ? ' (' . $d['trigger'] . ')' : '');
                     break;
                 case 'PROVIDER_FAILURE':
                     $turn['holds']++;
@@ -392,7 +466,7 @@ foreach ($plan as $n => $path) {
             }
         }
         $turns[] = $turn;
-        if (preg_match('/^SUBMIT_RESPONSE \(messy input: (.*)\)$/', $action, $mm)) {
+        if (preg_match('/^[A-Z_]+ \(messy input: (.*)\)$/', $action, $mm)) {
             $messyRows[] = ['session' => $name, 'turn' => $t, 'label' => $mm[1], 'text' => $learner, 'item' => $turn['item_before'], 'http' => $r->status,
                 'verdict' => $turn['verdicts'] ? explode(' ', $turn['verdicts'][0])[0] : '(none)', 'scope' => $turn['scopes'][0] ?? '',
                 'shown' => implode(' / ', array_map(fn ($m) => '[' . $m['kind'] . '] ' . $m['text'], $turn['messages'])),
@@ -439,6 +513,12 @@ foreach ($plan as $n => $path) {
         'length' => count(array_filter($sessionCalls, fn ($c) => $c['finish_reason'] === 'length')),
         'call_median' => $median($callTimes), 'call_max' => $callTimes ? max($callTimes) : null,
         'tokens' => $usageSum($sessionCalls), 'response_models' => array_values(array_unique(array_filter(array_column($sessionCalls, 'response_model')))),
+        'sign_guard' => count(array_filter($allRejections, fn ($x) => $x['session'] === $name && $x['sign_step'])),
+        'vocab_rejections' => count(array_filter($allRejections, fn ($x) => $x['session'] === $name && $x['vocab'])),
+        'independent_presented' => array_sum(array_column($turns, 'independent_presented')),
+        'independent_with_model_text' => array_sum(array_column($turns, 'independent_with_model_text')),
+        'discarded' => count(array_merge(...array_column($turns, 'discarded'))),
+        'vocab_hits' => array_merge(...array_column($turns, 'vocab')),
     ];
     $metrics[] = $m;
 
@@ -459,8 +539,8 @@ foreach ($plan as $n => $path) {
         }
         $tx[] = "- Mode: {$tn['mode_before']} → {$tn['mode']} (skill {$tn['skill']}); status {$tn['status']} (HTTP {$tn['http']})";
         $tx[] = '- Verdict: ' . ($tn['verdicts'] ? implode('; ', $tn['verdicts']) : '(none this turn)');
-        foreach ($tn['messages'] as $msg) {
-            $tx[] = "- Tutor [{$msg['kind']}]: " . $msg['text'];
+        foreach ($tn['messages'] as $i => $msg) {
+            $tx[] = "- Tutor [{$msg['kind']}, " . strtolower($tn['sources'][$i] ?? '?') . ' text]: ' . $msg['text'];
         }
         if ($tn['item'] !== null) {
             $tx[] = '- Item shown' . ($tn['support'] ? " ({$tn['support']})" : '') . ': ' . str_replace("\n", ' / ', $tn['item']);
@@ -502,9 +582,10 @@ foreach ($plan as $n => $path) {
 // ------------------------------------------------------------ metrics file
 $fmt = fn ($v) => $v === null ? '-' : (is_float($v) ? number_format($v, 1) : (string) $v);
 $mx = ["# Scripted sessions — metrics", '', implode("\n", array_slice($runLog, 2)), '',
-    '| Session | Path | Final mode | Report | Turns | Binding 1st try | Provider calls | Repairs by operation (accepted generations) | HOLDs | Guard rejections | Other rejections | Empty responses | finish=length | Call time median / slowest (s) | Turn latency median / slowest (s) | Tokens in | Tokens out (reasoning) | Cache hit / miss | Cost |',
-    '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|'];
-$tot = ['turns' => 0, 'calls' => 0, 'holds' => 0, 'guard' => 0, 'other' => 0, 'empty' => 0, 'length' => 0, 'in' => 0, 'out' => 0, 'reasoning' => 0, 'hit' => 0, 'miss' => 0, 'first' => 0, 'ops' => [], 'rep' => []];
+    '| Session | Path | Final mode | Report | Turns | Binding 1st try | Provider calls | Repairs by operation (accepted generations) | HOLDs | Guard rejections (on sign steps) | Other rejections (internal vocabulary) | Independent items shown / with model text | Model text discarded | Internal-vocabulary hits in learner text | Empty responses | finish=length | Call time median / slowest (s) | Learner wait median / slowest (s) | Tokens in | Tokens out (reasoning) | Cache hit / miss | Cost |',
+    '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|'];
+$tot = ['turns' => 0, 'calls' => 0, 'holds' => 0, 'guard' => 0, 'other' => 0, 'empty' => 0, 'length' => 0, 'in' => 0, 'out' => 0, 'reasoning' => 0, 'hit' => 0, 'miss' => 0, 'first' => 0, 'ops' => [], 'rep' => [],
+    'sign' => 0, 'vocabrej' => 0, 'ind' => 0, 'indmodel' => 0, 'disc' => 0, 'vocab' => 0];
 $allCallTimes = $transport !== null ? array_map(fn ($c) => $c['seconds'], $transport->calls) : [];
 foreach ($metrics as $i => $m) {
     $ops = [];
@@ -515,7 +596,7 @@ foreach ($metrics as $i => $m) {
     }
     $tk = $m['tokens'];
     $mx[] = "| {$m['session']} | {$m['path']} | {$m['final_mode']} | {$m['report_status']} | {$m['turns']} | {$m['binding_first_try']} | {$m['provider_calls']} | " . implode('; ', $ops)
-        . " | {$m['holds']} | {$m['guard_rejections']} | {$m['other_rejections']} | " . ($live ? $m['empty'] . ' | ' . $m['length'] . ' | ' . $fmt($m['call_median']) . ' / ' . $fmt($m['call_max']) : 'n/a | n/a | n/a') . ' | ' . $fmt($m['latency_median']) . ' / ' . $fmt($m['latency_max'])
+        . " | {$m['holds']} | {$m['guard_rejections']} ({$m['sign_guard']}) | {$m['other_rejections']} ({$m['vocab_rejections']}) | {$m['independent_presented']} / {$m['independent_with_model_text']} | {$m['discarded']} | " . count($m['vocab_hits']) . ' | ' . ($live ? $m['empty'] . ' | ' . $m['length'] . ' | ' . $fmt($m['call_median']) . ' / ' . $fmt($m['call_max']) : 'n/a | n/a | n/a') . ' | ' . $fmt($m['latency_median']) . ' / ' . $fmt($m['latency_max'])
         . ($live ? " | {$tk['in']} | {$tk['out']} ({$tk['reasoning']}) | {$tk['cache_hit']} / {$tk['cache_miss']} | " . ($tk['cost'] === null ? 'not reported by provider' : $tk['cost']) : ' | n/a (mock) | n/a | n/a | n/a') . ' |';
     $tot['turns'] += $m['turns'];
     $tot['calls'] += $m['provider_calls'];
@@ -525,6 +606,12 @@ foreach ($metrics as $i => $m) {
     $tot['empty'] += $m['empty'];
     $tot['length'] += $m['length'];
     $tot['first'] += $m['binding_first_try'] === 'yes' ? 1 : 0;
+    $tot['sign'] += $m['sign_guard'];
+    $tot['vocabrej'] += $m['vocab_rejections'];
+    $tot['ind'] += $m['independent_presented'];
+    $tot['indmodel'] += $m['independent_with_model_text'];
+    $tot['disc'] += $m['discarded'];
+    $tot['vocab'] += count($m['vocab_hits']);
     foreach (['in', 'out', 'reasoning'] as $k) {
         $tot[$k] += $tk[$k];
     }
@@ -535,11 +622,19 @@ $ops = [];
 foreach ($tot['ops'] + $tot['rep'] as $op => $_) {
     $ops[] = "$op " . ($tot['rep'][$op] ?? 0) . ' (' . ($tot['ops'][$op] ?? 0) . ')';
 }
-$mx[] = '| **Total** | ' . count($metrics) . ' sessions | | | ' . $tot['turns'] . ' | ' . $tot['first'] . '/' . count($metrics) . ' | ' . $tot['calls'] . ' | ' . implode('; ', $ops) . ' | ' . $tot['holds'] . ' | ' . $tot['guard'] . ' | ' . $tot['other']
-    . ' | ' . ($live ? $tot['empty'] . ' | ' . $tot['length'] . ' | ' . $fmt($median($allCallTimes)) . ' / ' . $fmt($allCallTimes ? max($allCallTimes) : null) : 'n/a | n/a | n/a')
+$mx[] = '| **Total** | ' . count($metrics) . ' sessions | | | ' . $tot['turns'] . ' | ' . $tot['first'] . '/' . count($metrics) . ' | ' . $tot['calls'] . ' (' . ($metrics ? number_format($tot['calls'] / count($metrics), 1) : '-') . ' per session) | ' . implode('; ', $ops) . ' | ' . $tot['holds'] . ' | ' . $tot['guard'] . ' (' . $tot['sign'] . ') | ' . $tot['other'] . ' (' . $tot['vocabrej'] . ')'
+    . ' | ' . $tot['ind'] . ' / ' . $tot['indmodel'] . ' | ' . $tot['disc'] . ' | ' . $tot['vocab'] . ' | ' . ($live ? $tot['empty'] . ' | ' . $tot['length'] . ' | ' . $fmt($median($allCallTimes)) . ' / ' . $fmt($allCallTimes ? max($allCallTimes) : null) : 'n/a | n/a | n/a')
     . ' | ' . $fmt($median($allLatencies)) . ' / ' . $fmt($allLatencies ? max($allLatencies) : null) . ' | ' . ($live ? $tot['in'] . ' | ' . $tot['out'] . ' (' . $tot['reasoning'] . ') | ' . $tot['hit'] . ' / ' . $tot['miss'] . ' | not reported by provider' : 'n/a | n/a | n/a | n/a') . ' |';
 $mx[] = '';
-$mx[] = 'Repairs by operation: bounded repair requests per operation, with accepted generations in brackets. Call time: one provider call. Turn latency: the wall time of one API request (all provider calls in it included). Empty responses: HTTP 200 with empty content.';
+$mx[] = 'Repairs by operation: bounded repair requests per operation, with accepted generations in brackets. Call time: one provider call. Learner wait: the wall time of one API request (all provider calls in it included). Empty responses: HTTP 200 with empty content.'
+    . ' Guard rejections on sign steps: disclosure-guard rejections while the step asked "positive or negative". Other rejections (internal vocabulary): rejections naming an internal term (R5-B).'
+    . ' Independent items shown / with model text: turns that showed an independent item / of those, turns that also showed model-written text (B14; must be 0). Model text discarded: independent items whose model text was dropped unread (R5-A).'
+    . ' Internal-vocabulary hits: listed terms found in any learner-visible message, progress line or item (must be 0).';
+$hits = array_merge(...array_map(fn ($m) => array_map(fn ($h) => $m['session'] . ': ' . $h, $m['vocab_hits']), $metrics));
+if ($hits !== []) {
+    $mx[] = '';
+    $mx[] = 'Internal-vocabulary hits: ' . implode('; ', $hits);
+}
 if ($live) {
     $mx[] = '';
     $counts = array_count_values(array_map(fn ($c) => (string) ($c['response_model'] ?? '(none)'), $transport->calls));

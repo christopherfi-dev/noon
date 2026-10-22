@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace AlgebraEngine\Workflow;
 
 use AlgebraEngine\Support\Ids;
+use AlgebraEngine\Support\LearnerText;
 
 /**
  * Working copy of one committed instructional mutation. Nothing here is
@@ -17,7 +18,7 @@ final class Turn
     public array $items = [];
     /** @var list<array<string,mixed>> */
     public array $results = [];
-    /** @var list<array{kind:string,text:string}> */
+    /** @var list<array{kind:string,text:string,source:string}> source HOST or MODEL (internal; never projected) */
     public array $messages = [];
     public ?array $generation = null;
     public string $triggerEventId;
@@ -49,10 +50,15 @@ final class Turn
         return $eventId;
     }
 
-    public function say(string $kind, string $text): void
+    /** @param string $source HOST for host-written lines, MODEL for accepted model text (round 5: B14 is checked against it) */
+    public function say(string $kind, string $text, string $source = 'HOST'): void
     {
+        // R5-B: host-written lines pass the same internal-vocabulary check as model text.
+        if ($source === 'HOST' && ($terms = LearnerText::internalTerms($text)) !== []) {
+            throw new \LogicException('Host line uses internal terms (' . implode(', ', $terms) . '): ' . $text);
+        }
         if (trim($text) !== '') {
-            $this->messages[] = ['kind' => $kind, 'text' => $text];
+            $this->messages[] = ['kind' => $kind, 'text' => $text, 'source' => $source];
         }
     }
 
