@@ -5,7 +5,7 @@ namespace AlgebraEngine\Math\Ast;
 
 final class Neg extends Node
 {
-    public function __construct(public readonly Node $operand)
+    public function __construct(public Node $operand)
     {
     }
 }

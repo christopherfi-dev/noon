@@ -75,7 +75,7 @@ final class ClassificationSupport
      */
     public static function validateCodes(mixed $codes, array $pool, array &$errors): bool
     {
-        if (!is_array($codes) || !array_is_list($codes) || count($codes) !== 4) {
+        if (!is_array($codes) || !self::isList($codes) || count($codes) !== 4) {
             $errors[] = 'parameters.options must be a list of exactly 4 option codes';
             return false;
         }
@@ -88,6 +88,18 @@ final class ClassificationSupport
         if (count(array_unique($codes)) !== 4) {
             $errors[] = 'parameters.options must not repeat a code';
             return false;
+        }
+        return true;
+    }
+
+    /** Same result as PHP 8.1's array_is_list(): keys are exactly 0, 1, 2, … in order (an empty array is a list). */
+    private static function isList(array $a): bool
+    {
+        $i = 0;
+        foreach ($a as $k => $_) {
+            if ($k !== $i++) {
+                return false;
+            }
         }
         return true;
     }

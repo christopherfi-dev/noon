@@ -1,8 +1,9 @@
-WARN  PHP_VERSION          8.3.6 works; a supported 8.4/8.5 release is preferred if the host offers it.
+PASS  PHP_VERSION          8.0.30 (8.0 or newer required)
 PASS  PDO                  loaded
 PASS  PDO_SQLITE           loaded
 PASS  JSON                 loaded
 PASS  MBSTRING             loaded
+PASS  CTYPE                loaded
 PASS  CONFIG               config.php found
 WARN  CONFIG_PERMISSIONS   config.php is world-accessible (644); use chmod 600.
 PASS  PROVIDER             mock provider (no outbound calls). Live provider not configured.

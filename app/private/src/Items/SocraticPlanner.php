@@ -20,7 +20,7 @@ use AlgebraEngine\Support\RandomSource;
  */
 final class SocraticPlanner
 {
-    public function __construct(private readonly ItemFactory $factory)
+    public function __construct(private ItemFactory $factory)
     {
     }
 

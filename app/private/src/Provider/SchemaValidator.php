@@ -17,7 +17,7 @@ final class SchemaValidator
     private const BASE = 'https://algebra-engine.invalid/contracts/';
     private Validator $validator;
 
-    public function __construct(private readonly string $contractsDir)
+    public function __construct(private string $contractsDir)
     {
         $this->validator = new Validator();
         $this->validator->setMaxErrors(10);

@@ -8,13 +8,13 @@ final class CheckOutcome
 {
     /** @param list<string> $limitations */
     public function __construct(
-        public readonly string $verdict,
-        public readonly string $observation,
-        public readonly string $scope,
-        public readonly ?string $clarification = null,
-        public readonly ?string $normalizedResponse = null,
-        public readonly array $limitations = [],
-        public readonly ?string $formIssue = null,
+        public string $verdict,
+        public string $observation,
+        public string $scope,
+        public ?string $clarification = null,
+        public ?string $normalizedResponse = null,
+        public array $limitations = [],
+        public ?string $formIssue = null,
     ) {
     }
 }

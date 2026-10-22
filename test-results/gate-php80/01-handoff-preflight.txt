@@ -1,0 +1,1 @@
+{"status": "PASS", "check_groups": 10, "schemas_exercised": 8, "template_examples": 10, "goldens_mathematically_checked": 9, "goldens_semantic_requirements_only": 4, "preflight_mutation_guards": 9, "future_app_scenarios": 53}

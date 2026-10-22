@@ -27,7 +27,7 @@ final class CapabilityRegistry
         'N18' => ['tests/Unit/Items/TemplatesTest.php', 'tests/Integration/BetaJourneyTest.php::testEveryBetaSkillCanStartAndScore'],
     ];
 
-    public function __construct(private readonly CurriculumRepository $curriculum, private readonly ItemFactory $factory)
+    public function __construct(private CurriculumRepository $curriculum, private ItemFactory $factory)
     {
     }
 

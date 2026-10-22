@@ -11,7 +11,7 @@ final class Rational
 {
     public const BOUND = 1_000_000_000_000_000;
 
-    private function __construct(private readonly int $n, private readonly int $d)
+    private function __construct(private int $n, private int $d)
     {
     }
 

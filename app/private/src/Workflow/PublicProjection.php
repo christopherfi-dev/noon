@@ -21,7 +21,7 @@ final class PublicProjection
         'plan', 'diagnosis', 'checker_result_id', 'engine', 'snapshot',
     ];
 
-    public function __construct(private readonly CurriculumRepository $curriculum, private readonly SchemaValidator $schemas)
+    public function __construct(private CurriculumRepository $curriculum, private SchemaValidator $schemas)
     {
     }
 

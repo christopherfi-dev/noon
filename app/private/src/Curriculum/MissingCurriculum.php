@@ -5,7 +5,7 @@ namespace AlgebraEngine\Curriculum;
 
 final class MissingCurriculum extends \RuntimeException
 {
-    public function __construct(public readonly string $skillId)
+    public function __construct(public string $skillId)
     {
         parent::__construct('Canonical skill record not available: ' . $skillId);
     }

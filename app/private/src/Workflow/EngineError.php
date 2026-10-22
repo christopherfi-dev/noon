@@ -7,8 +7,8 @@ namespace AlgebraEngine\Workflow;
 final class EngineError extends \RuntimeException
 {
     public function __construct(
-        public readonly int $httpStatus,
-        public readonly string $errorCode,
+        public int $httpStatus,
+        public string $errorCode,
         string $userMessage,
     ) {
         parent::__construct($userMessage);

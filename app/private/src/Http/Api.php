@@ -25,7 +25,7 @@ final class Api
 
     private array $actionRules;
 
-    public function __construct(private readonly App $app)
+    public function __construct(private App $app)
     {
         $rules = Json::decode((string) file_get_contents($app->config->string('resources_dir') . '/contracts/public-actions.json'));
         foreach ($rules['actions'] as $r) {
@@ -146,7 +146,7 @@ final class Api
         } catch (\JsonException) {
             throw new EngineError(400, 'INVALID_JSON', 'Invalid request body.');
         }
-        if (!is_array($data) || ($data !== [] && array_is_list($data))) {
+        if (!is_array($data) || ($data !== [] && self::isList($data))) {
             throw new EngineError(400, 'INVALID_JSON', 'Invalid request body.');
         }
         return $data;
@@ -375,5 +375,17 @@ final class Api
             return Response::error(429, 'GLOBAL_BUDGET', 'The tutor is at its daily limit. Please try again later.');
         }
         return null;
+    }
+
+    /** Same result as PHP 8.1's array_is_list(): keys are exactly 0, 1, 2, … in order (an empty array is a list). */
+    private static function isList(array $a): bool
+    {
+        $i = 0;
+        foreach ($a as $k => $_) {
+            if ($k !== $i++) {
+                return false;
+            }
+        }
+        return true;
     }
 }

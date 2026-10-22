@@ -43,7 +43,7 @@ final class Config
     ];
 
     /** @param array<string,mixed> $values */
-    private function __construct(private readonly array $values)
+    private function __construct(private array $values)
     {
     }
 

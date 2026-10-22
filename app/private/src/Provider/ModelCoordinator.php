@@ -25,14 +25,14 @@ final class ModelCoordinator
     private string $handshake;
 
     public function __construct(
-        private readonly ProviderAdapter $provider,
-        private readonly PromptAssembler $assembler,
-        private readonly SchemaValidator $schemas,
-        private readonly AcceptanceGate $gate,
-        private readonly CurriculumRepository $curriculum,
-        private readonly TransitionGuard $guard,
-        private readonly string $architecture,
-        private readonly int $maxBytes = 65536,
+        private ProviderAdapter $provider,
+        private PromptAssembler $assembler,
+        private SchemaValidator $schemas,
+        private AcceptanceGate $gate,
+        private CurriculumRepository $curriculum,
+        private TransitionGuard $guard,
+        private string $architecture,
+        private int $maxBytes = 65536,
     ) {
         if (!preg_match('/^(ACE_BOUND: [^\n]+)$/m', $architecture, $m)) {
             throw new \RuntimeException('Architecture text has no activation line');

@@ -5,7 +5,7 @@ namespace AlgebraEngine\Math\Ast;
 
 final class VarRef extends Node
 {
-    public function __construct(public readonly string $name)
+    public function __construct(public string $name)
     {
     }
 }

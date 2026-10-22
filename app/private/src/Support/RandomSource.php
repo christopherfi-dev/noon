@@ -11,7 +11,7 @@ final class RandomSource
 {
     private int $counter = 0;
 
-    private function __construct(private readonly ?string $seed)
+    private function __construct(private ?string $seed)
     {
     }
 

@@ -1,0 +1,3 @@
+Warning: The lock file is not up to date with the latest changes in composer.json. You may be getting outdated dependencies. It is recommended that you run `composer update` or `composer update <package name>`.
+Wrote /home/user/noon/dist/algebra-engine-bluehost-upload.zip (677 files, 780 KiB)
+Wrote /home/user/noon/dist/algebra-engine-vps-upload.zip (664 files, 784 KiB)

@@ -54,17 +54,17 @@ final class Engine
     private RandomSource $rng;
 
     public function __construct(
-        private readonly Config $config,
-        private readonly Store $store,
-        private readonly CurriculumRepository $curriculum,
-        private readonly ItemFactory $factory,
-        private readonly SocraticPlanner $planner,
-        private readonly ModelCoordinator $model,
-        private readonly TransitionGuard $guard,
-        private readonly ReportBuilder $reports,
-        private readonly SchemaValidator $schemas,
-        private readonly PublicProjection $projection,
-        private readonly Clock $clock,
+        private Config $config,
+        private Store $store,
+        private CurriculumRepository $curriculum,
+        private ItemFactory $factory,
+        private SocraticPlanner $planner,
+        private ModelCoordinator $model,
+        private TransitionGuard $guard,
+        private ReportBuilder $reports,
+        private SchemaValidator $schemas,
+        private PublicProjection $projection,
+        private Clock $clock,
         ?RandomSource $rng = null,
     ) {
         $this->rng = $rng ?? RandomSource::secure();

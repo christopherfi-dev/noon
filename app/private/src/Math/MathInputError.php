@@ -30,7 +30,7 @@ final class MathInputError extends \RuntimeException
         'NOT_AN_EQUATION' => 'Enter an equation with exactly one = sign.',
     ];
 
-    public function __construct(public readonly string $errorCode, string $message = '')
+    public function __construct(public string $errorCode, string $message = '')
     {
         parent::__construct($message !== '' ? $message : $errorCode);
     }

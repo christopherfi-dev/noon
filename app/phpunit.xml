@@ -3,10 +3,13 @@
          xsi:noNamespaceSchemaLocation="private/vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="tests/bootstrap.php"
          colors="false"
-         cacheDirectory="private/var/.phpunit.cache"
+         cacheResultFile="private/var/.phpunit.result.cache"
          failOnWarning="true"
-         failOnRisky="true"
-         displayDetailsOnTestsThatTriggerWarnings="true">
+         failOnRisky="true">
+    <php>
+        <!-- The suite keeps every test's harness until it ends (about 230 MB); independent of the CLI php.ini. -->
+        <ini name="memory_limit" value="512M"/>
+    </php>
     <testsuites>
         <testsuite name="Unit">
             <directory>tests/Unit</directory>

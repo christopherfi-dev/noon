@@ -1,5 +1,8 @@
 # Deploying the beta to Bluehost (cPanel)
 
+For the nginx VPS (AlmaLinux 9, PHP 8.0), use `DEPLOYMENT_VPS.md` and
+`dist/algebra-engine-vps-upload.zip` instead.
+
 **Nothing has been deployed.** These are instructions for when the owner
 decides to deploy. The checks below are deployment checks for your account;
 nothing here is known about your Bluehost plan in advance.
@@ -18,9 +21,9 @@ a different layout, edit the one `ALGEBRA_PRIVATE_DIR` line at the top of
 
 ## 1. Check the hosting plan
 
-In cPanel → *Select PHP Version* (or *MultiPHP Manager*) choose PHP 8.3 or
-newer (8.4/8.5 preferred if offered) for the domain, and enable the
-extensions `pdo_sqlite`, `mbstring`, `json`, and `curl` + `openssl` if you
+In cPanel → *Select PHP Version* (or *MultiPHP Manager*) choose PHP 8.0 or
+newer for the domain, and enable the
+extensions `pdo_sqlite`, `mbstring`, `ctype`, `json`, and `curl` + `openssl` if you
 will use a live provider. The app refuses to run without PDO SQLite; there is
 no file-based fallback.
 

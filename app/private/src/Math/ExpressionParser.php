@@ -28,7 +28,7 @@ final class ExpressionParser
     private int $pos = 0;
 
     /** @param list<string> $allowedVariables */
-    private function __construct(private readonly array $allowedVariables)
+    private function __construct(private array $allowedVariables)
     {
     }
 

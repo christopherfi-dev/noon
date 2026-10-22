@@ -5,6 +5,9 @@ declare(strict_types=1);
  * Builds the Bluehost upload ZIP with two trees:
  *   algebra-private/      -> place in the account home, OUTSIDE public_html
  *   public_html/algebra/  -> place under public_html
+ * and (round PHP80) the nginx VPS upload ZIP with two top-level folders:
+ *   algebra-engine/          -> /var/www/html/educational-engines/algebra-engine/  (public)
+ *   algebra-engine-private/  -> /var/www/algebra-engine-private/                   (outside the web root)
  * Production dependencies are installed without dev packages so no Composer
  * or shell is needed on the host. Nothing here deploys anything.
  *
@@ -21,6 +24,10 @@ foreach (array_slice($argv, 1) as $a) {
 }
 $stage = $out . '/stage';
 $zipPath = $out . '/algebra-engine-bluehost-upload.zip';
+$vpsStage = $out . '/stage-vps';
+$vpsZipPath = $out . '/algebra-engine-vps-upload.zip';
+const VPS_PRIVATE_DIR = '/var/www/algebra-engine-private';
+const VPS_BASE_PATH = '/educational-engines/algebra-engine/';
 
 function rmrf(string $p): void
 {
@@ -64,8 +71,30 @@ function run(string $cmd): void
     }
 }
 
+/** Zip a staged tree with stable ordering. */
+function zipTree(string $stage, string $zipPath): int
+{
+    $zip = new ZipArchive();
+    if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+        fwrite(STDERR, "Cannot create $zipPath\n");
+        exit(1);
+    }
+    $files = [];
+    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($stage, FilesystemIterator::SKIP_DOTS)) as $file) {
+        $files[] = substr($file->getPathname(), strlen($stage) + 1);
+    }
+    sort($files);
+    foreach ($files as $rel) {
+        $zip->addFile("$stage/$rel", $rel);
+    }
+    $zip->close();
+    return count($files);
+}
+
 rmrf($stage);
 @unlink($zipPath);
+rmrf($vpsStage);
+@unlink($vpsZipPath);
 $priv = "$stage/algebra-private";
 $pub = "$stage/public_html/algebra";
 
@@ -120,19 +149,56 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($pub, File
     }
 }
 
-// Zip with stable ordering.
-$zip = new ZipArchive();
-if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-    fwrite(STDERR, "Cannot create $zipPath\n");
+$n = zipTree($stage, $zipPath);
+echo "Wrote $zipPath ($n files, " . round(filesize($zipPath) / 1024) . " KiB)\n";
+
+// ------------------------------------------------------------------ nginx VPS bundle (round PHP80)
+// Same code and dependencies; only the layout, the api.php default private path and the
+// example base_path differ. nginx ignores .htaccess, so the VPS bundle carries no dotfiles.
+$vpsPub = "$vpsStage/algebra-engine";
+$vpsPriv = "$vpsStage/algebra-engine-private";
+copyTree($priv, $vpsPriv, ['.htaccess']);
+@unlink("$vpsPriv/var/.htaccess");
+// Dependencies' repository metadata (.gitattributes, .github/, .gitignore, .editorconfig) is not needed at run time.
+$dotted = [];
+foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator("$vpsPriv/vendor", FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST) as $file) {
+    if (str_starts_with($file->getFilename(), '.')) {
+        $dotted[] = $file->getPathname();
+    }
+}
+foreach ($dotted as $path) {
+    rmrf($path); // a dotted folder may already be gone with its parent
+}
+file_put_contents("$vpsPriv/var/README.txt", "SQLite database location. Keep this folder outside the web root, owned by the PHP-FPM user (nginx) and not readable by others.\n");
+$example = (string) file_get_contents("$vpsPriv/config.example.php");
+$example = str_replace("    // 'base_path' => '/algebra/',        // cookie path; defaults to the api.php folder",
+    "    'base_path' => '" . VPS_BASE_PATH . "',   // cookie path: the public folder's URL path on this server", $example, $replaced);
+if ($replaced !== 1) {
+    fwrite(STDERR, "config.example.php: base_path line not found\n");
     exit(1);
 }
-$files = [];
-foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($stage, FilesystemIterator::SKIP_DOTS)) as $file) {
-    $files[] = substr($file->getPathname(), strlen($stage) + 1);
+file_put_contents("$vpsPriv/config.example.php", $example);
+@mkdir($vpsPub . '/assets', 0755, true);
+copy("$app/public/index.html", "$vpsPub/index.html");
+copyTree("$app/public/assets", "$vpsPub/assets");
+$api = (string) file_get_contents("$app/public/api.php");
+$api = str_replace("const ALGEBRA_PRIVATE_DIR = __DIR__ . '/../../algebra-private';", "const ALGEBRA_PRIVATE_DIR = '" . VPS_PRIVATE_DIR . "';", $api, $replaced);
+if ($replaced !== 1) {
+    fwrite(STDERR, "api.php: ALGEBRA_PRIVATE_DIR line not found\n");
+    exit(1);
 }
-sort($files);
-foreach ($files as $rel) {
-    $zip->addFile("$stage/$rel", $rel);
+file_put_contents("$vpsPub/api.php", $api);
+// Guard: the public folder holds only index.html, api.php and assets/, and no dotfiles anywhere.
+foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($vpsStage, FilesystemIterator::SKIP_DOTS)) as $file) {
+    $rel = substr($file->getPathname(), strlen($vpsStage) + 1);
+    if (preg_match('#(^|/)\.#', $rel)) {
+        fwrite(STDERR, "Refusing to bundle dotfile $rel\n");
+        exit(1);
+    }
+    if (str_starts_with($rel, 'algebra-engine/') && !preg_match('#^algebra-engine/(index\.html|api\.php|assets/[^/]+)$#', $rel)) {
+        fwrite(STDERR, "Refusing to place $rel in the public folder\n");
+        exit(1);
+    }
 }
-$zip->close();
-echo "Wrote $zipPath (" . count($files) . " files, " . round(filesize($zipPath) / 1024) . " KiB)\n";
+$n = zipTree($vpsStage, $vpsZipPath);
+echo "Wrote $vpsZipPath ($n files, " . round(filesize($vpsZipPath) / 1024) . " KiB)\n";

@@ -6,3 +6,4 @@ config.php
 .env*
 config.local.php
 !app/private/config.example.php
+dist/stage-vps/

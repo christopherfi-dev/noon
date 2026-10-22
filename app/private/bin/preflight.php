@@ -22,11 +22,11 @@ $add = function (string $status, string $check, string $detail) use (&$results):
     $results[] = [$status, $check, $detail];
 };
 
-// PHP version
-if (PHP_VERSION_ID < 80300) {
-    $add('FAIL', 'PHP_VERSION', PHP_VERSION . ' found; PHP 8.3 or newer is required.');
+// PHP version (round PHP80: the production server runs PHP 8.0)
+if (PHP_VERSION_ID < 80000) {
+    $add('FAIL', 'PHP_VERSION', PHP_VERSION . ' found; PHP 8.0 or newer is required.');
 } else {
-    $add(PHP_VERSION_ID < 80400 ? 'WARN' : 'PASS', 'PHP_VERSION', PHP_VERSION . (PHP_VERSION_ID < 80400 ? ' works; a supported 8.4/8.5 release is preferred if the host offers it.' : ''));
+    $add('PASS', 'PHP_VERSION', PHP_VERSION . ' (8.0 or newer required)');
 }
 
 // Extensions
@@ -35,6 +35,7 @@ $required = [
     'pdo_sqlite' => 'PDO SQLite is required. There is no file-based fallback; the app will refuse to run without it.',
     'json' => 'JSON is required.',
     'mbstring' => 'mbstring is required for text length limits.',
+    'ctype' => 'ctype is required by the maths input parser and the answer-disclosure guard.',
 ];
 foreach ($required as $ext => $why) {
     extension_loaded($ext)

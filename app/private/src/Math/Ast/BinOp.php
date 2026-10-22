@@ -7,10 +7,10 @@ namespace AlgebraEngine\Math\Ast;
 final class BinOp extends Node
 {
     public function __construct(
-        public readonly string $op,
-        public readonly Node $left,
-        public readonly Node $right,
-        public readonly bool $implicit = false,
+        public string $op,
+        public Node $left,
+        public Node $right,
+        public bool $implicit = false,
     ) {
     }
 }

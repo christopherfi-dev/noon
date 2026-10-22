@@ -39,8 +39,11 @@ ledger), `Report\ReportBuilder`, `Http\Api`, `Workflow\PublicProjection`.
 
 ## Run locally
 
-Requirements: PHP 8.3+ with `pdo_sqlite`, `mbstring`, `json` (and `curl` for a
-live provider). Composer for development only.
+Requirements: PHP 8.0+ (the production server runs 8.0.30; the gate runs on
+8.0 and 8.3) with `pdo_sqlite`, `mbstring`, `ctype`, `json` (and `curl` +
+`openssl` for a live provider). Composer for development only (PHPUnit 9.6).
+Deployment: `DEPLOYMENT_VPS.md` (nginx VPS, `dist/algebra-engine-vps-upload.zip`)
+or `DEPLOYMENT.md` (Bluehost, `dist/algebra-engine-bluehost-upload.zip`).
 
 ```bash
 cd app

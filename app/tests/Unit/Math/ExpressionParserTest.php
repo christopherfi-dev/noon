@@ -13,7 +13,6 @@ use AlgebraEngine\Math\EquationParser;
 use AlgebraEngine\Math\ExpressionParser;
 use AlgebraEngine\Math\MathInputError;
 use AlgebraEngine\Math\Polynomial;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class ExpressionParserTest extends TestCase
@@ -90,7 +89,7 @@ final class ExpressionParserTest extends TestCase
         ];
     }
 
-    #[DataProvider('hostile')]
+    /** @dataProvider hostile */
     public function testHostileInputFailsClosed(string $input): void
     {
         $this->expectException(MathInputError::class);

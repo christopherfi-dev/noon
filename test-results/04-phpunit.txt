@@ -1,50 +1,4 @@
-PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
-
-Runtime:       PHP 8.3.6
-Configuration: /home/user/noon/app/phpunit.xml
-
-...............................................................  63 / 198 ( 31%)
-............................................................... 126 / 198 ( 63%)
-............................................................... 189 / 198 ( 95%)
-.........                                                       198 / 198 (100%)
-
-Time: 00:44.748, Memory: 32.00 MB
-
-Beta Guards (AlgebraEngine\Tests\Integration\BetaGuards)
- ✔ B 5 non prerequisite proposal rejected
- ✔ B 6 host key governs and item flagged
- ✔ B 7 hint makes item assisted
- ✔ B 8 disclosure guard rejects leak
- ✔ Internal vocabulary is repaired not shown
- ✔ Support claim in model text is repaired not shown
- ✔ B 8 repeated leak holds
- ✔ D 1 hint and i dont know give smaller questions
- ✔ Repair opening never holds on its own facts
- ✔ B 9 prompts carry no anchor or example content
-
-Beta Journey (AlgebraEngine\Tests\Integration\BetaJourney)
- ✔ B 1 distribution journey
- ✔ B 2 probe correct no descent
- ✔ B 3 deep descent and return
- ✔ B 3 prerequisite success stops descent
- ✔ B 4 beta boundary
- ✔ B 10 stuck step goes directly to its prerequisite
- ✔ B 10 stuck step at a boundary is recorded not failed
- ✔ Random scripted journeys complete without holds
- ✔ B 12 re ask shows no model text
- ✔ B 13 repair keeps the failed sign pattern
- ✔ Every beta skill can start and score
-
-Checkers (AlgebraEngine\Tests\Unit\Math\Checkers)
- ✔ Exact rational
- ✔ Polynomial equivalence and form
- ✔ Polynomial checker rejects invalid host key
- ✔ Classification
-
-Deploy Coverage (AlgebraEngine\Tests\Integration\DeployCoverage)
- ✔ Cover 01 capability matrix
- ✔ Deploy 01 private files not served
- ✔ Deploy 02 missing extension
+PHPUnit 9.6.38 by Sebastian Bergmann and contributors.
 
 Engine Units (AlgebraEngine\Tests\Unit\Engine\EngineUnits)
  ✔ Transition guard follows workflow policy
@@ -56,13 +10,23 @@ Engine Units (AlgebraEngine\Tests\Unit\Engine\EngineUnits)
  ✔ Host lines use no internal vocabulary
  ✔ Envelope skeleton has placeholders only
 
-Evidence (AlgebraEngine\Tests\Integration\Evidence)
- ✔ Evid 01 hint independence
- ✔ Evid 02 freshness
- ✔ Evid 03 numeric only skill
- ✔ Evid 04 immediate versus retention
- ✔ Evid 05 correction cascade
- ✔ Evid 06 untested map
+Templates (AlgebraEngine\Tests\Unit\Items\Templates)
+ ✔ Every template generates valid items whose host key checks correct
+ ✔ Parameter bounds are enforced
+ ✔ Grouped linear signatures are distinct and branch correctly
+ ✔ Contrast keys are derived from the displayed equations
+ ✔ Option order is randomised per item
+ ✔ Every guided step is tagged with the skill it exercises
+ ✔ Structural features are kept by the planner
+ ✔ Gate rejects a proposal that changes a kept feature
+ ✔ Opening facts never contain a step answer
+ ✔ Guided plans are questions that never state their answer
+
+Checkers (AlgebraEngine\Tests\Unit\Math\Checkers)
+ ✔ Exact rational
+ ✔ Polynomial equivalence and form
+ ✔ Polynomial checker rejects invalid host key
+ ✔ Classification
 
 Expression Parser (AlgebraEngine\Tests\Unit\Math\ExpressionParser)
  ✔ Unary minus binds looser than power
@@ -97,16 +61,6 @@ Expression Parser (AlgebraEngine\Tests\Unit\Math\ExpressionParser)
  ✔ Division by zero parses but polynomial rejects
  ✔ Equation parser
 
-Flow (AlgebraEngine\Tests\Integration\Flow)
- ✔ Entry 01 known topic
- ✔ Flow 01 distribution journey
- ✔ Flow 02 deeper repair
- ✔ Flow 03 switch target
- ✔ Flow 04 single correct probe
- ✔ Flow 05 alternative dependencies
- ✔ Flow 06 budget boundary
- ✔ Flow 07 stop while pending
-
 Form Inspector (AlgebraEngine\Tests\Unit\Math\FormInspector)
  ✔ Expanded simplified
  ✔ Factored
@@ -117,66 +71,10 @@ Golden Cases (AlgebraEngine\Tests\Unit\Math\GoldenCases)
  ✔ Requested form golden
  ✔ Out of scope goldens are listed not guessed
 
-Host (AlgebraEngine\Tests\Integration\Host)
- ✔ Host 01 duplicate submit
- ✔ Concurrent request refused while pending
- ✔ Host 02 idempotency conflict
- ✔ Host 03 stale tab
- ✔ Host 04 late lease discarded
- ✔ Slow provider holds before lease runs out
- ✔ Host 05 empty and truncated output
- ✔ Host 06 forged promotion rejected
- ✔ Host 07 missing curriculum
- ✔ Host 08 no answer leakage
- ✔ Host 09 prompt injection is data
- ✔ Host 10 cross session access denied
- ✔ Host 11 csrf
- ✔ Host 12 input preserved on timeout
- ✔ Host 13 binding modes
- ✔ Host 14 context replacement
- ✔ Host 15 counter binding
- ✔ Host 16 forget and expiry
- ✔ Host 17 cost limits
-
-Independent Evidence (AlgebraEngine\Tests\Integration\IndependentEvidence)
- ✔ B 14 independent items show host line only
- ✔ B 14 discarded text is not stored
- ✔ B 14b hint means no without help message
- ✔ B 14b item shown with model text is not counted
-
-Json Syntax (AlgebraEngine\Tests\Unit\Support\JsonSyntax)
- ✔ Position of the round 3 extra brace
- ✔ Valid and invalid examples
- ✔ Agrees with json decode on random corruptions
-
-Key Leak (AlgebraEngine\Tests\Integration\KeyLeak)
- ✔ No tracked file or zip entry contains a key
- ✔ Scanner detects planted keys
-
 Linear Equation (AlgebraEngine\Tests\Unit\Math\LinearEquation)
  ✔ Unique solutions
  ✔ Degenerate cases
  ✔ Not linear
-
-Live Adapter (AlgebraEngine\Tests\Integration\LiveAdapter)
- ✔ Adapter request format and full journey start
- ✔ Empty content and internal words are repaired not shown
- ✔ Thinking settings are explicit
- ✔ Reasoning content is never kept and truncation is recorded
- ✔ Network failure diagnostics are logged
- ✔ Live provider requires explicit settings and https
-
-Math Scenario (AlgebraEngine\Tests\Integration\MathScenario)
- ✔ Math 01 exact rational
- ✔ Math 02 near number
- ✔ Math 03 polynomial expansion
- ✔ Math 06 requested form
- ✔ Math 08 unsafe syntax
- ✔ Math 09 ambiguity
-
-Messy Learner (AlgebraEngine\Tests\Integration\MessyLearner)
- ✔ B 11 unreadable inputs are never scored as wrong
- ✔ B 11 correct answers in loose forms are accepted
 
 Polynomial (AlgebraEngine\Tests\Unit\Math\Polynomial)
  ✔ Distributivity metamorphic
@@ -185,12 +83,6 @@ Polynomial (AlgebraEngine\Tests\Unit\Math\Polynomial)
  ✔ No sampling coincidence
  ✔ Rational coefficients and constants
  ✔ Degree and size limits
-
-Probe After Help (AlgebraEngine\Tests\Integration\ProbeAfterHelp)
- ✔ Second probe correct without help resumes
- ✔ Second probe wrong descends
- ✔ Second probe after help descends
- ✔ At most two probes when skipped
 
 Rational (AlgebraEngine\Tests\Unit\Math\Rational)
  ✔ Reduces and normalises sign
@@ -231,6 +123,116 @@ Scalar Parser (AlgebraEngine\Tests\Unit\Math\ScalarParser)
  ✔ Rejected fails closed with data set "malformed interval"
  ✔ Decimal and fraction are exactly equal
 
+Json Syntax (AlgebraEngine\Tests\Unit\Support\JsonSyntax)
+ ✔ Position of the round 3 extra brace
+ ✔ Valid and invalid examples
+ ✔ Agrees with json decode on random corruptions
+
+Beta Guards (AlgebraEngine\Tests\Integration\BetaGuards)
+ ✔ B 5 non prerequisite proposal rejected
+ ✔ B 6 host key governs and item flagged
+ ✔ B 7 hint makes item assisted
+ ✔ B 8 disclosure guard rejects leak
+ ✔ Internal vocabulary is repaired not shown
+ ✔ Support claim in model text is repaired not shown
+ ✔ B 8 repeated leak holds
+ ✔ D 1 hint and i dont know give smaller questions
+ ✔ Repair opening never holds on its own facts
+ ✔ B 9 prompts carry no anchor or example content
+
+Beta Journey (AlgebraEngine\Tests\Integration\BetaJourney)
+ ✔ B 1 distribution journey
+ ✔ B 2 probe correct no descent
+ ✔ B 3 deep descent and return
+ ✔ B 3 prerequisite success stops descent
+ ✔ B 4 beta boundary
+ ✔ B 10 stuck step goes directly to its prerequisite
+ ✔ B 10 stuck step at a boundary is recorded not failed
+ ✔ Random scripted journeys complete without holds
+ ✔ B 12 re ask shows no model text
+ ✔ B 13 repair keeps the failed sign pattern
+ ✔ Every beta skill can start and score
+
+Deploy Coverage (AlgebraEngine\Tests\Integration\DeployCoverage)
+ ✔ Cover 01 capability matrix
+ ✔ Deploy 01 private files not served
+ ✔ Deploy 02 missing extension
+
+Evidence (AlgebraEngine\Tests\Integration\Evidence)
+ ✔ Evid 01 hint independence
+ ✔ Evid 02 freshness
+ ✔ Evid 03 numeric only skill
+ ✔ Evid 04 immediate versus retention
+ ✔ Evid 05 correction cascade
+ ✔ Evid 06 untested map
+
+Flow (AlgebraEngine\Tests\Integration\Flow)
+ ✔ Entry 01 known topic
+ ✔ Flow 01 distribution journey
+ ✔ Flow 02 deeper repair
+ ✔ Flow 03 switch target
+ ✔ Flow 04 single correct probe
+ ✔ Flow 05 alternative dependencies
+ ✔ Flow 06 budget boundary
+ ✔ Flow 07 stop while pending
+
+Host (AlgebraEngine\Tests\Integration\Host)
+ ✔ Host 01 duplicate submit
+ ✔ Concurrent request refused while pending
+ ✔ Host 02 idempotency conflict
+ ✔ Host 03 stale tab
+ ✔ Host 04 late lease discarded
+ ✔ Slow provider holds before lease runs out
+ ✔ Host 05 empty and truncated output
+ ✔ Host 06 forged promotion rejected
+ ✔ Host 07 missing curriculum
+ ✔ Host 08 no answer leakage
+ ✔ Host 09 prompt injection is data
+ ✔ Host 10 cross session access denied
+ ✔ Host 11 csrf
+ ✔ Host 12 input preserved on timeout
+ ✔ Host 13 binding modes
+ ✔ Host 14 context replacement
+ ✔ Host 15 counter binding
+ ✔ Host 16 forget and expiry
+ ✔ Host 17 cost limits
+
+Independent Evidence (AlgebraEngine\Tests\Integration\IndependentEvidence)
+ ✔ B 14 independent items show host line only
+ ✔ B 14 discarded text is not stored
+ ✔ B 14b hint means no without help message
+ ✔ B 14b item shown with model text is not counted
+
+Key Leak (AlgebraEngine\Tests\Integration\KeyLeak)
+ ✔ No tracked file or zip entry contains a key
+ ✔ Scanner detects planted keys
+
+Live Adapter (AlgebraEngine\Tests\Integration\LiveAdapter)
+ ✔ Adapter request format and full journey start
+ ✔ Empty content and internal words are repaired not shown
+ ✔ Thinking settings are explicit
+ ✔ Reasoning content is never kept and truncation is recorded
+ ✔ Network failure diagnostics are logged
+ ✔ Live provider requires explicit settings and https
+
+Math Scenario (AlgebraEngine\Tests\Integration\MathScenario)
+ ✔ Math 01 exact rational
+ ✔ Math 02 near number
+ ✔ Math 03 polynomial expansion
+ ✔ Math 06 requested form
+ ✔ Math 08 unsafe syntax
+ ✔ Math 09 ambiguity
+
+Messy Learner (AlgebraEngine\Tests\Integration\MessyLearner)
+ ✔ B 11 unreadable inputs are never scored as wrong
+ ✔ B 11 correct answers in loose forms are accepted
+
+Probe After Help (AlgebraEngine\Tests\Integration\ProbeAfterHelp)
+ ✔ Second probe correct without help resumes
+ ✔ Second probe wrong descends
+ ✔ Second probe after help descends
+ ✔ At most two probes when skipped
+
 Scenario Map (AlgebraEngine\Tests\Integration\ScenarioMap)
  ✔ Every scenario is implemented or deferred with a reason
 
@@ -248,16 +250,6 @@ Summary Wording (AlgebraEngine\Tests\Integration\SummaryWording)
  ✔ Summary prose uses plain words
  ✔ Plain words for stored text
 
-Templates (AlgebraEngine\Tests\Unit\Items\Templates)
- ✔ Every template generates valid items whose host key checks correct
- ✔ Parameter bounds are enforced
- ✔ Grouped linear signatures are distinct and branch correctly
- ✔ Contrast keys are derived from the displayed equations
- ✔ Option order is randomised per item
- ✔ Every guided step is tagged with the skill it exercises
- ✔ Structural features are kept by the planner
- ✔ Gate rejects a proposal that changes a kept feature
- ✔ Opening facts never contain a step answer
- ✔ Guided plans are questions that never state their answer
+Time: 00:51.364, Memory: 254.00 MB
 
 OK (198 tests, 38931 assertions)

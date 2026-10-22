@@ -31,7 +31,7 @@ TXT;
 
     private ?array $skeleton = null;
 
-    public function __construct(private readonly SchemaValidator $schemas)
+    public function __construct(private SchemaValidator $schemas)
     {
     }
 

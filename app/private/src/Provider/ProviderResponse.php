@@ -11,13 +11,13 @@ final class ProviderResponse
      * @param ?array{curl_errno:int,stage:string,elapsed_ms:int} $diagnostics transport detail for a network failure
      */
     public function __construct(
-        public readonly ?string $content,
-        public readonly ?string $finishReason = 'stop',
-        public readonly ?string $error = null,
-        public readonly ?int $httpStatus = null,
-        public readonly array $usage = [],
-        public readonly ?int $durationMs = null,
-        public readonly ?array $diagnostics = null,
+        public ?string $content,
+        public ?string $finishReason = 'stop',
+        public ?string $error = null,
+        public ?int $httpStatus = null,
+        public array $usage = [],
+        public ?int $durationMs = null,
+        public ?array $diagnostics = null,
     ) {
     }
 

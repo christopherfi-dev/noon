@@ -39,11 +39,22 @@ final class KeyLeakTest extends TestCase
             file_put_contents("$dir/b.txt", "value=$literal\n");
             file_put_contents("$dir/c.txt", "sk-short, risk-assessment and task-based-assessment-for-learning are fine\n");
             file_put_contents("$dir/d.txt", "OPENAI=$prefixed\n");
-            $zip = new \ZipArchive();
-            $zip->open("$dir/u.zip", \ZipArchive::CREATE);
-            $zip->addFromString('private/config.php', "<?php return ['provider_api_key' => '$fake'];");
-            $zip->addFromString('public/index.html', '<p>clean</p>');
-            $zip->close();
+            $entries = ['private/config.php' => "<?php return ['provider_api_key' => '$fake'];", 'public/index.html' => '<p>clean</p>'];
+            if (class_exists(\ZipArchive::class)) {
+                $zip = new \ZipArchive();
+                $zip->open("$dir/u.zip", \ZipArchive::CREATE);
+                foreach ($entries as $name => $content) {
+                    $zip->addFromString($name, $content);
+                }
+                $zip->close();
+            } else {
+                // Round PHP80: the PHP 8.0 gate image has no zip extension; PharData writes the same ZIP.
+                $zip = new \PharData("$dir/u.zip", 0, null, \Phar::ZIP);
+                foreach ($entries as $name => $content) {
+                    $zip->addFromString($name, $content);
+                }
+                unset($zip);
+            }
             $r = \key_leak_scan(["$dir/a.txt", "$dir/b.txt", "$dir/c.txt", "$dir/d.txt"], ["$dir/u.zip"], $literal, $dir);
             $this->assertSame([
                 'a.txt: matches sk-[A-Za-z0-9]{20,}',

@@ -6,7 +6,6 @@ namespace AlgebraEngine\Tests\Unit\Math;
 use AlgebraEngine\Math\MathInputError;
 use AlgebraEngine\Math\Rational;
 use AlgebraEngine\Math\ScalarParser;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class ScalarParserTest extends TestCase
@@ -33,7 +32,7 @@ final class ScalarParserTest extends TestCase
         ];
     }
 
-    #[DataProvider('accepted')]
+    /** @dataProvider accepted */
     public function testAccepted(string $input, string $expected, ?string $variable): void
     {
         self::assertSame($expected, ScalarParser::parse($input, $variable)->toString());
@@ -61,7 +60,7 @@ final class ScalarParserTest extends TestCase
         ];
     }
 
-    #[DataProvider('rejected')]
+    /** @dataProvider rejected */
     public function testRejectedFailsClosed(string $input, string $code, ?string $variable): void
     {
         try {

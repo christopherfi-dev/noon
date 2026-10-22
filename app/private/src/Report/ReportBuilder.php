@@ -22,7 +22,7 @@ use AlgebraEngine\Support\Time;
  */
 final class ReportBuilder
 {
-    public function __construct(private readonly CurriculumRepository $curriculum, private readonly SchemaValidator $schemas)
+    public function __construct(private CurriculumRepository $curriculum, private SchemaValidator $schemas)
     {
     }
 

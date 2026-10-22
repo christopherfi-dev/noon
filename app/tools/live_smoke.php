@@ -37,7 +37,7 @@ if ($logPath !== '') {
     $transport = new class ($logPath) implements AlgebraEngine\Provider\HttpTransport {
         private AlgebraEngine\Provider\CurlTransport $inner;
 
-        public function __construct(private readonly string $path)
+        public function __construct(private string $path)
         {
             $this->inner = new AlgebraEngine\Provider\CurlTransport();
         }

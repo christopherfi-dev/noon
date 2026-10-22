@@ -1,0 +1,4 @@
+php:8.0-cli image (digest sha256:0569e384b9064c04dec55dc6e41be41b494a878dfbb6577a7d76bd50cfd5bc00)
+PHP 8.0.30 (cli) (built: Nov 21 2023 16:10:15) ( NTS )
+SQLite 3.34.1; zip extension: no
+2026-10-22T12:16:57Z – 2026-10-22T12:18:02Z

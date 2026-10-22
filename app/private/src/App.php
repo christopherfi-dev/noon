@@ -28,21 +28,21 @@ use AlgebraEngine\Workflow\TransitionGuard;
 /** Builds the object graph from private configuration. */
 final class App
 {
-    public readonly Store $store;
-    public readonly CurriculumRepository $curriculum;
-    public readonly ItemFactory $factory;
-    public readonly SchemaValidator $schemas;
-    public readonly ProviderAdapter $provider;
-    public readonly PromptAssembler $assembler;
-    public readonly ModelCoordinator $model;
-    public readonly Engine $engine;
-    public readonly PublicProjection $projection;
-    public readonly TransitionGuard $guard;
-    public readonly Clock $clock;
-    public readonly string $architecture;
+    public Store $store;
+    public CurriculumRepository $curriculum;
+    public ItemFactory $factory;
+    public SchemaValidator $schemas;
+    public ProviderAdapter $provider;
+    public PromptAssembler $assembler;
+    public ModelCoordinator $model;
+    public Engine $engine;
+    public PublicProjection $projection;
+    public TransitionGuard $guard;
+    public Clock $clock;
+    public string $architecture;
 
     public function __construct(
-        public readonly Config $config,
+        public Config $config,
         ?Clock $clock = null,
         ?ProviderAdapter $provider = null,
         ?CurriculumRepository $curriculum = null,

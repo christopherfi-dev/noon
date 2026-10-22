@@ -12,7 +12,7 @@ final class Database
     private \PDO $pdo;
     private int $depth = 0;
 
-    public function __construct(string $path, private readonly string $migrationsDir)
+    public function __construct(string $path, private string $migrationsDir)
     {
         if (!extension_loaded('pdo_sqlite')) {
             throw new StorageUnavailable('PDO_SQLITE_MISSING');

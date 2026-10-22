@@ -11,14 +11,14 @@ final class Request
      * @param array<string,string> $cookies
      */
     public function __construct(
-        public readonly string $method,
-        public readonly array $query,
-        public readonly array $headers,
-        public readonly array $cookies,
-        public readonly string $body,
-        public readonly bool $https,
-        public readonly string $host,
-        public readonly string $scriptDir = '/',
+        public string $method,
+        public array $query,
+        public array $headers,
+        public array $cookies,
+        public string $body,
+        public bool $https,
+        public string $host,
+        public string $scriptDir = '/',
     ) {
     }
 

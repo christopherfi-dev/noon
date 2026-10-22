@@ -22,8 +22,8 @@ final class AcceptanceGate
     public const GUIDED_TEMPLATE = 'GUIDED_STEP';
 
     public function __construct(
-        private readonly ItemFactory $factory,
-        private readonly SchemaValidator $schemas,
+        private ItemFactory $factory,
+        private SchemaValidator $schemas,
     ) {
     }
 

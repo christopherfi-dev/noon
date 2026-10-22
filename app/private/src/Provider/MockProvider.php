@@ -23,7 +23,7 @@ final class MockProvider implements ProviderAdapter
     /** @var list<array{json:bool,messages:list<array>}> */
     public array $log = [];
 
-    public function __construct(private readonly ItemFactory $factory, private readonly string $faultFile = '')
+    public function __construct(private ItemFactory $factory, private string $faultFile = '')
     {
     }
 

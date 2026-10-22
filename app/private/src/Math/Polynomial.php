@@ -24,7 +24,7 @@ final class Polynomial
     /**
      * @param array<string, array{0: Rational, 1: array<string,int>}> $terms monomial key => [coefficient, exponents]
      */
-    private function __construct(private readonly array $terms)
+    private function __construct(private array $terms)
     {
     }
 

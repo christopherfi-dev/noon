@@ -15,7 +15,7 @@ use AlgebraEngine\Config;
  */
 final class OpenAiCompatibleProvider implements ProviderAdapter
 {
-    public function __construct(private readonly Config $config, private readonly HttpTransport $transport)
+    public function __construct(private Config $config, private HttpTransport $transport)
     {
         foreach (['provider_base_url', 'provider_model', 'provider_api_key'] as $k) {
             if (trim($config->string($k)) === '') {

@@ -11,6 +11,11 @@ declare(strict_types=1);
  * The configured key is read from ALGEBRA_CONFIG when set, otherwise from
  * app/private/config.php when present. Output names locations only; it never
  * prints a matched value. Only "key present: yes/no" is reported.
+ *
+ * Round PHP80: runs where git or the zip extension are absent (the PHP 8.0
+ * gate image). ALGEBRA_TRACKED_FILES may name a file holding `git ls-files -z`
+ * output written by the caller; ZIP entries are read with ZipArchive when it
+ * exists, otherwise with PharData (built into PHP).
  */
 
 const KEY_PATTERN = '/sk-[A-Za-z0-9]{20,}/';
@@ -31,6 +36,14 @@ function key_leak_configured_key(string $appRoot): string
 /** Tracked files (git ls-files), relative to the repository root. @return list<string> */
 function key_leak_tracked_files(string $repo): array
 {
+    $list = getenv('ALGEBRA_TRACKED_FILES');
+    if (is_string($list) && $list !== '') {
+        $out = file_get_contents($list);
+        if ($out === false) {
+            throw new RuntimeException('cannot read the tracked-file list ' . $list);
+        }
+        return array_values(array_filter(explode("\0", $out), fn ($f) => $f !== ''));
+    }
     $proc = proc_open(['git', '-C', $repo, 'ls-files', '-z'], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
     if (!is_resource($proc)) {
         throw new RuntimeException('git is required to list tracked files');
@@ -79,36 +92,65 @@ function key_leak_scan(array $files, array $zips, string $key, string $base = ''
     }
     $entries = 0;
     foreach ($zips as $zipPath) {
-        $zip = new ZipArchive();
-        if ($zip->open($zipPath, ZipArchive::RDONLY) !== true) {
+        $list = key_leak_zip_entries($zipPath);
+        if ($list === null) {
             $hits[] = basename($zipPath) . ': cannot be opened for scanning';
             continue;
         }
-        for ($i = 0; $i < $zip->numFiles; $i++) {
+        foreach ($list as [$name, $content]) {
             $entries++;
-            foreach (key_leak_check((string) $zip->getFromIndex($i), $key) as $why) {
-                $hits[] = basename($zipPath) . '!' . $zip->getNameIndex($i) . ': ' . $why;
+            foreach (key_leak_check($content, $key) as $why) {
+                $hits[] = basename($zipPath) . '!' . $name . ': ' . $why;
             }
         }
-        $zip->close();
     }
     return ['files' => $count, 'zip_entries' => $entries, 'hits' => $hits];
+}
+
+/** Every entry of a ZIP as [name, content], in archive order; null when it cannot be opened. @return ?list<array{0:string,1:string}> */
+function key_leak_zip_entries(string $zipPath): ?array
+{
+    $out = [];
+    if (class_exists('ZipArchive')) {
+        $zip = new ZipArchive();
+        if ($zip->open($zipPath, ZipArchive::RDONLY) !== true) {
+            return null;
+        }
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $out[] = [(string) $zip->getNameIndex($i), (string) $zip->getFromIndex($i)];
+        }
+        $zip->close();
+        return $out;
+    }
+    try {
+        $archive = new PharData($zipPath);
+    } catch (Throwable $e) {
+        return null;
+    }
+    $prefix = 'phar://' . realpath($zipPath) . '/';
+    foreach (new RecursiveIteratorIterator($archive) as $file) {
+        $out[] = [substr($file->getPathname(), strlen($prefix)), (string) file_get_contents($file->getPathname())];
+    }
+    return $out;
 }
 
 if (realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__) {
     $app = dirname(__DIR__);
     $repo = dirname($app);
     $key = key_leak_configured_key($app);
-    $zip = $repo . '/dist/algebra-engine-bluehost-upload.zip';
+    // Both upload ZIPs: Bluehost and (round PHP80) the nginx VPS bundle.
+    $zips = [$repo . '/dist/algebra-engine-bluehost-upload.zip', $repo . '/dist/algebra-engine-vps-upload.zip'];
+    $present = array_values(array_filter($zips, 'is_file'));
     $files = array_map(fn ($f) => $repo . '/' . $f, key_leak_tracked_files($repo));
-    $r = key_leak_scan($files, is_file($zip) ? [$zip] : [], $key, $repo);
+    $r = key_leak_scan($files, $present, $key, $repo);
     echo 'Configured key present: ' . ($key !== '' ? 'yes' : 'no') . "\n";
     echo "Tracked files scanned: {$r['files']}\n";
-    echo 'Upload ZIP entries scanned: ' . (is_file($zip) ? $r['zip_entries'] : 'ZIP NOT FOUND') . "\n";
+    echo 'Upload ZIP entries scanned: ' . $r['zip_entries'] . ' (' . implode(', ', array_map('basename', $present)) . ')'
+        . (count($present) < count($zips) ? '; ZIP NOT FOUND: ' . implode(', ', array_map('basename', array_diff($zips, $present))) : '') . "\n";
     foreach ($r['hits'] as $h) {
         echo "LEAK  $h\n";
     }
-    $ok = $r['hits'] === [] && is_file($zip);
+    $ok = $r['hits'] === [] && count($present) === count($zips);
     echo $ok ? "KEY-LEAK SCAN PASSED\n" : "KEY-LEAK SCAN FAILED\n";
     exit($ok ? 0 : 1);
 }

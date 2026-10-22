@@ -13,7 +13,7 @@ final class Store
     public const ARCHITECTURE_VERSION = '1.2';
     public const CURRICULUM_VERSION = '1.1.0';
 
-    public function __construct(public readonly Database $db)
+    public function __construct(public Database $db)
     {
     }
 

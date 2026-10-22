@@ -4,24 +4,30 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.0",
         "ext-json": "*",
         "ext-pdo": "*",
         "ext-pdo_sqlite": "*",
         "opis/json-schema": "2.6.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "11.5.*"
+        "phpunit/phpunit": "9.6.*"
     },
     "autoload": {
-        "psr-4": { "AlgebraEngine\\": "private/src/" }
+        "psr-4": {
+            "AlgebraEngine\\": "private/src/"
+        }
     },
     "autoload-dev": {
-        "psr-4": { "AlgebraEngine\\Tests\\": "tests/" }
+        "psr-4": {
+            "AlgebraEngine\\Tests\\": "tests/"
+        }
     },
     "config": {
         "vendor-dir": "private/vendor",
         "sort-packages": true,
-        "platform": { "php": "8.3.6" }
+        "platform": {
+            "php": "8.0.30"
+        }
     }
 }

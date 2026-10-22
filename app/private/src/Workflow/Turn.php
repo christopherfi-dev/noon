@@ -37,8 +37,8 @@ final class Turn
     public function __construct(
         public array $snap,
         public array $eng,
-        public readonly \DateTimeImmutable $now,
-        public readonly string $action,
+        public \DateTimeImmutable $now,
+        public string $action,
     ) {
         $this->triggerEventId = Ids::make('evt');
     }

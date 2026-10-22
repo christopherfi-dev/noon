@@ -158,3 +158,17 @@ Offline only; no key used.
 | 2026-10-22T11:23:59Z | **Start**. Ruling (1): the boundary case shows "I won't give the answer, but let's try a different problem."; (2)–(4) accepted as implemented | Line added (`LINE_ASK_DIFFERENT_PROBLEM`), P1 test asserts it; capability matrix and acceptance scenarios updated |
 | 2026-10-22T11:24:29Z–11:25:37Z | Full gate with Bluehost upload bundle rebuild (mock config, no key) | PASS — every step exit 0; PHPUnit 198 (38931 assertions); browser 5/5; bundle rebuilt (677 files), smoke 12/12; key-leak scan 0 hits over 330 tracked files and 677 ZIP entries |
 | 2026-10-22T11:25:57Z | **End**. Not deployed | Interval 11:23:59Z–2026-10-22T11:25:57Z |
+
+## Round PHP80 — run on the production server's PHP 8.0 (`CONDUCTOR_ROUND_PHP80.md`)
+
+Separate interval. Offline only: no live run, no key, nothing deployed.
+
+| UTC time | Action | Result |
+|---|---|---|
+| 2026-10-22T11:49:36Z | **Round PHP80 start**. Instructions placed in `CONDUCTOR_ROUND_PHP80.md` | Recorded |
+| 2026-10-22T11:49:51Z–11:52Z | PHP 8.0 runtime: started the Docker daemon; pulled `php:8.0-cli` (PHP 8.0.30, SQLite 3.34.1, no zip extension, no git). Building a derived image failed: Debian mirrors are blocked (403) and Docker Hub then rate-limited further pulls (429) | One PHP 8.0.30 image available |
+| between 11:52Z and 12:12:22Z (exact times not recorded) | §2: composer `php >=8.0`, platform 8.0.30, PHPUnit 9.6.38 (production packages unchanged); `phpunit.xml` for 9.6 (+ memory_limit 512M); 3 `#[DataProvider]` attributes → `@dataProvider`; 98 `readonly` removed in 36 files; 2 `array_is_list()` → private `isList()` helpers; token scan + PHP 8.0 lint of all 124 files + function/class/constant check inside PHP 8.0; preflight requires 8.0 and checks `ctype`; key-leak scan works without git (tracked list from the caller) or the zip extension (PharData); nginx VPS bundle and its smoke checks; docs (`README.md`, `DEPLOYMENT.md`, new `DEPLOYMENT_VPS.md`) | PHPUnit 198 PASS on 8.3 (PHPUnit 9.6); on `php:8.0-cli` all pass except DEPLOY-02 (the image compiles pdo_sqlite in, so `php -n` cannot remove it) |
+| 2026-10-22T12:12:22Z | Native PHP 8.0.30 built from the official `php-8.0.30.tar.xz` (sha256 216ab305…d777d9, the tarball in `php:8.0-cli`), extensions as shared modules like AlmaLinux packages; one-line OpenSSL 3 build fix (`#ifdef RSA_SSLV23_PADDING`) | `PHP 8.0.30 (cli) (built: Oct 22 2026 12:12:22) ( NTS )`; `php -n` drops pdo_sqlite |
+| 2026-10-22T12:14:08Z–12:15:23Z | Full gate on PHP 8.3.6 | PASS — every step exit 0; PHPUnit 198; browser 5/5; both bundles built; smoke PASS (Bluehost + VPS); key-leak 0 hits (330 files, 1341 ZIP entries). Saved in `test-results/gate-php83/` |
+| 2026-10-22T12:15:30Z–12:16:40Z | Full gate on native PHP 8.0.30 (every PHP step, including the bundle build) | PASS — every step exit 0; preflight PASS; PHPUnit 198; browser 5/5; bundles built; smoke PASS (Bluehost + VPS); key-leak 0 hits. Saved in `test-results/gate-php80/`; the committed ZIPs are from this run |
+| 2026-10-22T12:16:57Z–12:18:02Z | Supplementary on `php:8.0-cli` (SQLite 3.34.1, no zip extension) | PHPUnit 197 PASS (DEPLOY-02 excluded, reason above); smoke PASS; key-leak PASS via PharData. Saved in `test-results/supplementary-php80-image/` |
