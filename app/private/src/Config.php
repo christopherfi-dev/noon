@@ -36,6 +36,7 @@ final class Config
         'working_max' => 4000,
         'provider_result_max' => 65536,
         'default_session_minutes' => 20,
+        'progress_retention_days' => 90,    // round UI v3 (U10): progress records are kept this long after their last use
         'continuation_target_items' => 10,
         'access_gate_token' => '',          // optional private-pilot gate
         'mock_fault_file' => '',            // test harness only; never set in production

@@ -138,7 +138,7 @@ final class SummaryWordingTest extends TestCase
             $this->assertArrayHasKey('summary', $s, $name);
             $learner = $s['summary']['learner'];
             $teacher = $s['summary']['teacher'];
-            $this->assertSame(['worked_on', 'goals_met', 'hard', 'next', 'note'], array_keys($learner), $name);
+            $this->assertSame(['did_well', 'trouble', 'worked_on', 'next_time', 'headings', 'empty', 'note', 'earlier'], array_keys($learner), $name);
             foreach (['learner' => $learner, 'teacher' => $teacher] as $level => $data) {
                 $this->assertSame([], self::duplicates($data), "$name $level: a list repeats a line");
                 foreach (self::strings($data) as [$path, $text]) {
@@ -170,11 +170,11 @@ final class SummaryWordingTest extends TestCase
             $this->assertStringContainsString('These results describe this session only', $learner['note']);
         }
         $b1 = $this->summaries()['B1']['summary'];
-        $this->assertCount(2, $b1['learner']['goals_met']);
-        foreach ($b1['learner']['goals_met'] as $g) {
+        $this->assertCount(2, $b1['learner']['did_well']);
+        foreach ($b1['learner']['did_well'] as $g) {
             $this->assertStringContainsString('goal met: 3 correct in a row without help', $g);
         }
-        $this->assertSame(['Apply the distributive property with positive factors: you worked through it step by step with help.'], $b1['learner']['hard']);
+        $this->assertContains('Apply the distributive property with positive factors: 1 answer was not right yet; you used help.', $b1['learner']['trouble']);
         $q07 = $b1['teacher']['skills'][0];
         $this->assertSame('Solve equations containing parentheses (Q07)', $q07['name']);
         $this->assertCount(1, $q07['observed'], 'the same observation is listed once');

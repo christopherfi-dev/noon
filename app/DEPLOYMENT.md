@@ -43,7 +43,9 @@ no file-based fallback.
 1. In `algebra-private/`, copy `config.example.php` to `config.php`.
 2. Edit `config.php`. Mock mode needs no changes. Set `'base_path' =>
    '/algebra/'` so the cookie is scoped to the app.
-3. Set permissions: `config.php` 600; `algebra-private/var/` 700.
+3. Set permissions: `config.php` 600. The app creates `algebra-private/var/`
+   (permissions 700) for its database on first use; the ZIP contains no
+   `config.php` and nothing inside `var/`.
 4. Optional private pilot: set `access_gate_token`. Every request must then
    carry it (cookie `ae_gate` or header `X-Access-Gate`).
 5. Live provider (only after the owner chooses one): set `provider` to
@@ -133,3 +135,25 @@ adapter compatibility, not teaching quality.
   browser storage.
 - Answers are stored in the private SQLite file for the browser
   session; "Forget this session" deletes them.
+
+## Updating an existing install
+
+The upload ZIP contains no `config.php` and nothing inside `var/`, so it never
+replaces your settings or your database. Sessions in progress continue after
+the update; on the first request the app adds the progress-code table to the
+database without deleting or rewriting existing data.
+
+1. Back up `algebra-private/config.php` and the folder `algebra-private/var/`
+   (cPanel → *File Manager* → *Compress*, then download).
+2. Delete these code folders and files inside `algebra-private/`: `bin`,
+   `migrations`, `resources`, `src`, `vendor`, `bootstrap.php`,
+   `composer.json`, `config.example.php`. Keep `config.php` and `var/`.
+3. Delete `public_html/algebra/` and extract the new ZIP in your home folder as
+   in §2. Because the ZIP holds no `config.php` and no `var/` files, your
+   settings and database are untouched.
+4. Run the preflight (`php algebra-private/bin/preflight.php
+   --public=public_html/algebra`). It must end with `PREFLIGHT PASSED`; its
+   `SCHEMA` line says whether a database update is still to be applied (the app
+   applies it on the next request).
+5. If `config.php` has no `progress_retention_days` line, progress records are
+   kept 90 days after their last use.

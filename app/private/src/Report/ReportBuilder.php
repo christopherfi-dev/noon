@@ -250,7 +250,7 @@ final class ReportBuilder
             'policy_version' => '1.0',
         ];
         // Round UI (U2): the summary page's learner and teacher levels, in plain words.
-        $built['summary'] = (new SummaryView($this->curriculum))->build($built, $events, $provider);
+        $built['summary'] = (new SummaryView($this->curriculum))->build($built, $events, $provider, $row['engine']['progress']['earlier'] ?? []);
         return $built;
     }
 

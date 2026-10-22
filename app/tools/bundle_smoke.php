@@ -215,5 +215,14 @@ if (is_file($vpsZip) && is_dir($vpsStage)) {
         rmrfSmoke($tmp);
     }
 }
+// ---------------------------------------------------------------- 3. upgrade safety (round UI v3, U11)
+echo "== Upgrade safety (both upload zips)\n";
+foreach ([$dist . '/algebra-engine-bluehost-upload.zip', $vpsZip] as $zipPath) {
+    $names = array_keys(is_file($zipPath) ? zipEntries($zipPath) : []);
+    $config = array_values(array_filter($names, fn ($n) => preg_match('#(^|/)config\.php$#', $n) === 1));
+    $var = array_values(array_filter($names, fn ($n) => preg_match('#^[^/]+/var/.#', $n) === 1));
+    $check(basename($zipPath) . ': no config.php, nothing inside var/', $names !== [] && $config === [] && $var === [], implode(', ', array_merge($config, $var)) ?: count($names) . ' entries');
+    $check(basename($zipPath) . ': carries migration 004 (progress codes)', (bool) array_filter($names, fn ($n) => str_ends_with($n, '/migrations/004_progress.sql')));
+}
 echo $fail === 0 ? "BUNDLE SMOKE PASSED\n" : "BUNDLE SMOKE FAILED ($fail)\n";
 exit($fail === 0 ? 0 : 1);

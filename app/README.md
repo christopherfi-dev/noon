@@ -35,7 +35,14 @@ signatures), `Items\SocraticPlanner` (D1 question-only repair plans),
 envelope schema + semantic checks, bounded repair), `Provider\DisclosureGuard`
 (D1 answer-leak heuristic), `Provider\PromptAssembler` (trusted blocks, F2
 skeleton), `Evidence\CriteriaCalculator` (criteria recomputed from the
-ledger), `Report\ReportBuilder`, `Http\Api`, `Workflow\PublicProjection`.
+ledger), `Report\ReportBuilder`, `Report\SummaryView` (the learner and teacher
+levels of the summary), `Report\ReportHtml` (the downloadable report),
+`Progress\ProgressCode` + `Progress\ProgressRecord` (progress codes; the server
+keeps only each code's sha256), `Http\Api`, `Workflow\PublicProjection`.
+
+Updating a server that already runs an earlier version: "Updating an existing
+install" in `DEPLOYMENT_VPS.md` (nginx) or `DEPLOYMENT.md` (Bluehost). The
+upload ZIPs contain no `config.php` and nothing inside `var/`.
 
 ## Run locally
 

@@ -1,6 +1,6 @@
 // Browser tests (mock mode): B1 end to end at 360x740 and 1280x800, UI-01
 // (mobile keyboard and screen-reader status), UI-02 (safe rendering), UI-03
-// (skill map) and the round UI checks UI-04 to UI-06 at 390 and 1280 wide.
+// (skill map), the round UI checks UI-04 to UI-06 and the round UI v3 check UI-07, at 390 and 1280 wide.
 // Usage: node app/tests/Browser/run_browser.mjs <out_dir>
 import { createRequire } from 'module';
 import { execFileSync, spawn } from 'child_process';
@@ -248,7 +248,9 @@ try {
       && (await page.getByTestId('stuck').getAttribute('aria-expanded')) === 'true';
     await page.getByTestId('hint').focus();
     await page.keyboard.press('Escape');
-    checks.u5EscapeCloses = (await menuLabels(page)).length === 0 && await page.evaluate(() => document.activeElement?.getAttribute('data-testid') === 'stuck');
+    // Round UI v3 (U5): closing the menu returns focus to the answer field.
+    await page.waitForFunction(() => document.activeElement?.getAttribute('data-testid') === 'answer-input', null, { timeout: 2000 }).catch(() => {});
+    checks.u5EscapeCloses = (await menuLabels(page)).length === 0 && await page.evaluate(() => document.activeElement?.getAttribute('data-testid') === 'answer-input');
     checks.u4NoWorkingBox = (await page.locator('textarea').count()) === 0;
 
     await answer(page, correct());
@@ -293,7 +295,9 @@ try {
     checks.u7ProbeNoDots = (await dots(page)) === null && (await page.getByTestId('goal-note').textContent()).includes('does not count toward the goal');
     await answer(page, oracle().active.signatures.DIST_X_ONLY);
     const p = oracle().active.params;
-    checks.u7BuildingBlockDots = (await dots(page)).filled === 0 && (await page.getByTestId('progress-context').textContent()).startsWith('Building block: ');
+    // Round UI v3 (U7): a single building-block check shows no dots.
+    checks.u7BuildingBlockNoDots = (await dots(page)) === null && (await page.getByTestId('progress-context').textContent()).startsWith('Building block: ')
+      && (await page.getByTestId('goal-note').textContent()).includes('One question to check this building block.');
     await answer(page, `${p.a}x+${p.b}`);
 
     // U1, U5, U6 in guided repair.
@@ -302,8 +306,24 @@ try {
     checks.u5Guided = JSON.stringify(await controlLabels(page)) === JSON.stringify(['Submit', "I'm stuck"]);
     checks.u6 = (await page.locator('[data-testid="assisted-tag"]').count()) === 1 && !/with help|not counted/i.test(await page.getByTestId('progress').textContent());
     await page.getByTestId('stuck').click();
-    checks.u5GuidedMenu = JSON.stringify(await menuLabels(page)) === JSON.stringify(['Give me a hint', "I don't know"]);
+    checks.u5GuidedMenu = JSON.stringify(await menuLabels(page)) === JSON.stringify(['Give me a hint', 'Explain the idea', "I don't know"]);
     await shot('05-guided-step-im-stuck-open');
+    // Round UI v3 (U5): the menu by keyboard; closing returns focus to the answer field.
+    await page.getByTestId('stuck').click(); // closing returns focus to the answer field
+    await page.waitForFunction(() => document.activeElement?.getAttribute('data-testid') === 'answer-input');
+    await page.getByTestId('stuck').focus();
+    await page.keyboard.press('Enter'); // opens the menu and moves to its first choice
+    const firstFocused = await page.evaluate(() => document.activeElement?.textContent);
+    await page.keyboard.press('ArrowDown');
+    const secondFocused = await page.evaluate(() => document.activeElement?.textContent);
+    await page.keyboard.press('End');
+    const lastFocused = await page.evaluate(() => document.activeElement?.textContent);
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => document.activeElement?.getAttribute('data-testid') === 'answer-input', null, { timeout: 2000 }).catch(() => {});
+    checks.u5Keyboard = firstFocused === 'Give me a hint' && secondFocused === 'Explain the idea' && lastFocused === "I don't know"
+      && (await menuLabels(page)).length === 0 && (await page.getByTestId('stuck').getAttribute('aria-expanded')) === 'false'
+      && await page.evaluate(() => document.activeElement?.getAttribute('data-testid') === 'answer-input');
+    await page.getByTestId('stuck').click();
     const before = sent.length;
     await page.getByTestId('hint').click();
     await idle(page);
@@ -320,8 +340,11 @@ try {
     checks.u2Collapsed = (await details.evaluate((d) => d.open)) === false;
     const learnerText = await page.getByTestId('learner-summary').textContent();
     const learnerHeadings = await page.locator('[data-testid="learner-summary"] h2').allTextContents();
-    checks.u2Learner = JSON.stringify(learnerHeadings) === JSON.stringify(['What you worked on', 'Goals met', 'What was hard', 'What to practise next'])
+    checks.u2Learner = JSON.stringify(learnerHeadings) === JSON.stringify(['What you did well', 'Where you had trouble', 'What we worked on', 'What to work on next time'])
       && !/\b[A-Z]\d{2}\b/.test(learnerText) && learnerText.includes('goal met: 3 correct in a row without help');
+    // Round UI v3 (U9): "Download report" and "Print or save as PDF"; the JSON record sits inside the teacher details.
+    checks.u9Buttons = (await page.getByTestId('download-report').textContent()) === 'Download report' && (await page.getByTestId('print-report').textContent()) === 'Print or save as PDF'
+      && (await page.locator('[data-testid="teacher-details"] [data-testid="download-json"]').count()) === 1;
     await shot('09-learner-summary');
     await page.getByTestId('teacher-toggle').click();
     checks.u2Opened = await details.evaluate((d) => d.open);
@@ -409,6 +432,87 @@ try {
     const pass = ok(out.light) && ok(out.dark) && errors.length === 0;
     record('UI-06 result blocks meet WCAG AA contrast in light and dark mode', pass, { out, consoleErrors: errors });
     await ctx.close();
+  }
+
+  // UI-07 (round UI v3, U9/U10): the code during a session, "Welcome back" on another device, the
+  // take-over message on the first device, and the downloaded report opened in a browser.
+  for (const [w, h, label] of [[390, 844, 'mobile'], [1280, 800, 'desktop']]) {
+    resetDb();
+    const A = await newPage(browser, w, h);
+    const B = await newPage(browser, w, h);
+    const shotOf = (page, name) => page.screenshot({ path: path.join(uiDir, `${name}-${w}.png`), fullPage: true });
+    const checks = {};
+    const page = A.page;
+    await page.goto(base);
+    await page.getByTestId('start-default').click();
+    await page.getByTestId('workspace').waitFor();
+    await idle(page);
+    checks.noCodeBeforeAnswer = (await page.getByTestId('your-code').count()) === 0;
+    await answer(page, oracle().active.signatures.DIST_X_ONLY);
+    await page.getByTestId('your-code').waitFor();
+    const code = (await page.getByTestId('code-value').textContent()).trim();
+    checks.codeShownAfterFirstAnswer = /^[2-9A-HJKMNP-Z]{4}-[2-9A-HJKMNP-Z]{4}-[2-9A-HJKMNP-Z]{4}$/.test(code)
+      && (await page.getByTestId('your-code').textContent()).includes('Write this down or download your report to continue next time.');
+    await answer(page, oracle().active.signatures.DIST_X_ONLY);
+    const p = oracle().active.params;
+    await answer(page, `${p.a}x+${p.b}`);
+    checks.stillSameCode = (await page.getByTestId('code-value').textContent()).trim() === code;
+    await shotOf(page, '13-code-during-session');
+    const promptOnA = await page.getByTestId('prompt').textContent();
+
+    // Another device: the code typed in lower case without dashes.
+    const pb = B.page;
+    await pb.goto(base);
+    await pb.getByTestId('code-input').fill(code.replace(/-/g, '').toLowerCase());
+    await pb.getByTestId('code-continue').click();
+    await pb.getByTestId('welcome-back').waitFor();
+    const wbHeadings = await pb.locator('[data-testid="welcome-back"] h3').allTextContents();
+    checks.welcomeBack = JSON.stringify(wbHeadings) === JSON.stringify(['What you did well', 'Where you had trouble', 'What we worked on', 'What to work on next time'])
+      && (await pb.getByTestId('code-start').textContent()).includes('continue where you stopped');
+    await shotOf(pb, '12-welcome-back-after-entering-a-code');
+    await pb.getByTestId('code-start').click();
+    await pb.getByTestId('workspace').waitFor();
+    await idle(pb);
+    checks.continuedExactly = (await pb.getByTestId('prompt').textContent()) === promptOnA && (await pb.getByTestId('code-value').textContent()).trim() === code;
+
+    // The first device: its next answer is refused, and it says why.
+    await page.getByTestId('answer-input').fill('1');
+    await page.getByTestId('submit').click();
+    await page.getByTestId('moved').waitFor();
+    checks.movedMessage = (await page.getByTestId('moved').textContent()).includes('This progress continued on another device.')
+      && (await page.getByTestId('answer-input').count()) === 0;
+    await page.reload();
+    await page.getByTestId('moved').waitFor();
+    checks.movedAfterReload = (await page.getByTestId('moved').textContent()).includes('This progress continued on another device.');
+    await shotOf(page, '14-continued-on-another-device');
+
+    // The downloaded report, opened in a browser.
+    pb.removeAllListeners('dialog');
+    pb.on('dialog', (d) => d.accept()); // "End this session and see your summary?"
+    await pb.getByTestId('end-session').click();
+    await idle(pb);
+    await pb.getByTestId('view-report').click();
+    await pb.getByTestId('report').waitFor();
+    const [download] = await Promise.all([pb.waitForEvent('download'), pb.getByTestId('download-report').click()]);
+    const file = path.join(tmp, `report-${w}.html`);
+    await download.saveAs(file);
+    const html = fs.readFileSync(file, 'utf8');
+    checks.downloadName = /^algebra-report-\d{4}-\d{2}-\d{2}\.html$/.test(download.suggestedFilename());
+    checks.downloadSelfContained = html.includes('<style>') && !/<script|https?:\/\/|<link|<img|url\(/i.test(html) && html.includes(code) && !html.includes('<details');
+    const viewer = await B.ctx.newPage();
+    const requests = [];
+    viewer.on('request', (r) => { if (!r.url().startsWith('file:')) requests.push(r.url()); });
+    await viewer.goto('file://' + file);
+    const viewerText = await viewer.locator('body').textContent();
+    checks.downloadOpens = ['What you did well', 'Where you had trouble', 'What we worked on', 'What to work on next time', 'Details for teachers', 'Your code'].every((t) => viewerText.includes(t)) && requests.length === 0;
+    checks.downloadNoOverflow = await viewer.evaluate(() => document.documentElement.scrollWidth - window.innerWidth) <= 0;
+    await viewer.screenshot({ path: path.join(uiDir, `11-downloaded-report-opened-${w}.png`), fullPage: true });
+    // The refused answer on the first device is an expected 409, which the browser logs as a failed load.
+    const unexpected = [...A.errors.filter((e) => !e.includes('status of 409')), ...B.errors];
+    const pass = Object.values(checks).every(Boolean) && unexpected.length === 0 && A.errors.length <= 1;
+    record(`UI-07 progress code, welcome back, take-over and downloaded report (${label} ${w}x${h})`, pass, { checks, consoleErrors: [...A.errors, ...B.errors] });
+    await A.ctx.close();
+    await B.ctx.close();
   }
 } finally {
   await browser.close();

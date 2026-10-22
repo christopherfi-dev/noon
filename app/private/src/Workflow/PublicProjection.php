@@ -83,7 +83,8 @@ final class PublicProjection
             return [];
         }
         if ($mode === 'SESSION_REPORT') {
-            return ['END_SESSION'];
+            // Round UI v3 (U10): "Next:" to the route target uses the change-topic path.
+            return ($eng['menu']['menu_id'] ?? null) === 'next-target' ? ['CHANGE_TARGET', 'END_SESSION'] : ['END_SESSION'];
         }
         if ($eng['status'] === 'HOLD') {
             return match ($eng['hold_kind']) {
@@ -111,6 +112,9 @@ final class PublicProjection
         $actions[] = 'END_SESSION';
         return $actions;
     }
+
+    /** Round UI v3 (U7): modes whose answers count toward a run of three. */
+    public const STREAK_MODES = ['TARGET_ASSESSMENT', 'INDEPENDENT_CHECK', 'RETURN_TO_TARGET'];
 
     /**
      * The label's first line names the skill when it is not the topic; the
@@ -142,7 +146,8 @@ final class PublicProjection
         } else {
             $lines = [$skill !== $snap['original_target_skill_id'] ? 'Building block: ' . $this->curriculum->title($skill) . '.' : ''];
             $active = $eng['active'];
-            if ($active !== null && in_array($active['role'], CriteriaCalculator::COUNTED_ROLES, true)) {
+            // Round UI v3 (U7): the goal line only in modes whose answers build a run of three.
+            if ($active !== null && in_array($mode, self::STREAK_MODES, true) && in_array($active['role'], CriteriaCalculator::COUNTED_ROLES, true)) {
                 $lines[] = min($streak, CriteriaCalculator::REQUIRED) . ' of ' . CriteriaCalculator::REQUIRED . ' in a row without help';
                 $needed = array_values(array_diff(BetaScope::VARIANTS, $covered));
                 if (BetaScope::threeVariant($skill) && $needed !== []) {
@@ -153,6 +158,8 @@ final class PublicProjection
                 }
             } elseif ($active !== null && $active['role'] === 'DIAGNOSTIC') {
                 $lines[] = 'This question helps choose what to practise. It does not count toward the goal.';
+            } elseif ($active !== null && $mode === 'PREREQUISITE_CHECK') {
+                $lines[] = 'One question to check this building block.';
             }
             $label = implode("\n", $lines);
         }

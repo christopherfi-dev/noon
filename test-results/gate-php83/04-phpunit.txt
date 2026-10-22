@@ -237,6 +237,28 @@ Probe After Help (AlgebraEngine\Tests\Integration\ProbeAfterHelp)
  ✔ Second probe after help descends
  ✔ At most two probes when skipped
 
+Progress Code (AlgebraEngine\Tests\Integration\ProgressCode)
+ ✔ Created at first answer and updated in the same transaction
+ ✔ Closed mid repair resumes at the repair skill then offers next
+ ✔ Live session continues exactly and take over
+ ✔ Take over waits for an answer in flight
+ ✔ All goals met
+ ✔ Earlier goals labelled and not counted
+ ✔ Normalisation and generic error
+ ✔ Rate limit
+ ✔ Expiry
+ ✔ Forget deletes the record
+ ✔ Start over leaves the record untouched
+ ✔ Lost code is replaced only before it was shown
+ ✔ Retention default when config lacks the key
+ ✔ Code format
+
+Report Download (AlgebraEngine\Tests\Integration\ReportDownload)
+ ✔ Empty headings use their fixed lines
+ ✔ Learner headings for the b 1 journey
+ ✔ Downloaded report is self contained
+ ✔ Download escapes text
+
 Scenario Map (AlgebraEngine\Tests\Integration\ScenarioMap)
  ✔ Every scenario is implemented or deferred with a reason
 
@@ -264,6 +286,10 @@ Ui Round (AlgebraEngine\Tests\Integration\UiRound)
  ✔ U 8 result words
  ✔ U 4 working removed
 
-Time: 00:30.700, Memory: 248.00 MB
+Upgrade (AlgebraEngine\Tests\Integration\Upgrade)
+ ✔ Live session continues after the upgrade
+ ✔ Migration is safe to run twice
 
-OK (208 tests, 40055 assertions)
+Time: 00:35.143, Memory: 342.00 MB
+
+OK (228 tests, 42709 assertions)

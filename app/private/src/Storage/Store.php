@@ -125,6 +125,8 @@ final class Store
         }
         $this->db->exec('DELETE FROM containers WHERE expires_at < ? AND current_session_id IS NULL', [$iso]);
         $this->db->exec('DELETE FROM counters WHERE expires_at < ?', [$iso]);
+        // Round UI v3 (U10): progress records expire a set number of days after their last use.
+        $this->db->exec('DELETE FROM progress WHERE expires_at < ?', [$iso]);
         return count($ids);
     }
 
@@ -257,6 +259,77 @@ final class Store
     {
         $row = $this->db->one('SELECT report_json FROM reports WHERE session_id = ? ORDER BY rowid DESC LIMIT 1', [$sessionId]);
         return $row === null ? null : Json::decode($row['report_json'], 64);
+    }
+
+    // ---------------------------------------------------------------- progress
+
+    /** Round UI v3 (U10): the progress record linked to a session, if any. */
+    public function progressBySession(string $sessionId): ?array
+    {
+        $row = $this->db->one('SELECT * FROM progress WHERE live_session_id = ?', [$sessionId]);
+        return $row === null ? null : self::progressRow($row);
+    }
+
+    /** An unexpired record by the sha256 of its code; the stored hash is compared in constant time. */
+    public function progressByHash(string $hash, \DateTimeImmutable $now): ?array
+    {
+        $row = $this->db->one('SELECT * FROM progress WHERE code_sha256 = ? AND expires_at > ?', [$hash, Time::iso($now)]);
+        if ($row === null || !hash_equals((string) $row['code_sha256'], $hash)) {
+            return null;
+        }
+        return self::progressRow($row);
+    }
+
+    public function progressHashTaken(string $hash): bool
+    {
+        return $this->db->scalar('SELECT 1 FROM progress WHERE code_sha256 = ?', [$hash]) !== null;
+    }
+
+    public function insertProgress(string $hash, array $record, string $sessionId, \DateTimeImmutable $now, int $retentionDays): string
+    {
+        $id = Ids::make('prg');
+        $this->db->exec('INSERT INTO progress (progress_id, code_sha256, record_json, live_session_id, code_shown, created_at, last_used_at, expires_at) VALUES (?,?,?,?,?,?,?,?)',
+            [$id, $hash, Json::encode($record), $sessionId, 0, Time::iso($now), Time::iso($now), Time::iso($now->modify("+$retentionDays days"))]);
+        return $id;
+    }
+
+    /** Record update, and the retention clock restarts at this use. */
+    public function updateProgress(string $progressId, ?array $record, \DateTimeImmutable $now, int $retentionDays): void
+    {
+        if ($record !== null) {
+            $this->db->exec('UPDATE progress SET record_json = ? WHERE progress_id = ?', [Json::encode($record), $progressId]);
+        }
+        $this->db->exec('UPDATE progress SET last_used_at = ?, expires_at = ? WHERE progress_id = ?',
+            [Time::iso($now), Time::iso($now->modify("+$retentionDays days")), $progressId]);
+    }
+
+    /** A code links to at most one live session. */
+    public function linkProgress(string $progressId, string $sessionId): void
+    {
+        $this->db->exec('UPDATE progress SET live_session_id = ? WHERE progress_id = ?', [$sessionId, $progressId]);
+    }
+
+    public function replaceProgressCode(string $progressId, string $hash): void
+    {
+        $this->db->exec('UPDATE progress SET code_sha256 = ?, code_shown = 0 WHERE progress_id = ?', [$hash, $progressId]);
+    }
+
+    public function markProgressShown(string $progressId): void
+    {
+        $this->db->exec('UPDATE progress SET code_shown = 1 WHERE progress_id = ?', [$progressId]);
+    }
+
+    /** Forget: the record linked to a session goes with it. @return int records deleted */
+    public function deleteProgressForSession(string $sessionId): int
+    {
+        return $this->db->exec('DELETE FROM progress WHERE live_session_id = ?', [$sessionId]);
+    }
+
+    private static function progressRow(array $row): array
+    {
+        $row['record'] = Json::decode($row['record_json'], 64);
+        $row['code_shown'] = (int) $row['code_shown'];
+        return $row;
     }
 
     // ---------------------------------------------------------------- counters

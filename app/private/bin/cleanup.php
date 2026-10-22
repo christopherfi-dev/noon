@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 /*
  * Cron cleanup: deletes expired sessions (idle 24 h / absolute 7 days by
- * default) and expired counters. Example cron line (hourly):
+ * default), expired counters and progress records past their retention
+ * (progress_retention_days after last use, 90 by default). Example cron line (hourly):
  *   php /home/ACCOUNT/algebra-private/bin/cleanup.php
  */
 

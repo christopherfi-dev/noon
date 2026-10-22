@@ -18,5 +18,6 @@ PASS  FILE                 vendor/autoload.php
 PASS  ARCHITECTURE_HASH    v1.2 ef03667dabf7152be63009ec6c1e327a83340b4fff65eef303e3eeb326291390
 PASS  STORAGE_DIR          writable: /home/user/noon/app/private/var
 PASS  SQLITE_OPEN          database opened and writable
+PASS  SCHEMA               4 update(s) to apply (1, 2, 3, 4); applied automatically on the next request, without deleting or rewriting existing data
 PASS  LAYOUT               private folder is outside the public folder
 PREFLIGHT PASSED

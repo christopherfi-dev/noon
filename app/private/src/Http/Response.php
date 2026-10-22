@@ -18,6 +18,9 @@ final class Response
         'Content-Security-Policy' => "default-src 'none'; frame-ancestors 'none'",
     ];
 
+    /** A non-JSON body (round UI v3: the downloadable HTML report); headers say what it is. */
+    public ?string $raw = null;
+
     public function __construct(public int $status, public array $body)
     {
     }
@@ -36,6 +39,6 @@ final class Response
         foreach ($this->cookies as $c) {
             header('Set-Cookie: ' . $c, false);
         }
-        echo Json::encode($this->body);
+        echo $this->raw ?? Json::encode($this->body);
     }
 }

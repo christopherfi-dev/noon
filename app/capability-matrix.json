@@ -1,5 +1,5 @@
 {
-    "generated_at": "2026-10-22T22:52:51Z",
+    "generated_at": "2026-10-22T23:39:14Z",
     "curriculum": "ACE-ALGEBRA1 1.1.0",
     "architecture": "1.2",
     "counts": {
@@ -4281,6 +4281,14 @@
         }
     ],
     "heuristics": [
+        {
+            "item": "Progress codes (round UI v3, U10)",
+            "note": "A code is created with the first recorded answer of a session and its record is updated in the same database transaction as every later commit. The record holds, per skill, a status (goal met, needed help, unresolved, not in the beta), a date and observed mistake-pattern codes, plus the route target and the next skill; no answers, names or addresses. The server stores only the sha256 of a code. The code itself stays on the learner's device in an HttpOnly cookie (so \"Your code\", the summary and the download can show it) and in what the learner writes down or downloads. A code whose first response never arrived is replaced once; a code already shown is never replaced. 12 characters from 31 symbols give about 59.4 bits, not 60 (see the round UI v3 report). One live session per code; entering it on another device takes the session over and the earlier device is refused. Lookups: one generic message, at most 10 failures per hour per browser session. Records are deleted progress_retention_days (default 90) after their last use; \"Forget this session\" deletes the linked record. Results from earlier sessions are listed under \"From earlier sessions\" and never count toward this session's goals."
+        },
+        {
+            "item": "Downloaded report (round UI v3, U9)",
+            "note": "One HTML file (algebra-report-YYYY-MM-DD.html) with inline CSS, no scripts and no external requests (its own Content-Security-Policy forbids them); the four learner headings, the teacher details expanded, the date and the progress code. Every sentence comes from recorded evidence. The JSON record download is inside \"Details for teachers\"."
+        },
         {
             "item": "Problem named with feedback (round UI, U1)",
             "note": "HEURISTIC. When guided repair opens after a wrong or partly right answer, the host line \"On <problem> you answered <answer>.\" comes before the opening; the problem is the item's longest run of numbers, x, y, operators and parentheses (one with \"=\" first), read from the prompt the learner saw. A guided step that does not repeat its problem is shown under a \"Problem:\" line (the stored prompt is unchanged). In the browser, other results name the answered item the same way. Feedback that refers to an older item is not detected."

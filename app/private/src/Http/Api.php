@@ -6,6 +6,9 @@ namespace AlgebraEngine\Http;
 use AlgebraEngine\App;
 use AlgebraEngine\Capability\CapabilityRegistry;
 use AlgebraEngine\Curriculum\BetaScope;
+use AlgebraEngine\Progress\ProgressCode;
+use AlgebraEngine\Report\ReportHtml;
+use AlgebraEngine\Report\SummaryView;
 use AlgebraEngine\Storage\StorageUnavailable;
 use AlgebraEngine\Support\Json;
 use AlgebraEngine\Support\Time;
@@ -20,7 +23,13 @@ final class Api
     private const ACTIONS = [
         'bootstrap' => 'GET', 'state' => 'GET', 'report' => 'GET', 'task' => 'GET',
         'start' => 'POST', 'event' => 'POST', 'forget' => 'POST', 'create_task' => 'POST',
+        'progress' => 'GET', 'progress_lookup' => 'POST', 'progress_start' => 'POST',
     ];
+    /** Round UI v3 (U10): the cookie that keeps a progress code on this device; the server stores only its sha256. */
+    private const CODE_COOKIE = 'ae_pc';
+    private const CODE_FAILURES_PER_HOUR = 10;
+    private const CODE_NOT_FOUND = 'That code wasn\'t found. Check it, or start fresh.';
+    private const MOVED = 'This progress continued on another device.';
     private const START_KEYS = ['idempotency_key', 'expected_revision', 'entry_route', 'target_skill_id', 'task_token', 'replace_current'];
 
     private array $actionRules;
@@ -82,12 +91,25 @@ final class Api
                 return $guard;
             }
         }
+        // Round UI v3 (U10): after a take-over the earlier device keeps its pointer but no longer owns the session.
+        if ($this->movedAway($container)) {
+            if ($action === 'state') {
+                return new Response(200, ['session' => null, 'continued_elsewhere' => true, 'message' => self::MOVED]);
+            }
+            if (in_array($action, ['event', 'report', 'progress'], true)) {
+                return Response::error(409, 'CONTINUED_ELSEWHERE', self::MOVED);
+            }
+            $container['current_session_id'] = null; // start, forget and codes act as if no session were open here
+        }
         return match ($action) {
             'state' => $this->state($container),
             'report' => $this->report($req, $container),
             'start' => $this->start($req, $container),
             'event' => $this->event($req, $container),
             'forget' => $this->forget($req, $container),
+            'progress' => $this->progress($req, $container),
+            'progress_lookup' => $this->progressLookup($req, $container),
+            'progress_start' => $this->progressStart($req, $container),
         };
     }
 
@@ -106,12 +128,22 @@ final class Api
         return $c;
     }
 
-    private function cookie(Request $req, string $value, int $maxAge): string
+    private function cookie(Request $req, string $value, int $maxAge, ?string $name = null): string
     {
         $secure = $this->app->config->get('cookie_secure');
         $secure = $secure === 'auto' ? $req->https : (bool) $secure;
         $path = $this->app->config->get('base_path') ?? $req->scriptDir;
-        return $this->app->config->string('cookie_name') . '=' . $value . '; Path=' . $path . '; Max-Age=' . $maxAge . '; HttpOnly; SameSite=Lax' . ($secure ? '; Secure' : '');
+        return ($name ?? $this->app->config->string('cookie_name')) . '=' . $value . '; Path=' . $path . '; Max-Age=' . $maxAge . '; HttpOnly; SameSite=Lax' . ($secure ? '; Secure' : '');
+    }
+
+    /** True when this browser's current session now belongs to another device. */
+    private function movedAway(array $container): bool
+    {
+        if ($container['current_session_id'] === null) {
+            return false;
+        }
+        $owner = $this->app->store->db->scalar('SELECT container_id FROM sessions WHERE session_id = ?', [$container['current_session_id']]);
+        return $owner !== null && $owner !== $container['container_id'];
     }
 
     /** CSRF token bound to the container, same-origin check, JSON body limits. */
@@ -170,10 +202,12 @@ final class Api
         } else {
             $app->store->touchContainer($container['container_id'], $now, $app->config->int('session_absolute_ttl'));
         }
-        $session = $container['current_session_id'] !== null ? $app->engine->view($container['current_session_id']) : null;
+        $moved = $this->movedAway($container);
+        $session = $container['current_session_id'] !== null && !$moved ? $app->engine->view($container['current_session_id']) : null;
         if ($session !== null) {
             $session['csrf_token'] = $container['csrf_token'];
         }
+        $days = $app->config->int('progress_retention_days');
         $registry = new CapabilityRegistry($app->curriculum, $app->factory);
         $resp = new Response(200, [
             'csrf_token' => $container['csrf_token'],
@@ -189,11 +223,13 @@ final class Api
             ], $registry->all()),
             'notices' => [
                 'data' => 'Your answers are stored on this server for this browser session so the tutor can continue and build your summary. No name or account is needed. Use "Forget this session" to delete them.',
+                'progress' => 'Progress codes keep skill results only, for up to ' . $days . ' days after last use. Anyone with your code or your downloaded report can continue your progress.',
                 'provider' => $app->config->isMock()
                     ? 'This beta is running on a simulated tutor model. No answers are sent to an outside AI service.'
                     : 'Your answers are sent to the configured AI provider to word the tutor\'s messages.',
             ],
             'session' => $session,
+            'continued_elsewhere' => $moved,
         ]);
         $resp->cookies = $cookies;
         return $resp;
@@ -217,8 +253,21 @@ final class Api
         if ($report === null) {
             return Response::error(404, 'NO_REPORT', 'There is no session report for this browser.');
         }
+        $code = $this->deviceCode($req, $this->app->store->progressBySession($container['current_session_id']));
+        $report['progress_code'] = $code === null ? null : ProgressCode::format($code);
+        $format = $req->query['format'] ?? '';
+        if ($format === 'html') {
+            // Round UI v3 (U9): one self-contained file with inline CSS, no scripts and no external requests.
+            $date = $this->app->clock->now()->format('Y-m-d');
+            $resp = new Response(200, []);
+            $resp->raw = ReportHtml::render($report, $date);
+            $resp->headers['Content-Type'] = 'text/html; charset=utf-8';
+            $resp->headers['Content-Security-Policy'] = "default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'";
+            $resp->headers['Content-Disposition'] = 'attachment; filename="algebra-report-' . $date . '.html"';
+            return $resp;
+        }
         $resp = new Response(200, $report);
-        if (($req->query['format'] ?? '') === 'download') {
+        if ($format === 'download') {
             $resp->headers['Content-Disposition'] = 'attachment; filename="algebra-session-report.json"';
         }
         return $resp;
@@ -257,6 +306,7 @@ final class Api
         $currentId = $container['current_session_id'];
         $current = $currentId !== null ? $app->store->session($currentId) : null;
         $live = $current !== null && !$app->engine->expired($current, $app->clock->now()) && $current['snapshot']['mode'] !== 'SESSION_CLOSED';
+        // Round UI v3 (U10): "Start over" begins a fresh session with no code; any progress record stays as it is.
         if ($live && !$body['replace_current']) {
             return Response::error(409, 'SESSION_EXISTS', 'A session is already in progress. Continue it, or choose to start over.');
         }
@@ -321,7 +371,12 @@ final class Api
         }
         $view = $app->engine->handle($sessionId, $body, $hash);
         $view['csrf_token'] = $container['csrf_token'];
-        return new Response(200, $view);
+        $resp = new Response(200, $view);
+        $issued = $app->engine->takeIssuedCode();
+        if ($issued !== null) { // round UI v3 (U10): the code created at this session's first answer
+            $resp->cookies[] = $this->cookie($req, $issued, $app->config->int('session_absolute_ttl'), self::CODE_COOKIE);
+        }
+        return $resp;
     }
 
     private function forget(Request $req, array $container): Response
@@ -331,14 +386,177 @@ final class Api
             return Response::error(400, 'INVALID_FORGET', 'Invalid request.');
         }
         $app = $this->app;
-        $app->store->db->transaction(function () use ($container, $app) {
+        $codes = $app->store->db->transaction(function () use ($container, $app) {
+            $codes = 0;
             foreach ($app->store->db->all('SELECT session_id FROM sessions WHERE container_id = ?', [$container['container_id']]) as $r) {
+                $codes += $app->store->deleteProgressForSession($r['session_id']); // round UI v3 (U10)
                 $app->store->deleteSession($r['session_id']);
             }
             $app->store->deleteContainer($container['container_id']);
+            return $codes;
         });
-        $resp = new Response(200, ['forgotten' => true, 'note' => 'This session, its answers, items, results, operations and reports were deleted from application storage. Server backups, if any, follow the hosting provider\'s own retention.']);
+        $resp = new Response(200, ['forgotten' => true, 'progress_codes_deleted' => $codes,
+            'message' => $codes > 0 ? 'This session, its summary and its progress code were deleted.' : 'This session and its summary were deleted.',
+            'note' => 'This session, its answers, items, results, operations and reports' . ($codes > 0 ? ', and the progress record linked to it,' : '') . ' were deleted from application storage. Server backups, if any, follow the hosting provider\'s own retention.']);
         $resp->cookies[] = $this->cookie($req, 'deleted', 0);
+        $resp->cookies[] = $this->cookie($req, 'deleted', 0, self::CODE_COOKIE);
+        return $resp;
+    }
+
+    // ------------------------------------------------------- progress codes
+
+    /** The code on this device for $row, read from the code cookie and checked against the stored hash. */
+    private function deviceCode(Request $req, ?array $row): ?string
+    {
+        $code = ProgressCode::normalize((string) ($req->cookies[self::CODE_COOKIE] ?? ''));
+        return $row !== null && $code !== null && hash_equals($row['code_sha256'], ProgressCode::hash($code)) ? $code : null;
+    }
+
+    /**
+     * Round UI v3 (U10): the current session's code, for "Your code" on screen.
+     * A code that never reached this device (its response was lost) is replaced
+     * once; a code already shown is never replaced.
+     */
+    private function progress(Request $req, array $container): Response
+    {
+        $app = $this->app;
+        $sessionId = $container['current_session_id'];
+        $row = $sessionId === null ? null : $app->store->progressBySession($sessionId);
+        if ($row === null) {
+            return new Response(200, ['linked' => false, 'code' => null]);
+        }
+        $code = $this->deviceCode($req, $row);
+        $cookies = [];
+        if ($code === null && $row['code_shown'] === 0) {
+            $code = $app->store->db->transaction(function () use ($app, $row) {
+                do {
+                    $code = ProgressCode::generate();
+                } while ($app->store->progressHashTaken(ProgressCode::hash($code)));
+                $app->store->replaceProgressCode($row['progress_id'], ProgressCode::hash($code));
+                return $code;
+            });
+            $cookies[] = $this->cookie($req, $code, $app->config->int('session_absolute_ttl'), self::CODE_COOKIE);
+        }
+        if ($code !== null) {
+            $app->store->markProgressShown($row['progress_id']);
+        }
+        $resp = new Response(200, ['linked' => true, 'code' => $code === null ? null : ProgressCode::format($code)]);
+        $resp->cookies = $cookies;
+        return $resp;
+    }
+
+    /** A typed code, checked under the failure limit. @return array{0:?array,1:?Response} the record, or the error to send */
+    private function findCode(array $container, mixed $input): array
+    {
+        $app = $this->app;
+        $now = $app->clock->now();
+        $bucket = 'progress-fail-' . $container['container_id'] . '-' . gmdate('YmdH', $now->getTimestamp());
+        if ($app->store->counter($bucket) >= self::CODE_FAILURES_PER_HOUR) {
+            return [null, Response::error(429, 'TOO_MANY_CODE_TRIES', 'Too many codes were tried. Please wait an hour, or start fresh.')];
+        }
+        $code = is_string($input) && strlen($input) <= 64 ? ProgressCode::normalize($input) : null;
+        $row = $code === null ? null : $app->store->progressByHash(ProgressCode::hash($code), $now);
+        if ($row === null) {
+            $app->store->bump($bucket, $now->modify('+2 hours'));
+            return [null, Response::error(404, 'CODE_NOT_FOUND', self::CODE_NOT_FOUND)];
+        }
+        return [$row + ['code' => $code], null];
+    }
+
+    /** "Welcome back": what the record says, in the report's four headings. Changes nothing. */
+    private function progressLookup(Request $req, array $container): Response
+    {
+        $body = $this->decode($req);
+        if (array_keys($body) !== ['code']) {
+            return Response::error(400, 'INVALID_CODE_REQUEST', 'Invalid request.');
+        }
+        [$row, $error] = $this->findCode($container, $body['code']);
+        if ($error !== null) {
+            return $error;
+        }
+        // Entering a code is a use: the retention period restarts.
+        $this->app->store->updateProgress($row['progress_id'], null, $this->app->clock->now(), $this->app->config->int('progress_retention_days'));
+        return new Response(200, $this->welcomeBack($row));
+    }
+
+    private function welcomeBack(array $row): array
+    {
+        $app = $this->app;
+        $record = $row['record'];
+        $live = $row['live_session_id'] !== null && $app->engine->live($app->store->session($row['live_session_id']));
+        $next = $record['next_skill'] ?? null;
+        $title = fn (?string $id) => $id === null ? null : ['skill_id' => $id, 'title' => $app->curriculum->title($id)];
+        return [
+            'code' => ProgressCode::format($row['code']),
+            'live' => $live,
+            'all_met' => !$live && $next === null,
+            'next_skill' => $title($next),
+            'route_target' => $title($record['route_target'] ?? null),
+            'summary' => (new SummaryView($app->curriculum))->fromRecord($record),
+        ];
+    }
+
+    /**
+     * Start with a code: a live session continues exactly where it stopped (taken
+     * over from another device if need be); otherwise a new session begins at the
+     * record's next skill, or at a chosen beta skill once every goal on the route is met.
+     */
+    private function progressStart(Request $req, array $container): Response
+    {
+        $app = $this->app;
+        $body = $this->decode($req);
+        if (array_keys($body) !== ['code', 'idempotency_key', 'target_skill_id'] || !is_string($body['idempotency_key'])
+            || strlen($body['idempotency_key']) < 16 || strlen($body['idempotency_key']) > 100
+            || ($body['target_skill_id'] !== null && (!is_string($body['target_skill_id']) || !BetaScope::contains($body['target_skill_id'])))) {
+            return Response::error(400, 'INVALID_CODE_REQUEST', 'Invalid request.');
+        }
+        [$row, $error] = $this->findCode($container, $body['code']);
+        if ($error !== null) {
+            return $error;
+        }
+        $cookies = [$this->cookie($req, $row['code'], $app->config->int('session_absolute_ttl'), self::CODE_COOKIE)];
+        // Like "Start over", leaving this browser's own session in progress rotates the browser credential.
+        $own = $container['current_session_id'] !== null ? $app->store->session($container['current_session_id']) : null;
+        $rotate = fn () => $own !== null && $own['session_id'] !== $row['live_session_id'] && !$app->engine->expired($own, $app->clock->now()) && $own['snapshot']['mode'] !== 'SESSION_CLOSED'
+            ? [$this->cookie($req, $app->store->rotateCookie($container['container_id']), $app->config->int('session_absolute_ttl'))] : [];
+        $live = $row['live_session_id'] !== null ? $app->store->session($row['live_session_id']) : null;
+        if ($app->engine->live($live)) {
+            $view = $live['container_id'] === $container['container_id']
+                ? $app->engine->view($live['session_id'])
+                : $app->engine->takeOver($live['session_id'], $container['container_id']);
+            $app->store->setCurrentSession($container['container_id'], $live['session_id']);
+            $app->store->updateProgress($row['progress_id'], null, $app->clock->now(), $app->config->int('progress_retention_days'));
+            $view['csrf_token'] = $container['csrf_token'];
+            $resp = new Response(200, $view);
+            $resp->cookies = array_merge($cookies, $rotate());
+            return $resp;
+        }
+        $record = $row['record'];
+        $target = $body['target_skill_id'] ?? $record['next_skill'] ?? null;
+        if ($target === null) {
+            return Response::error(409, 'ALL_GOALS_MET', 'You met every goal on this route. Choose a skill to keep practising.');
+        }
+        $hash = hash('sha256', Json::encode(['code_sha256' => $row['code_sha256'], 'target' => $target]));
+        $cached = $this->idempotent($container['container_id'], $body['idempotency_key'], $hash, $container);
+        if ($cached !== null) {
+            return $cached;
+        }
+        $now = $app->clock->now();
+        if ($app->store->bump('starts-' . $container['container_id'] . '-' . gmdate('YmdH', $now->getTimestamp()), $now->modify('+2 hours')) > $app->config->int('starts_per_container_per_hour')
+            || $app->store->bump('starts-global-' . gmdate('YmdH', $now->getTimestamp()), $now->modify('+2 hours')) > $app->config->int('global_starts_per_hour')) {
+            return Response::error(429, 'RATE_LIMITED', 'Too many sessions started. Please try again later.');
+        }
+        $limited = $this->providerBudgetExhausted(null);
+        if ($limited !== null) {
+            return $limited;
+        }
+        // The route target stays the skill the learner set out for, unless they chose a new one.
+        $route = $body['target_skill_id'] !== null && $body['target_skill_id'] !== ($record['next_skill'] ?? null) ? $target : ($record['route_target'] ?? $target);
+        $result = $app->engine->createSession($container['container_id'], 'TOPIC', $target, $body['idempotency_key'], $hash,
+            ['progress_id' => $row['progress_id'], 'record' => $record, 'route_target' => $route]);
+        $resp = new Response(200, $result['view']);
+        $resp->body['csrf_token'] = $container['csrf_token'];
+        $resp->cookies = array_merge($cookies, $rotate());
         return $resp;
     }
 

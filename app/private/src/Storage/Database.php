@@ -39,6 +39,11 @@ final class Database
         $this->migrate();
     }
 
+    /**
+     * Applies each migration once, in order. Round UI v3 (U11): each one runs
+     * under a write lock and re-checks that it is still unapplied, so two
+     * requests arriving together after an upgrade cannot both apply it.
+     */
     private function migrate(): void
     {
         $files = glob($this->migrationsDir . '/*.sql') ?: [];
@@ -50,11 +55,20 @@ final class Database
             if (in_array($version, $applied, true)) {
                 continue;
             }
-            $this->pdo->beginTransaction();
-            $this->pdo->exec((string) file_get_contents($file));
-            $stmt = $this->pdo->prepare('INSERT INTO schema_migrations (version, applied_at) VALUES (?, ?)');
-            $stmt->execute([$version, gmdate('Y-m-d\TH:i:s\Z')]);
-            $this->pdo->commit();
+            $this->pdo->exec('BEGIN IMMEDIATE');
+            try {
+                $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM schema_migrations WHERE version = ?');
+                $stmt->execute([$version]);
+                if ((int) $stmt->fetchColumn() === 0) {
+                    $this->pdo->exec((string) file_get_contents($file));
+                    $stmt = $this->pdo->prepare('INSERT INTO schema_migrations (version, applied_at) VALUES (?, ?)');
+                    $stmt->execute([$version, gmdate('Y-m-d\TH:i:s\Z')]);
+                }
+                $this->pdo->exec('COMMIT');
+            } catch (\Throwable $e) {
+                $this->pdo->exec('ROLLBACK');
+                throw $e;
+            }
         }
     }
 

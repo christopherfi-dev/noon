@@ -14,7 +14,9 @@ algebra-engine/            -> /var/www/html/educational-engines/algebra-engine/ 
 algebra-engine-private/    -> /var/www/algebra-engine-private/                   (outside the web root)
 ```
 
-`algebra-engine/` holds only `index.html`, `api.php` and `assets/`. Its
+`algebra-engine/` holds only `index.html`, `api.php` and `assets/`. The ZIP
+contains no `config.php` and nothing inside `var/`, so it can never replace a
+server's settings or its database (see "Updating an existing install"). Its
 `api.php` finds the private folder at `/var/www/algebra-engine-private`
 (the `ALGEBRA_PRIVATE_DIR` line at the top; the environment variable of the
 same name overrides it). The bundle has no `.htaccess` files, because nginx
@@ -40,8 +42,7 @@ find /var/www/html/educational-engines/algebra-engine -type f -exec chmod 644 {}
 chown -R root:nginx /var/www/algebra-engine-private
 find /var/www/algebra-engine-private -type d -exec chmod 750 {} +
 find /var/www/algebra-engine-private -type f -exec chmod 640 {} +
-chown nginx:nginx /var/www/algebra-engine-private/var
-chmod 700 /var/www/algebra-engine-private/var
+install -d -o nginx -g nginx -m 700 /var/www/algebra-engine-private/var
 ```
 
 The SQLite database is created at
@@ -118,10 +119,56 @@ Hourly, as `nginx` (`crontab -u nginx -e`):
    returns JSON with `"provider_mode":"mock"`, and its `Set-Cookie` path is
    `/educational-engines/algebra-engine/`.
 
+## Updating an existing install
+
+Use this when an earlier version is already running, with sessions in its
+database. Replace the code folders, keep `config.php` and `var/`, then run the
+preflight. Sessions in progress continue after the update. On the first
+request the app adds the progress-code table to the database; it never
+deletes or rewrites existing data, and doing it twice is harmless.
+
+1. Back up the settings and the database (as root):
+
+   ```bash
+   cp -a /var/www/algebra-engine-private/config.php /root/algebra-config-$(date +%F).php
+   cp -a /var/www/algebra-engine-private/var /root/algebra-var-$(date +%F)
+   ```
+
+2. Unpack the new ZIP to a temporary folder:
+
+   ```bash
+   unzip algebra-engine-vps-upload.zip -d /tmp/algebra-upload
+   ```
+
+3. Replace the code folders. `config.php` and `var/` are left where they are
+   (the ZIP holds neither):
+
+   ```bash
+   cd /var/www/algebra-engine-private
+   rm -rf bin migrations resources src vendor bootstrap.php composer.json config.example.php
+   cp -a /tmp/algebra-upload/algebra-engine-private/. /var/www/algebra-engine-private/
+   rm -rf /var/www/html/educational-engines/algebra-engine
+   cp -a /tmp/algebra-upload/algebra-engine /var/www/html/educational-engines/
+   rm -rf /tmp/algebra-upload
+   ```
+
+4. Set ownership and permissions again with the commands in §1 (they do not
+   touch the database file inside `var/`).
+5. Run the preflight (§4). It must end with `PREFLIGHT PASSED`. Its `SCHEMA`
+   line says whether a database update is still to be applied; the app applies
+   it on the next request.
+6. Open the page: a session that was in progress continues where it was, and
+   from its next answer it gets a progress code.
+7. If `config.php` has no `progress_retention_days` line, progress records are
+   kept 90 days after their last use; add the line to change that.
+
 ## Rollback
 
 1. `mv /var/www/html/educational-engines/algebra-engine /var/www/html/educational-engines/algebra-engine-off`
    stops serving immediately.
-2. To restore a previous version, copy the previous bundle's two folders over
-   these, keeping `algebra-engine-private/config.php` and `algebra-engine-private/var/`.
+2. To restore a previous version, replace the code folders with the previous
+   bundle's as in "Updating an existing install", keeping
+   `algebra-engine-private/config.php` and `algebra-engine-private/var/`. An
+   earlier version ignores the progress-code table, so it runs on the updated
+   database; codes created meanwhile cannot be used until you update again.
 3. To remove completely, delete both folders (this deletes all session data).

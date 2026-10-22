@@ -73,8 +73,13 @@ final class Harness
         $raw = $rawBody ?? ($body === null ? '' : json_encode($body, JSON_THROW_ON_ERROR));
         $r = $this->api->handle(new Request($method, $query, $h, $this->cookies, $raw, false, 'localhost', '/'));
         foreach ($r->cookies as $c) {
-            if (preg_match('/^ae_sid=([^;]*)/', $c, $m)) {
-                $this->cookies['ae_sid'] = $m[1];
+            // Every cookie the API sets (the session cookie and, since round UI v3, the progress-code cookie).
+            if (preg_match('/^([A-Za-z0-9_]+)=([^;]*)/', $c, $m)) {
+                if (str_contains($c, 'Max-Age=0')) {
+                    unset($this->cookies[$m[1]]);
+                } else {
+                    $this->cookies[$m[1]] = $m[2];
+                }
             }
         }
         $this->last = $r;

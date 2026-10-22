@@ -105,11 +105,10 @@ copyTree("$app/private/migrations", "$priv/migrations");
 copyTree("$app/private/bin", "$priv/bin");
 copy("$app/private/bootstrap.php", "$priv/bootstrap.php");
 copy("$app/private/config.example.php", "$priv/config.example.php");
-@mkdir("$priv/var", 0700, true);
-file_put_contents("$priv/var/README.txt", "SQLite database location. Keep this folder outside public_html and writable only by your account.\n");
-$deny = "# Defence in depth: this folder must never be web-accessible.\nRequire all denied\n";
+// Round UI v3 (U11): no config.php and nothing inside var/ in either bundle, so unpacking over a live
+// install never replaces the server's configuration or its database. The app creates var/ when needed.
+$deny = "# Defence in depth: this folder (and var/ inside it) must never be web-accessible.\nRequire all denied\n";
 file_put_contents("$priv/.htaccess", $deny);
-file_put_contents("$priv/var/.htaccess", $deny);
 
 // Production dependencies only.
 $composer = json_decode((string) file_get_contents("$app/composer.json"), true);
@@ -132,6 +131,10 @@ $forbidden = ['config.php', 'algebra.sqlite', 'phpunit', 'tests', '.git'];
 $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($stage, FilesystemIterator::SKIP_DOTS));
 foreach ($it as $file) {
     $rel = substr($file->getPathname(), strlen($stage) + 1);
+    if (preg_match('#^[^/]+/var/#', $rel)) {
+        fwrite(STDERR, "Refusing to bundle $rel: nothing inside var/ may be in an upload bundle\n");
+        exit(1);
+    }
     foreach ($forbidden as $f) {
         if (preg_match('#(^|/)' . preg_quote($f, '#') . '(/|$)#', $rel) && !($f === 'tests' && str_starts_with($rel, 'algebra-private/vendor/'))) {
             fwrite(STDERR, "Refusing to bundle $rel\n");
@@ -158,7 +161,6 @@ echo "Wrote $zipPath ($n files, " . round(filesize($zipPath) / 1024) . " KiB)\n"
 $vpsPub = "$vpsStage/algebra-engine";
 $vpsPriv = "$vpsStage/algebra-engine-private";
 copyTree($priv, $vpsPriv, ['.htaccess']);
-@unlink("$vpsPriv/var/.htaccess");
 // Dependencies' repository metadata (.gitattributes, .github/, .gitignore, .editorconfig) is not needed at run time.
 $dotted = [];
 foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator("$vpsPriv/vendor", FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST) as $file) {
@@ -169,7 +171,6 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator("$vpsPriv/
 foreach ($dotted as $path) {
     rmrf($path); // a dotted folder may already be gone with its parent
 }
-file_put_contents("$vpsPriv/var/README.txt", "SQLite database location. Keep this folder outside the web root, owned by the PHP-FPM user (nginx) and not readable by others.\n");
 $example = (string) file_get_contents("$vpsPriv/config.example.php");
 $example = str_replace("    // 'base_path' => '/algebra/',        // cookie path; defaults to the api.php folder",
     "    'base_path' => '" . VPS_BASE_PATH . "',   // cookie path: the public folder's URL path on this server", $example, $replaced);
@@ -193,6 +194,10 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($vpsStage,
     $rel = substr($file->getPathname(), strlen($vpsStage) + 1);
     if (preg_match('#(^|/)\.#', $rel)) {
         fwrite(STDERR, "Refusing to bundle dotfile $rel\n");
+        exit(1);
+    }
+    if (preg_match('#(^|/)config\.php$#', $rel) || preg_match('#^[^/]+/var/#', $rel)) {
+        fwrite(STDERR, "Refusing to bundle $rel: no config.php and nothing inside var/\n");
         exit(1);
     }
     if (str_starts_with($rel, 'algebra-engine/') && !preg_match('#^algebra-engine/(index\.html|api\.php|assets/[^/]+)$#', $rel)) {

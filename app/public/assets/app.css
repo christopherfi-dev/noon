@@ -195,6 +195,20 @@ fieldset.options legend { font-weight: 600; padding: 0; margin-bottom: 8px; }
 .stuck-toggle[aria-expanded="true"] { border-color: var(--accent); background: var(--chosen); }
 .stuck-menu { display: flex; flex-wrap: wrap; gap: 8px; margin: -4px 0 4px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
 .session-controls { margin-top: 20px; }
+
+/* Round UI v3 (U10): "Your code" in the header area; the code form and "Welcome back". */
+.code-bar { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: 0 0 10px; padding: 8px 12px; border: 1px dashed var(--line); border-radius: 8px; background: var(--card); }
+.code-label { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+.code-value { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 700; font-size: 1.05rem; letter-spacing: 0.06em; white-space: nowrap; }
+.code-note { flex-basis: 100%; font-size: 0.9rem; color: var(--muted); }
+.code-row { display: flex; gap: 8px; }
+.code-row input { flex: 1; min-width: 0; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+.welcome-back { border-top: 1px solid var(--line); margin-top: 14px; }
+.learner-summary.compact { margin: 8px 0; }
+.learner-summary.compact .summary-part h3 { margin: 0.6em 0 0.3em; }
+.empty-line { font-style: italic; }
+.next-row { margin-top: 4px; }
+a.primary-link { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 600; }
 .pending { font-weight: 600; }
 
 .error-banner { background: var(--error-bg); color: var(--error-fg); padding: 10px 12px; border-radius: 8px; }

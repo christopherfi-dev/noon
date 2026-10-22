@@ -113,13 +113,25 @@ final class UiRoundTest extends TestCase
         $this->assertContains('You had help on this one, so the count starts again after your answer.', $this->labelLines());
     }
 
-    /** U7: a building block names itself and its own kinds; a numeric-only skill has no "still needed" line. */
+    /**
+     * U7: a single building-block check shows no goal line (round UI v3); its independent check
+     * names its own kinds; a numeric-only skill has no "still needed" line.
+     */
     public function testU7BuildingBlockAndNumericOnlySkill(): void
     {
         $h = $this->h;
         $h->start('Q07');
         $h->submit($h->wrong('DIST_X_ONLY'));
         $h->submit($h->wrong('DIST_X_ONLY'));
+        $this->assertSame('PREREQUISITE_CHECK', $h->mode());
+        $this->assertSame([
+            'Building block: Apply the distributive property with positive factors.',
+            'One question to check this building block.',
+        ], $this->labelLines());
+        $p = $h->active()['params'];
+        $h->submit($p['a'] . 'x+' . $p['b']);
+        $h->completeGuidedRepair();
+        $this->assertSame('INDEPENDENT_CHECK', $h->mode());
         $this->assertSame([
             'Building block: Apply the distributive property with positive factors.',
             '0 of 3 in a row without help',

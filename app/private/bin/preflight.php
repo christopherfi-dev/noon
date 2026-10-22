@@ -124,6 +124,14 @@ if (extension_loaded('pdo_sqlite') && is_dir($dbDir) && is_writable($dbDir)) {
         $pdo->exec('CREATE TABLE IF NOT EXISTS preflight_probe (x INTEGER)');
         $pdo->exec('DROP TABLE preflight_probe');
         $add('PASS', 'SQLITE_OPEN', 'database opened and writable');
+        // Round UI v3 (U11): report schema updates; the app applies pending ones itself on its next request.
+        $files = array_map(fn ($f) => (int) basename($f), glob($privateDir . '/migrations/*.sql') ?: []);
+        $hasTable = (bool) $pdo->query("SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = 'schema_migrations'")->fetchColumn();
+        $applied = $hasTable ? array_map('intval', $pdo->query('SELECT version FROM schema_migrations')->fetchAll(PDO::FETCH_COLUMN)) : [];
+        $pending = array_values(array_diff($files, $applied));
+        $pending === []
+            ? $add('PASS', 'SCHEMA', 'up to date (' . count($applied) . ' updates applied)')
+            : $add('PASS', 'SCHEMA', count($pending) . ' update(s) to apply (' . implode(', ', $pending) . '); applied automatically on the next request, without deleting or rewriting existing data');
     } catch (Throwable $e) {
         $add('FAIL', 'SQLITE_OPEN', 'Could not open the SQLite database.');
     }

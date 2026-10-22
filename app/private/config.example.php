@@ -27,6 +27,10 @@ return [
     'starts_per_container_per_hour' => 30,
     'global_starts_per_hour' => 300,
 
+    // Progress codes (round UI v3): records are deleted this many days after
+    // their last use. If this line is missing, 90 applies.
+    'progress_retention_days' => 90,
+
     // Optional private-pilot gate: when set, every request must carry this
     // code (cookie ae_gate or header X-Access-Gate).
     'access_gate_token' => '',

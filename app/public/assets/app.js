@@ -38,6 +38,12 @@
     draft: { key: null, text: '', options: [] },
     lastItemKey: null,
     lastSubmit: null,       // the item and answer last sent (round UI, U1)
+    code: null,             // round UI v3 (U10): this session's progress code, once known
+    codeInput: '',
+    codeError: null,
+    welcomeBack: null,      // what a typed code's record says ("Welcome back")
+    moved: false,           // this session continued on another device
+    forgotten: null,        // the message after "Forget this session"
     stuckOpen: false,       // the "I'm stuck" choices (round UI, U5)
   };
 
@@ -80,7 +86,7 @@
   }
 
   // Routine confirmations are for screen readers only; anything else is also shown.
-  const ROUTINE = ['Sending…', 'Saved.', 'Done.', 'Working…', 'Summary loaded.', 'Loading your summary…'];
+  const ROUTINE = ['Sending…', 'Saved.', 'Done.', 'Working…', 'Summary loaded.', 'Loading your summary…', 'Welcome back.'];
 
   function announce(text) {
     if (!statusEl) return;
@@ -171,12 +177,15 @@
       if (r.status === 200 && r.data && typeof r.data.revision === 'number') {
         adoptView(r.data);
         announce(r.data.status === 'HOLD' ? 'Saved. The next step is not ready yet.' : 'Saved.');
+        if (!state.code) await fetchCode();
       } else if (r.status === 202) {
         announce('Working…');
         const settled = await pollUntilSettled();
         announce(settled ? 'Saved.' : 'Still working. Please wait a moment and reload.');
       } else if (r.status === 200) {
         announce('Done.');
+      } else if (r.status === 409 && r.data && r.data.error_code === 'CONTINUED_ELSEWHERE') {
+        showMoved();
       } else {
         const message = (r.data && r.data.message) || 'Something went wrong. Your typed answer is kept.';
         state.error = message;
@@ -211,6 +220,72 @@
     });
   }
 
+  // ------------------------------------------------- progress codes (round UI v3, U10)
+
+  /** This session's code, for "Your code". The server reads it from this device's cookie. */
+  async function fetchCode() {
+    try {
+      const r = await request('GET', 'progress');
+      if (r.status === 200 && r.data) state.code = r.data.code || null;
+      else if (r.status === 409 && r.data && r.data.error_code === 'CONTINUED_ELSEWHERE') showMoved();
+    } catch (e) { /* the code is shown on the next answer */ }
+  }
+
+  function showMoved() {
+    state.moved = true;
+    state.screen = 'moved';
+    state.view = null;
+    state.report = null;
+    announce('This progress continued on another device.');
+  }
+
+  async function lookupCode(e) {
+    if (e) e.preventDefault();
+    if (state.busy) return;
+    const code = state.codeInput.trim();
+    if (!code) { state.codeError = 'Enter your code first.'; render(); return; }
+    state.busy = true;
+    state.codeError = null;
+    render();
+    try {
+      const r = await request('POST', 'progress_lookup', { code });
+      if (r.status === 200 && r.data) {
+        state.welcomeBack = r.data;
+        announce('Welcome back.');
+      } else {
+        state.welcomeBack = null;
+        state.codeError = (r.data && r.data.message) || "That code wasn't found. Check it, or start fresh.";
+        announce(state.codeError);
+      }
+    } catch (err) {
+      state.codeError = 'The connection failed. Please try again.';
+    } finally {
+      state.busy = false;
+      render();
+    }
+    const card = document.getElementById('welcome-back-heading') || document.getElementById('code');
+    if (card) card.focus();
+  }
+
+  async function startWithCode(targetSkillId) {
+    state.code = null; // the code shown from now on is this one (read back after the start)
+    const r = await mutate('progress_start', { code: state.codeInput.trim(), idempotency_key: newKey(), target_skill_id: targetSkillId || null });
+    if (r && r.status === 200) {
+      state.welcomeBack = null;
+      state.codeInput = '';
+      state.moved = false;
+      state.screen = 'workspace';
+      state.report = null;
+      render();
+      focusAnswer();
+    } else if (r && r.data && r.data.error_code === 'CODE_NOT_FOUND') {
+      state.error = null;
+      state.welcomeBack = null;
+      state.codeError = r.data.message;
+      render();
+    }
+  }
+
   async function startSession(skillId) {
     const live = liveSession();
     const r = await mutate('start', {
@@ -225,6 +300,8 @@
       state.screen = 'workspace';
       state.report = null;
       state.picker = false;
+      state.moved = false;
+      state.code = null; // a fresh session gets its own code at its first answer; any earlier record is untouched
       render();
       focusAnswer();
     }
@@ -238,8 +315,11 @@
       const r = await request('GET', 'report');
       if (r.status === 200 && r.data && r.data.report) {
         state.report = r.data;
+        if (r.data.progress_code) state.code = r.data.progress_code;
         state.screen = 'summary';
         announce('Summary loaded.');
+      } else if (r.status === 409 && r.data && r.data.error_code === 'CONTINUED_ELSEWHERE') {
+        showMoved();
       } else {
         state.error = (r.data && r.data.message) || 'The summary is not available.';
         announce(state.error);
@@ -253,10 +333,16 @@
   }
 
   async function forget() {
-    if (!window.confirm('Delete this session, your answers and your summary from this server?')) return;
+    if (!window.confirm('Delete this session, your answers, your summary and its progress code from this server?')) return;
     const r = await request('POST', 'forget', { idempotency_key: newKey() });
     if (r.status === 200) {
-      window.location.reload();
+      state.forgotten = (r.data && r.data.message) || 'This session was deleted.';
+      state.screen = 'forgotten';
+      state.view = null;
+      state.report = null;
+      state.code = null;
+      announce(state.forgotten);
+      render();
     } else {
       announce((r.data && r.data.message) || 'Could not delete the session.');
     }
@@ -274,7 +360,11 @@
     if (r.data.session) adoptView(r.data.session);
     const badge = document.querySelector('[data-testid="mock-badge"]');
     if (badge) badge.hidden = r.data.provider_mode !== 'mock';
-    state.screen = 'welcome';
+    const privacy = document.querySelector('[data-testid="privacy-progress"]');
+    if (privacy && r.data.notices && r.data.notices.progress) privacy.textContent = r.data.notices.progress;
+    state.screen = r.data.continued_elsewhere ? 'moved' : 'welcome';
+    state.moved = !!r.data.continued_elsewhere;
+    if (r.data.session && r.data.session.status !== 'CLOSED') await fetchCode();
     render();
   }
 
@@ -289,6 +379,8 @@
       case 'browse': screen = renderBrowse(); break;
       case 'workspace': screen = state.view ? renderWorkspace() : renderWelcome(); break;
       case 'summary': screen = state.report ? renderSummary() : renderWorkspace(); break;
+      case 'moved': screen = renderMessage('moved', 'Continued on another device', 'This progress continued on another device. This page can no longer send answers.'); break;
+      case 'forgotten': screen = renderMessage('forgotten', 'Deleted', state.forgotten || 'This session was deleted.'); break;
       default: screen = renderWelcome();
     }
     const active = document.activeElement;
@@ -298,6 +390,59 @@
       const again = root.querySelector('[data-testid="' + activeId + '"]');
       if (again && again !== document.activeElement && !again.disabled) again.focus();
     }
+  }
+
+  function renderMessage(testid, heading, text) {
+    return el('section', { className: 'screen', testid, 'aria-labelledby': 'message-heading' },
+      el('h1', { id: 'message-heading', tabindex: '-1', text: heading }),
+      el('div', { className: 'card notice-card' },
+        el('p', { text }),
+        el('div', { className: 'row' },
+          button('Start a new session', 'message-new-session', () => { window.location.reload(); }, { className: 'primary' }))));
+  }
+
+  /** U10: "Your code" in the header area of a session and of its summary. */
+  function codeBar() {
+    if (!state.code) return null;
+    return el('div', { className: 'code-bar', testid: 'your-code', role: 'note', 'aria-label': 'Your progress code' },
+      el('span', { className: 'code-label', text: 'Your code' }),
+      el('span', { className: 'code-value', testid: 'code-value', text: state.code }),
+      el('span', { className: 'code-note', text: 'Write this down or download your report to continue next time.' }));
+  }
+
+  function headingList(lines, empty, testid) {
+    if (!lines || !lines.length) return el('p', { className: 'muted empty-line', testid, text: empty });
+    return el('ul', { testid }, lines.map((t) => el('li', null, mathText(t))));
+  }
+
+  /** U10: "Continue with a progress code" and, for a valid code, "Welcome back". */
+  function renderCodeCard() {
+    const wb = state.welcomeBack;
+    const form = el('form', { className: 'code-form', onsubmit: lookupCode, novalidate: true },
+      el('label', { for: 'code', className: 'field-label', text: 'Continue with a progress code' }),
+      el('div', { className: 'code-row' },
+        el('input', {
+          id: 'code', type: 'text', testid: 'code-input', value: state.codeInput, maxlength: 40, autocomplete: 'off', autocapitalize: 'characters', spellcheck: 'false',
+          placeholder: 'K7QM-4XRT-9WPC', 'aria-describedby': state.codeError ? 'code-error' : null,
+          oninput: (e) => { state.codeInput = e.target.value; },
+        }),
+        el('button', { type: 'submit', testid: 'code-continue', disabled: state.busy }, 'Continue')),
+      state.codeError ? el('p', { id: 'code-error', className: 'error-banner', role: 'alert', testid: 'code-error', text: state.codeError }) : null);
+    if (!wb) return el('div', { className: 'card code-card' }, form);
+    const sum = wb.summary;
+    return el('div', { className: 'card code-card' }, form,
+      el('section', { className: 'welcome-back', testid: 'welcome-back', 'aria-labelledby': 'welcome-back-heading' },
+        el('h2', { id: 'welcome-back-heading', tabindex: '-1', text: 'Welcome back' }),
+        el('p', { className: 'muted', text: 'From last time, with code ' + wb.code + ':' }),
+        el('div', { className: 'learner-summary compact' },
+          Object.keys(sum.headings).map((k) => el('section', { className: 'summary-part' },
+            el('h3', { text: sum.headings[k] }), headingList(sum[k], sum.empty[k])))),
+        wb.all_met
+          ? el('div', null,
+            el('p', { testid: 'all-met', text: 'You met every goal on this route. Choose a skill to keep practising with this code.' }),
+            skillButtonList((id) => startWithCode(id), 'code-skill-', null))
+          : el('div', { className: 'row' },
+            button(wb.live ? 'Start: continue where you stopped' : 'Start: ' + (wb.next_skill ? wb.next_skill.title : 'continue'), 'code-start', () => startWithCode(null), { className: 'primary' }))));
   }
 
   function errorBanner() {
@@ -329,9 +474,11 @@
           button('Choose another skill', 'choose-skill', () => { state.screen = 'pick'; render(); }),
           button('Browse skills', 'browse-skills', () => { state.screen = 'browse'; render(); })),
       ),
+      renderCodeCard(),
       el('div', { className: 'notices' },
         el('h2', { text: 'Before you start' }),
         el('p', { text: boot.notices.data }),
+        boot.notices.progress ? el('p', { text: boot.notices.progress }) : null,
         el('p', { text: boot.notices.provider }),
         el('p', { text: 'Results describe what you showed in this session only. They are not a grade and not a long-term judgement.' })),
     );
@@ -509,6 +656,27 @@
     });
   }
 
+  /** U5: open or close the help choices; closing returns focus to the answer field. */
+  function toggleStuck(byKeyboard) {
+    state.stuckOpen = !state.stuckOpen;
+    render();
+    if (!state.stuckOpen) focusAnswer();
+    else if (byKeyboard) { const first = root.querySelector('#stuck-menu button'); if (first) first.focus(); }
+  }
+
+  /** Arrow keys move between the choices; Escape closes the menu. */
+  function stuckKeys(e) {
+    const items = Array.from(root.querySelectorAll('#stuck-menu button'));
+    const at = items.indexOf(document.activeElement);
+    if (e.key === 'Escape') { e.preventDefault(); state.stuckOpen = false; render(); focusAnswer(); return; }
+    let to = null;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') to = (at + 1) % items.length;
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') to = (at - 1 + items.length) % items.length;
+    else if (e.key === 'Home') to = 0;
+    else if (e.key === 'End') to = items.length - 1;
+    if (to !== null && items[to]) { e.preventDefault(); items[to].focus(); }
+  }
+
   function stuckAction(action) {
     state.stuckOpen = false;
     sendEvent(action).then((r) => { if (r && r.status === 200) focusAnswer(); });
@@ -558,8 +726,9 @@
         }));
     }
     // U5: Submit, "I'm stuck" (which opens the ways to get help) and Skip where the engine allows it.
+    // Round UI v3 (U5): guided steps keep "Explain the idea" too; every action that exists stays, only regrouped.
     const choices = isGuided
-      ? [['REQUEST_HINT', 'Give me a hint', 'hint'], ['NOT_LEARNED', "I don't know", 'not-learned']]
+      ? [['REQUEST_HINT', 'Give me a hint', 'hint'], ['REQUEST_EXPLANATION', 'Explain the idea', 'explain'], ['NOT_LEARNED', "I don't know", 'not-learned']]
       : [['REQUEST_HINT', 'Give me a hint', 'hint'], ['REQUEST_EXPLANATION', 'Explain the idea', 'explain'], ['NOT_LEARNED', "I haven't learned this yet", 'not-learned']];
     const available = choices.filter(([action]) => allowed(action));
     const canSubmit = allowed('SUBMIT_RESPONSE') || allowed('CLARIFY_RESPONSE');
@@ -568,15 +737,13 @@
         canSubmit
           ? el('button', { type: 'submit', className: 'primary', testid: 'submit', disabled }, state.busy ? 'Checking…' : allowed('CLARIFY_RESPONSE') ? 'Submit again' : 'Submit')
           : null,
-        available.length ? button("I'm stuck", 'stuck', () => { state.stuckOpen = !state.stuckOpen; render(); }, {
+        available.length ? button("I'm stuck", 'stuck', (e) => toggleStuck(e.detail === 0), {
           disabled, className: 'stuck-toggle', 'aria-expanded': state.stuckOpen ? 'true' : 'false', 'aria-controls': 'stuck-menu',
         }) : null,
         allowed('SKIP_ITEM') && !isGuided ? button('Skip', 'skip', () => sendEvent('SKIP_ITEM'), { disabled, className: 'quiet' }) : null),
       available.length ? el('div', {
         id: 'stuck-menu', className: 'stuck-menu', testid: 'stuck-menu', hidden: !state.stuckOpen, role: 'group', 'aria-label': 'Ways to get help',
-        onkeydown: (e) => {
-          if (e.key === 'Escape') { state.stuckOpen = false; render(); const t = root.querySelector('[data-testid="stuck"]'); if (t) t.focus(); }
-        },
+        onkeydown: stuckKeys,
       },
       available.map(([action, label, testid]) => button(label, testid, () => stuckAction(action), { disabled }))) : null);
   }
@@ -640,8 +807,9 @@
 
   // -------------------------------------------------------- goal progress
 
-  // U7: the goal counts answers on the items of these modes; a probe and a guided step do not count.
-  const COUNTED_MODES = ['TARGET_ASSESSMENT', 'PREREQUISITE_CHECK', 'INDEPENDENT_CHECK', 'RETURN_TO_TARGET'];
+  // U7: the dots appear only on items of these modes.
+  // Round UI v3: only modes whose answers build a run; never a probe or a single building-block check.
+  const COUNTED_MODES = ['TARGET_ASSESSMENT', 'INDEPENDENT_CHECK', 'RETURN_TO_TARGET'];
 
   function renderProgress(v, reportReady) {
     const lines = (v.progress.label || '').split('\n');
@@ -671,6 +839,7 @@
     const parsed = it ? parsePrompt(it.prompt) : null;
     const main = parsed ? mainExpression(parsed.stem) : '';
     return el('section', { className: 'screen workspace', testid: 'workspace', 'aria-labelledby': 'ws-heading' },
+      codeBar(),
       el('p', { className: 'topic', testid: 'target-title', text: v.target ? 'Topic: ' + v.target.title : 'No topic chosen yet' }),
       el('h1', { id: 'ws-heading', text: heading }),
       renderProgress(v, reportReady),
@@ -686,16 +855,14 @@
         renderAnswerForm(v, parsed)) : null,
       v.menu && v.menu.options && v.menu.options.length && !reportReady ? el('div', { className: 'menu card' },
         el('h2', { text: v.menu.menu_id === 'continuation' ? 'Keep going?' : 'Choose an option' }),
-        el('div', { className: 'menu-options' }, v.menu.options.map((o) => button(o.label, 'menu-option-' + o.option_id, () => {
-          if (o.action === 'SELECT_TARGET') sendEvent('SELECT_TARGET', { target_skill_id: o.option_id });
-          else if (o.action === 'CONTINUE_SESSION') sendEvent('CONTINUE_SESSION', { continue_minutes: 10 });
-          else sendEvent(o.action, {});
-        }, { disabled: state.busy || pending })))) : null,
+        el('div', { className: 'menu-options' }, v.menu.options.map((o) => menuButton(o, pending)))) : null,
       allowed('RESUME_SESSION') ? el('div', { className: 'row' }, button('Try again', 'retry', () => sendEvent('RESUME_SESSION'), { className: 'primary' })) : null,
       reportReady ? el('div', { className: 'card done-card' },
         el('p', { text: v.status === 'CLOSED' ? 'This session has ended.' : 'Your work on this topic is complete for this session.' }),
+        // Round UI v3 (U10): "Next: <route target>" after a building block started from a progress code.
+        v.menu && v.menu.menu_id === 'next-target' && v.status !== 'CLOSED' ? el('div', { className: 'row next-row' }, v.menu.options.map((o) => menuButton(o, pending, 'primary'))) : null,
         el('div', { className: 'row' },
-          button('View your session summary', 'view-report', loadReport, { className: 'primary' }),
+          button('View your session summary', 'view-report', loadReport, { className: v.menu && v.menu.menu_id === 'next-target' ? null : 'primary' }),
           v.status !== 'CLOSED' && allowed('END_SESSION') ? button('Close session', 'end-session', () => sendEvent('END_SESSION')) : null,
           button('Start a new session', 'new-session', () => { state.screen = 'welcome'; render(); }))) : null,
       !reportReady ? el('div', { className: 'row session-controls' },
@@ -708,6 +875,14 @@
         el('p', { text: 'Your current work is kept in the record as interrupted; the new topic starts fresh.' }),
         skillButtonList((id) => { state.picker = false; sendEvent('CHANGE_TARGET', { target_skill_id: id }); }, 'change-to-', null)) : null,
     );
+  }
+
+  function menuButton(o, pending, className) {
+    return button(o.label, 'menu-option-' + o.option_id, () => {
+      if (o.action === 'SELECT_TARGET' || o.action === 'CHANGE_TARGET') sendEvent(o.action, { target_skill_id: o.option_id }).then((r) => { if (r && r.status === 200) focusAnswer(); });
+      else if (o.action === 'CONTINUE_SESSION') sendEvent('CONTINUE_SESSION', { continue_minutes: 10 });
+      else sendEvent(o.action, {});
+    }, { disabled: state.busy || pending, className });
   }
 
   // --------------------------------------------------------------- summary
@@ -738,11 +913,13 @@
     return el('section', { className: 'screen summary', testid: 'report', 'aria-labelledby': 'summary-heading' },
       el('h1', { id: 'summary-heading', tabindex: '-1', text: 'Session summary' }),
       el('p', { className: 'provider-label', testid: 'report-provider', text: data.provider_label }),
+      codeBar(),
+      // Round UI v3 (U2): four headings in this order; a heading with nothing to report shows its fixed line.
       el('div', { className: 'learner-summary', testid: 'learner-summary' },
-        el('section', { className: 'summary-part' }, el('h2', { text: 'What you worked on' }), list(learner.worked_on, 'No skill was started.')),
-        el('section', { className: 'summary-part' }, el('h2', { text: 'Goals met' }), list(learner.goals_met, 'No goal was met in this session.')),
-        el('section', { className: 'summary-part' }, el('h2', { text: 'What was hard' }), list(learner.hard, 'You did not need help in this session.')),
-        el('section', { className: 'summary-part' }, el('h2', { text: 'What to practise next' }), list(learner.next, 'Nothing listed.')),
+        Object.keys(learner.headings).map((k) => el('section', { className: 'summary-part', testid: 'part-' + k },
+          el('h2', { text: learner.headings[k] }), headingList(learner[k], learner.empty[k]))),
+        learner.earlier && learner.earlier.length ? el('section', { className: 'summary-part earlier', testid: 'part-earlier' },
+          el('h2', { text: 'From earlier sessions' }), list(learner.earlier, '')) : null,
         el('p', { className: 'muted summary-note', text: learner.note })),
       el('details', { className: 'teacher-details', testid: 'teacher-details' },
         el('summary', { testid: 'teacher-toggle' }, el('span', { text: 'Details for teachers' })),
@@ -752,10 +929,13 @@
           details,
           teacher.sections.map((sec) => el('section', { className: 'teacher-section' },
             el('h3', { text: sec.heading }),
-            sec.lines.length === 1 && sec.heading === 'About these results' ? el('p', null, sec.lines[0]) : list(sec.lines, sec.empty))))),
+            sec.lines.length === 1 && sec.heading === 'About these results' ? el('p', null, sec.lines[0]) : list(sec.lines, sec.empty))),
+          // U9: the raw record, for teachers.
+          el('p', null, el('a', { className: 'button-link', href: 'api.php?action=report&format=download', download: 'algebra-session-report.json', testid: 'download-json' }, 'Download the record (JSON)')))),
       el('div', { className: 'row controls' },
-        el('a', { className: 'button-link', href: 'api.php?action=report&format=download', download: 'algebra-session-report.json', testid: 'download-report' }, 'Download JSON'),
-        button('Print', 'print-report', () => window.print()),
+        // U9: one self-contained file to share with a teacher; and the print dialog.
+        el('a', { className: 'button-link primary-link', href: 'api.php?action=report&format=html', download: true, testid: 'download-report' }, 'Download report'),
+        button('Print or save as PDF', 'print-report', () => window.print()),
         button('Start a new session', 'new-session', () => { state.report = null; state.screen = 'welcome'; render(); }),
         state.view && state.view.status !== 'CLOSED' ? button('Back', 'back', () => { state.screen = 'workspace'; render(); }) : null),
     );

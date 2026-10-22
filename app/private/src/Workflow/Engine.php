@@ -16,6 +16,8 @@ use AlgebraEngine\Items\AcceptanceGate;
 use AlgebraEngine\Items\ItemFactory;
 use AlgebraEngine\Items\SocraticPlanner;
 use AlgebraEngine\Items\StructuralFeatures;
+use AlgebraEngine\Progress\ProgressCode;
+use AlgebraEngine\Progress\ProgressRecord;
 use AlgebraEngine\Math\ScalarParser;
 use AlgebraEngine\Provider\ModelCoordinator;
 use AlgebraEngine\Provider\ProviderResponse;
@@ -54,6 +56,11 @@ final class Engine
 
     private RandomSource $rng;
 
+    /** Round UI v3 (U10): a progress code created by the last commit, handed to the API once to deliver. */
+    private ?string $issuedCode = null;
+    /** A code created inside a commit that has not finished yet. */
+    private ?string $pendingCode = null;
+
     public function __construct(
         private Config $config,
         private Store $store,
@@ -73,21 +80,36 @@ final class Engine
 
     // =================================================================== API
 
+    /** The progress code created by the last request, once (round UI v3, U10). */
+    public function takeIssuedCode(): ?string
+    {
+        $code = $this->issuedCode;
+        $this->issuedCode = null;
+        return $code;
+    }
+
     /**
      * Create a session for a browser container and run its first turn.
      *
+     * @param array{progress_id:string,record:array,route_target:?string}|null $progress round UI v3 (U10): continue a
+     *        progress record; its earlier results stay separate and never count toward this session's goals
      * @return array{session_id:string,view:array}
      */
-    public function createSession(string $containerId, string $entryRoute, ?string $target, string $idemKey, string $requestHash): array
+    public function createSession(string $containerId, string $entryRoute, ?string $target, string $idemKey, string $requestHash, ?array $progress = null): array
     {
         if ($target !== null) {
             $this->assertSelectable($target);
         }
         $now = $this->clock->now();
         $sessionId = Ids::make('ses');
-        $op = $this->store->db->transaction(function () use ($containerId, $entryRoute, $sessionId, $now, $idemKey, $requestHash) {
+        $op = $this->store->db->transaction(function () use ($containerId, $entryRoute, $sessionId, $now, $idemKey, $requestHash, $progress) {
             $this->store->idempotencyPending($containerId, $idemKey, $requestHash, $now);
             [$snap, $eng] = $this->initialState($sessionId, $entryRoute, $now);
+            if ($progress !== null) {
+                $eng['progress'] = ['earlier' => $progress['record']['skills'] ?? [], 'route_target' => $progress['route_target']];
+                $this->store->linkProgress($progress['progress_id'], $sessionId);
+                $this->store->updateProgress($progress['progress_id'], null, $now, $this->config->int('progress_retention_days'));
+            }
             $this->store->insertSession($sessionId, $containerId, $snap, $eng, $now, $this->config->int('session_idle_ttl'), $this->config->int('session_absolute_ttl'));
             $this->store->setCurrentSession($containerId, $sessionId);
             return $this->store->claimOperation($sessionId, 0, $requestHash, $now, $this->config->int('lease_seconds'));
@@ -162,7 +184,39 @@ final class Engine
         if ($row === null || $this->expired($row, $this->clock->now())) {
             return null;
         }
-        return $this->store->latestReport($sessionId) ?? $this->buildReport($row, $this->store->events($sessionId), 'IN_PROGRESS');
+        // A session that continued after its summary (round UI v3 "Next:") reports its current work.
+        $finished = in_array($row['snapshot']['mode'], ['SESSION_REPORT', 'SESSION_CLOSED'], true);
+        return ($finished ? $this->store->latestReport($sessionId) : null) ?? $this->buildReport($row, $this->store->events($sessionId), 'IN_PROGRESS');
+    }
+
+    /**
+     * Round UI v3 (U10): a progress code entered on another device takes the
+     * live session over. The revision moves on, so anything the earlier device
+     * sends afterwards is refused; a request still in flight blocks the take-over
+     * (409) instead of being lost.
+     */
+    public function takeOver(string $sessionId, string $containerId): array
+    {
+        $now = $this->clock->now();
+        return $this->store->db->transaction(function () use ($sessionId, $containerId, $now) {
+            $row = $this->loadForMutation($sessionId, $now);
+            $snap = $row['snapshot'];
+            $snap['revision'] = $row['revision'] + 1;
+            $snap['last_activity_at'] = Time::iso($now);
+            $this->store->appendEvent($sessionId, 'SESSION_CONTINUED_ELSEWHERE', $snap['revision'],
+                ['note' => 'Continued with a progress code on another device; the earlier device can no longer answer.'], $now);
+            $this->store->appendEvent($sessionId, 'STATE_COMMITTED', $snap['revision'], ['snapshot' => $snap], $now);
+            $this->store->saveSession($sessionId, $snap, $row['engine'], $now, $this->config->int('session_idle_ttl'));
+            $this->store->db->exec('UPDATE sessions SET container_id = ? WHERE session_id = ?', [$containerId, $sessionId]);
+            $this->store->setCurrentSession($containerId, $sessionId);
+            return $this->projection->build($this->store->session($sessionId), null);
+        });
+    }
+
+    /** Live: not expired, and not yet at its summary. */
+    public function live(?array $row): bool
+    {
+        return $row !== null && !$this->expired($row, $this->clock->now()) && !in_array($row['snapshot']['mode'], ['SESSION_REPORT', 'SESSION_CLOSED'], true);
     }
 
     /**
@@ -237,6 +291,7 @@ final class Engine
     private function commit(string $sessionId, array $op, Turn $turn, int $baseRevision, string $idemScope, string $idemKey): array
     {
         $now = $turn->now;
+        $this->pendingCode = null;
         $view = $this->store->db->transaction(function () use ($sessionId, $op, $turn, $baseRevision, $idemScope, $idemKey, $now) {
             $current = $this->store->operation($op['operation_id']);
             $row = $this->store->session($sessionId);
@@ -275,6 +330,7 @@ final class Engine
                     $events[] = ['event_id' => $id, 'type' => 'CRITERION_MET', 'data' => $m + ['scope' => $this->criterionScope($m)], 'revision' => $revision, 'created_at' => Time::iso($now)];
                 }
             }
+            $this->syncProgress($sessionId, $turn, $events, $computed, $now);
             $ids = array_column($events, 'event_id');
             $turn->snap['accepted_event_ids'] = array_slice($ids, -2000);
             $turn->eng['messages'] = $turn->messages;
@@ -298,7 +354,40 @@ final class Engine
         if ($view === null) {
             throw new EngineError(409, 'OPERATION_CANCELLED', 'This request was cancelled or superseded. Reload to see the current state.');
         }
+        $this->issuedCode = $this->pendingCode; // only a committed record's code is handed out
+        $this->pendingCode = null;
         return $view;
+    }
+
+    /**
+     * Round UI v3 (U10): the progress record is created at the session's first
+     * recorded answer and updated in the same transaction as every commit after
+     * it, so closing the tab loses nothing that was answered.
+     */
+    private function syncProgress(string $sessionId, Turn $turn, array $events, array $computed, \DateTimeImmutable $now): void
+    {
+        $row = $this->store->progressBySession($sessionId);
+        $answered = (bool) array_filter($turn->events, fn ($e) => $e['type'] === 'RESPONSE_SUBMITTED');
+        if ($row === null && !$answered) {
+            return;
+        }
+        $p = $turn->eng['progress'] ?? [];
+        $route = $p['route_target'] ?? $turn->snap['original_target_skill_id'];
+        $record = [
+            'route_target' => $route,
+            'next_skill' => ProgressRecord::nextSkill($turn->snap, $computed, $route),
+            'skills' => ProgressRecord::merge($p['earlier'] ?? [], ProgressRecord::sessionSkills($events, $computed, $now->format('Y-m-d'))),
+        ];
+        $days = $this->config->int('progress_retention_days');
+        if ($row !== null) {
+            $this->store->updateProgress($row['progress_id'], $record, $now, $days);
+            return;
+        }
+        do {
+            $code = ProgressCode::generate();
+        } while ($this->store->progressHashTaken(ProgressCode::hash($code)));
+        $this->store->insertProgress(ProgressCode::hash($code), $record, $sessionId, $now, $days);
+        $this->pendingCode = $code;
     }
 
     private function criterionRecorded(array $events, array $m): bool
@@ -408,6 +497,10 @@ final class Engine
         if (isset($req['payload']['target_skill_id'])) {
             $this->assertSelectable($req['payload']['target_skill_id']);
         }
+        if ($snap['mode'] === 'SESSION_REPORT' && $req['action'] === 'CHANGE_TARGET'
+            && !in_array($req['payload']['target_skill_id'] ?? null, array_column($eng['menu']['options'] ?? [], 'option_id'), true)) {
+            throw new EngineError(409, 'ACTION_NOT_ALLOWED', 'That action is not available right now.');
+        }
         if ($req['action'] === 'CLARIFY_RESPONSE' && !($active['unscorable'] ?? false)) {
             throw new EngineError(409, 'ACTION_NOT_ALLOWED', 'There is nothing to clarify for this question.');
         }
@@ -496,6 +589,12 @@ final class Engine
         $this->transition($turn, 'TARGET_ASSESSMENT', 'Confirmed canonical target ' . $skill . ' (' . $reason . ').', [], ['explicit_target_change' => $reason === 'CHANGE_TARGET']);
         $turn->snap['target_episode_id'] = $episode;
         $turn->snap['original_target_skill_id'] = $skill;
+        // Round UI v3 (U10): the route target is the skill the learner set out for; a session started
+        // from a progress code at a building block keeps the route target it was given.
+        $turn->eng['progress'] ??= ['earlier' => [], 'route_target' => null];
+        if ($reason !== 'START' || $turn->eng['progress']['route_target'] === null) {
+            $turn->eng['progress']['route_target'] = $skill;
+        }
         $turn->snap['current_skill_id'] = $skill;
         $turn->snap['return_stack'] = [];
         $turn->snap['issue'] = null;
@@ -530,7 +629,11 @@ final class Engine
                 return;
             case 'CHANGE_TARGET':
                 $turn->event('ACTION_RECEIVED', ['action' => 'CHANGE_TARGET', 'target_skill_id' => $req['payload']['target_skill_id']], $turn->triggerEventId);
-                $this->suspendEpisode($turn);
+                if ($turn->mode() !== 'SESSION_REPORT') {
+                    $this->suspendEpisode($turn);
+                } else { // "Next:" (round UI v3): the completed episode is not interrupted; the session is in progress again
+                    $turn->eng['report_status'] = 'IN_PROGRESS';
+                }
                 $this->startEpisode($turn, $req['payload']['target_skill_id'], 'CHANGE_TARGET');
                 return;
             case 'SUBMIT_RESPONSE':
@@ -1277,6 +1380,11 @@ final class Engine
             ? 'You answered three different kinds of questions on this skill correctly in a row, without help. That meets this session\'s check for the skill. It is a check from today\'s session, not a long-term claim.'
             : 'You answered three questions on this skill correctly in a row, without help. That meets this session\'s check for the numeric part of the skill; other parts of the skill are not checked in this beta.');
         $turn->say('INFORMATION', 'Your session summary is ready.');
+        // Round UI v3 (U10): a session started at a building block from a progress code offers the route target next.
+        $route = $turn->eng['progress']['route_target'] ?? null;
+        if ($route !== null && $route !== $skill && BetaScope::contains($route)) {
+            $turn->eng['menu'] = ['menu_id' => 'next-target', 'options' => [['option_id' => $route, 'label' => 'Next: ' . $this->curriculum->title($route), 'action' => 'CHANGE_TARGET']]];
+        }
     }
 
     private function closeSession(Turn $turn, string $reason): void

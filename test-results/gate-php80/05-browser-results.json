@@ -1,5 +1,5 @@
 {
-  "ran_at": "2026-10-22T22:56:08.236Z",
+  "ran_at": "2026-10-22T23:44:12.489Z",
   "results": [
     {
       "name": "B1 browser journey (mobile 360x740)",
@@ -19,7 +19,7 @@
         "maxOverflow": 0,
         "internalInSummary": [],
         "consoleErrors": [],
-        "smallerPrompt": "What is 3 + 3 + 3?"
+        "smallerPrompt": "What is 12 + 12?"
       }
     },
     {
@@ -40,7 +40,7 @@
         "maxOverflow": 0,
         "internalInSummary": [],
         "consoleErrors": [],
-        "smallerPrompt": "What is 6 × 9?"
+        "smallerPrompt": "What is 7 × 6?"
       }
     },
     {
@@ -132,15 +132,17 @@
           "u7Dots2": true,
           "u8NotYet": true,
           "u7ProbeNoDots": true,
-          "u7BuildingBlockDots": true,
+          "u7BuildingBlockNoDots": true,
           "u1": true,
           "u5Guided": true,
           "u6": true,
           "u5GuidedMenu": true,
+          "u5Keyboard": true,
           "u5HintAction": true,
           "reachedReport": true,
           "u2Collapsed": true,
           "u2Learner": true,
+          "u9Buttons": true,
           "u2Opened": true,
           "u2Words": true,
           "u2Table": true
@@ -171,15 +173,17 @@
           "u7Dots2": true,
           "u8NotYet": true,
           "u7ProbeNoDots": true,
-          "u7BuildingBlockDots": true,
+          "u7BuildingBlockNoDots": true,
           "u1": true,
           "u5Guided": true,
           "u6": true,
           "u5GuidedMenu": true,
+          "u5Keyboard": true,
           "u5HintAction": true,
           "reachedReport": true,
           "u2Collapsed": true,
           "u2Learner": true,
+          "u9Buttons": true,
           "u2Opened": true,
           "u2Words": true,
           "u2Table": true
@@ -276,6 +280,50 @@
           }
         },
         "consoleErrors": []
+      }
+    },
+    {
+      "name": "UI-07 progress code, welcome back, take-over and downloaded report (mobile 390x844)",
+      "pass": true,
+      "detail": {
+        "checks": {
+          "noCodeBeforeAnswer": true,
+          "codeShownAfterFirstAnswer": true,
+          "stillSameCode": true,
+          "welcomeBack": true,
+          "continuedExactly": true,
+          "movedMessage": true,
+          "movedAfterReload": true,
+          "downloadName": true,
+          "downloadSelfContained": true,
+          "downloadOpens": true,
+          "downloadNoOverflow": true
+        },
+        "consoleErrors": [
+          "Failed to load resource: the server responded with a status of 409 (Conflict)"
+        ]
+      }
+    },
+    {
+      "name": "UI-07 progress code, welcome back, take-over and downloaded report (desktop 1280x800)",
+      "pass": true,
+      "detail": {
+        "checks": {
+          "noCodeBeforeAnswer": true,
+          "codeShownAfterFirstAnswer": true,
+          "stillSameCode": true,
+          "welcomeBack": true,
+          "continuedExactly": true,
+          "movedMessage": true,
+          "movedAfterReload": true,
+          "downloadName": true,
+          "downloadSelfContained": true,
+          "downloadOpens": true,
+          "downloadNoOverflow": true
+        },
+        "consoleErrors": [
+          "Failed to load resource: the server responded with a status of 409 (Conflict)"
+        ]
       }
     }
   ]
