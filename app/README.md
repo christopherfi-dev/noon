@@ -99,10 +99,12 @@ per turn, every host rejection with the rejected text) and `METRICS.md`
 (binding, repairs per operation, HOLDs, rejections, latency, tokens).
 
 Thinking settings (round 3 ruling) are required for the live provider and are
-never left to the provider default:
+never left to the provider default. **Default: thinking disabled** (round 4
+choice, from the round 3 results: fewest repairs, no HOLDs, no empty responses,
+median learner wait 2.7 s). The setting stays configurable.
 
-- `provider_thinking`: `'disabled'` or `'enabled'`, sent as
-  `"thinking": {"type": ...}` on every call.
+- `provider_thinking`: `'disabled'` (default in `config.example.php`) or
+  `'enabled'`, sent as `"thinking": {"type": ...}` on every call.
 - `provider_reasoning_effort`: `'low'`, `'high'` or `'max'`, sent only when
   thinking is enabled (empty otherwise).
 - `temperature` is sent only when thinking is disabled (it has no effect in

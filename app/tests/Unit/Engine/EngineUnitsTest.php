@@ -88,6 +88,25 @@ final class EngineUnitsTest extends TestCase
         $c = ['answer' => ['kind' => 'classification', 'expected' => ['B']], 'options' => [['letter' => 'A', 'text' => 'Subtract 3'], ['letter' => 'B', 'text' => 'Divide by 3']]];
         $this->assertNotSame([], DisclosureGuard::violations('The answer is B.', [$c]));
         $this->assertNotSame([], DisclosureGuard::violations('You should divide by 3 here.', [$c]));
+        // Round 4 ruling 1(a): options named together as alternatives are not a choice; anything else still is.
+        $sign = ['answer' => ['kind' => 'classification', 'expected' => ['B']], 'options' => [['letter' => 'A', 'text' => 'Positive'], ['letter' => 'B', 'text' => 'Negative']], 'active' => true];
+        $this->assertSame([], DisclosureGuard::violations('Decide whether the result is negative or positive.', [$sign]));
+        $this->assertSame([], DisclosureGuard::violations('Is it positive, or negative?', [$sign]));
+        $this->assertSame([], DisclosureGuard::violations('Pick option A or B.', [$sign]));
+        $this->assertNotSame([], DisclosureGuard::violations('The result is negative.', [$sign]));
+        $this->assertNotSame([], DisclosureGuard::violations('Put the negative sign back on the divisor.', [$sign]), 'not an alternatives list: still checked');
+        // Round 4 ruling 1(b): the learner's own answer to a completed step is not protected, except as the active step's answer.
+        $smaller = ['answer' => ['kind' => 'exact_rational', 'expected' => '3'], 'active' => false];
+        $done = [['kind' => 'exact_rational', 'expected' => '3']];
+        $this->assertSame([], DisclosureGuard::violations('Good, the sizes work out to 3. Now bring the sign back in.', [$smaller], $done));
+        $this->assertNotSame([], DisclosureGuard::violations('Good, the sizes work out to 3.', [$smaller]), 'without a completed step it is still protected');
+        $this->assertNotSame([], DisclosureGuard::violations('Good, the sizes work out to 3.', [['active' => true] + $smaller], $done), 'the active step is always protected');
+        // The round 3 real leak (thinking-disabled 05-B1 turn 6) is still rejected: 25 answers the re-asked active step.
+        $leak = 'That is right: five groups of five fives gives 25. Now look at the whole grouped expression. Each of the five groups holds an x and a 5, so the fives across all the groups add up to 25. Keep that in mind as you expand the whole expression.';
+        $this->assertNotSame([], DisclosureGuard::violations($leak, [
+            ['answer' => ['kind' => 'exact_rational', 'expected' => '25'], 'active' => true],
+            ['answer' => ['kind' => 'polynomial', 'expected' => '5*x'], 'variables' => ['x'], 'active' => false],
+        ], [['kind' => 'exact_rational', 'expected' => '25']]));
         // Documented limit: a paraphrase is not detected.
         $this->assertSame([], DisclosureGuard::violations('Try dividing by 3.', [$c]));
     }

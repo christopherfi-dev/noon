@@ -3,11 +3,11 @@ PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
 Runtime:       PHP 8.3.6
 Configuration: /home/user/noon/app/phpunit.xml
 
-...............................................................  63 / 164 ( 38%)
-............................................................... 126 / 164 ( 76%)
-......................................                          164 / 164 (100%)
+...............................................................  63 / 174 ( 36%)
+............................................................... 126 / 174 ( 72%)
+................................................                174 / 174 (100%)
 
-Time: 00:20.595, Memory: 32.00 MB
+Time: 00:16.786, Memory: 32.00 MB
 
 Beta Guards (AlgebraEngine\Tests\Integration\BetaGuards)
  ✔ B 5 non prerequisite proposal rejected
@@ -28,6 +28,8 @@ Beta Journey (AlgebraEngine\Tests\Integration\BetaJourney)
  ✔ B 10 stuck step goes directly to its prerequisite
  ✔ B 10 stuck step at a boundary is recorded not failed
  ✔ Random scripted journeys complete without holds
+ ✔ B 12 re ask shows no model text
+ ✔ B 13 repair keeps the failed sign pattern
  ✔ Every beta skill can start and score
 
 Checkers (AlgebraEngine\Tests\Unit\Math\Checkers)
@@ -129,6 +131,11 @@ Host (AlgebraEngine\Tests\Integration\Host)
  ✔ Host 16 forget and expiry
  ✔ Host 17 cost limits
 
+Json Syntax (AlgebraEngine\Tests\Unit\Support\JsonSyntax)
+ ✔ Position of the round 3 extra brace
+ ✔ Valid and invalid examples
+ ✔ Agrees with json decode on random corruptions
+
 Key Leak (AlgebraEngine\Tests\Integration\KeyLeak)
  ✔ No tracked file or zip entry contains a key
  ✔ Scanner detects planted keys
@@ -143,6 +150,7 @@ Live Adapter (AlgebraEngine\Tests\Integration\LiveAdapter)
  ✔ Empty content and internal words are repaired not shown
  ✔ Thinking settings are explicit
  ✔ Reasoning content is never kept and truncation is recorded
+ ✔ Network failure diagnostics are logged
  ✔ Live provider requires explicit settings and https
 
 Math Scenario (AlgebraEngine\Tests\Integration\MathScenario)
@@ -152,6 +160,10 @@ Math Scenario (AlgebraEngine\Tests\Integration\MathScenario)
  ✔ Math 06 requested form
  ✔ Math 08 unsafe syntax
  ✔ Math 09 ambiguity
+
+Messy Learner (AlgebraEngine\Tests\Integration\MessyLearner)
+ ✔ B 11 unreadable inputs are never scored as wrong
+ ✔ B 11 correct answers in loose forms are accepted
 
 Polynomial (AlgebraEngine\Tests\Unit\Math\Polynomial)
  ✔ Distributivity metamorphic
@@ -210,7 +222,9 @@ Templates (AlgebraEngine\Tests\Unit\Items\Templates)
  ✔ Contrast keys are derived from the displayed equations
  ✔ Option order is randomised per item
  ✔ Every guided step is tagged with the skill it exercises
+ ✔ Structural features are kept by the planner
+ ✔ Gate rejects a proposal that changes a kept feature
  ✔ Opening facts never contain a step answer
  ✔ Guided plans are questions that never state their answer
 
-OK (164 tests, 29017 assertions)
+OK (174 tests, 32487 assertions)

@@ -47,11 +47,29 @@ no file-based fallback.
    `openai_compatible`, `provider_base_url` (https only), `provider_model`
    (confirmed with the provider), `provider_api_key`, and keep the spend
    ceiling `global_provider_calls_per_day`. Keys stay in this private file and
-   never reach the browser. Also set `provider_thinking` (`disabled` or
-   `enabled`) and, with thinking enabled, `provider_reasoning_effort` (`low`,
-   `high` or `max`), plus `provider_max_tokens`. Preflight fails if thinking is
-   not set explicitly. The level is the owner's choice from the round 3 live
-   results (see README, "Live provider").
+   never reach the browser. Keep `provider_thinking` at `disabled` (the
+   default in `config.example.php`, chosen in round 4; `temperature` 0.2 then
+   applies). It stays configurable: with `enabled`, also set
+   `provider_reasoning_effort` (`low`, `high` or `max`). Keep
+   `provider_max_tokens` (4096 with thinking disabled). Preflight fails if
+   thinking is not set explicitly.
+
+### Where the production API key goes (owner only)
+
+The owner puts the production DeepSeek key on Bluehost. It is never given to
+Claude Code, never committed and never uploaded in the ZIP.
+
+- **File:** `/home/ACCOUNT/algebra-private/config.php`
+  (`ACCOUNT` is your cPanel user name). This folder is beside `public_html`,
+  not inside it, so the web server cannot serve it.
+- **Line:** `'provider_api_key' => 'sk-…',` (replace `sk-…` with the key),
+  together with `'provider' => 'openai_compatible'`,
+  `'provider_base_url' => 'https://api.deepseek.com/v1'`,
+  `'provider_model' => 'deepseek-flash'` and `'provider_thinking' => 'disabled'`.
+- **Permissions:** `chmod 600 /home/ACCOUNT/algebra-private/config.php`.
+- Never put the key in any file under `/home/ACCOUNT/public_html/`. Check that
+  `https://YOURDOMAIN/algebra-private/config.php` and
+  `https://YOURDOMAIN/algebra/config.php` do not return the file (step 6).
 
 ## 4. Run the preflight
 

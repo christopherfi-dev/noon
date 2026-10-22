@@ -25,21 +25,44 @@ final class SocraticPlanner
     }
 
     /**
-     * @param array{route?:string,avoid?:?array,avoid_text?:string} $opts avoid_text: text shown with the opening step (feedback facts)
+     * @param array{route?:string,avoid?:?array,avoid_text?:string,keep?:array<string,string>} $opts avoid_text: text shown with
+     *        the opening step (feedback facts); keep: structural features of the failed item to keep (R4-B)
      * @return array<string,mixed>
      */
     public function plan(string $skillId, RandomSource $rng, bool $faded = false, array $opts = []): array
     {
         $template = $this->factory->templateFor($skillId, 'constructed');
         $route = $opts['route'] ?? 'divide';
+        // R4-B: keep every requested feature this template can express; a feature it can never match (for
+        // example the equation form of a transfer item) is dropped and reported, the rest are still kept.
+        $keep = $opts['keep'] ?? [];
+        $unkept = [];
+        $sample = StructuralFeatures::of($template->id(), $template->generate(RandomSource::seeded('probe'), null));
+        foreach ($keep as $k => $v) {
+            if ($k === 'form' && array_key_exists('form', $sample) && $sample['form'] !== $v) {
+                $unkept[] = $k;
+                unset($keep[$k]);
+            }
+        }
         $plan = null;
-        for ($i = 0; $i < 60; $i++) {
+        for ($i = 0; $i < 400; $i++) {
             $params = $template->generate($rng, $opts['avoid'] ?? null);
+            if (StructuralFeatures::mismatches($keep, $template->id(), $params) !== []) {
+                continue;
+            }
             $plan = $this->build($skillId, $params, $rng, $route);
             if ($this->answersAbsentFromProblem($plan, $opts['avoid_text'] ?? '')) {
                 break;
             }
         }
+        if ($plan === null) {
+            // No sample kept every feature: fall back to an unconstrained problem and report it.
+            $unkept = array_keys($opts['keep'] ?? []);
+            $keep = [];
+            $plan = $this->build($skillId, $template->generate($rng, $opts['avoid'] ?? null), $rng, $route);
+        }
+        $plan['kept_features'] = $keep;
+        $plan['unkept_features'] = $unkept;
         if ($faded) {
             $plan = $this->fade($plan);
         }

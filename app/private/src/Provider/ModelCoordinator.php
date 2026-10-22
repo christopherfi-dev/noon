@@ -6,6 +6,7 @@ namespace AlgebraEngine\Provider;
 use AlgebraEngine\Curriculum\CurriculumRepository;
 use AlgebraEngine\Items\AcceptanceGate;
 use AlgebraEngine\Support\Json;
+use AlgebraEngine\Support\JsonSyntax;
 use AlgebraEngine\Support\RandomSource;
 use AlgebraEngine\Workflow\TransitionGuard;
 
@@ -73,7 +74,7 @@ final class ModelCoordinator
             $resp = $this->provider->complete($messages, false);
             if ($resp->error !== null) {
                 $log('binding', 'TRANSPORT_' . $resp->error, $resp);
-                return ['ok' => false, 'failure' => ['type' => 'PROVIDER_UNAVAILABLE', 'detail' => $resp->error]];
+                return ['ok' => false, 'failure' => ['type' => 'PROVIDER_UNAVAILABLE', 'detail' => $resp->error] + ($resp->diagnostics === null ? [] : ['transport' => $resp->diagnostics])];
             }
             $text = trim((string) $resp->content);
             if ($text === $this->handshake) {
@@ -110,7 +111,7 @@ final class ModelCoordinator
             $resp = $this->provider->complete($messages, true);
             if ($resp->error !== null) {
                 $log('envelope', 'TRANSPORT_' . $resp->error, $resp);
-                return self::failure('PROVIDER_UNAVAILABLE', $resp->error, $repairs);
+                return self::failure('PROVIDER_UNAVAILABLE', $resp->error, $repairs, $resp->diagnostics);
             }
             [$envelope, $raw, $errors] = $this->parse($resp);
             $result = null;
@@ -131,6 +132,24 @@ final class ModelCoordinator
         return self::failure('INVALID_OUTPUT', 'The provider output failed host acceptance after ' . self::MAX_REPAIRS . ' repair attempts.', $repairs);
     }
 
+    /**
+     * R4-A: a guided step presented by the host alone (a re-ask). The host builds
+     * the item through the same gate; no provider call, no model text.
+     */
+    public function hostOnly(array $allocation, RandomSource $rng, array $fingerprints): array
+    {
+        $draft = [];
+        foreach (['item_id', 'item_version', 'skill_id', 'role', 'variant_id', 'component_id'] as $k) {
+            $draft[$k] = $allocation[$k];
+        }
+        $draft += ['template_id' => AcceptanceGate::GUIDED_TEMPLATE, 'response_type' => $allocation['guided_step']['response_type'], 'parameters' => $allocation['fixed_parameters']];
+        $accepted = $this->gate->accept($draft, $allocation, $fingerprints, $rng);
+        if (!$accepted['ok']) {
+            throw new \LogicException('Host-built guided step failed the gate: ' . implode('; ', $accepted['errors']));
+        }
+        return ['ok' => true, 'repairs' => [], 'proposals' => [], 'student_message' => ''] + $accepted;
+    }
+
     /** @return array{0:?array,1:mixed,2:list<string>} associative form, raw object form, errors */
     private function parse(ProviderResponse $resp): array
     {
@@ -148,8 +167,10 @@ final class ModelCoordinator
         try {
             $decoded = Json::decode(trim($content), 32);
             $raw = Json::decodeObject(trim($content), 32);
-        } catch (\JsonException) {
-            return [null, null, ['output is not valid JSON']];
+        } catch (\JsonException $e) {
+            // Round 4 ruling 2: name the parser's error and the character position.
+            $at = JsonSyntax::firstError(trim($content));
+            return [null, null, ['output is not valid JSON: ' . $e->getMessage() . ($at === null ? '' : ' (character ' . $at['position'] . ': ' . $at['message'] . ')')]];
         }
         if (!is_array($decoded) || !is_object($raw)) {
             return [null, null, ['output must be one JSON object']];
@@ -200,7 +221,7 @@ final class ModelCoordinator
             $errors[] = 'student_message must speak to the learner directly and must not mention the host or keys';
         }
         if ($expect['disclosure_guard']) {
-            foreach (DisclosureGuard::violations($message, $expect['protected_answers']) as $v) {
+            foreach (DisclosureGuard::violations($message, $expect['protected_answers'], $expect['completed_answers'] ?? []) as $v) {
                 $errors[] = $v;
             }
         }
@@ -274,8 +295,8 @@ final class ModelCoordinator
         return $out;
     }
 
-    private static function failure(string $type, string $detail, array $repairs): array
+    private static function failure(string $type, string $detail, array $repairs, ?array $transport = null): array
     {
-        return ['ok' => false, 'failure' => ['type' => $type, 'detail' => $detail], 'repairs' => $repairs];
+        return ['ok' => false, 'failure' => ['type' => $type, 'detail' => $detail] + ($transport === null ? [] : ['transport' => $transport]), 'repairs' => $repairs];
     }
 }

@@ -5,7 +5,13 @@ declare(strict_types=1);
  * Scripted sessions for Conductor Round 2 §4.2–4.3: the B1 and B3 paths with
  * a scripted learner, against the configured provider.
  *
- *   ALGEBRA_CONFIG=/private/config.php php app/tools/live_sessions.php --out=DIR [--b1=5] [--b3=3] [--label=NAME] [--accept-unlisted-model]
+ *   ALGEBRA_CONFIG=/private/config.php php app/tools/live_sessions.php --out=DIR [--b1=5] [--b3=3] [--b11=0] [--label=NAME] [--accept-unlisted-model]
+ *
+ * B11 (round 4 §4) follows the B3 script with a messy learner: free-text and
+ * unreadable entries, and correct answers written loosely (x = 3, 3.0, 6/2,
+ * a Unicode minus, a typo then its correction). Each input is listed in
+ * METRICS.md with the checker verdict and scope, what the tutor showed and
+ * any host rejection.
  *
  * With provider 'openai_compatible' it first lists the provider's models and
  * stops (exit 3) when the configured model is not listed (§4.1), unless
@@ -33,7 +39,7 @@ use AlgebraEngine\Http\Api;
 use AlgebraEngine\Http\Request;
 use AlgebraEngine\Support\RandomSource;
 
-$opts = getopt('', ['out:', 'b1::', 'b3::', 'accept-unlisted-model', 'max-turns::', 'label::']);
+$opts = getopt('', ['out:', 'b1::', 'b3::', 'b11::', 'accept-unlisted-model', 'max-turns::', 'label::']);
 $out = $opts['out'] ?? '';
 $file = getenv('ALGEBRA_CONFIG') ?: '';
 if ($out === '' || $file === '' || !is_file($file)) {
@@ -48,6 +54,7 @@ if ($live && trim((string) ($settings['provider_api_key'] ?? '')) === '') {
 }
 $b1 = (int) ($opts['b1'] ?? 5);
 $b3 = (int) ($opts['b3'] ?? 3);
+$b11 = (int) ($opts['b11'] ?? 0);
 $maxTurns = (int) ($opts['max-turns'] ?? 80);
 if (!is_dir($out) && !mkdir($out, 0777, true)) {
     fwrite(STDERR, "Cannot create $out\n");
@@ -109,6 +116,7 @@ if ($live) {
                 'seconds' => round(microtime(true) - $t, 2), 'finish_reason' => is_array($d) ? ($d['choices'][0]['finish_reason'] ?? null) : null,
                 'usage' => is_array($d) ? ($d['usage'] ?? null) : null, 'response_model' => is_array($d) ? ($d['model'] ?? null) : null,
                 'content' => is_string($msg['content'] ?? null) ? $msg['content'] : null,
+                'diagnostics' => $r['diagnostics'] ?? null,
             ];
             return $r;
         }
@@ -122,6 +130,9 @@ $runLog[] = 'Provider / model: ' . $app->provider->name() . ' / ' . $app->provid
 // ------------------------------------------------------------ scripted learner
 /** Wrong answers in order; each is used once when the session reaches that mode and skill. Everything else is answered correctly. */
 $scripts = [
+    // B11 uses the B3 script: its path has the most items with a single-number answer for the loosely written inputs.
+    'B11' => [['TARGET_ASSESSMENT', 'Q07', 'SIGN_ERROR_B'], ['DIAGNOSTIC_PROBE', 'Q07', 'SIGN_ERROR_B'], ['PREREQUISITE_CHECK', 'Q06', 'MULTIPLY_INSTEAD_OF_DIVIDE'],
+        ['PREREQUISITE_CHECK', 'Q05', 'QUOTIENT_SIGN'], ['PREREQUISITE_CHECK', 'N06', 'NO_SIGNATURE']],
     'B1' => [['TARGET_ASSESSMENT', 'Q07', 'DIST_X_ONLY'], ['DIAGNOSTIC_PROBE', 'Q07', 'DIST_X_ONLY'], ['PREREQUISITE_CHECK', 'E06', 'FIRST_TERM_ONLY'], ['GUIDED_REPAIR', 'E06', 'PLAIN_WRONG']],
     'B3' => [['TARGET_ASSESSMENT', 'Q07', 'SIGN_ERROR_B'], ['DIAGNOSTIC_PROBE', 'Q07', 'SIGN_ERROR_B'], ['PREREQUISITE_CHECK', 'Q06', 'MULTIPLY_INSTEAD_OF_DIVIDE'],
         ['PREREQUISITE_CHECK', 'Q05', 'QUOTIENT_SIGN'], ['PREREQUISITE_CHECK', 'N06', 'NO_SIGNATURE']],
@@ -179,7 +190,31 @@ $usageSum = function (array $calls): array {
     return $t;
 };
 
-$plan = array_merge(array_fill(0, $b1, 'B1'), array_fill(0, $b3, 'B3'));
+$plan = array_merge(array_fill(0, $b1, 'B1'), array_fill(0, $b3, 'B3'), array_fill(0, $b11, 'B11'));
+
+/**
+ * B11 messy inputs, in order. phase 'any': submitted on the next scalar item, before scripted errors
+ * (expected to be unreadable). phase 'correct': used when the item is answered correctly anyway.
+ * needs: 'x' = an item asking for the value of x; 'int' = an integer key; 'neg' = a negative key.
+ */
+$words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
+$messyList = [
+    ['label' => 'idk', 'phase' => 'any', 'needs' => null, 'text' => fn ($v) => 'idk'],
+    ['label' => 'empty submit', 'phase' => 'any', 'needs' => null, 'text' => fn ($v) => ''],
+    ['label' => 'can you just tell me the answer', 'phase' => 'any', 'needs' => null, 'text' => fn ($v) => 'can you just tell me the answer'],
+    ['label' => 'is this on the test?', 'phase' => 'any', 'needs' => null, 'text' => fn ($v) => 'is this on the test?'],
+    ['label' => 'number word ("three")', 'phase' => 'any', 'needs' => null, 'text' => fn ($v) => preg_match('/^\d+$/', $v) && (int) $v <= 20 ? $words[(int) $v] : 'three'],
+    ['label' => 'x = 3 form', 'phase' => 'correct', 'needs' => 'x', 'text' => fn ($v) => 'x = ' . $v],
+    ['label' => 'x=3 form', 'phase' => 'correct', 'needs' => 'x', 'text' => fn ($v) => 'x=' . $v],
+    ['label' => '"3 " with spaces', 'phase' => 'correct', 'needs' => null, 'text' => fn ($v) => '  ' . $v . ' '],
+    ['label' => '3.0 form', 'phase' => 'correct', 'needs' => 'int', 'text' => fn ($v) => $v . '.0'],
+    ['label' => '6/2 form', 'phase' => 'correct', 'needs' => 'int', 'text' => fn ($v) => (2 * (int) $v) . '/2'],
+    ['label' => 'Unicode minus', 'phase' => 'correct', 'needs' => 'neg', 'text' => fn ($v) => "\u{2212}" . ltrim($v, '-')],
+    ['label' => 'typo', 'phase' => 'correct', 'needs' => null, 'text' => fn ($v) => $v . ']'],
+];
+$correction = ['label' => 'correction after the typo', 'text' => fn ($v) => $v];   // submitted on the same item right after the typo
+$xTemplates = ['ONE_STEP_ADD', 'ONE_STEP_MULTIPLY', 'TWO_STEP', 'GROUPED_LINEAR', 'GROUPED_LINEAR_TRANSFER'];
+$messyRows = [];
 $metrics = [];
 $allRejections = [];
 $allLatencies = [];
@@ -214,6 +249,8 @@ foreach ($plan as $n => $path) {
 
     $turns = [];
     $script = $scripts[$path];
+    $messy = $path === 'B11' ? $messyList : [];
+    $pendingCorrection = null;   // item id that was answered with the typo
     $seenEvents = 0;
     $sid = null;
     $consecutiveHolds = 0;
@@ -248,11 +285,42 @@ foreach ($plan as $n => $path) {
                 }
             } elseif ($active !== null && ($view['active_item'] ?? null) !== null) {
                 $code = null;
-                if ($script !== [] && $script[0][0] === $view['mode'] && $script[0][1] === $active['skill_id']) {
-                    $code = array_shift($script)[2];
+                $entry = null;
+                $expected = is_array($active['answer_spec']['expected']) ? null : (string) $active['answer_spec']['expected'];
+                $fits = function (array $e) use ($active, $expected, $xTemplates): bool {
+                    if ($active['answer_spec']['kind'] !== 'exact_rational' || $expected === null) {
+                        return false;
+                    }
+                    return match ($e['needs']) {
+                        'x' => in_array($active['template_id'], $xTemplates, true),
+                        'int' => preg_match('/^-?\d+$/', $expected) === 1,
+                        'neg' => str_starts_with($expected, '-'),
+                        default => true,
+                    };
+                };
+                $due = $script !== [] && $script[0][0] === $view['mode'] && $script[0][1] === $active['skill_id'];
+                if ($pendingCorrection !== null && $pendingCorrection === $active['item_id']) {
+                    $entry = $correction;
+                } else {
+                    foreach ($messy as $i => $e) {
+                        if (($e['phase'] === 'any' && $fits($e)) || ($e['phase'] === 'correct' && !$due && $fits($e))) {
+                            $entry = $e;
+                            array_splice($messy, $i, 1);
+                            break;
+                        }
+                    }
                 }
-                $learner = $answerFor($active, $code);
-                $action = 'SUBMIT_RESPONSE' . ($code !== null ? " (scripted error: $code)" : ' (correct)');
+                $pendingCorrection = ($entry['label'] ?? null) === 'typo' ? $active['item_id'] : null;
+                if ($entry !== null) {
+                    $learner = ($entry['text'])($expected);
+                    $action = 'SUBMIT_RESPONSE (messy input: ' . $entry['label'] . ')';
+                } else {
+                    if ($due) {
+                        $code = array_shift($script)[2];
+                    }
+                    $learner = $answerFor($active, $code);
+                    $action = 'SUBMIT_RESPONSE' . ($code !== null ? " (scripted error: $code)" : ' (correct)');
+                }
                 [$r, $secs] = $evt('SUBMIT_RESPONSE', ['text' => $learner], true);
             } else {
                 $action = 'END_SESSION (no active item)';
@@ -273,13 +341,15 @@ foreach ($plan as $n => $path) {
             'http' => $r->status, 'status' => $r->body['status'] ?? ($r->body['error_code'] ?? '?'), 'mode' => $r->body['mode'] ?? ($view['mode'] ?? '?'),
             'skill' => (string) ($app->store->db->scalar('SELECT json_extract(snapshot_json, "$.current_skill_id") FROM sessions WHERE session_id = ?', [$sid]) ?? ''),
             'messages' => $r->body['messages'] ?? [], 'item' => $r->body['active_item']['prompt'] ?? null, 'support' => $r->body['active_item']['support_status'] ?? null,
-            'seconds' => $secs, 'calls' => $calls, 'verdicts' => [], 'rejections' => [], 'notes' => [], 'accepted' => [], 'holds' => 0,
+            'seconds' => $secs, 'calls' => $calls, 'verdicts' => [], 'scopes' => [], 'rejections' => [], 'notes' => [], 'accepted' => [], 'holds' => 0,
+            'item_before' => $t === 1 ? null : ($active['prompt'] ?? null),
         ];
         foreach ($new as $e) {
             $d = $e['data'];
             switch ($e['type']) {
                 case 'CHECKER_RESULT':
                     $turn['verdicts'][] = $d['result']['verdict'] . ' (' . $d['role'] . ', ' . ($d['result']['item_id'] ?? '') . ')';
+                    $turn['scopes'][] = $d['result']['verification_scope'];
                     break;
                 case 'MODEL_OUTPUT_REJECTED':
                     $text = $jsonCalls[$d['attempt']]['content'] ?? null;
@@ -322,6 +392,16 @@ foreach ($plan as $n => $path) {
             }
         }
         $turns[] = $turn;
+        if (preg_match('/^SUBMIT_RESPONSE \(messy input: (.*)\)$/', $action, $mm)) {
+            $messyRows[] = ['session' => $name, 'turn' => $t, 'label' => $mm[1], 'text' => $learner, 'item' => $turn['item_before'], 'http' => $r->status,
+                'verdict' => $turn['verdicts'] ? explode(' ', $turn['verdicts'][0])[0] : '(none)', 'scope' => $turn['scopes'][0] ?? '',
+                'shown' => implode(' / ', array_map(fn ($m) => '[' . $m['kind'] . '] ' . $m['text'], $turn['messages'])),
+                'rejections' => array_map(fn ($x) => $x['operation'] . ': ' . implode(' | ', $x['errors']), $turn['rejections'])];
+        }
+    }
+    foreach ($messy as $e) {
+        $messyRows[] = ['session' => $name, 'turn' => null, 'label' => $e['label'], 'text' => '', 'item' => null, 'http' => null, 'verdict' => 'NOT APPLIED (no suitable item before the session ended)',
+            'scope' => '', 'shown' => '', 'rejections' => []];
     }
     $report = $call('GET', 'report')[0];
     $ended = gmdate('Y-m-d\TH:i:s\Z');
@@ -363,7 +443,11 @@ foreach ($plan as $n => $path) {
     $metrics[] = $m;
 
     // ---------------------------------------------------- transcript
-    $tx = ["# Transcript $name — " . ($path === 'B1' ? 'B1 path (Q07 distribution error → E06 → repair → return)' : 'B3 path (Q07 → Q06 → Q05 → N06 and back)'), '',
+    $tx = ["# Transcript $name — " . match ($path) {
+            'B1' => 'B1 path (Q07 distribution error → E06 → repair → return)',
+            'B3' => 'B3 path (Q07 → Q06 → Q05 → N06 and back)',
+            default => 'B11 messy learner on the B3 path (free text, unreadable input, loosely written answers)',
+        }, '',
         "Mode: $label", "Provider / model: {$app->provider->name()} / {$app->provider->model()}", "Started $started, ended $ended (UTC). Turns: " . count($turns) . ". Provider calls: " . count($rows) . '.',
         'Learner responses are supplied by script. Verdicts are the host checker\'s. Nothing is stripped.', ''];
     foreach ($turns as $tn) {
@@ -387,7 +471,7 @@ foreach ($plan as $n => $path) {
         foreach ($tn['calls'] as $i => $c) {
             $u = $c['usage'] ?? [];
             $tx[] = sprintf('- Provider call %d: %s, HTTP %s%s, model returned %s, %s s, finish %s, tokens in %s / out %s (reasoning %s)', $i + 1, $c['json_mode'] ? 'JSON' : 'text', $c['status'],
-                $c['error'] ? ' ' . $c['error'] : '', $c['response_model'] ?? '-', $c['seconds'], $c['finish_reason'] ?? '-', $u['prompt_tokens'] ?? '-', $u['completion_tokens'] ?? '-', $u['completion_tokens_details']['reasoning_tokens'] ?? '-');
+                $c['error'] ? ' ' . $c['error'] . (isset($c['diagnostics']) ? sprintf(' (curl error %d, stage %s, %d ms)', $c['diagnostics']['curl_errno'], $c['diagnostics']['stage'], $c['diagnostics']['elapsed_ms']) : '') : '', $c['response_model'] ?? '-', $c['seconds'], $c['finish_reason'] ?? '-', $u['prompt_tokens'] ?? '-', $u['completion_tokens'] ?? '-', $u['completion_tokens_details']['reasoning_tokens'] ?? '-');
         }
         foreach ($tn['calls'] as $i => $c) {
             if (!$c['json_mode']) {
@@ -462,6 +546,17 @@ if ($live) {
     $mx[] = 'Model name returned in each response (count of calls): ' . implode(', ', array_map(fn ($k, $v) => "$k ($v)", array_keys($counts), $counts)) . '. Each call\'s value is in the transcripts.';
 }
 $mx[] = '';
+if ($messyRows !== []) {
+    $mx[] = '## B11: messy inputs, one by one';
+    $mx[] = '';
+    $mx[] = '| Session | Turn | Input | Text submitted | Item | HTTP | Checker verdict | Verification scope | Tutor showed | Host rejections |';
+    $mx[] = '|---|---|---|---|---|---|---|---|---|---|';
+    foreach ($messyRows as $m) {
+        $mx[] = '| ' . implode(' | ', array_map($md, [$m['session'], (string) ($m['turn'] ?? '-'), $m['label'], $m['turn'] === null ? '-' : '`' . $m['text'] . '`', (string) ($m['item'] ?? '-'),
+            (string) ($m['http'] ?? '-'), $m['verdict'], $m['scope'], $m['shown'], $m['rejections'] ? implode('; ', $m['rejections']) : 'none'])) . ' |';
+    }
+    $mx[] = '';
+}
 $mx[] = '## Every host rejection of model output';
 $mx[] = '';
 if ($allRejections === []) {

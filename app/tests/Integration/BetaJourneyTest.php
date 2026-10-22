@@ -351,6 +351,79 @@ final class BetaJourneyTest extends TestCase
         }
     }
 
+    /**
+     * B12 (round 4, R4-A): a re-ask of a previously failed guided step shows the host line and the item only.
+     * No model call is made and no model-written text is shown, both after a smaller question and for the
+     * alternate phrasing.
+     */
+    public function testB12ReAskShowsNoModelText(): void
+    {
+        $h = $this->h;
+        $this->intoE06Repair();
+        $reAsk = function (string $stepId) use ($h): void {
+            $calls = $h->mock->calls;
+            $before = count($h->events());
+            $r = $h->answerCorrect();                                  // the smaller question is solved → re-ask
+            $this->assertSame($stepId, $h->active()['guided_step']['id']);
+            $this->assertSame([['FEEDBACK', 'Yes, that is right.'], ['INFORMATION', 'Now try the earlier question again.']],
+                array_map(fn ($m) => [$m['kind'], $m['text']], $r->body['messages']), 'host line and item only');
+            $this->assertSame($calls, $h->mock->calls, 'no model call for the re-ask');
+            $new = array_slice($h->events(), $before);
+            $this->assertSame([], array_values(array_filter($new, fn ($e) => in_array($e['type'], ['MODEL_OUTPUT_ACCEPTED', 'MODEL_OUTPUT_REJECTED'], true))));
+            $this->assertCount(1, array_filter($new, fn ($e) => $e['type'] === 'HOST_ONLY_STEP'));
+        };
+        $h->submit($h->plainWrong());                                  // s1 wrong → smaller s1.1
+        $reAsk('s1');
+        $h->answerCorrect();                                           // s1
+        $h->answerCorrect();                                           // s2
+        $h->submit($h->plainWrong());                                  // s3 wrong → smaller s3.1
+        $reAsk('s3');
+
+        // Alternate phrasing after failing the re-asked step: also host-only.
+        $calls = $h->mock->calls;
+        $r = $h->submit($h->plainWrong());
+        $this->assertSame('alt', $h->active()['params']['phrasing']);
+        foreach ($r->body['messages'] as $m) {
+            $this->assertContains($m['text'], ['Not yet.', 'Here is the same question, asked another way.'], 'no model text: ' . $m['text']);
+        }
+        $this->assertSame($calls, $h->mock->calls);
+    }
+
+    /**
+     * B13 (round 4, R4-B): for each N06 sign pattern, a failed item produces guided items with the same pattern:
+     * the first guided problem and the first fresh guided problem after it. N06 items always have a negative
+     * operand (item specification), so the patterns are + ÷ −, − ÷ + and − ÷ −.
+     */
+    public function testB13RepairKeepsTheFailedSignPattern(): void
+    {
+        $sign = fn (int $v) => $v > 0 ? '+' : '-';
+        foreach ([[72, -9, 40, -8], [-72, 9, -40, 8], [-72, -9, -40, -8]] as [$a1, $b1, $a2, $b2]) {
+            $pattern = $sign($a1) . $sign($b1);
+            $h = new Harness([], null, null, null, null, 'b13' . $pattern);
+            try {
+                $h->mock->faults[] = ['type' => 'ITEM_PATCH', 'patch' => ['parameters' => ['a' => $a1, 'b' => $b1]]];
+                $h->start('N06');
+                $this->assertSame(['a' => $a1, 'b' => $b1], $h->active()['params']);
+                $h->mock->faults[] = ['type' => 'ITEM_PATCH', 'patch' => ['parameters' => ['a' => $a2, 'b' => $b2]]];
+                $h->submit($h->wrong('NO_SIGNATURE'));                  // target wrong → slip-check probe, same pattern
+                $this->assertSame('DIAGNOSTIC_PROBE', $h->mode());
+                $h->submit($h->wrong('NO_SIGNATURE'));                  // probe wrong, no signature → repair at N06
+                $this->assertSame(['GUIDED_REPAIR', 'N06'], [$h->mode(), $h->skill()], $pattern);
+                $started = $h->events('REPAIR_STARTED');
+                $this->assertSame(['sign_a' => $sign($a1), 'sign_b' => $sign($b1)], end($started)['data']['kept_features'], $pattern);
+                $plans = [];
+                for ($n = 0; $n < 30 && $h->mode() === 'GUIDED_REPAIR' && count($plans) < 2; $n++) {
+                    $p = $h->active()['guided_plan_params'];
+                    $plans[json_encode($p)] = $sign($p['a']) . $sign($p['b']);
+                    $h->answerCorrect();
+                }
+                $this->assertSame([$pattern, $pattern], array_values($plans), "first guided problem and the next fresh one keep $pattern");
+            } finally {
+                $h->cleanup();
+            }
+        }
+    }
+
     /** Every beta skill can be started, presents a host-accepted item and scores a correct answer. */
     public function testEveryBetaSkillCanStartAndScore(): void
     {

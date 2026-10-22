@@ -59,14 +59,25 @@ final class AcceptanceGate
         }
         $params = $draft['parameters'] ?? [];
         $hostGenerated = false;
+        $keep = $allocation['keep_features'] ?? [];
         if ($params === [] || $params === null) {
-            $params = $template->generate($rng, $allocation['avoid_parameters'] ?? null);
+            for ($i = 0; $i < 400; $i++) {
+                $params = $template->generate($rng, $allocation['avoid_parameters'] ?? null);
+                if (StructuralFeatures::mismatches($keep, $templateId, $params) === []) {
+                    break;
+                }
+            }
             $hostGenerated = true;
         } else {
             $errors = array_merge($errors, $template->validate($params));
             $avoid = $allocation['avoid_parameters'] ?? null;
             if ($errors === [] && $avoid !== null && !$this->varies($params, $avoid)) {
                 $errors[] = 'parameters must vary the implicated component: every numeric parameter must differ from the previous item';
+            }
+            // R4-B: a proposal may not change a structural feature that must be kept; the bounded repair path follows.
+            $changed = $errors === [] ? StructuralFeatures::mismatches($keep, $templateId, $params) : [];
+            if ($changed !== []) {
+                $errors[] = 'parameters must keep the structure of the item the learner failed: ' . implode(', ', $changed);
             }
         }
         if ($errors !== []) {

@@ -82,7 +82,7 @@ final class OpenAiCompatibleProvider implements ProviderAdapter
             $this->config->int('provider_result_max'),
         );
         if ($result['error'] !== null) {
-            return ProviderResponse::failure($result['error'], $result['status']);
+            return ProviderResponse::failure($result['error'], $result['status'], $result['diagnostics'] ?? null);
         }
         if ($result['status'] < 200 || $result['status'] >= 300) {
             return ProviderResponse::failure('HTTP_ERROR', $result['status']);

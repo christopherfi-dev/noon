@@ -51,6 +51,9 @@ final class LiveAdapterTest extends TestCase
                 if ($next === 'TIMEOUT') {
                     return ['status' => 0, 'body' => '', 'error' => 'TIMEOUT'];
                 }
+                if ($next === 'NETWORK_DIAG') {
+                    return ['status' => 0, 'body' => '', 'error' => 'NETWORK', 'diagnostics' => ['curl_errno' => 56, 'stage' => 'response', 'elapsed_ms' => 5300]];
+                }
                 if ($next === 'HTTP_500') {
                     return ['status' => 500, 'body' => '{"error":{"message":"overloaded"}}', 'error' => null];
                 }
@@ -220,6 +223,36 @@ final class LiveAdapterTest extends TestCase
         } finally {
             $h->cleanup();
         }
+    }
+
+    /** Round 4 ruling 4: a network failure logs the curl error number, the stage reached and the elapsed time. */
+    public function testNetworkFailureDiagnosticsAreLogged(): void
+    {
+        $server = self::fakeServer();
+        $h = new Harness(self::LIVE, null, null);
+        $app = new \AlgebraEngine\App($h->app->config, $h->clock, null, null, null, $server);
+        $h->app = $app;
+        $h->api = new \AlgebraEngine\Http\Api($app);
+        try {
+            $h->bootstrap();
+            $h->start('Q07');
+            $server->script = ['NETWORK_DIAG'];
+            $h->submit($h->wrong('DIST_X_ONLY'));
+            $this->assertSame('HOLD', $h->view['status']);
+            $failure = $h->events('PROVIDER_FAILURE')[0]['data']['failure'];
+            $this->assertSame(['curl_errno' => 56, 'stage' => 'response', 'elapsed_ms' => 5300], $failure['transport']);
+            $row = $app->store->db->one("SELECT transport_detail FROM model_calls WHERE outcome = 'TRANSPORT_NETWORK'");
+            $this->assertSame(['curl_errno' => 56, 'stage' => 'response', 'elapsed_ms' => 5300], json_decode($row['transport_detail'], true));
+            $this->assertStringNotContainsString('curl_errno', json_encode($h->view), 'diagnostics stay server-side');
+        } finally {
+            $h->cleanup();
+        }
+        // The real transport reports the stage: a closed local port fails at connect.
+        $r = (new CurlTransport())->post('https://127.0.0.1:1/', [], '{}', 2, 2, 1000);
+        $this->assertSame('NETWORK', $r['error']);
+        $this->assertSame('connect', $r['diagnostics']['stage']);
+        $this->assertSame(CURLE_COULDNT_CONNECT, $r['diagnostics']['curl_errno']);
+        $this->assertIsInt($r['diagnostics']['elapsed_ms']);
     }
 
     public function testLiveProviderRequiresExplicitSettingsAndHttps(): void

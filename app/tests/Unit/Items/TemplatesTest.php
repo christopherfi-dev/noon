@@ -130,6 +130,56 @@ final class TemplatesTest extends TestCase
         $this->assertArrayHasKey('E06', $seen['E06']);
     }
 
+    /** R4-B: structural features per template, and a planner that keeps them. */
+    public function testStructuralFeaturesAreKeptByThePlanner(): void
+    {
+        $this->assertSame(['sign_a' => '+', 'sign_b' => '-'], \AlgebraEngine\Items\StructuralFeatures::of('SIGNED_DIVIDE', ['a' => 72, 'b' => -9]));
+        $this->assertSame(['form' => 'c=a(x+b)', 'sign_a' => '+', 'sign_b' => '-', 'sign_c' => '+'],
+            \AlgebraEngine\Items\StructuralFeatures::of('GROUPED_LINEAR_TRANSFER', ['form' => 'SWAPPED', 'a' => 3, 'b' => -2, 'c' => 12, 'd' => 0]));
+        $planner = new SocraticPlanner(new ItemFactory());
+        $factory = new ItemFactory();
+        foreach (['N03' => 'SIGNED_ADD', 'N04' => 'SIGNED_SUBTRACT', 'N05' => 'SIGNED_MULTIPLY', 'N06' => 'SIGNED_DIVIDE'] as $skill => $template) {
+            // Only sign patterns the skill's items can have: N03–N06 items always include a negative operand.
+            $patterns = [];
+            $rng = RandomSource::seeded("patterns$skill");
+            for ($i = 0; $i < 2000; $i++) {
+                $f = \AlgebraEngine\Items\StructuralFeatures::of($template, $factory->get($template)->generate($rng));
+                $patterns[$f['sign_a'] . $f['sign_b']] = [$f['sign_a'], $f['sign_b']];
+            }
+            $this->assertCount(3, $patterns, $skill . ': at least one operand is negative by the item specification');
+            foreach ($patterns as [$sa, $sb]) {
+                for ($i = 0; $i < 10; $i++) {
+                    $plan = $planner->plan($skill, RandomSource::seeded("keep$skill$sa$sb$i"), $i % 2 === 1, ['keep' => ['sign_a' => $sa, 'sign_b' => $sb]]);
+                    $this->assertSame(['sign_a' => $sa, 'sign_b' => $sb], \AlgebraEngine\Items\StructuralFeatures::of($template, $plan['params']), "$skill $sa$sb");
+                    $this->assertSame([], $plan['unkept_features']);
+                }
+            }
+        }
+        // Q07 guided problems use a(x+b)=c; the SWAPPED form cannot be kept, the signs still are.
+        $plan = $planner->plan('Q07', RandomSource::seeded('keepq07'), false, ['keep' => ['form' => 'c=a(x+b)', 'sign_a' => '+', 'sign_b' => '-', 'sign_c' => '-']]);
+        $this->assertSame(['form'], $plan['unkept_features']);
+        $this->assertSame(['-', '-'], [\AlgebraEngine\Items\StructuralFeatures::of('GROUPED_LINEAR', $plan['params'])['sign_b'], \AlgebraEngine\Items\StructuralFeatures::of('GROUPED_LINEAR', $plan['params'])['sign_c']]);
+    }
+
+    /** R4-B: the gate rejects a model proposal that changes a kept feature (bounded repair follows); host-chosen numbers keep them. */
+    public function testGateRejectsAProposalThatChangesAKeptFeature(): void
+    {
+        $gate = new \AlgebraEngine\Items\AcceptanceGate(new ItemFactory(), new \AlgebraEngine\Provider\SchemaValidator(ALGEBRA_APP_ROOT . '/private/resources/contracts'));
+        $alloc = ['item_id' => 'itm_00000000000000000000000a', 'item_version' => 1, 'skill_id' => 'N06', 'role' => 'GUIDED', 'variant_id' => 'constructed',
+            'component_id' => 'numeric', 'template_ids' => ['SIGNED_DIVIDE'], 'avoid_parameters' => null, 'keep_features' => ['sign_a' => '+', 'sign_b' => '-']];
+        $draft = fn (array $p) => ['item_id' => $alloc['item_id'], 'item_version' => 1, 'skill_id' => 'N06', 'role' => 'GUIDED', 'variant_id' => 'constructed',
+            'component_id' => 'numeric', 'template_id' => 'SIGNED_DIVIDE', 'response_type' => 'scalar', 'parameters' => $p];
+        $rng = RandomSource::seeded('gatekeep');
+        $bad = $gate->accept($draft(['a' => -72, 'b' => 9]), $alloc, [], $rng);
+        $this->assertFalse($bad['ok']);
+        $this->assertSame(['parameters must keep the structure of the item the learner failed: sign_a must be +, sign_b must be -'], $bad['errors']);
+        $this->assertTrue($gate->accept($draft(['a' => 40, 'b' => -8]), $alloc, [], $rng)['ok']);
+        for ($i = 0; $i < 20; $i++) {
+            $host = $gate->accept($draft([]), $alloc, [], $rng);
+            $this->assertSame(['sign_a' => '+', 'sign_b' => '-'], \AlgebraEngine\Items\StructuralFeatures::of('SIGNED_DIVIDE', $host['record']['parameters']));
+        }
+    }
+
     /** Regression (found by the round 3 gate): no step answer may equal a number in the facts shown with the opening step. */
     public function testOpeningFactsNeverContainAStepAnswer(): void
     {

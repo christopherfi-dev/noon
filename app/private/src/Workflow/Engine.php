@@ -15,6 +15,7 @@ use AlgebraEngine\Evidence\CriteriaCalculator;
 use AlgebraEngine\Items\AcceptanceGate;
 use AlgebraEngine\Items\ItemFactory;
 use AlgebraEngine\Items\SocraticPlanner;
+use AlgebraEngine\Items\StructuralFeatures;
 use AlgebraEngine\Math\ScalarParser;
 use AlgebraEngine\Provider\ModelCoordinator;
 use AlgebraEngine\Provider\ProviderResponse;
@@ -653,6 +654,10 @@ final class Engine
         $turn->event('ITEM_CLOSED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'reason' => $outcome->verdict]);
         $turn->eng['active'] = null;
         $turn->say('FEEDBACK', $this->verdictSentence($outcome, $active['role'] === 'GUIDED'));
+        if ($outcome->verdict === 'INCORRECT' && $active['role'] !== 'GUIDED') {
+            // R4-B: the repair practises the structure of the item the learner failed.
+            $turn->eng['last_failed'][$active['skill_id']] = ['template_id' => $active['template_id'], 'params' => $active['params'], 'item_id' => $active['item_id']];
+        }
 
         $verdict = $outcome->verdict;
         match ($turn->mode()) {
@@ -1016,9 +1021,14 @@ final class Engine
         $turn->snap['current_skill_id'] = $skill;
         $route = $this->implicatedRoute($turn, $skill);
         // The opening step is shown with the feedback facts, so no step answer may coincide with a number in them.
-        $plan = $this->planner->plan($skill, $this->rng, false, ['route' => $route, 'avoid_text' => implode(' ', $turn->facts)]);
-        $turn->eng['guided'] = ['plan' => $plan, 'path' => [$plan['steps'][0]['id']], 'done' => [], 'entered' => [], 'alt' => [], 'problems' => 0, 'clean' => true, 'phrasing' => 'main'];
-        $turn->event('REPAIR_STARTED', ['skill_id' => $skill, 'plan_id' => $plan['plan_id'], 'faded' => false, 'route' => $plan['route'], 'reason' => $reason]);
+        // R4-B: this problem and the next fresh one keep the structure of the item the learner failed.
+        $failed = $turn->eng['last_failed'][$skill] ?? null;
+        $keep = $failed === null ? [] : StructuralFeatures::of($failed['template_id'], $failed['params']);
+        $plan = $this->planner->plan($skill, $this->rng, false, ['route' => $route, 'avoid_text' => implode(' ', $turn->facts), 'keep' => $keep]);
+        $turn->eng['guided'] = ['plan' => $plan, 'path' => [$plan['steps'][0]['id']], 'done' => [], 'entered' => [], 'alt' => [], 'problems' => 0, 'clean' => true, 'phrasing' => 'main',
+            'keep' => $keep, 'keep_left' => 1];
+        $turn->event('REPAIR_STARTED', ['skill_id' => $skill, 'plan_id' => $plan['plan_id'], 'faded' => false, 'route' => $plan['route'], 'reason' => $reason,
+            'kept_features' => $plan['kept_features'], 'unkept_features' => $plan['unkept_features'], 'failed_item_id' => $failed['item_id'] ?? null]);
         // D1: repair may open by stating what the learner's last answer did.
         $this->presentStep($turn, $turn->facts);
     }
@@ -1076,7 +1086,7 @@ final class Engine
             }
             $g['path'] = [$parentId];
             unset($g);
-            $this->presentStep($turn, [], 'Now try the earlier question again.');
+            $this->presentStep($turn, [], 'Now try the earlier question again.', 'main', true);
             return;
         }
         foreach ($g['plan']['steps'] as $s) {
@@ -1099,9 +1109,12 @@ final class Engine
             $this->startIndependentCheck($turn, $skill, $plan['faded'] && $clean ? 'Support faded: the whole problem was answered without breaking it down.' : 'Guided problem budget reached; check independently.');
             return;
         }
-        $next = $this->planner->plan($skill, $this->rng, true, ['route' => $plan['route']]);
-        $turn->eng['guided'] = ['plan' => $next, 'path' => [$next['steps'][0]['id']], 'done' => [], 'entered' => [], 'alt' => [], 'problems' => $problems, 'clean' => true, 'phrasing' => 'main'];
-        $turn->event('REPAIR_STARTED', ['skill_id' => $skill, 'plan_id' => $next['plan_id'], 'faded' => true, 'route' => $next['route'], 'reason' => 'Fading support: whole problem first; smaller questions only if needed.']);
+        [$keep, $keepLeft] = $this->keepForNextPlan($turn);
+        $next = $this->planner->plan($skill, $this->rng, true, ['route' => $plan['route'], 'keep' => $keep]);
+        $turn->eng['guided'] = ['plan' => $next, 'path' => [$next['steps'][0]['id']], 'done' => [], 'entered' => [], 'alt' => [], 'problems' => $problems, 'clean' => true, 'phrasing' => 'main',
+            'keep' => $turn->eng['guided']['keep'] ?? [], 'keep_left' => $keepLeft];
+        $turn->event('REPAIR_STARTED', ['skill_id' => $skill, 'plan_id' => $next['plan_id'], 'faded' => true, 'route' => $next['route'], 'reason' => 'Fading support: whole problem first; smaller questions only if needed.',
+            'kept_features' => $next['kept_features'], 'unkept_features' => $next['unkept_features']]);
         $this->presentStep($turn, []);
     }
 
@@ -1122,7 +1135,11 @@ final class Engine
         if ($step['alt_prompt'] !== null && !isset($g['alt'][$id])) {
             $g['alt'][$id] = true;
             unset($g);
-            $this->presentStep($turn, $facts, null, 'alt');
+            // R4-A: also a re-ask of a failed step. Host-written facts may be shown; no model framing.
+            foreach (array_values(array_unique($facts)) as $fact) {
+                $turn->say('INFORMATION', $fact);
+            }
+            $this->presentStep($turn, [], 'Here is the same question, asked another way.', 'alt', true);
             return;
         }
         // Round 2 ruling 8: still stuck at the smallest available question. Set the
@@ -1144,10 +1161,21 @@ final class Engine
             $this->startIndependentCheck($turn, $skill, $reason . ' Guided problem budget reached; check independently.');
             return;
         }
-        $plan = $this->planner->plan($skill, $this->rng, false, ['route' => $g['plan']['route']]);
-        $turn->eng['guided'] = ['plan' => $plan, 'path' => [$plan['steps'][0]['id']], 'done' => [], 'entered' => [], 'alt' => [], 'problems' => $g['problems'], 'clean' => true, 'phrasing' => 'main'];
-        $turn->event('REPAIR_STARTED', ['skill_id' => $skill, 'plan_id' => $plan['plan_id'], 'faded' => false, 'route' => $plan['route'], 'reason' => $reason . ' A new guided problem with different numbers.']);
+        [$keep, $keepLeft] = $this->keepForNextPlan($turn);
+        $plan = $this->planner->plan($skill, $this->rng, false, ['route' => $g['plan']['route'], 'keep' => $keep]);
+        $turn->eng['guided'] = ['plan' => $plan, 'path' => [$plan['steps'][0]['id']], 'done' => [], 'entered' => [], 'alt' => [], 'problems' => $g['problems'], 'clean' => true, 'phrasing' => 'main',
+            'keep' => $g['keep'] ?? [], 'keep_left' => $keepLeft];
+        $turn->event('REPAIR_STARTED', ['skill_id' => $skill, 'plan_id' => $plan['plan_id'], 'faded' => false, 'route' => $plan['route'], 'reason' => $reason . ' A new guided problem with different numbers.',
+            'kept_features' => $plan['kept_features'], 'unkept_features' => $plan['unkept_features']]);
         $this->presentStep($turn, []);
+    }
+
+    /** R4-B: the first fresh guided problem after the first one still keeps the failed item's features; later ones may vary. */
+    private function keepForNextPlan(Turn $turn): array
+    {
+        $g = $turn->eng['guided'];
+        $left = (int) ($g['keep_left'] ?? 0);
+        return $left > 0 ? [$g['keep'] ?? [], $left - 1] : [[], 0];
     }
 
     private function startIndependentCheck(Turn $turn, string $skill, string $reason): void
@@ -1354,7 +1382,11 @@ final class Engine
         return $turn->snap['budgets']['target_assessment_items'] > $turn->eng['continuation_threshold'] || Time::iso($turn->now) > $turn->eng['deadline'];
     }
 
-    private function presentStep(Turn $turn, array $facts, ?string $lead = null, string $phrasing = 'main'): void
+    /**
+     * @param bool $hostOnly R4-A: a re-ask of a previously failed guided step shows the host line and the item only;
+     *                       no model framing is requested or shown.
+     */
+    private function presentStep(Turn $turn, array $facts, ?string $lead = null, string $phrasing = 'main', bool $hostOnly = false): void
     {
         $g = $turn->eng['guided'];
         $step = $this->currentStep($g);
@@ -1372,6 +1404,7 @@ final class Engine
             'template_ids' => [AcceptanceGate::GUIDED_TEMPLATE],
             'fixed_parameters' => ['plan_id' => $g['plan']['plan_id'], 'step_id' => $step['id'], 'phrasing' => $phrasing],
             'feedback_facts' => array_values(array_unique($facts)),
+            'host_only' => $hostOnly,
         ];
     }
 
@@ -1405,6 +1438,13 @@ final class Engine
             return;
         }
         $sessionId = $turn->snap['session_id'];
+        if ($gen['host_only'] ?? false) {
+            $result = $this->model->hostOnly($this->allocation($turn, $gen), $this->rng, $this->store->fingerprints($sessionId));
+            $turn->event('HOST_ONLY_STEP', ['operation' => $gen['operation'], 'step_id' => $gen['fixed_parameters']['step_id'],
+                'note' => 'Re-ask of a previously failed guided step: host line and item only; no model call (round 4, R4-A).']);
+            $this->presentGenerated($turn, $gen, $result, $sessionId);
+            return;
+        }
         // Never start a provider call that could outlive this operation's lease:
         // a slow provider then produces a retryable hold, not a discarded result.
         $leaseEnds = $turn->now->getTimestamp() + $this->config->int('lease_seconds') - 5;
@@ -1429,6 +1469,7 @@ final class Engine
             $this->store->logModelCall($sessionId, null, $kind, $provider->name(), $provider->model(), $outcome, $this->clock->now(), $resp === null ? [] : [
                 'finish_reason' => $resp->finishReason, 'duration_ms' => $resp->durationMs,
                 'prompt_tokens' => $resp->usage['prompt_tokens'] ?? null, 'completion_tokens' => $resp->usage['completion_tokens'] ?? null, 'reasoning_tokens' => $resp->usage['reasoning_tokens'] ?? null,
+                'transport_detail' => $resp->diagnostics,
             ]);
         };
 
@@ -1456,6 +1497,7 @@ final class Engine
             'current_skill' => $turn->skill(),
             'disclosure_guard' => in_array($gen['operation'], ['GUIDED_STEP', 'HINT', 'EXPLANATION'], true),
             'protected_answers' => $this->protectedAnswers($turn, $gen),
+            'completed_answers' => $this->completedAnswers($turn, $gen),
             'planned_transition' => $this->plannedTransition($turn),
             'known_event_ids' => array_merge($turn->snap['accepted_event_ids'], array_column($turn->events, 'event_id')),
         ];
@@ -1473,6 +1515,12 @@ final class Engine
         foreach ($result['proposals'] as $p) {
             $turn->event($p['status'] === 'REJECTED' ? 'MODEL_PROPOSAL_REJECTED' : 'MODEL_PROPOSAL', $p);
         }
+        $this->presentGenerated($turn, $gen, $result, $sessionId);
+    }
+
+    /** Fold an accepted generation (model or host-only) into the turn: message, item record, active item. */
+    private function presentGenerated(Turn $turn, array $gen, array $result, string $sessionId): void
+    {
         $turn->generation = null;
         if ($result['student_message'] !== '') {
             $turn->say('INFORMATION', $result['student_message']);
@@ -1635,14 +1683,31 @@ final class Engine
         $out = [];
         if (in_array($gen['operation'], ['HINT', 'EXPLANATION'], true) && $turn->eng['active'] !== null) {
             $a = $turn->eng['active'];
-            $out[] = ['answer' => $a['answer_spec'], 'variables' => $a['objects']['variables'] ?? ['x'], 'options' => $a['objects']['options'] ?? null];
+            $out[] = ['answer' => $a['answer_spec'], 'variables' => $a['objects']['variables'] ?? ['x'], 'options' => $a['objects']['options'] ?? null, 'active' => true];
         }
         if ($gen['operation'] === 'GUIDED_STEP' && $turn->eng['guided'] !== null) {
             $g = $turn->eng['guided'];
+            $current = $this->currentStep($g)['id'];
             foreach ($this->planner->flatten($g['plan']['steps']) as $s) {
                 if (!isset($g['done'][$s['id']])) {
-                    $out[] = ['answer' => $s['answer'], 'variables' => $s['variables'], 'options' => $s['options']];
+                    $out[] = ['answer' => $s['answer'], 'variables' => $s['variables'], 'options' => $s['options'], 'active' => $s['id'] === $current];
                 }
+            }
+        }
+        return $out;
+    }
+
+    /** Round 4 ruling 1(b): the learner's own (correct) answers to completed steps of the current guided problem. */
+    private function completedAnswers(Turn $turn, array $gen): array
+    {
+        if ($gen['operation'] !== 'GUIDED_STEP' || $turn->eng['guided'] === null) {
+            return [];
+        }
+        $g = $turn->eng['guided'];
+        $out = [];
+        foreach ($this->planner->flatten($g['plan']['steps']) as $s) {
+            if (isset($g['done'][$s['id']])) {
+                $out[] = $s['answer'];
             }
         }
         return $out;

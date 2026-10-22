@@ -276,12 +276,13 @@ final class Store
 
     // ------------------------------------------------------------- call log
 
-    /** @param array{finish_reason?:?string,duration_ms?:?int,prompt_tokens?:?int,completion_tokens?:?int,reasoning_tokens?:?int} $meta */
+    /** @param array{finish_reason?:?string,duration_ms?:?int,prompt_tokens?:?int,completion_tokens?:?int,reasoning_tokens?:?int,transport_detail?:?array} $meta */
     public function logModelCall(?string $sessionId, ?string $operationId, string $kind, string $provider, string $model, string $outcome, \DateTimeImmutable $now, array $meta = []): void
     {
-        $this->db->exec('INSERT INTO model_calls (call_id, session_id, operation_id, kind, provider, model, outcome, created_at, finish_reason, prompt_tokens, completion_tokens, reasoning_tokens, duration_ms) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        $this->db->exec('INSERT INTO model_calls (call_id, session_id, operation_id, kind, provider, model, outcome, created_at, finish_reason, prompt_tokens, completion_tokens, reasoning_tokens, duration_ms, transport_detail) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
             [Ids::make('call'), $sessionId, $operationId, $kind, $provider, $model, $outcome, Time::iso($now),
-                $meta['finish_reason'] ?? null, $meta['prompt_tokens'] ?? null, $meta['completion_tokens'] ?? null, $meta['reasoning_tokens'] ?? null, $meta['duration_ms'] ?? null]);
+                $meta['finish_reason'] ?? null, $meta['prompt_tokens'] ?? null, $meta['completion_tokens'] ?? null, $meta['reasoning_tokens'] ?? null, $meta['duration_ms'] ?? null,
+                isset($meta['transport_detail']) ? Json::encode($meta['transport_detail']) : null]);
     }
 
     public function modelCallCount(string $sessionId): int

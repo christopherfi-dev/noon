@@ -173,6 +173,12 @@ final class HostTest extends TestCase
         $this->assertStringNotContainsString('"architecture_version"', $text);
         $this->assertSame('INVALID_ITEM', $h->row()['snapshot']['issue']['type']);
         $this->assertStringContainsString('not a learner failure', $h->row()['snapshot']['issue']['detail']);
+        // Round 4 ruling 2: the invalid-JSON rejection, and the repair request built from it, name the parser error and position.
+        $all = array_merge(...array_map(fn ($e) => $e['data']['errors'], $h->events('MODEL_OUTPUT_REJECTED')));
+        $json = array_values(array_filter($all, fn ($x) => str_starts_with($x, 'output is not valid JSON')));
+        $this->assertSame("output is not valid JSON: Syntax error (character 0: expected a value, found 'H')", $json[0]);
+        $repairs = array_filter(array_merge(...array_map(fn ($c) => array_column($c['messages'], 'content'), $h->mock->log)), fn ($m) => str_contains($m, 'REPAIR_REQUEST'));
+        $this->assertTrue((bool) array_filter($repairs, fn ($m) => str_contains($m, 'character 0: expected a value')), 'the repair request carries the position');
     }
 
     /** HOST-06: a model-emitted pass without accepted supporting events is rejected. */

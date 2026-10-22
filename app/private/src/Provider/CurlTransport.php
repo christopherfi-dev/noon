@@ -41,12 +41,18 @@ final class CurlTransport implements HttpTransport
         $ok = curl_exec($ch);
         $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         $errno = curl_errno($ch);
+        // Round 4 ruling 4: how far a failed request got. Zero times mean the phase never completed.
+        $diagnostics = [
+            'curl_errno' => $errno,
+            'stage' => curl_getinfo($ch, CURLINFO_CONNECT_TIME) <= 0 ? 'connect' : (curl_getinfo($ch, CURLINFO_APPCONNECT_TIME) <= 0 ? 'tls' : 'response'),
+            'elapsed_ms' => (int) round(curl_getinfo($ch, CURLINFO_TOTAL_TIME) * 1000),
+        ];
         curl_close($ch);
         if ($tooLarge) {
             return ['status' => $status, 'body' => '', 'error' => 'TOO_LARGE'];
         }
         if ($ok === false) {
-            return ['status' => $status, 'body' => '', 'error' => $errno === CURLE_OPERATION_TIMEDOUT ? 'TIMEOUT' : 'NETWORK'];
+            return ['status' => $status, 'body' => '', 'error' => $errno === CURLE_OPERATION_TIMEDOUT ? 'TIMEOUT' : 'NETWORK', 'diagnostics' => $diagnostics];
         }
         return ['status' => $status, 'body' => $buffer, 'error' => null];
     }

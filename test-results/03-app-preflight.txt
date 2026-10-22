@@ -16,6 +16,7 @@ PASS  FILE                 resources/contracts/model-envelope.schema.json
 PASS  FILE                 resources/contracts/workflow-policy.json
 PASS  FILE                 migrations/001_init.sql
 PASS  FILE                 migrations/002_model_call_usage.sql
+PASS  FILE                 migrations/003_model_call_transport_detail.sql
 PASS  FILE                 vendor/autoload.php
 PASS  ARCHITECTURE_HASH    v1.2 ef03667dabf7152be63009ec6c1e327a83340b4fff65eef303e3eeb326291390
 PASS  STORAGE_DIR          writable: /home/user/noon/app/private/var

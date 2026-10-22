@@ -19,6 +19,13 @@ use AlgebraEngine\Math\ScalarParser;
  *
  * Protected answers are given as answer_spec arrays (kind, expected) plus,
  * for classification, the lettered options.
+ *
+ * Round 4 ruling 1 narrows it in exactly two cases; everything else is
+ * still checked:
+ * (a) answer options named together as alternatives ("positive or
+ *     negative") are not read as choosing one of them;
+ * (b) a value that is the learner's own answer to an already-completed step
+ *     is not protected, except as the answer of the step being asked now.
  */
 final class DisclosureGuard
 {
@@ -29,15 +36,20 @@ final class DisclosureGuard
     ];
 
     /**
-     * @param list<array{answer:array,variables?:list<string>,options?:?array}> $protected
+     * @param list<array{answer:array,variables?:list<string>,options?:?array,active?:bool}> $protected
+     * @param list<array> $completed answer specs of completed steps (the learner's own correct answers)
      * @return list<string> reasons; empty when no disclosure was detected
      */
-    public static function violations(string $message, array $protected): array
+    public static function violations(string $message, array $protected, array $completed = []): array
     {
         $text = self::normalize($message);
         $reasons = [];
         foreach ($protected as $p) {
             $a = $p['answer'];
+            // (b): the learner already gave this value; only the active step's answer stays protected.
+            if (!($p['active'] ?? true) && self::alreadyAnswered($a, $completed, $p['variables'] ?? ['x'])) {
+                continue;
+            }
             $hit = match ($a['kind']) {
                 'exact_rational' => self::scalarHit($text, (string) $a['expected']),
                 'polynomial' => self::expressionHit($text, (string) $a['expected'], $p['variables'] ?? ['x']),
@@ -197,8 +209,57 @@ final class DisclosureGuard
         return $out;
     }
 
+    /** True when a completed step's answer has the same value as this protected answer. */
+    private static function alreadyAnswered(array $answer, array $completed, array $vars): bool
+    {
+        foreach ($completed as $c) {
+            if (($c['kind'] ?? null) !== $answer['kind']) {
+                continue;
+            }
+            try {
+                $same = match ($answer['kind']) {
+                    'exact_rational' => ScalarParser::parse((string) $c['expected'])->equals(ScalarParser::parse((string) $answer['expected'])),
+                    'polynomial' => Polynomial::fromNode(ExpressionParser::parse((string) $c['expected'], $vars))
+                        ->equals(Polynomial::fromNode(ExpressionParser::parse((string) $answer['expected'], $vars))),
+                    'classification' => (array) $c['expected'] == (array) $answer['expected'],
+                    default => false,
+                };
+            } catch (MathInputError) {
+                $same = false;
+            }
+            if ($same) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * (a): remove spans that list two or more different options as alternatives
+     * ("positive or negative", "options A or B"), so naming the choices is not
+     * read as choosing one.
+     */
+    private static function withoutAlternatives(string $text, array $options): string
+    {
+        $texts = array_values(array_filter(array_map(fn ($o) => strtolower(Normalizer::normalize($o['text'])), $options), fn ($t) => mb_strlen($t) >= 4));
+        if (count($texts) >= 2) {
+            $alt = '(' . implode('|', array_map(fn ($t) => preg_quote($t, '/'), $texts)) . ')';
+            $text = (string) preg_replace_callback('/' . $alt . '(?:\s*(?:,\s*or|,|\/|\bor\b)\s*' . $alt . ')+/u', function ($m) use ($texts) {
+                $named = [];
+                foreach ($texts as $t) {
+                    if (str_contains($m[0], $t)) {
+                        $named[] = $t;
+                    }
+                }
+                return count($named) >= 2 ? ' ' : $m[0];
+            }, $text);
+        }
+        return (string) preg_replace('/\b(options?|choices?|letters?)\s+\(?[a-d]\)?(?:\s*(?:,\s*or|,|\/|\bor\b)\s*\(?[a-d]\)?)+/', ' ', $text);
+    }
+
     private static function classificationHit(string $text, array $letters, array $options): bool
     {
+        $text = self::withoutAlternatives($text, $options);
         foreach ($letters as $letter) {
             $l = strtolower((string) $letter);
             if (preg_match('/\b(option|choice|answer|letter)\s*(is\s*)?\(?' . $l . '\)?(?![a-z])/', $text) || preg_match('/(?<![a-z])' . $l . '\)/', $text)) {

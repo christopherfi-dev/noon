@@ -14,8 +14,9 @@ return [
     'provider_api_key' => '',             // secret; server-side only
     'provider_timeout' => 45,
     'provider_connect_timeout' => 10,
-    'provider_thinking' => '',            // live provider: 'disabled' or 'enabled' (required; sent on every call)
-    'provider_reasoning_effort' => '',    // 'low', 'high' or 'max' when thinking is enabled; empty when disabled
+    'provider_thinking' => 'disabled',    // round 4 choice; 'enabled' is still possible (sent on every call, never left to the provider default)
+    'provider_reasoning_effort' => '',    // 'low', 'high' or 'max' only when thinking is 'enabled'; empty when disabled
+    // temperature 0.2 is sent while thinking is disabled (it has no effect in thinking mode)
     'provider_max_tokens' => 4096,        // output limit per call; with thinking enabled, reasoning counts against it
 
     // 'db_path' => '/home/ACCOUNT/algebra-private/var/algebra.sqlite',

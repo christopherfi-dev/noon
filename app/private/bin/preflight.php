@@ -94,6 +94,7 @@ $expected = [
     'resources/contracts/workflow-policy.json',
     'migrations/001_init.sql',
     'migrations/002_model_call_usage.sql',
+    'migrations/003_model_call_transport_detail.sql',
     'vendor/autoload.php',
 ];
 foreach ($expected as $rel) {
