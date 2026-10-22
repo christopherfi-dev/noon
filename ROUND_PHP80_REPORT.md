@@ -50,7 +50,7 @@ Raw output: `test-results/gate-php80/`, `test-results/gate-php83/`, `test-result
 ## 5. Bundle
 
 `dist/algebra-engine-vps-upload.zip`, 664 files. **sha256 `d32e7fe3d0cdea1eeb0b42c39aac5e3b9da4368b792c6052e5240ae3e96b9383`**.
-- **Layout:** `algebra-engine/` holds only `index.html`, `api.php` and `assets/` (3 files); the rest is `algebra-engine-private/`.
+- **Layout:** `algebra-engine/` holds only `index.html`, `api.php` and `assets/` (`app.css`, `app.js`, `favicon.svg`): 5 files; the rest is `algebra-engine-private/`.
 - **No dotfiles:** none at all. The dependencies' `.gitattributes`, `.github/` and `.gitignore` were dropped.
 - **Settings:** in `api.php` the default `ALGEBRA_PRIVATE_DIR` is `/var/www/algebra-engine-private`, and `config.example.php` sets `'base_path' => '/educational-engines/algebra-engine/'`.
 - **Smoke test:** it checks all of the above. It also checks that the ZIP equals the staged tree, serves the bundle at `/educational-engines/algebra-engine/`, checks the cookie path, and refuses 6 private paths.
