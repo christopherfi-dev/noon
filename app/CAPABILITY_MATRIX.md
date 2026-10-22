@@ -4,7 +4,7 @@ Generated from the tested runtime registry (`app/private/src/Capability/Capabili
 
 Runtime status counts: AVAILABLE_SCORED 2, PARTIAL_COMPONENTS 8, UNAVAILABLE 195. No all-skills operational claim is made.
 
-**Live provider smoke test:** Round 3 (2026-10-21): scripted live runs (5 B1 + 3 B3) against DeepSeek deepseek-flash in three configurations: thinking disabled, enabled at low effort and enabled at high effort; all 24 sessions completed. Results: test-results/live/round3/ and ROUND_3_REPORT.md. The owner chooses the configuration. Earlier smoke runs: test-results/08-live-smoke.txt and test-results/live/00-smoke-and-model-check.md. These runs use scripted learners: they confirm provider compatibility and host gating, not teaching quality, learning or deployment. Every other result in this matrix is from mock mode (simulated model).
+**Live provider smoke test:** Round 4 (2026-10-22): live confirmation with thinking disabled (the chosen setting) against DeepSeek deepseek-flash: the 8 round 3 sessions (5 B1, 3 B3) and the B11 messy-learner session twice; all 10 sessions completed. Results: test-results/live/round4/ and ROUND_4_REPORT.md. Earlier runs: test-results/live/round3/, test-results/live/00-smoke-and-model-check.md, test-results/08-live-smoke.txt. These runs use scripted learners: they confirm provider compatibility and host gating, not teaching quality, learning or deployment. Every other result in this matrix is from mock mode (simulated model).
 
 ## Beta skills
 
