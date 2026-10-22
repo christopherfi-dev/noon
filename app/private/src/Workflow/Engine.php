@@ -42,7 +42,8 @@ final class Engine
     public const MAX_FAILED_CYCLES = 3;
     public const MAX_DEPTH = 8;
     public const MAX_GUIDED_PROBLEMS = 3;
-    public const MAX_PROBES_PER_DECISION = 3;
+    /** Round 5.1 P4: no more than two probes per diagnosis (the owner's slip check of one or two extra problems). */
+    public const MAX_PROBES_PER_DECISION = 2;
     public const HISTORY_LIMIT = 12;
 
     private const ITEM_ACTIONS = ['SUBMIT_RESPONSE', 'REQUEST_HINT', 'REQUEST_EXPLANATION', 'CLARIFY_RESPONSE', 'SKIP_ITEM', 'NOT_LEARNED'];
@@ -775,6 +776,29 @@ final class Engine
     {
         $skill = $turn->skill();
         $diag = $turn->eng['diagnosis'];
+        // Round 5.1 P4: an answer given after a hint, an explanation or a stuck entry cannot show the error was a slip.
+        if (($item['support_event_ids'] ?? []) !== []) {
+            if (($diag['probes'] ?? 1) < self::MAX_PROBES_PER_DECISION) {
+                $turn->event('OBSERVATION', [
+                    'statement' => 'Answered after a hint; inconclusive.',
+                    'code' => 'PROBE_INCONCLUSIVE_AFTER_HELP', 'branch' => null, 'skill_id' => $skill, 'item_id' => $item['item_id'],
+                    'evidence_event_ids' => [$responseEvent], 'provenance' => 'HOST_RULE', 'status' => 'OBSERVATION_NOT_CAUSE',
+                ]);
+                $turn->eng['diagnosis']['probes'] = ($diag['probes'] ?? 1) + 1;
+                $turn->eng['diagnosis']['inconclusive'] = true;
+                $this->presentItem($turn, 'DIAGNOSTIC', $skill, 'constructed', $item['params']);
+                return;
+            }
+            // The second probe also needed help: the breakdown is confirmed (owner rule). No hypothesis update from assisted work.
+            $turn->event('OBSERVATION', [
+                'statement' => 'The second probe was also answered after a hint; the breakdown is treated as confirmed.',
+                'code' => 'BREAKDOWN_CONFIRMED_AFTER_HELP', 'branch' => null, 'skill_id' => $skill, 'item_id' => $item['item_id'],
+                'evidence_event_ids' => array_values(array_filter([$diag['trigger_event_id'] ?? null, $responseEvent])), 'provenance' => 'HOST_RULE', 'status' => 'OBSERVATION_NOT_CAUSE',
+            ]);
+            $turn->eng['diagnosis'] = null;
+            $this->descend($turn, $skill, ($diag['branch'] ?? null) ?? self::branchOf($sigs), $responseEvent);
+            return;
+        }
         if ($verdict === 'CORRECT' || $verdict === 'PARTIAL') {
             $turn->event('OBSERVATION', [
                 'statement' => 'The earlier error was not reproduced on a fresh probe. This does not confirm a slip.',
@@ -791,7 +815,10 @@ final class Engine
             $this->beginRepair($turn, $skill, 'Error not reproduced on the probe; bounded instructional trial before further independent checks.', [$responseEvent]);
             return;
         }
-        $branch = self::branchOf($sigs) ?? ($diag['branch'] ?? null);
+        // After an inconclusive first probe, descend along the branch the original error implicated (round 5.1 P4).
+        $branch = ($diag['inconclusive'] ?? false)
+            ? (($diag['branch'] ?? null) ?? self::branchOf($sigs))
+            : (self::branchOf($sigs) ?? ($diag['branch'] ?? null));
         $this->updateHypothesis($turn, $diag['branch'] ?? null, self::branchOf($sigs), [$diag['trigger_event_id'] ?? $responseEvent, $responseEvent]);
         $turn->eng['diagnosis'] = null;
         $this->descend($turn, $skill, $branch, $responseEvent);
@@ -1138,8 +1165,12 @@ final class Engine
         $this->presentStep($turn, []);
     }
 
-    /** D1: when stuck, ask a smaller question; never show the answer. */
-    private function stuck(Turn $turn, array $facts): void
+    /**
+     * D1: when stuck, ask a smaller question; never show the answer.
+     *
+     * @return string what follows: SMALLER, ANOTHER_WAY, PREREQUISITE (a prerequisite check) or OTHER (after a boundary)
+     */
+    private function stuck(Turn $turn, array $facts): string
     {
         $g = &$turn->eng['guided'];
         $g['clean'] = false;
@@ -1150,7 +1181,7 @@ final class Engine
             $g['path'] = [$id, $step['smaller'][0]['id']];
             unset($g);
             $this->presentStep($turn, $facts);
-            return;
+            return 'SMALLER';
         }
         if ($step['alt_prompt'] !== null && !isset($g['alt'][$id])) {
             $g['alt'][$id] = true;
@@ -1160,7 +1191,7 @@ final class Engine
                 $turn->say('INFORMATION', $fact);
             }
             $this->presentStep($turn, [], 'Here is the same question, asked another way.', 'alt', true);
-            return;
+            return 'ANOTHER_WAY';
         }
         // Round 2 ruling 8: still stuck at the smallest available question. Set the
         // problem aside (no answer shown) and check the declared prerequisite that
@@ -1171,6 +1202,7 @@ final class Engine
         $turn->event('GUIDED_PROBLEM_ABANDONED', ['skill_id' => $turn->skill(), 'plan_id' => $plan['plan_id'], 'step_id' => $id, 'exercises' => $step['exercises'],
             'note' => 'Stuck at the smallest available question; no answer was shown.']);
         $this->descend($turn, $turn->skill(), $step['exercises'], $turn->triggerEventId, true);
+        return $turn->mode() === 'PREREQUISITE_CHECK' ? 'PREREQUISITE' : 'OTHER';
     }
 
     /** After a boundary at a stuck question: a fresh guided problem at the same skill, within the problem budget. */
@@ -1270,15 +1302,25 @@ final class Engine
     private function onStuckEntry(Turn $turn, string $kind, string $responseEvent): void
     {
         $active = $turn->eng['active'];
-        if ($kind === 'ASK_FOR_ANSWER') {
-            $turn->say('INFORMATION', EntryInterpreter::LINE_ASK_FOR_ANSWER);
-        }
         if ($turn->mode() === 'GUIDED_REPAIR') {
             $turn->event('ITEM_CLOSED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'reason' => 'STUCK_ENTRY',
                 'note' => 'The learner typed that they are stuck or asked for the answer; not an incorrect attempt.']);
             $turn->eng['active'] = null;
-            $this->stuck($turn, []);
+            $at = count($turn->messages);
+            $next = $this->stuck($turn, []);
+            if ($kind === 'ASK_FOR_ANSWER') {
+                // Round 5.1 P1: the line names what actually follows, placed before it.
+                $turn->sayAt($at, 'INFORMATION', match ($next) {
+                    'SMALLER' => EntryInterpreter::LINE_ASK_SMALLER,
+                    'ANOTHER_WAY' => EntryInterpreter::LINE_ASK_ANOTHER_WAY,
+                    'PREREQUISITE' => EntryInterpreter::LINE_ASK_PREREQUISITE,
+                    default => EntryInterpreter::LINE_ASK_OTHER,
+                });
+            }
             return;
+        }
+        if ($kind === 'ASK_FOR_ANSWER') {
+            $turn->say('INFORMATION', EntryInterpreter::LINE_ASK_HINT);
         }
         $this->onSupport($turn, 'REQUEST_HINT', $responseEvent);
     }

@@ -83,9 +83,9 @@ final class StuckEntryTest extends TestCase
                 $this->assertSame('GUIDED_REPAIR', $h->mode());
                 $this->assertSame('s1.1', $h->active()['guided_step']['id'], 'a smaller question: ' . $text);
                 if ($kind === 'ASK_FOR_ANSWER') {
-                    $this->assertSame(EntryInterpreter::LINE_ASK_FOR_ANSWER, $shown[0], $text);
+                    $this->assertSame(EntryInterpreter::LINE_ASK_SMALLER, $shown[0], $text);
                 } else {
-                    $this->assertNotContains(EntryInterpreter::LINE_ASK_FOR_ANSWER, $shown);
+                    $this->assertNotContains(EntryInterpreter::LINE_ASK_SMALLER, $shown);
                 }
             } finally {
                 $h->cleanup();
@@ -111,7 +111,7 @@ final class StuckEntryTest extends TestCase
                 $this->assertCount(1, $support, $text);
                 $this->assertSame(['HINT', 'STUCK_ENTRY'], [$support[0]['data']['kind'], $support[0]['data']['trigger']]);
                 $this->assertSame(['TARGET_ASSESSMENT', $item, 'ASSISTED'], [$h->mode(), $h->active()['item_id'], $h->view['active_item']['support_status']], $text);
-                $expected = $kind === 'ASK_FOR_ANSWER' ? [EntryInterpreter::LINE_ASK_FOR_ANSWER, self::HELP_LINE] : [self::HELP_LINE];
+                $expected = $kind === 'ASK_FOR_ANSWER' ? [EntryInterpreter::LINE_ASK_HINT, self::HELP_LINE] : [self::HELP_LINE];
                 $this->assertSame($expected, array_slice($shown, 0, count($expected)), $text);
                 $this->assertGreaterThan(count($expected), count($shown), 'the hint follows');
                 // The assisted item does not count as independent work.
@@ -120,6 +120,68 @@ final class StuckEntryTest extends TestCase
             } finally {
                 $h->cleanup();
             }
+        }
+    }
+
+    /** Round 5.1 P1: asking for the answer shows the line that names what actually follows, in each case. */
+    public function testAskForAnswerLineNamesWhatFollows(): void
+    {
+        $ask = 'can you just tell me the answer';
+        // Independent item: a hint follows.
+        $h = self::target('p1-hint');
+        try {
+            [, $shown] = self::send($h, $ask);
+            $this->assertSame([EntryInterpreter::LINE_ASK_HINT, self::HELP_LINE], array_slice($shown, 0, 2));
+        } finally {
+            $h->cleanup();
+        }
+        // Guided repair: a smaller question follows (s1 has s1.1).
+        $h = self::guided('p1-smaller');
+        try {
+            [, $shown] = self::send($h, $ask);
+            $this->assertSame(['GUIDED_REPAIR', 's1.1'], [$h->mode(), $h->active()['guided_step']['id']]);
+            $this->assertSame(EntryInterpreter::LINE_ASK_SMALLER, $shown[0]);
+        } finally {
+            $h->cleanup();
+        }
+        // Guided repair: the same question asked another way (s3 after its smaller question, with an alternate phrasing).
+        $h = self::guided('p1-another-way');
+        try {
+            $h->answerCorrect();                                    // s1
+            $h->answerCorrect();                                    // s2
+            $h->submit($h->plainWrong());                           // s3 → s3.1
+            $h->answerCorrect();                                    // s3.1 → s3 again
+            $this->assertSame('s3', $h->active()['guided_step']['id']);
+            [, $shown] = self::send($h, $ask);
+            $this->assertSame('alt', $h->active()['params']['phrasing']);
+            $this->assertSame([EntryInterpreter::LINE_ASK_ANOTHER_WAY, 'Here is the same question, asked another way.'], $shown);
+        } finally {
+            $h->cleanup();
+        }
+        // Guided repair: a prerequisite check follows (stuck at s1.1, which exercises N18, a declared prerequisite in the beta).
+        $h = self::guided('p1-prerequisite');
+        try {
+            $h->submit($h->plainWrong());                           // s1 → s1.1
+            [, $shown] = self::send($h, $ask);
+            $this->assertSame(['PREREQUISITE_CHECK', 'N18'], [$h->mode(), $h->skill()]);
+            $this->assertSame(EntryInterpreter::LINE_ASK_PREREQUISITE, $shown[0]);
+        } finally {
+            $h->cleanup();
+        }
+        // Not covered by the ruling: a boundary follows (s3.1 exercises A07, outside the beta) and then a new guided problem.
+        $h = self::guided('p1-boundary');
+        try {
+            $h->answerCorrect();                                    // s1
+            $h->answerCorrect();                                    // s2
+            $h->submit($h->plainWrong());                           // s3 → s3.1
+            [, $shown] = self::send($h, $ask);
+            $this->assertSame(['GUIDED_REPAIR', 's1'], [$h->mode(), $h->active()['guided_step']['id']]);
+            $this->assertSame(EntryInterpreter::LINE_ASK_OTHER, $shown[0]);
+            foreach ([EntryInterpreter::LINE_ASK_SMALLER, EntryInterpreter::LINE_ASK_ANOTHER_WAY, EntryInterpreter::LINE_ASK_PREREQUISITE, EntryInterpreter::LINE_ASK_HINT] as $line) {
+                $this->assertNotContains($line, $shown);
+            }
+        } finally {
+            $h->cleanup();
         }
     }
 
@@ -303,7 +365,7 @@ final class StuckEntryTest extends TestCase
         }
         $this->assertSame([
             'TARGET_ASSESSMENT' => 'Q07 → TARGET_ASSESSMENT (Q07)',     // next target item; no criterion progress
-            'DIAGNOSTIC_PROBE' => 'Q07 → TARGET_ASSESSMENT (Q07)',      // error not reproduced; resume target assessment
+            'DIAGNOSTIC_PROBE' => 'Q07 → DIAGNOSTIC_PROBE (Q07)',       // round 5.1 P4: inconclusive; one more fresh probe (B16)
             'PREREQUISITE_CHECK' => 'E06 → GUIDED_REPAIR (E06)',         // assisted check → bounded instructional trial
             'INDEPENDENT_CHECK' => 'E06 → INDEPENDENT_CHECK (E06)',      // next independent item; no criterion progress
             'RETURN_TO_TARGET' => 'Q07 → RETURN_TO_TARGET (Q07)',        // same kind of item again

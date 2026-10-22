@@ -22,8 +22,13 @@ final class EntryInterpreter
     public const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve',
         'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
 
-    /** Host lines, exactly as written in the round 5 table. */
-    public const LINE_ASK_FOR_ANSWER = 'I won\'t give the answer, but here is a smaller step.';
+    /** Host lines, exactly as written in the round 5 table and the round 5.1 ruling on P1 (one per follow-on). */
+    public const LINE_ASK_HINT = 'I won\'t give the answer, but here is a hint.';
+    public const LINE_ASK_SMALLER = 'I won\'t give the answer, but here is a smaller step.';
+    public const LINE_ASK_ANOTHER_WAY = 'I won\'t give the answer, but let\'s look at it another way.';
+    public const LINE_ASK_PREREQUISITE = 'I won\'t give the answer, but let\'s check something that comes before this.';
+    /** Not in the ruling: a boundary follows (a fresh guided problem or an independent check). States no next step. */
+    public const LINE_ASK_OTHER = 'I won\'t give the answer.';
     public const LINE_QUESTION = 'This box is for your answer. If you\'re stuck, type help.';
     public const LINE_NUMBER_WORD = 'Write the number with digits.';
 

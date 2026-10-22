@@ -62,6 +62,15 @@ final class Turn
         }
     }
 
+    /** Like say(), but placed at $index among this turn's messages (a line that depends on what follows it). */
+    public function sayAt(int $index, string $kind, string $text, string $source = 'HOST'): void
+    {
+        $before = $this->messages;
+        $this->messages = [];
+        $this->say($kind, $text, $source);
+        $this->messages = array_merge(array_slice($before, 0, $index), $this->messages, array_slice($before, $index));
+    }
+
     public function mode(): string
     {
         return $this->snap['mode'];

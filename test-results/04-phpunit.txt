@@ -3,12 +3,12 @@ PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
 Runtime:       PHP 8.3.6
 Configuration: /home/user/noon/app/phpunit.xml
 
-...............................................................  63 / 189 ( 33%)
-............................................................... 126 / 189 ( 66%)
-............................................................... 189 / 189 (100%)
+...............................................................  63 / 198 ( 31%)
+............................................................... 126 / 198 ( 63%)
+............................................................... 189 / 198 ( 95%)
+.........                                                       198 / 198 (100%)
 
-
-Time: 00:46.081, Memory: 32.00 MB
+Time: 00:50.167, Memory: 32.00 MB
 
 Beta Guards (AlgebraEngine\Tests\Integration\BetaGuards)
  ✔ B 5 non prerequisite proposal rejected
@@ -16,6 +16,7 @@ Beta Guards (AlgebraEngine\Tests\Integration\BetaGuards)
  ✔ B 7 hint makes item assisted
  ✔ B 8 disclosure guard rejects leak
  ✔ Internal vocabulary is repaired not shown
+ ✔ Support claim in model text is repaired not shown
  ✔ B 8 repeated leak holds
  ✔ D 1 hint and i dont know give smaller questions
  ✔ Repair opening never holds on its own facts
@@ -51,6 +52,7 @@ Engine Units (AlgebraEngine\Tests\Unit\Engine\EngineUnits)
  ✔ Disclosure guard heuristic
  ✔ Guard operand noun exemption
  ✔ Internal vocabulary
+ ✔ Support claims in model text only
  ✔ Host lines use no internal vocabulary
  ✔ Envelope skeleton has placeholders only
 
@@ -184,6 +186,12 @@ Polynomial (AlgebraEngine\Tests\Unit\Math\Polynomial)
  ✔ Rational coefficients and constants
  ✔ Degree and size limits
 
+Probe After Help (AlgebraEngine\Tests\Integration\ProbeAfterHelp)
+ ✔ Second probe correct without help resumes
+ ✔ Second probe wrong descends
+ ✔ Second probe after help descends
+ ✔ At most two probes when skipped
+
 Rational (AlgebraEngine\Tests\Unit\Math\Rational)
  ✔ Reduces and normalises sign
  ✔ Arithmetic
@@ -229,11 +237,16 @@ Scenario Map (AlgebraEngine\Tests\Integration\ScenarioMap)
 Stuck Entry (AlgebraEngine\Tests\Integration\StuckEntry)
  ✔ Stuck and ask for answer in guided repair
  ✔ Stuck and ask for answer on independent item
+ ✔ Ask for answer line names what follows
  ✔ Off task question and number words
  ✔ Capital x is read as x
  ✔ Trailing question mark is scored normally
  ✔ Normalisation
  ✔ Stuck entry flow in each independent mode
+
+Summary Wording (AlgebraEngine\Tests\Integration\SummaryWording)
+ ✔ Summary prose uses plain words
+ ✔ Plain words for stored text
 
 Templates (AlgebraEngine\Tests\Unit\Items\Templates)
  ✔ Every template generates valid items whose host key checks correct
@@ -247,4 +260,4 @@ Templates (AlgebraEngine\Tests\Unit\Items\Templates)
  ✔ Opening facts never contain a step answer
  ✔ Guided plans are questions that never state their answer
 
-OK (189 tests, 38530 assertions)
+OK (198 tests, 38932 assertions)

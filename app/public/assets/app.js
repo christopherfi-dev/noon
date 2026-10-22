@@ -541,18 +541,25 @@
     return list((items || []).map((x) => x.statement), empty);
   }
 
+  // Round 5.1: plain words for the stored goal status (the stored codes are unchanged).
+  function goalText(status) {
+    if (status === 'IMMEDIATE_CRITERION_MET') return 'goal met: 3 correct in a row without help';
+    if (status === 'COMPONENT_CRITERION_MET') return 'goal met: 3 correct in a row without help (numeric part only)';
+    return 'not met yet';
+  }
+
   function renderSummary() {
     const data = state.report;
     const r = data.report;
     const table = el('table', { className: 'skills-table' },
       el('caption', { text: 'Per skill, this session' }),
-      el('thead', null, el('tr', null, ['Skill', 'Items attempted', 'Independent', 'With help', 'Criterion status', 'Coverage'].map((h) => el('th', { scope: 'col', text: h })))),
+      el('thead', null, el('tr', null, ['Skill', 'Items attempted', 'Without help', 'With help', 'Goal', 'Coverage'].map((h) => el('th', { scope: 'col', text: h })))),
       el('tbody', null, data.per_skill.map((s) => el('tr', null,
         el('th', { scope: 'row', text: s.skill_id + ' ' + s.title }),
         el('td', { text: String(s.items_attempted) }),
         el('td', { text: String(s.independent) }),
         el('td', { text: String(s.assisted) }),
-        el('td', { text: s.criterion_status.replace(/_/g, ' ').toLowerCase() }),
+        el('td', { text: goalText(s.criterion_status) }),
         el('td', { text: s.runtime_coverage }),
       ))));
     const details = data.per_skill.map((s) => el('section', { className: 'skill-detail' },
@@ -567,8 +574,8 @@
       el('p', { text: 'Status: ' + r.status.replace(/_/g, ' ').toLowerCase() + '. Topics: ' + (r.targets_attempted.join(', ') || 'none') + '.' }),
       el('div', { className: 'table-wrap' }, table),
       details,
-      el('h2', { text: 'Criteria met in this session' }),
-      statements(r.immediate_criteria, 'No criterion was met in this session.'),
+      el('h2', { text: 'Goals met in this session' }),
+      statements(r.immediate_criteria, 'No goal was met in this session.'),
       el('h2', { text: 'Transfer actually tested' }),
       statements(r.transfer_evidence, 'No transfer item was answered correctly without help.'),
       el('h2', { text: 'Guided work' }),

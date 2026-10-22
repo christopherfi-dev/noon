@@ -137,3 +137,14 @@ Separate interval from earlier rounds. Only v3 of the round 5 instructions reach
 | 2026-10-22T09:47:47Z | §5 keys: literal search found the key in my private config, the uploaded file and this conversation's history file; deleted the first two. The conversation history cannot be removed by me | Owner to revoke the key |
 | 2026-10-22T09:53:50Z–09:54:53Z | Final gate (no key configured) | PASS — every step exit 0; PHPUnit 189 (105 unit, 84 integration; 38530 assertions); browser 5/5; bundle smoke PASS; key-leak scan 0 hits |
 | 2026-10-22T09:55:01Z | **Round 5 end**. Report: `ROUND_5_REPORT.md`; transcripts in `test-results/live/round5/`. Key copies deleted except the conversation history; owner to revoke the key. Not deployed | Round 5 interval 06:59:22Z–2026-10-22T09:55:01Z |
+
+## Round 5.1 — truth fixes from ROUND_5_REPORT (`CONDUCTOR_ROUND_5_1.md`)
+
+Separate interval. Offline only: no live run, no key needed or used.
+
+| UTC time | Action | Result |
+|---|---|---|
+| 2026-10-22T10:56:51Z | **Round 5.1 start**. Instructions placed in `CONDUCTOR_ROUND_5_1.md` | Recorded |
+| between 10:56:51Z and 11:10:21Z (exact times not recorded) | Ruling 4: plain words in the session summary (report prose and summary page; field names and stored codes unchanged). P1: the ask-for-answer line names what follows (`stuck()` reports its outcome; a boundary gets "I won't give the answer." alone, conflict reported). P2: an answer after a hint, explanation or stuck entry resets the run (owner-rule override recorded in the capability matrix). P3: five support claims rejected in model text only. P4: a probe answered after help is inconclusive; one more fresh probe; at most two probes per diagnosis | PHPUnit 198 PASS (106 unit, 92 integration); browser 5/5. Tests that pinned the old behaviour updated: B14b, EVID-01, B15 flow, two EvidenceTest wording checks |
+| 2026-10-22T11:10:21Z–11:11:28Z | Round 5.1 gate (mock config, no key) | PASS — every step exit 0; PHPUnit 198 (38932 assertions); browser 5/5; bundle smoke PASS; key-leak scan 0 hits; 2 more PHPUnit runs clean |
+| 2026-10-22T11:13:43Z | **Round 5.1 end**. Report: `ROUND_5_1_REPORT.md`. No live run, no key used. Not deployed | Round 5.1 interval 10:56:51Z–2026-10-22T11:13:43Z |

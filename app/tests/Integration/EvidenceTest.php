@@ -22,7 +22,7 @@ final class EvidenceTest extends TestCase
         $this->h->cleanup();
     }
 
-    /** EVID-01: support requested before a correct answer is committed first; the answer is assisted and excluded. */
+    /** EVID-01: support requested before a correct answer is committed first; the answer is assisted, excluded, and (round 5.1) resets the run. */
     public function testEvid01HintIndependence(): void
     {
         $h = $this->h;
@@ -34,11 +34,12 @@ final class EvidenceTest extends TestCase
         $this->assertSame('EXPLANATION', $support[0]['data']['kind']);
         $this->assertSame('ASSISTED', $h->view['active_item']['support_status']);
         $h->answerCorrect();
-        $this->assertSame(1, $h->view['progress']['independent_successes'], 'assisted correct neither advances nor resets');
+        // Round 5.1 owner rule: an answer given after support breaks the run, exactly as a wrong answer does.
+        $this->assertSame(0, $h->view['progress']['independent_successes'], 'an answer after support resets the run');
         $results = $h->events('CHECKER_RESULT');
         $this->assertFalse(end($results)['data']['result']['independent_eligible']);
         $h->answerCorrect();
-        $this->assertSame(2, $h->view['progress']['independent_successes']);
+        $this->assertSame(1, $h->view['progress']['independent_successes']);
     }
 
     /** EVID-02: a solved instance reused with a new item ID is detected by fingerprint; no independent credit. */
@@ -107,7 +108,7 @@ final class EvidenceTest extends TestCase
         $this->assertStringContainsString('no retention or long-term learning claim', $report['immediate_criteria'][0]['review_scope']);
         $this->assertSame([], $report['retention_evidence']);
         $this->assertStringContainsString('later independent review', $report['next_evidence_needed'][0]);
-        $this->assertStringContainsString('in-session classification only', $report['policy_note']);
+        $this->assertStringContainsString('a check from this session only, not a long-term learning claim', $report['policy_note']);
     }
 
     /** EVID-05: invalidating an earlier credited item appends a correction, preserves the original and recomputes claims. */
@@ -153,6 +154,6 @@ final class EvidenceTest extends TestCase
             }
         }
         $this->assertDoesNotMatchRegularExpression('/\b(failed|passed)\b/i', json_encode($report['report']['independent_evidence']));
-        $this->assertStringContainsString('Fresh independent Q07 work', $report['report']['next_evidence_needed'][0]);
+        $this->assertStringContainsString('Fresh Q07 work without help', $report['report']['next_evidence_needed'][0]);
     }
 }

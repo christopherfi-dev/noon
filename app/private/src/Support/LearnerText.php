@@ -23,11 +23,35 @@ final class LearnerText
         'criterion' => 'criterion|criteria',
     ];
 
+    /**
+     * Round 5.1 (P3): claims about support that only the host may make. Rejected in model
+     * text; host lines are exempt ("Here is one to try on your own." is true there).
+     */
+    public const SUPPORT_CLAIMS = [
+        'on your own' => 'on your own',
+        'without help' => 'without help',
+        'independently' => 'independently',
+        'by yourself' => 'by yourself',
+        'no help' => 'no help',
+    ];
+
     /** @return list<string> listed terms found in $text */
     public static function internalTerms(string $text): array
     {
+        return self::find($text, self::INTERNAL_TERMS);
+    }
+
+    /** Terms rejected in model-written learner text: the internal terms plus the support claims. @return list<string> */
+    public static function modelTextTerms(string $text): array
+    {
+        return array_merge(self::find($text, self::INTERNAL_TERMS), self::find($text, self::SUPPORT_CLAIMS));
+    }
+
+    /** @param array<string,string> $terms @return list<string> */
+    private static function find(string $text, array $terms): array
+    {
         $found = [];
-        foreach (self::INTERNAL_TERMS as $term => $pattern) {
+        foreach ($terms as $term => $pattern) {
             $words = str_replace(' ', '\s+', $pattern);
             if (preg_match('/(?<![\p{L}\p{N}_])(?:' . $words . ')(?![\p{L}\p{N}_])/iu', $text)) {
                 $found[] = $term;

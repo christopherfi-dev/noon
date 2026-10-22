@@ -218,10 +218,14 @@ final class ModelCoordinator
         if ($shown && preg_match(self::BANNED_WORDS, $message)) {
             $errors[] = 'student_message must not make mastery, verification or hypothesis claims';
         }
-        // R5-B: internal vocabulary, as whole words or phrases.
+        // R5-B: internal vocabulary, as whole words or phrases. Round 5.1 (P3): only the host says when work is unaided.
         $terms = $shown ? LearnerText::internalTerms($message) : [];
         if ($terms !== []) {
             $errors[] = 'student_message must speak to the learner in plain words; it uses internal terms: ' . implode(', ', array_map(fn ($t) => '"' . $t . '"', $terms));
+        }
+        $claims = $shown ? array_values(array_diff(LearnerText::modelTextTerms($message), $terms)) : [];
+        if ($claims !== []) {
+            $errors[] = 'student_message must not say whether work is done without help; the host says that. It uses: ' . implode(', ', array_map(fn ($t) => '"' . $t . '"', $claims));
         }
         if ($shown && $expect['disclosure_guard']) {
             foreach (DisclosureGuard::violations($message, $expect['protected_answers'], $expect['completed_answers'] ?? []) as $v) {

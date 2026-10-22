@@ -181,6 +181,30 @@ final class EngineUnitsTest extends TestCase
         }
     }
 
+    /** Round 5.1 P3: support claims are rejected in model text only; the four live round 5 lines are caught; host lines are exempt. */
+    public function testSupportClaimsInModelTextOnly(): void
+    {
+        $live = [
+            'You put the number part and the x-part together correctly. Here is a fresh one to try on your own.',   // confirmation 01-B1 t9
+            'You combined the size and the sign correctly on that one. Here is a fresh one to try on your own.',    // confirmation 07-B3 t9
+            'You found the size and the sign. Now try a fresh one on your own.',                                    // B11 02-B11 t16
+            'You handled the sizes and the signs on that one. Here is a fresh one to try on your own.',             // B11 02-B11 t21
+        ];
+        foreach ($live as $text) {
+            $this->assertSame(['on your own'], LearnerText::modelTextTerms($text), $text);
+            $this->assertSame([], LearnerText::internalTerms($text), 'not an internal term: host lines may say it');
+        }
+        foreach (['on your own' => 'Try it On Your Own.', 'without help' => 'You did it without help.', 'independently' => 'Work independently now.',
+            'by yourself' => 'Do this one by yourself.', 'no help' => 'You needed no help.'] as $term => $text) {
+            $this->assertSame([$term], LearnerText::modelTextTerms($text), $text);
+        }
+        foreach (['Your own answer was close.', 'No helper is needed', 'The independent variable is x.', 'help yourself to a pencil'] as $text) {
+            $this->assertSame([], LearnerText::modelTextTerms($text), $text);
+        }
+        $this->assertSame([], LearnerText::internalTerms(\AlgebraEngine\Workflow\Engine::INDEPENDENT_LEAD));
+        $this->assertSame(['on your own'], LearnerText::modelTextTerms(\AlgebraEngine\Workflow\Engine::INDEPENDENT_LEAD), 'the host line would be rejected only if the model wrote it');
+    }
+
     /** R5-B: host-written learner lines pass the same check (static scan; Turn::say also enforces it at run time). */
     public function testHostLinesUseNoInternalVocabulary(): void
     {

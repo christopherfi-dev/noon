@@ -95,13 +95,15 @@ try {
     await page.getByTestId('view-report').click();
     await page.getByTestId('report').waitFor();
     const reportText = await page.getByTestId('report').textContent();
+    // Round 5.1 ruling 4: the summary page uses plain words (R5-B list, plurals included).
+    const internalInSummary = reportText.match(/\b(expected values?|expected answers?|answer keys?|matched the key|guided steps?|hosts?|assisted|verdicts?|criterion|criteria)\b/gi) || [];
     maxOverflow = Math.max(maxOverflow, await overflow(page));
     await page.screenshot({ path: path.join(outDir, `b1-${label}-report.png`), fullPage: true });
     const expected = ['TARGET_ASSESSMENT', 'DIAGNOSTIC_PROBE', 'PREREQUISITE_CHECK', 'GUIDED_REPAIR', 'GUIDED_REPAIR', 'INDEPENDENT_CHECK', 'RETURN_TO_TARGET', 'SESSION_REPORT'];
     const modes = steps.map((s) => s.mode);
     const pass = JSON.stringify(modes) === JSON.stringify(expected) && finalMode === 'SESSION_REPORT' && guidedHeading && dontKnow.includes("I don't know")
-      && reportText.includes('MOCK') && reportText.includes('IMMEDIATE_CRITERION_MET') && !/master/i.test(reportText) && maxOverflow <= 0 && errors.length === 0;
-    record(`B1 browser journey (${label} ${w}x${h})`, pass, { modes, maxOverflow, consoleErrors: errors, smallerPrompt: smallerPrompt.slice(0, 120) });
+      && reportText.includes('MOCK') && reportText.includes('goal met: 3 correct in a row without help') && !/master/i.test(reportText) && internalInSummary.length === 0 && maxOverflow <= 0 && errors.length === 0;
+    record(`B1 browser journey (${label} ${w}x${h})`, pass, { modes, maxOverflow, internalInSummary, consoleErrors: errors, smallerPrompt: smallerPrompt.slice(0, 120) });
     await ctx.close();
     execFileSync('php', ['-r', `$p=new PDO('sqlite:${dbPath}'); foreach(['sessions','events','items','checker_results','operations','idempotency','reports','containers','counters','model_calls'] as $t) $p->exec("DELETE FROM $t");`]);
   }

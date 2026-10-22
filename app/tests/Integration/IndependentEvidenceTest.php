@@ -89,33 +89,43 @@ final class IndependentEvidenceTest extends TestCase
 
     /**
      * B14b: a criterion message saying "without help" is produced only when every counted item was
-     * independent, had no hint and passed B14. A hint on the third item: no message; the streak stays 2.
+     * independent, had no hint and passed B14. Round 5.1 owner rule: an answer given after a hint resets
+     * the run, so a hint on the third answer means the criterion is met on answers 4, 5 and 6.
      */
     public function testB14bHintMeansNoWithoutHelpMessage(): void
     {
         $h = new Harness();
         try {
             $h->start('N06');
-            $h->answerCorrect();
-            $h->answerCorrect();
+            $answered = [];
+            $answer = function () use ($h, &$answered) {
+                $answered[] = $h->active()['item_id'];
+                return $h->answerCorrect();
+            };
+            $answer();
+            $answer();
             $this->assertSame(2, $h->view['progress']['independent_successes']);
             $hinted = $h->active()['item_id'];
             $this->assertSame(200, $h->event('REQUEST_HINT')->status);
             $this->assertSame('ASSISTED', $h->view['active_item']['support_status']);
-            $h->answerCorrect();                                      // third correct answer in a row, but with a hint
+            $answer();                                                // third correct answer, but after a hint
             $this->assertSame('TARGET_ASSESSMENT', $h->mode());
             $this->assertSame([], self::criterionMessages($h->view['messages']));
             $this->assertSame([], $h->events('CRITERION_MET'));
-            $this->assertSame(2, $h->view['progress']['independent_successes']);
+            $this->assertSame(0, $h->view['progress']['independent_successes'], 'the answer after the hint broke the run');
 
-            // The next unhelped correct answer meets the criterion; every counted item is independent, unhinted and host-framed.
-            $r = $h->answerCorrect();
+            $answer();                                                // 4
+            $answer();                                                // 5
+            $this->assertSame(['TARGET_ASSESSMENT', 2], [$h->mode(), $h->view['progress']['independent_successes']]);
+            $this->assertSame([], self::criterionMessages($h->view['messages']));
+            $r = $answer();                                           // 6
             $this->assertSame('SESSION_REPORT', $h->mode());
             $this->assertCount(1, self::criterionMessages($r->body['messages']));
             $met = $h->events('CRITERION_MET');
             $this->assertCount(1, $met);
             $responses = array_column(array_map(fn ($e) => ['id' => $e['event_id'], 'item' => $e['data']['item_id']], $h->events('RESPONSE_SUBMITTED')), 'item', 'id');
             $counted = array_map(fn ($id) => $responses[$id], $met[0]['data']['event_ids']);
+            $this->assertSame(array_slice($answered, 3, 3), $counted, 'counted: answers 4, 5 and 6');
             $this->assertNotContains($hinted, $counted);
             $presented = array_column(array_map(fn ($e) => $e['data'], $h->events('ITEM_PRESENTED')), null, 'item_id');
             $supported = array_column(array_map(fn ($e) => $e['data'], $h->events('SUPPORT_GIVEN')), 'item_id');

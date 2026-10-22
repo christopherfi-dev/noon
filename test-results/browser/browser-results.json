@@ -1,5 +1,5 @@
 {
-  "ran_at": "2026-10-22T09:54:49.928Z",
+  "ran_at": "2026-10-22T11:11:25.762Z",
   "results": [
     {
       "name": "B1 browser journey (mobile 360x740)",
@@ -16,8 +16,9 @@
           "SESSION_REPORT"
         ],
         "maxOverflow": 0,
+        "internalInSummary": [],
         "consoleErrors": [],
-        "smallerPrompt": "What is 9 × 10?"
+        "smallerPrompt": "What is 5 × 10?"
       }
     },
     {
@@ -35,8 +36,9 @@
           "SESSION_REPORT"
         ],
         "maxOverflow": 0,
+        "internalInSummary": [],
         "consoleErrors": [],
-        "smallerPrompt": "What is 8 × 4?"
+        "smallerPrompt": "What is 7 × 10?"
       }
     },
     {

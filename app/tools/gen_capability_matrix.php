@@ -38,12 +38,17 @@ $otherGaps = [
 ];
 $heuristics = [
     ['Answer-disclosure guard (D1)', 'HEURISTIC. Rejects model text containing the active or a remaining guided step\'s answer as a standalone number, number word, equivalent polynomial span or the key option\'s text. The word "one" used as a determiner or pronoun ("one way", "on one side") is not read as the value 1 unless a value cue precedes it ("x is one"). Paraphrases (e.g. "dividing by 3" for the option "Divide by 3") are not detected. Not read as a choice: options named together as alternatives ("positive or negative"); the learner\'s own answer to a completed step (never the active step\'s); positive, negative, plus or minus (or a plural) directly followed by an operand noun ("the negative sign", "a negative divisor"; round 5 ruling 2).'],
-    ['Internal vocabulary (R5-B)', 'Learner-facing model text containing expected value, expected answer, answer key, matched the key, guided step, host, assisted, verdict or criterion (whole words or phrases, any case, plurals included) is rejected and repaired; host lines pass the same check. Other internal wording is not detected. The session report keeps its defined evidence terms (criterion, assisted) and is outside this check.'],
+    ['Internal vocabulary (R5-B)', 'Learner-facing model text containing expected value, expected answer, answer key, matched the key, guided step, host, assisted, verdict or criterion (whole words or phrases, any case, plurals included) is rejected and repaired; host lines and the session summary pass the same check (round 5.1: the summary says "with help", "the answer the app computed" and "goal met: 3 correct in a row without help"; report field names and stored codes are unchanged). Model text also may not say on your own, without help, independently, by yourself or no help (round 5.1 P3); host lines may. Other internal wording is not detected.'],
     ['Independent items (R5-A)', 'Every independent item (target, probe, prerequisite check, independent check, return) is shown with the host line "Here is one to try on your own." only. The model still proposes the item\'s parameters through the same gate; any learner text it writes with them is discarded unread. Model-written learner text remains in guided steps, hints and explanations.'],
-    ['Stuck and off-task entries (R5-C)', 'Fixed lists, matched after normalising (lowercase, trimmed, spaces collapsed, apostrophes removed, trailing . ! ? stripped): stuck phrases and "?" give a smaller question in guided repair or the hint path on an independent item; asking for the answer adds "I won\'t give the answer, but here is a smaller step."; other words ending in "?" and number words zero to twenty get a host line; a readable answer with a trailing "?" and "X = 3" on an item in x are scored normally. Other phrasings keep the clarification for unreadable input. None is scored as incorrect.'],
+    ['Stuck and off-task entries (R5-C)', 'Fixed lists, matched after normalising (lowercase, trimmed, spaces collapsed, apostrophes removed, trailing . ! ? stripped): stuck phrases and "?" give a smaller question in guided repair or the hint path on an independent item; asking for the answer adds a line naming what follows (round 5.1 P1: "…but here is a hint.", "…but here is a smaller step.", "…but let\'s look at it another way.", "…but let\'s check something that comes before this.", or "I won\'t give the answer." alone when a boundary follows); other words ending in "?" and number words zero to twenty get a host line; a readable answer with a trailing "?" and "X = 3" on an item in x are scored normally. Other phrasings keep the clarification for unreadable input. None is scored as incorrect.'],
     ['Guided-step skill tags', 'Each guided step names the skill it exercises (the repair skill or a declared prerequisite); being stuck at the smallest step checks that prerequisite directly (Round 2 ruling 8). The tags are authored per template, not inferred.'],
     ['One action per message', 'HEURISTIC. Model text may not contain "?"; the only question shown is the host-rendered item prompt.'],
     ['Error signatures', 'Deterministic value matching of known error patterns. A match is recorded as an observation, never a confirmed cause, and only selects the probe/descent branch.'],
+];
+
+$ownerRules = [
+    ['Answer after a hint resets the run (round 5.1, P2)', 'An answer given after a hint, an explanation or a stuck entry resets the count of correct answers in a row to 0, exactly as a wrong answer does. Owner-rule override of the package\'s "assisted neither advances nor resets" behaviour. Partial, unreadable, reused or invalidated answers still neither advance nor reset.'],
+    ['Diagnostic probe after help (round 5.1, P4)', 'A probe answered after a hint, an explanation or a stuck entry is recorded as "Answered after a hint; inconclusive." and one more fresh probe follows. Correct with no help: the earlier error was not reproduced, resume as before. Wrong, or answered after help: the breakdown is confirmed and descent follows the branch the original error implicated, or a boundary. At most two probes per diagnosis, skips included (was three).'],
 ];
 
 $counts = array_count_values(array_column($entries, 'runtime_status'));
@@ -57,6 +62,7 @@ $json = [
     'deferred' => array_map(fn ($d) => ['item' => $d[0], 'status' => 'NOT IMPLEMENTED', 'behaviour' => $d[1]], $deferred),
     'other_gaps' => array_map(fn ($d) => ['item' => $d[0], 'status' => 'NOT IMPLEMENTED', 'note' => $d[1]], $otherGaps),
     'heuristics' => array_map(fn ($d) => ['item' => $d[0], 'note' => $d[1]], $heuristics),
+    'owner_rule_overrides' => array_map(fn ($d) => ['item' => $d[0], 'note' => $d[1]], $ownerRules),
 ];
 file_put_contents($app . '/capability-matrix.json', json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "\n");
 
@@ -72,13 +78,17 @@ foreach ($entries as $e) {
         continue;
     }
     $crit = $e['runtime_status'] === 'AVAILABLE_SCORED'
-        ? '3 consecutive independent correct covering constructed + contrast + transfer → IMMEDIATE_CRITERION_MET'
-        : '3 consecutive independent correct (numeric component) → COMPONENT_CRITERION_MET only';
+        ? '3 consecutive independent correct covering constructed + contrast + transfer → IMMEDIATE_CRITERION_MET (an answer after a hint resets the run)'
+        : '3 consecutive independent correct (numeric component) → COMPONENT_CRITERION_MET only (an answer after a hint resets the run)';
     $md .= '| ' . $e['skill_id'] . ' | ' . $e['title'] . ' | ' . $e['runtime_status'] . ' | ' . implode('<br>', $e['implemented_variants']) . ' | '
         . implode(', ', $e['checkers']) . ' | ' . $crit . ' | ' . implode(' ', $e['remaining']) . ' | ' . implode('<br>', array_map(fn ($t) => '`' . $t . '`', $e['test_references'])) . " |\n";
 }
 $md .= "\n## Heuristics and their limits\n\n| Item | Note |\n|---|---|\n";
 foreach ($heuristics as [$a, $b]) {
+    $md .= "| $a | $b |\n";
+}
+$md .= "\n## Owner-rule overrides of the package\n\n| Rule | Note |\n|---|---|\n";
+foreach ($ownerRules as [$a, $b]) {
     $md .= "| $a | $b |\n";
 }
 $md .= "\n## Deferred (addendum §5) — NOT IMPLEMENTED\n\n| Item | Behaviour in the beta |\n|---|---|\n";

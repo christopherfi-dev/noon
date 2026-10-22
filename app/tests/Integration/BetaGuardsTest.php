@@ -146,6 +146,21 @@ final class BetaGuardsTest extends TestCase
         }
     }
 
+    /** Round 5.1 P3: a model line saying the learner works "on your own" is repaired and never shown. */
+    public function testSupportClaimInModelTextIsRepairedNotShown(): void
+    {
+        $h = $this->h;
+        $this->intoGuidedRepair();
+        $text = 'You put the number part and the x-part together correctly. Here is a fresh one to try on your own.';
+        $h->mock->faults[] = ['type' => 'STUDENT_MESSAGE', 'text' => $text];
+        $h->answerCorrect();
+        $this->assertSame(['READY', 'GUIDED_REPAIR'], [$h->view['status'], $h->mode()]);
+        $rejected = $h->events('MODEL_OUTPUT_REJECTED');
+        $this->assertCount(1, $rejected);
+        $this->assertStringContainsString('must not say whether work is done without help', implode(' ', $rejected[0]['data']['errors']));
+        $this->assertNotContains($text, array_column($h->view['messages'], 'text'));
+    }
+
     /** B8 (bounded): when every repair still leaks, the operation is held; nothing leaks and nothing is scored as failure. */
     public function testB8RepeatedLeakHolds(): void
     {
