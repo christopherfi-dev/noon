@@ -365,7 +365,8 @@ final class BetaJourneyTest extends TestCase
             $before = count($h->events());
             $r = $h->answerCorrect();                                  // the smaller question is solved → re-ask
             $this->assertSame($stepId, $h->active()['guided_step']['id']);
-            $this->assertSame([['FEEDBACK', 'Yes, that is right.'], ['INFORMATION', 'Now try the earlier question again.']],
+            // Round UI (U8): guided steps now say "Correct." like independent items (was "Yes, that is right.").
+            $this->assertSame([['FEEDBACK', 'Correct.'], ['INFORMATION', 'Now try the earlier question again.']],
                 array_map(fn ($m) => [$m['kind'], $m['text']], $r->body['messages']), 'host line and item only');
             $this->assertSame($calls, $h->mock->calls, 'no model call for the re-ask');
             $new = array_slice($h->events(), $before);

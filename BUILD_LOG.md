@@ -173,3 +173,14 @@ Separate interval. Offline only: no live run, no key, nothing deployed.
 | 2026-10-22T12:15:30Z–12:16:40Z | Full gate on native PHP 8.0.30 (every PHP step, including the bundle build) | PASS — every step exit 0; preflight PASS; PHPUnit 198; browser 5/5; bundles built; smoke PASS (Bluehost + VPS); key-leak 0 hits. Saved in `test-results/gate-php80/`; the committed ZIPs are from this run |
 | 2026-10-22T12:16:57Z–12:18:02Z | Supplementary on `php:8.0-cli` (SQLite 3.34.1, no zip extension) | PHPUnit 197 PASS (DEPLOY-02 excluded, reason above); smoke PASS; key-leak PASS via PharData. Saved in `test-results/supplementary-php80-image/` |
 | 2026-10-22T12:19:39Z | **Round PHP80 end**. Code, bundles and results in `a1f9e16`; report `ROUND_PHP80_REPORT.md`. VPS bundle sha256 d32e7fe3d0cdea1eeb0b42c39aac5e3b9da4368b792c6052e5240ae3e96b9383. Not deployed | Round PHP80 interval 11:49:36Z–2026-10-22T12:19:39Z |
+
+## Round UI — what the student sees (`CONDUCTOR_ROUND_UI.md`)
+
+Separate interval. Offline only: no live run, no key, nothing deployed. Presentation and learner-facing wording only.
+
+| UTC time | Action | Result |
+|---|---|---|
+| 2026-10-22T22:21:37Z | **Round UI start**. Instructions placed in `CONDUCTOR_ROUND_UI.md` (with the owner's note on look and fluid experience) | Recorded |
+| between 22:21:37Z and 22:53:57Z (exact times not recorded) | U1 host line "On <problem> you answered <answer>." before a repair opening (`Support/ProblemText`), guided steps shown under a "Problem:" line in the view; U8 "Not yet." / "Correct." for every role; U6/U7 progress label (building-block line, "N of 3 in a row without help", "Still needed: …", probe and after-hint notes); U4 notices; U2 `Report/SummaryView` (learner and teacher levels, plain words, deduplicated); client rewrite (math spans, full-text options, "I'm stuck" menu, dots, result blocks, two-level summary with stacked cards under 600px); tests `UiRoundTest`, `ProblemTextTest`, `SummaryWordingTest` (levels), browser UI-04 to UI-06; B12 literal "Yes, that is right." → "Correct."; capability matrix regenerated | PHPUnit 208 PASS on 8.0.30 and on 8.3 during development; browser 10/10 |
+| 2026-10-22T22:54:08Z–22:55:02Z | Full gate on PHP 8.3.6 | PASS — every step exit 0; PHPUnit 208; browser 10/10 (B1 ×2, UI-01 to UI-06); both bundles built; smoke PASS (Bluehost + VPS); key-leak 0 hits. Saved in `test-results/gate-php83/` |
+| 2026-10-22T22:55:18Z–22:56:11Z | Full gate on native PHP 8.0.30 (every PHP step, including the bundle build and the browser tests' server) | PASS — every step exit 0; PHPUnit 208; browser 10/10; bundles built (Bluehost 679 files, VPS 666 files); smoke PASS; key-leak 0 hits (373 tracked files, 1345 ZIP entries). Saved in `test-results/gate-php80/`; screenshots in `test-results/browser/ui-round/` (20: 10 views × 390 and 1280); the committed ZIPs are from this run. VPS bundle sha256 72e279b63bb51f1756a6e90525d8f510b2120198ac9c2325ac23e9849063ab5c |

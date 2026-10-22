@@ -128,6 +128,10 @@ Json Syntax (AlgebraEngine\Tests\Unit\Support\JsonSyntax)
  ✔ Valid and invalid examples
  ✔ Agrees with json decode on random corruptions
 
+Problem Text (AlgebraEngine\Tests\Unit\Support\ProblemText)
+ ✔ Main expression of each prompt shape
+ ✔ Answer line
+
 Beta Guards (AlgebraEngine\Tests\Integration\BetaGuards)
  ✔ B 5 non prerequisite proposal rejected
  ✔ B 6 host key governs and item flagged
@@ -248,8 +252,18 @@ Stuck Entry (AlgebraEngine\Tests\Integration\StuckEntry)
 
 Summary Wording (AlgebraEngine\Tests\Integration\SummaryWording)
  ✔ Summary prose uses plain words
+ ✔ Summary levels use plain words and no codes
  ✔ Plain words for stored text
 
-Time: 00:55.671, Memory: 230.00 MB
+Ui Round (AlgebraEngine\Tests\Integration\UiRound)
+ ✔ U 1 feedback before first guided problem names the missed problem
+ ✔ U 1 guided steps keep their problem on screen
+ ✔ U 7 goal line and reset
+ ✔ U 7 building block and numeric only skill
+ ✔ U 6 guided label carries no notice
+ ✔ U 8 result words
+ ✔ U 4 working removed
 
-OK (198 tests, 38931 assertions)
+Time: 00:30.700, Memory: 248.00 MB
+
+OK (208 tests, 40055 assertions)

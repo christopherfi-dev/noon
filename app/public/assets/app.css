@@ -13,6 +13,15 @@
   --error-bg: #fdecec;
   --error-fg: #8a1c1c;
   --assisted: #fff4d6;
+  /* Round UI (U8): result blocks. Text pairs meet WCAG AA (4.5:1); borders and icons 3:1. */
+  --ok-bg: #e7f5ec;
+  --ok-line: #1a7f37;
+  --ok-fg: #0f5323;
+  --ok-icon-fg: #ffffff;
+  --notyet-bg: #f3f4f6;
+  --notyet-line: #6e7781;
+  --notyet-fg: #1b1f24;
+  --chosen: #e8f1fb;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -30,8 +39,18 @@
     --error-bg: #3a1717;
     --error-fg: #ffb4b4;
     --assisted: #3a2f12;
+    --ok-bg: #10291a;
+    --ok-line: #3fb950;
+    --ok-fg: #7ee787;
+    --ok-icon-fg: #0f1419;
+    --notyet-bg: #1c232b;
+    --notyet-line: #8b949e;
+    --notyet-fg: #e6edf3;
+    --chosen: #13283d;
   }
 }
+
+[hidden] { display: none !important; }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -44,7 +63,7 @@ body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 1.0625rem;
   line-height: 1.5;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .wrap { max-width: 760px; margin: 0 auto; padding: 0 16px; }
@@ -70,7 +89,8 @@ main:focus { outline: none; }
 h1 { font-size: 1.5rem; line-height: 1.25; margin: 0.25em 0 0.5em; }
 h2 { font-size: 1.15rem; margin: 1.25em 0 0.5em; }
 h3 { font-size: 1.05rem; margin: 1em 0 0.4em; }
-h4 { font-size: 0.95rem; margin: 0.8em 0 0.3em; color: var(--muted); }
+h4 { font-size: 0.95rem; margin: 0.8em 0 0.3em; }
+h5 { font-size: 0.9rem; margin: 0.7em 0 0.25em; color: var(--muted); }
 
 p { margin: 0.5em 0; }
 .lead { color: var(--muted); }
@@ -96,40 +116,85 @@ button:hover:not(:disabled), .button-link:hover { border-color: var(--accent); }
 button.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 600; }
 button.wide { width: 100%; margin: 8px 0; }
 button.small { min-height: 36px; padding: 4px 12px; font-size: 0.9rem; }
+button.quiet { background: transparent; }
 button:disabled { opacity: 0.55; cursor: not-allowed; }
 .link-button { background: none; border: none; color: var(--accent); text-decoration: underline; padding: 8px 0; min-height: 44px; }
 
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
-input:focus-visible, textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
+input:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
 
 label, .field-label { display: block; font-weight: 600; margin: 12px 0 4px; }
 
-input[type="text"], input[type="search"], textarea {
+input[type="text"], input[type="search"] {
   width: 100%; font: inherit; font-size: 1.05rem; padding: 10px 12px;
   border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg);
 }
-textarea { resize: vertical; min-height: 72px; }
 
-fieldset.options { border: 1px solid var(--line); border-radius: 8px; margin: 12px 0 0; padding: 8px 12px 12px; }
-fieldset.options legend { font-weight: 600; padding: 0 4px; }
-.option { display: flex; align-items: center; gap: 10px; min-height: 44px; }
-.option input { width: 22px; height: 22px; margin: 0; flex: none; }
-.option label { margin: 0; font-weight: 500; display: inline; }
+fieldset.options { border: 0; margin: 12px 0 0; padding: 0; min-width: 0; display: grid; gap: 8px; }
+fieldset.options legend { font-weight: 600; padding: 0; margin-bottom: 8px; }
+/* U3: each option row is one large target: the checkbox and its full text. */
+.option { position: relative; display: flex; align-items: flex-start; gap: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); padding: 10px 12px; min-height: 48px; }
+.option:hover { border-color: var(--accent); }
+.option:has(input:checked) { border-color: var(--accent); background: var(--chosen); box-shadow: inset 3px 0 0 var(--accent); }
+.option input { position: relative; z-index: 1; width: 22px; height: 22px; margin: 2px 0 0; flex: none; accent-color: var(--accent); }
+.option label { margin: 0; font-weight: 400; display: block; flex: 1; cursor: pointer; }
+.option label::after { content: ""; position: absolute; inset: 0; }
+.option-letter { font-weight: 600; }
 
 .topic { margin: 0; color: var(--muted); font-weight: 600; }
-.progress { color: var(--muted); font-size: 0.95rem; }
+.workspace h1 { margin-bottom: 0.25em; }
+
+/* U3: an equation or expression never breaks across lines; the sentence around it may wrap. */
+.math { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.math-main { font-weight: 650; }
+
+/* U7: three dots for three correct in a row without help. */
+.progress { margin: 0 0 4px; }
+.progress .context { margin: 0 0 6px; color: var(--muted); }
+.goal { display: flex; align-items: flex-start; gap: 12px; margin: 8px 0 4px; }
+.goal p { margin: 0; }
+.goal-count { font-weight: 600; }
+.goal-note { color: var(--muted); font-size: 0.95rem; }
+.goal-none { display: block; }
+.dots { display: inline-flex; gap: 6px; padding-top: 0.3em; flex: none; }
+.dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--accent); background: transparent; transition: background-color 0.25s ease, transform 0.25s ease; }
+.dot-filled { background: var(--accent); transform: scale(1.08); }
 
 .messages { list-style: none; margin: 12px 0; padding: 0; display: grid; gap: 8px; }
-.msg { padding: 10px 12px; border-radius: 8px; border-left: 4px solid var(--line); background: var(--info); white-space: pre-wrap; }
-.msg-feedback { background: var(--feedback); border-left-color: var(--accent); font-weight: 600; }
+.msg { padding: 10px 14px; border-radius: 8px; border-left: 4px solid var(--line); background: var(--info); }
+.msg p { margin: 0.25em 0; white-space: pre-wrap; }
 .msg-information { background: var(--info); }
 .msg-error { background: var(--error-bg); color: var(--error-fg); border-left-color: var(--error-fg); }
 
+/* U8: one block per result. Words and an icon carry the meaning; the tint only supports them. */
+.feedback { color: var(--fg); }
+.feedback-head { display: flex; align-items: center; gap: 10px; margin: 0.15em 0 0.35em; }
+.feedback-word { font-weight: 700; }
+.feedback-icon { flex: none; width: 1.5em; height: 1.5em; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; line-height: 1; }
+.feedback-correct { background: var(--ok-bg); border-left-color: var(--ok-line); }
+.feedback-correct .feedback-word { color: var(--ok-fg); }
+.feedback-correct .feedback-icon { background: var(--ok-line); color: var(--ok-icon-fg); }
+.feedback-notyet, .feedback-partial { background: var(--notyet-bg); border-left-color: var(--notyet-line); }
+.feedback-notyet .feedback-word, .feedback-partial .feedback-word { color: var(--notyet-fg); }
+.feedback-notyet .feedback-icon { border: 2px solid var(--notyet-line); }
+.feedback-partial .feedback-icon { border: 2px solid var(--notyet-line); background: linear-gradient(90deg, var(--notyet-line) 50%, transparent 50%); }
+.feedback-partial .feedback-word { font-weight: 600; }
+.feedback-context { font-weight: 600; }
+
 .question .prompt {
-  font-size: 1.15rem; font-weight: 600; white-space: pre-wrap; margin: 4px 0 8px;
-  font-variant-numeric: tabular-nums;
+  font-size: 1.15rem; font-weight: 400; white-space: pre-wrap; margin: 4px 0 8px;
 }
+.question .problem { margin: 0 0 8px; font-size: 1.05rem; }
+.question .field-label { font-weight: 500; color: var(--muted); font-size: 0.95rem; }
+.question fieldset.options legend { font-weight: 500; color: var(--muted); font-size: 0.95rem; }
+.problem-label { color: var(--muted); font-weight: 600; }
+.problem .math { font-weight: 650; }
 .assisted { display: inline-block; background: var(--assisted); padding: 2px 8px; border-radius: 6px; font-size: 0.9rem; margin: 0 0 6px; }
+
+/* U5: help choices open from "I'm stuck". */
+.stuck-toggle[aria-expanded="true"] { border-color: var(--accent); background: var(--chosen); }
+.stuck-menu { display: flex; flex-wrap: wrap; gap: 8px; margin: -4px 0 4px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+.session-controls { margin-top: 20px; }
 .pending { font-weight: 600; }
 
 .error-banner { background: var(--error-bg); color: var(--error-fg); padding: 10px 12px; border-radius: 8px; }
@@ -150,11 +215,38 @@ fieldset.options legend { font-weight: 600; padding: 0 4px; }
 .notices { border-top: 1px solid var(--line); margin-top: 24px; color: var(--muted); font-size: 0.95rem; }
 
 .summary .provider-label { font-weight: 700; padding: 8px 12px; border: 2px solid var(--focus); border-radius: 8px; background: var(--assisted); }
+/* U2: the learner level, then the teacher level behind a disclosure. */
+.learner-summary { display: grid; gap: 12px; margin: 16px 0; }
+.summary-part { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 4px 16px 8px; }
+.summary-part h2 { margin: 0.6em 0 0.3em; }
+.summary-part ul { margin: 0.3em 0; padding-left: 1.2em; }
+.summary-note { margin: 0; }
+.teacher-details { border: 1px solid var(--line); border-radius: 10px; margin: 16px 0; }
+.teacher-details > summary { cursor: pointer; padding: 12px 16px; font-weight: 600; min-height: 44px; list-style-position: inside; }
+.teacher-details[open] > summary { border-bottom: 1px solid var(--line); }
+.teacher-body { padding: 4px 16px 12px; }
+.teacher-section h3 { margin-top: 1em; }
+.teacher-body ul { padding-left: 1.2em; }
+.teacher-body li + li { margin-top: 4px; }
 .table-wrap { overflow-x: auto; max-width: 100%; }
 .skills-table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
 .skills-table caption { text-align: left; font-weight: 600; padding: 4px 0; }
-.skills-table th, .skills-table td { border: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+.skills-table th, .skills-table td { border: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; overflow-wrap: normal; word-break: normal; hyphens: manual; }
 .skill-detail { border-top: 1px solid var(--line); margin-top: 12px; }
+
+/* U2: under 600px each skill row becomes a card; no cell wraps a word letter by letter. */
+@media (max-width: 599px) {
+  .skills-table, .skills-table thead, .skills-table tbody, .skills-table tr, .skills-table th, .skills-table td { display: block; width: auto; }
+  .skills-table caption { display: block; }
+  .skills-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .skills-table tr { border: 1px solid var(--line); border-radius: 8px; margin: 8px 0; padding: 4px 0; background: var(--card); }
+  .skills-table th, .skills-table td { border: 0; padding: 4px 12px; }
+  .skills-table tbody th { font-weight: 700; }
+  .skills-table td { display: flex; justify-content: space-between; gap: 12px; }
+  .skills-table td::before { content: attr(data-label); color: var(--muted); }
+  .skills-table td:nth-of-type(4), .skills-table td:nth-of-type(5) { display: block; }
+  .skills-table td:nth-of-type(4)::before, .skills-table td:nth-of-type(5)::before { display: block; }
+}
 
 .site-footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; }
 .site-footer .wrap { padding-top: 8px; padding-bottom: 16px; }
@@ -169,6 +261,8 @@ fieldset.options legend { font-weight: 600; padding: 0 4px; }
   h1 { font-size: 1.75rem; }
   button.wide { width: auto; }
   .catalog-row { grid-template-columns: 1fr auto; align-items: center; }
+  .learner-summary { grid-template-columns: 1fr 1fr; }
+  .summary-note { grid-column: 1 / -1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -178,6 +272,7 @@ fieldset.options legend { font-weight: 600; padding: 0 4px; }
 @media print {
   .site-header, .site-footer, .controls, .session-controls, .status, .skip-link, button, .button-link { display: none !important; }
   body { background: #fff; color: #000; font-size: 11pt; }
-  .card, .msg, .summary .provider-label { background: none; border-color: #999; }
+  .card, .msg, .summary .provider-label, .summary-part { background: none; border-color: #999; }
   .table-wrap { overflow: visible; }
+  .teacher-details > summary { list-style: none; }
 }

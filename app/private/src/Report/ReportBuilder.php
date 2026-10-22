@@ -239,7 +239,7 @@ final class ReportBuilder
         if ($errors !== []) {
             throw new \LogicException('Report failed report.schema.json: ' . implode('; ', $errors));
         }
-        return [
+        $built = [
             'report' => $report,
             'per_skill' => array_values($perSkill),
             'descent_path' => $descents,
@@ -249,6 +249,9 @@ final class ReportBuilder
                 'binding_note' => 'An acknowledged binding is not evidence of enforcement; the app enforces the contract.'],
             'policy_version' => '1.0',
         ];
+        // Round UI (U2): the summary page's learner and teacher levels, in plain words.
+        $built['summary'] = (new SummaryView($this->curriculum))->build($built, $events, $provider);
+        return $built;
     }
 
     /** The learner-visible statement for a met goal (stored status codes are unchanged). */

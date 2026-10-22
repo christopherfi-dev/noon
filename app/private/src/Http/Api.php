@@ -188,10 +188,10 @@ final class Api
                 'domain' => $app->curriculum->skill($e['skill_id'])['domain_name'], 'runtime_status' => $e['runtime_status'],
             ], $registry->all()),
             'notices' => [
-                'data' => 'Your answers and working are stored on this server for this browser session so the tutor can continue and build your summary. No name or account is needed. Use "Forget this session" to delete them.',
+                'data' => 'Your answers are stored on this server for this browser session so the tutor can continue and build your summary. No name or account is needed. Use "Forget this session" to delete them.',
                 'provider' => $app->config->isMock()
                     ? 'This beta is running on a simulated tutor model. No answers are sent to an outside AI service.'
-                    : 'Your answers and working are sent to the configured AI provider to word the tutor\'s messages.',
+                    : 'Your answers are sent to the configured AI provider to word the tutor\'s messages.',
             ],
             'session' => $session,
         ]);

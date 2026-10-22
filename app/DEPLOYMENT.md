@@ -131,5 +131,5 @@ adapter compatibility, not teaching quality.
 - Sessions use an HttpOnly, SameSite=Lax cookie (Secure under HTTPS), a
   session-bound CSRF token and same-origin checks. No session IDs in URLs or
   browser storage.
-- Answers and working are stored in the private SQLite file for the browser
+- Answers are stored in the private SQLite file for the browser
   session; "Forget this session" deletes them.

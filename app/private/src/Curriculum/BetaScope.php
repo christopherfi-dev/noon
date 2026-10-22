@@ -11,6 +11,18 @@ final class BetaScope
     /** Skills whose whole-node criterion uses the three-variant rule (D3). */
     public const THREE_VARIANT_SKILLS = ['Q07', 'E06'];
     public const VARIANTS = ['constructed', 'contrast', 'transfer'];
+    /** Round UI (U2, U7): learner words for the three kinds of question in the three-variant goal. */
+    public const VARIANT_KINDS = [
+        'Q07' => ['constructed' => 'a solve', 'contrast' => 'a step choice', 'transfer' => 'a new kind of equation'],
+        'E06' => ['constructed' => 'an expansion', 'contrast' => 'a choice question', 'transfer' => 'a new kind of expression'],
+    ];
+
+    /** "a solve, a step choice and a new kind of equation" @param list<string> $variants */
+    public static function kinds(string $skillId, array $variants = self::VARIANTS): string
+    {
+        $words = array_values(array_map(fn ($v) => self::VARIANT_KINDS[$skillId][$v] ?? $v, $variants));
+        return count($words) > 1 ? implode(', ', array_slice($words, 0, -1)) . ' and ' . end($words) : implode('', $words);
+    }
 
     public static function contains(string $skillId): bool
     {

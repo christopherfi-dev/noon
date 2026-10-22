@@ -47,7 +47,7 @@ step "F1 manifest (after preflight)" 00-manifest-after.txt bash "$APP/tools/mani
 step "App preflight" 03-app-preflight.txt php "$APP/private/bin/preflight.php" --public="$APP/public"
 cd "$APP"
 step "PHPUnit unit + integration" 04-phpunit.txt php private/vendor/bin/phpunit --testdox --log-junit "$OUT/04-phpunit-junit.xml"
-step "Browser (B1 x2 widths, UI-01, UI-02, UI-03)" 05-browser.txt node tests/Browser/run_browser.mjs "$OUT/browser"
+step "Browser (B1 x2 widths, UI-01 to UI-03, round UI UI-04 to UI-06)" 05-browser.txt node tests/Browser/run_browser.mjs "$OUT/browser"
 step "Bundle build" 06-bundle-build.txt "$BUILD_PHP" tools/build_bundle.php
 step "Bundle smoke (deploy layout)" 07-bundle-smoke.txt php tools/bundle_smoke.php "$REPO/dist/stage"
 # After the bundle build, so the ZIP just built is scanned. Uses ALGEBRA_CONFIG for the configured key when set.

@@ -35,8 +35,10 @@
     picker: false,
     busy: false,
     error: null,
-    draft: { key: null, text: '', working: '', options: [] },
+    draft: { key: null, text: '', options: [] },
     lastItemKey: null,
+    lastSubmit: null,       // the item and answer last sent (round UI, U1)
+    stuckOpen: false,       // the "I'm stuck" choices (round UI, U5)
   };
 
   let root;
@@ -77,9 +79,13 @@
     return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
   }
 
+  // Routine confirmations are for screen readers only; anything else is also shown.
+  const ROUTINE = ['Sending…', 'Saved.', 'Done.', 'Working…', 'Summary loaded.', 'Loading your summary…'];
+
   function announce(text) {
     if (!statusEl) return;
     statusEl.textContent = '';
+    statusEl.classList.toggle('visually-hidden', ROUTINE.includes(text));
     window.setTimeout(() => { statusEl.textContent = text; }, 30);
   }
 
@@ -126,7 +132,8 @@
     state.view = view;
     state.lastItemKey = itemKey(view);
     if (state.lastItemKey !== state.draft.key) {
-      state.draft = { key: state.lastItemKey, text: '', working: '', options: [] };
+      state.draft = { key: state.lastItemKey, text: '', options: [] };
+      state.stuckOpen = false;
     }
     return before !== state.lastItemKey;
   }
@@ -396,18 +403,91 @@
       button('Back', 'back', () => { state.screen = 'welcome'; render(); }));
   }
 
-  function optionLetters(prompt) {
-    const letters = [];
-    const re = /^([A-D])\) /gm;
-    let m;
-    while ((m = re.exec(prompt)) !== null) {
-      if (!letters.includes(m[1])) letters.push(m[1]);
+  // ------------------------------------------------------------ math text
+
+  // Round UI (U3): equations and expressions never break across lines. A run of
+  // numbers, x or y, operators and parentheses (single spaces between) becomes a
+  // nowrap span; the sentence around it may wrap. The same reading is used on the
+  // server (ProblemText) to name the problem a piece of feedback is about.
+  const MATH_TOKEN = '(?:\\d+(?:\\.\\d+)?|(?<![\\p{L}])[xy](?![\\p{L}]|-\\p{L})|[+\\-−×÷·=\\/^()²])';
+  const MATH_RUN = new RegExp(MATH_TOKEN + '(?: ?' + MATH_TOKEN + ')*', 'gu');
+
+  function trimRun(run) {
+    let t = run.trim();
+    t = t.replace(/^(?:[+=×÷·/^)]\s?)+/u, '').replace(/(?:\s?[+\-−=×÷·/^(])+$/u, '');
+    const count = (str, c) => str.split(c).length - 1;
+    while (t && count(t, '(') > count(t, ')') && t.startsWith('(')) t = t.slice(1).trimStart();
+    while (t && count(t, ')') > count(t, '(') && t.endsWith(')')) t = t.slice(0, -1).trimEnd();
+    return t.trim();
+  }
+
+  function isMath(run) {
+    return /[\dxy]/u.test(run) && /[+\-−×÷·=/^()]/u.test(run);
+  }
+
+  /** @return {Array<{text: string, math: boolean}>} */
+  function mathParts(text) {
+    const parts = [];
+    let at = 0;
+    for (const m of text.matchAll(MATH_RUN)) {
+      const run = trimRun(m[0]);
+      if (!run || !isMath(run)) continue;
+      const start = m.index + m[0].indexOf(run);
+      if (start > at) parts.push({ text: text.slice(at, start), math: false });
+      parts.push({ text: run, math: true });
+      at = start + run.length;
     }
-    return letters.length ? letters : ['A', 'B', 'C', 'D'];
+    if (at < text.length) parts.push({ text: text.slice(at), math: false });
+    return parts;
+  }
+
+  /** The item's main equation or expression: the longest run with "=", else the longest run. */
+  function mainExpression(text) {
+    let best = '';
+    for (const p of mathParts(text)) {
+      if (!p.math) continue;
+      const better = (p.text.includes('=') && !best.includes('=')) || (p.text.includes('=') === best.includes('=') && p.text.length > best.length);
+      if (better) best = p.text;
+    }
+    return best;
+  }
+
+  /** Text nodes and nowrap math spans only; nothing is parsed as HTML. */
+  function mathText(text, emphasise) {
+    const frag = document.createDocumentFragment();
+    let done = false;
+    for (const p of mathParts(text)) {
+      if (!p.math) { frag.append(document.createTextNode(p.text)); continue; }
+      const main = !done && emphasise && p.text === emphasise;
+      if (main) done = true;
+      frag.append(el('span', { className: main ? 'math math-main' : 'math', text: p.text }));
+    }
+    return frag;
+  }
+
+  // ------------------------------------------------------------- the item
+
+  /** Split an item prompt: an optional "Problem:" line (guided steps), the stem, and lettered options. */
+  function parsePrompt(prompt) {
+    const lines = prompt.split('\n');
+    let problem = null;
+    if (lines.length > 1 && /^Problem: /.test(lines[0])) problem = lines.shift().slice('Problem: '.length);
+    const options = [];
+    const stem = [];
+    for (const line of lines) {
+      const m = /^([A-D])\) (.*)$/.exec(line);
+      if (m) options.push({ letter: m[1], text: m[2] });
+      else if (!options.length) stem.push(line);
+    }
+    return { problem, stem: stem.join('\n').trim(), options };
   }
 
   function allowed(action) {
     return !!state.view && state.view.allowed_actions.includes(action);
+  }
+
+  function guided(v) {
+    return v.mode === 'GUIDED_REPAIR';
   }
 
   function submitAnswer(e) {
@@ -422,11 +502,16 @@
       text = state.draft.text.trim();
       if (!text) { announce('Enter an answer first.'); return; }
     }
-    const payload = { text };
-    if (state.draft.working.trim()) payload.working = state.draft.working;
-    sendEvent(allowed('CLARIFY_RESPONSE') ? 'CLARIFY_RESPONSE' : 'SUBMIT_RESPONSE', payload).then((r) => {
+    // U1: remember what was answered, so the feedback can name it once the item has left the screen.
+    state.lastSubmit = { key: itemKey(v), prompt: v.active_item.prompt, type: v.active_item.response_type, text };
+    sendEvent(allowed('CLARIFY_RESPONSE') ? 'CLARIFY_RESPONSE' : 'SUBMIT_RESPONSE', { text }).then((r) => {
       if (r && r.status === 200) focusAnswer();
     });
+  }
+
+  function stuckAction(action) {
+    state.stuckOpen = false;
+    sendEvent(action).then((r) => { if (r && r.status === 200) focusAnswer(); });
   }
 
   function focusAnswer() {
@@ -436,55 +521,145 @@
     }, 0);
   }
 
-  function renderAnswerForm(v) {
+  function renderOptions(it, options, disabled) {
+    return el('fieldset', { className: 'options' },
+      el('legend', { text: it.input_help || 'Choose every option that applies.' }),
+      options.map((o) => {
+        const id = 'opt-' + o.letter;
+        return el('div', { className: 'option' },
+          el('input', {
+            type: 'checkbox', id, testid: 'option-' + o.letter, checked: state.draft.options.includes(o.letter), disabled,
+            onchange: (e) => {
+              const set = new Set(state.draft.options);
+              if (e.target.checked) set.add(o.letter); else set.delete(o.letter);
+              state.draft.options = Array.from(set);
+            },
+          }),
+          el('label', { for: id, testid: 'option-label-' + o.letter },
+            el('span', { className: 'option-letter', text: o.letter + ')' }), ' ', mathText(o.text)));
+      }));
+  }
+
+  function renderAnswerForm(v, parsed) {
     const it = v.active_item;
     const disabled = state.busy || v.status === 'PENDING';
+    const isGuided = guided(v);
     const fields = [];
     if (it.response_type === 'classification') {
-      const letters = optionLetters(it.prompt);
-      fields.push(el('fieldset', { className: 'options' },
-        el('legend', { text: it.input_help || 'Choose every option that applies.' }),
-        letters.map((L) => {
-          const id = 'opt-' + L;
-          return el('div', { className: 'option' },
-            el('input', {
-              type: 'checkbox', id, testid: 'option-' + L, checked: state.draft.options.includes(L), disabled,
-              onchange: (e) => {
-                const set = new Set(state.draft.options);
-                if (e.target.checked) set.add(L); else set.delete(L);
-                state.draft.options = Array.from(set);
-              },
-            }),
-            el('label', { for: id, text: 'Option ' + L }));
-        })));
+      const options = parsed.options.length ? parsed.options : ['A', 'B', 'C', 'D'].map((L) => ({ letter: L, text: '' }));
+      fields.push(renderOptions(it, options, disabled));
     } else {
       fields.push(
         el('label', { for: 'answer', className: 'field-label', text: it.input_help || 'Your answer' }),
         el('input', {
           id: 'answer', type: 'text', testid: 'answer-input', value: state.draft.text, maxlength: 2000, disabled,
-          autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', inputmode: 'text',
+          autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', inputmode: 'text', enterkeyhint: 'send',
           oninput: (e) => { state.draft.text = e.target.value; },
         }));
     }
-    fields.push(
-      el('label', { for: 'working', className: 'field-label', text: 'Working (optional)' }),
-      el('textarea', {
-        id: 'working', rows: 3, testid: 'working-input', maxlength: 4000, disabled,
-        oninput: (e) => { state.draft.working = e.target.value; },
-      }));
-    const form = el('form', { className: 'answer-form', onsubmit: submitAnswer, novalidate: true }, fields,
+    // U5: Submit, "I'm stuck" (which opens the ways to get help) and Skip where the engine allows it.
+    const choices = isGuided
+      ? [['REQUEST_HINT', 'Give me a hint', 'hint'], ['NOT_LEARNED', "I don't know", 'not-learned']]
+      : [['REQUEST_HINT', 'Give me a hint', 'hint'], ['REQUEST_EXPLANATION', 'Explain the idea', 'explain'], ['NOT_LEARNED', "I haven't learned this yet", 'not-learned']];
+    const available = choices.filter(([action]) => allowed(action));
+    const canSubmit = allowed('SUBMIT_RESPONSE') || allowed('CLARIFY_RESPONSE');
+    return el('form', { className: 'answer-form', onsubmit: submitAnswer, novalidate: true }, fields,
       el('div', { className: 'row controls' },
-        (allowed('SUBMIT_RESPONSE') || allowed('CLARIFY_RESPONSE'))
-          ? el('button', { type: 'submit', className: 'primary', testid: 'submit', disabled }, allowed('CLARIFY_RESPONSE') ? 'Submit again' : 'Submit')
+        canSubmit
+          ? el('button', { type: 'submit', className: 'primary', testid: 'submit', disabled }, state.busy ? 'Checking…' : allowed('CLARIFY_RESPONSE') ? 'Submit again' : 'Submit')
           : null,
-        allowed('REQUEST_HINT') ? button('Hint', 'hint', () => sendEvent('REQUEST_HINT'), { disabled }) : null,
-        allowed('REQUEST_EXPLANATION') ? button('Explain this', 'explain', () => sendEvent('REQUEST_EXPLANATION'), { disabled }) : null,
-        allowed('NOT_LEARNED') ? button(v.mode === 'GUIDED_REPAIR' ? "I don't know" : "I haven't learned this", 'not-learned', () => sendEvent('NOT_LEARNED'), { disabled }) : null,
-        allowed('SKIP_ITEM') ? button('Skip', 'skip', () => sendEvent('SKIP_ITEM'), { disabled }) : null));
-    // The textarea value is set after creation so long text is preserved exactly.
-    const ta = form.querySelector('textarea');
-    if (ta) ta.value = state.draft.working;
-    return form;
+        available.length ? button("I'm stuck", 'stuck', () => { state.stuckOpen = !state.stuckOpen; render(); }, {
+          disabled, className: 'stuck-toggle', 'aria-expanded': state.stuckOpen ? 'true' : 'false', 'aria-controls': 'stuck-menu',
+        }) : null,
+        allowed('SKIP_ITEM') && !isGuided ? button('Skip', 'skip', () => sendEvent('SKIP_ITEM'), { disabled, className: 'quiet' }) : null),
+      available.length ? el('div', {
+        id: 'stuck-menu', className: 'stuck-menu', testid: 'stuck-menu', hidden: !state.stuckOpen, role: 'group', 'aria-label': 'Ways to get help',
+        onkeydown: (e) => {
+          if (e.key === 'Escape') { state.stuckOpen = false; render(); const t = root.querySelector('[data-testid="stuck"]'); if (t) t.focus(); }
+        },
+      },
+      available.map(([action, label, testid]) => button(label, testid, () => stuckAction(action), { disabled }))) : null);
+  }
+
+  // ---------------------------------------------------------- the feedback
+
+  function feedbackKind(text) {
+    if (text === 'Correct.') return 'correct';
+    if (text === 'Not yet.') return 'notyet';
+    return 'partial';
+  }
+
+  const FEEDBACK_ICON = { correct: '✓', notyet: '', partial: '' };
+
+  /** U1: name the answered problem when the server's messages do not already do so. */
+  function echoLine(v) {
+    const last = state.lastSubmit;
+    if (!last || last.key === itemKey(v) || !v.messages.some((m) => m.kind === 'FEEDBACK')) return null;
+    if (v.messages.some((m) => /^(On .+ you (answered|chose) |You (answered|chose) )/.test(m.text))) return null;
+    const problem = mainExpression(parsePrompt(last.prompt).stem);
+    let answer = last.text.replace(/\s+/g, ' ').trim();
+    let verb;
+    if (last.type === 'classification') {
+      const letters = answer.split(/[\s,;]+/).filter(Boolean);
+      verb = 'you chose ' + (letters.length > 1 ? letters.slice(0, -1).join(', ') + ' and ' + letters[letters.length - 1] : letters[0] || answer);
+    } else {
+      if (answer.length > 40) answer = answer.slice(0, 39) + '…';
+      verb = 'you answered ' + answer;
+    }
+    return problem ? 'On ' + problem + ' ' + verb + '.' : verb.charAt(0).toUpperCase() + verb.slice(1) + '.';
+  }
+
+  /**
+   * U8: a turn that starts with a result is shown as one block: a green-tinted
+   * block with a check for "Correct.", a neutral one for "Not yet." (and for an
+   * answer that is equal but not in the requested form). Icon and words always
+   * carry the meaning; colour is never the only signal.
+   */
+  function renderMessages(v) {
+    const blocks = [];
+    let block = null;
+    const echo = echoLine(v);
+    for (const m of v.messages) {
+      if (m.kind === 'FEEDBACK') {
+        const kind = feedbackKind(m.text);
+        block = el('li', { className: 'msg feedback feedback-' + kind, testid: 'feedback', 'data-result': kind },
+          el('p', { className: 'feedback-head' },
+            el('span', { className: 'feedback-icon', 'aria-hidden': 'true', text: FEEDBACK_ICON[kind] }),
+            el('span', { className: 'feedback-word', testid: 'feedback-word' }, mathText(m.text))));
+        if (echo) block.append(el('p', { className: 'feedback-context', testid: 'feedback-echo' }, mathText(echo)));
+        blocks.push(block);
+      } else if (m.kind === 'INFORMATION' && block) {
+        block.append(el('p', { className: /^On .+ you (answered|chose) /.test(m.text) ? 'feedback-context' : null }, mathText(m.text)));
+      } else {
+        block = null;
+        blocks.push(el('li', { className: 'msg msg-' + m.kind.toLowerCase() }, el('p', null, mathText(m.text))));
+      }
+    }
+    return el('ul', { className: 'messages', testid: 'messages', role: 'log', 'aria-live': 'polite', 'aria-label': 'Tutor messages' }, blocks);
+  }
+
+  // -------------------------------------------------------- goal progress
+
+  // U7: the goal counts answers on the items of these modes; a probe and a guided step do not count.
+  const COUNTED_MODES = ['TARGET_ASSESSMENT', 'PREREQUISITE_CHECK', 'INDEPENDENT_CHECK', 'RETURN_TO_TARGET'];
+
+  function renderProgress(v, reportReady) {
+    const lines = (v.progress.label || '').split('\n');
+    const context = lines.shift();
+    const parts = [];
+    if (context) parts.push(el('p', { className: 'context', testid: 'progress-context', text: context }));
+    if (!reportReady && v.active_item && COUNTED_MODES.includes(v.mode) && !guided(v)) {
+      const need = v.progress.criterion_required;
+      const have = Math.min(v.progress.independent_successes, need);
+      const dots = el('span', { className: 'dots', 'aria-hidden': 'true', testid: 'goal-dots', 'data-filled': String(have) },
+        Array.from({ length: need }, (_, i) => el('span', { className: i < have ? 'dot dot-filled' : 'dot' })));
+      parts.push(el('div', { className: 'goal', testid: 'goal' }, dots,
+        el('div', { className: 'goal-text' },
+          lines.map((line, i) => el('p', { className: i === 0 ? 'goal-count' : 'goal-note', testid: i === 0 ? 'goal-count' : null, text: line })))));
+    } else if (lines.length) {
+      parts.push(el('div', { className: 'goal goal-none', testid: 'goal-note' }, lines.map((line) => el('p', { className: 'goal-note', text: line }))));
+    }
+    return el('div', { className: 'progress', testid: 'progress' }, parts);
   }
 
   function renderWorkspace() {
@@ -493,19 +668,22 @@
     const pending = v.status === 'PENDING';
     const heading = MODE_HEADINGS[v.mode] || 'Practice';
     const it = v.active_item;
+    const parsed = it ? parsePrompt(it.prompt) : null;
+    const main = parsed ? mainExpression(parsed.stem) : '';
     return el('section', { className: 'screen workspace', testid: 'workspace', 'aria-labelledby': 'ws-heading' },
       el('p', { className: 'topic', testid: 'target-title', text: v.target ? 'Topic: ' + v.target.title : 'No topic chosen yet' }),
       el('h1', { id: 'ws-heading', text: heading }),
-      el('p', { className: 'progress', testid: 'progress', 'aria-live': 'polite', text: v.progress.label }),
+      renderProgress(v, reportReady),
       errorBanner(),
-      el('ul', { className: 'messages', testid: 'messages', role: 'log', 'aria-live': 'polite', 'aria-label': 'Tutor messages' },
-        v.messages.map((m) => el('li', { className: 'msg msg-' + m.kind.toLowerCase(), text: m.text }))),
+      renderMessages(v),
       pending ? el('p', { className: 'pending', role: 'status', text: 'Working…' }) : null,
-      it && !reportReady ? el('div', { className: 'question card' },
+      it && !reportReady ? el('div', { className: 'question card' + (guided(v) ? ' question-guided' : '') },
         el('h2', { className: 'visually-hidden', text: 'Question' }),
-        it.support_status === 'ASSISTED' ? el('p', { className: 'assisted', text: 'Practice with help (not counted as independent)' }) : null,
-        el('p', { className: 'prompt', testid: 'prompt', text: it.prompt }),
-        renderAnswerForm(v)) : null,
+        // U6: the only notice that guided work does not count.
+        guided(v) ? el('p', { className: 'assisted', testid: 'assisted-tag', text: 'Practice with help: not counted toward the goal' }) : null,
+        parsed.problem ? el('p', { className: 'problem', testid: 'guided-problem' }, el('span', { className: 'problem-label', text: 'Problem ' }), mathText(parsed.problem, parsed.problem)) : null,
+        el('p', { className: 'prompt', testid: 'prompt' }, mathText(parsed.stem, main)),
+        renderAnswerForm(v, parsed)) : null,
       v.menu && v.menu.options && v.menu.options.length && !reportReady ? el('div', { className: 'menu card' },
         el('h2', { text: v.menu.menu_id === 'continuation' ? 'Keep going?' : 'Choose an option' }),
         el('div', { className: 'menu-options' }, v.menu.options.map((o) => button(o.label, 'menu-option-' + o.option_id, () => {
@@ -514,17 +692,17 @@
           else sendEvent(o.action, {});
         }, { disabled: state.busy || pending })))) : null,
       allowed('RESUME_SESSION') ? el('div', { className: 'row' }, button('Try again', 'retry', () => sendEvent('RESUME_SESSION'), { className: 'primary' })) : null,
-      reportReady ? el('div', { className: 'card' },
+      reportReady ? el('div', { className: 'card done-card' },
         el('p', { text: v.status === 'CLOSED' ? 'This session has ended.' : 'Your work on this topic is complete for this session.' }),
         el('div', { className: 'row' },
           button('View your session summary', 'view-report', loadReport, { className: 'primary' }),
           v.status !== 'CLOSED' && allowed('END_SESSION') ? button('Close session', 'end-session', () => sendEvent('END_SESSION')) : null,
           button('Start a new session', 'new-session', () => { state.screen = 'welcome'; render(); }))) : null,
       !reportReady ? el('div', { className: 'row session-controls' },
-        allowed('CHANGE_TARGET') ? button(state.picker ? 'Hide topics' : 'Change topic', 'change-topic', () => { state.picker = !state.picker; render(); }, { 'aria-expanded': state.picker ? 'true' : 'false' }) : null,
+        allowed('CHANGE_TARGET') ? button(state.picker ? 'Hide topics' : 'Change topic', 'change-topic', () => { state.picker = !state.picker; render(); }, { 'aria-expanded': state.picker ? 'true' : 'false', className: 'quiet' }) : null,
         allowed('END_SESSION') ? button('End session', 'end-session', () => {
           if (window.confirm('End this session and see your summary?')) sendEvent('END_SESSION');
-        }) : null) : null,
+        }, { className: 'quiet' }) : null) : null,
       state.picker && allowed('CHANGE_TARGET') && !reportReady ? el('div', { className: 'card picker' },
         el('h2', { text: 'Switch to another skill' }),
         el('p', { text: 'Your current work is kept in the record as interrupted; the new topic starts fresh.' }),
@@ -532,64 +710,49 @@
     );
   }
 
-  function list(items, empty) {
-    if (!items || !items.length) return el('p', { className: 'muted', text: empty });
-    return el('ul', null, items.map((t) => el('li', { text: t })));
+  // --------------------------------------------------------------- summary
+
+  function list(items, empty, testid) {
+    if (!items || !items.length) return el('p', { className: 'muted', testid, text: empty });
+    return el('ul', { testid }, items.map((t) => el('li', null, mathText(t))));
   }
 
-  function statements(items, empty) {
-    return list((items || []).map((x) => x.statement), empty);
-  }
-
-  // Round 5.1: plain words for the stored goal status (the stored codes are unchanged).
-  function goalText(status) {
-    if (status === 'IMMEDIATE_CRITERION_MET') return 'goal met: 3 correct in a row without help';
-    if (status === 'COMPONENT_CRITERION_MET') return 'goal met: 3 correct in a row without help (numeric part only)';
-    return 'not met yet';
-  }
-
+  /** U2: the learner level on top; the full record behind "Details for teachers". */
   function renderSummary() {
     const data = state.report;
-    const r = data.report;
-    const table = el('table', { className: 'skills-table' },
+    const learner = data.summary.learner;
+    const teacher = data.summary.teacher;
+    const cols = [['Skill', null], ['Questions answered', 'items_attempted'], ['Without help', 'independent'], ['With help', 'assisted'], ['Goal', 'goal'], ['What the beta checks', 'checked']];
+    const table = el('table', { className: 'skills-table', testid: 'skills-table' },
       el('caption', { text: 'Per skill, this session' }),
-      el('thead', null, el('tr', null, ['Skill', 'Items attempted', 'Without help', 'With help', 'Goal', 'Coverage'].map((h) => el('th', { scope: 'col', text: h })))),
-      el('tbody', null, data.per_skill.map((s) => el('tr', null,
-        el('th', { scope: 'row', text: s.skill_id + ' ' + s.title }),
-        el('td', { text: String(s.items_attempted) }),
-        el('td', { text: String(s.independent) }),
-        el('td', { text: String(s.assisted) }),
-        el('td', { text: goalText(s.criterion_status) }),
-        el('td', { text: s.runtime_coverage }),
-      ))));
-    const details = data.per_skill.map((s) => el('section', { className: 'skill-detail' },
-      el('h3', { text: s.skill_id + ': ' + s.title }),
-      el('h4', { text: 'Error patterns observed (observations, not confirmed causes)' }),
-      list(s.error_signatures_observed, 'None observed.'),
-      s.descent_path.length ? el('div', null, el('h4', { text: 'Descent and return' }), list(s.descent_path, '')) : null,
-      s.boundary_notes.length ? el('div', null, el('h4', { text: 'Beta boundary' }), list(s.boundary_notes, '')) : null));
+      el('thead', null, el('tr', null, cols.map(([h]) => el('th', { scope: 'col', text: h })))),
+      el('tbody', null, teacher.skills.map((s) => el('tr', null,
+        el('th', { scope: 'row', 'data-label': 'Skill', text: s.name }),
+        cols.slice(1).map(([h, key]) => el('td', { 'data-label': h, text: String(s[key]) }))))));
+    const details = teacher.skills.map((s) => el('section', { className: 'skill-detail' },
+      el('h4', { text: s.name }),
+      el('h5', { text: 'What we saw (observations, not confirmed causes)' }),
+      list(s.observed, 'Nothing to note.'),
+      s.route.length ? el('div', null, el('h5', { text: 'Route' }), list(s.route, '')) : null,
+      s.notes.length ? el('div', null, el('h5', { text: 'Not in this beta' }), list(s.notes, '')) : null));
     return el('section', { className: 'screen summary', testid: 'report', 'aria-labelledby': 'summary-heading' },
       el('h1', { id: 'summary-heading', tabindex: '-1', text: 'Session summary' }),
       el('p', { className: 'provider-label', testid: 'report-provider', text: data.provider_label }),
-      el('p', { text: 'Status: ' + r.status.replace(/_/g, ' ').toLowerCase() + '. Topics: ' + (r.targets_attempted.join(', ') || 'none') + '.' }),
-      el('div', { className: 'table-wrap' }, table),
-      details,
-      el('h2', { text: 'Goals met in this session' }),
-      statements(r.immediate_criteria, 'No goal was met in this session.'),
-      el('h2', { text: 'Transfer actually tested' }),
-      statements(r.transfer_evidence, 'No transfer item was answered correctly without help.'),
-      el('h2', { text: 'Guided work' }),
-      statements(r.guided_work, 'No guided work in this session.'),
-      el('h2', { text: 'Repairs and returns' }),
-      statements(r.repairs_and_returns, 'No repair was needed.'),
-      el('h2', { text: 'Route taken' }),
-      list(data.descent_path, 'No descent to other skills.'),
-      el('h2', { text: 'Unresolved or untested' }),
-      list(r.unresolved_or_untested, 'Nothing listed.'),
-      el('h2', { text: 'Next evidence needed' }),
-      list(r.next_evidence_needed, 'Nothing listed.'),
-      el('h2', { text: 'About these results' }),
-      el('p', { text: r.policy_note }),
+      el('div', { className: 'learner-summary', testid: 'learner-summary' },
+        el('section', { className: 'summary-part' }, el('h2', { text: 'What you worked on' }), list(learner.worked_on, 'No skill was started.')),
+        el('section', { className: 'summary-part' }, el('h2', { text: 'Goals met' }), list(learner.goals_met, 'No goal was met in this session.')),
+        el('section', { className: 'summary-part' }, el('h2', { text: 'What was hard' }), list(learner.hard, 'You did not need help in this session.')),
+        el('section', { className: 'summary-part' }, el('h2', { text: 'What to practise next' }), list(learner.next, 'Nothing listed.')),
+        el('p', { className: 'muted summary-note', text: learner.note })),
+      el('details', { className: 'teacher-details', testid: 'teacher-details' },
+        el('summary', { testid: 'teacher-toggle' }, el('span', { text: 'Details for teachers' })),
+        el('div', { className: 'teacher-body' },
+          el('p', null, 'Status: ' + teacher.status + '. Topic' + (teacher.topics.length === 1 ? '' : 's') + ': ' + (teacher.topics.join(', ') || 'none') + '.'),
+          el('div', { className: 'table-wrap' }, table),
+          details,
+          teacher.sections.map((sec) => el('section', { className: 'teacher-section' },
+            el('h3', { text: sec.heading }),
+            sec.lines.length === 1 && sec.heading === 'About these results' ? el('p', null, sec.lines[0]) : list(sec.lines, sec.empty))))),
       el('div', { className: 'row controls' },
         el('a', { className: 'button-link', href: 'api.php?action=report&format=download', download: 'algebra-session-report.json', testid: 'download-report' }, 'Download JSON'),
         button('Print', 'print-report', () => window.print()),
@@ -603,6 +766,8 @@
     statusEl = document.getElementById('status');
     const forgetButton = document.getElementById('forget');
     if (forgetButton) forgetButton.addEventListener('click', forget);
+    // A printed summary includes the teacher details.
+    window.addEventListener('beforeprint', () => { document.querySelectorAll('details').forEach((d) => { d.open = true; }); });
     boot().catch(() => {
       root.replaceChildren(el('p', { className: 'error-banner', role: 'alert', text: 'The tutor could not load. Please reload the page.' }));
     });

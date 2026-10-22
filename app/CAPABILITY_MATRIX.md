@@ -25,6 +25,8 @@ Runtime status counts: AVAILABLE_SCORED 2, PARTIAL_COMPONENTS 8, UNAVAILABLE 195
 
 | Item | Note |
 |---|---|
+| Problem named with feedback (round UI, U1) | HEURISTIC. When guided repair opens after a wrong or partly right answer, the host line "On <problem> you answered <answer>." comes before the opening; the problem is the item's longest run of numbers, x, y, operators and parentheses (one with "=" first), read from the prompt the learner saw. A guided step that does not repeat its problem is shown under a "Problem:" line (the stored prompt is unchanged). In the browser, other results name the answered item the same way. Feedback that refers to an older item is not detected. |
+| Plain words in the summary page (round UI, U2) | The learner level (titles only) and the teacher level (titles with IDs in brackets) are generated in plain words. Stored record text shown in the teacher level is rewritten from a fixed list (declared prerequisite, descent, implicated, branch, transfer variant, retention, faded support, coverage, edge and status codes). Stored wording outside that list is not rewritten; SummaryWordingTest fails if a listed term or code reaches either level in its two sessions. The report record and the JSON download keep their field names, stored codes and skill IDs. |
 | Answer-disclosure guard (D1) | HEURISTIC. Rejects model text containing the active or a remaining guided step's answer as a standalone number, number word, equivalent polynomial span or the key option's text. The word "one" used as a determiner or pronoun ("one way", "on one side") is not read as the value 1 unless a value cue precedes it ("x is one"). Paraphrases (e.g. "dividing by 3" for the option "Divide by 3") are not detected. Not read as a choice: options named together as alternatives ("positive or negative"); the learner's own answer to a completed step (never the active step's); positive, negative, plus or minus (or a plural) directly followed by an operand noun ("the negative sign", "a negative divisor"; round 5 ruling 2). |
 | Internal vocabulary (R5-B) | Learner-facing model text containing expected value, expected answer, answer key, matched the key, guided step, host, assisted, verdict or criterion (whole words or phrases, any case, plurals included) is rejected and repaired; host lines and the session summary pass the same check (round 5.1: the summary says "with help", "the answer the app computed" and "goal met: 3 correct in a row without help"; report field names and stored codes are unchanged). Model text also may not say on your own, without help, independently, by yourself or no help (round 5.1 P3); host lines may. Other internal wording is not detected. |
 | Independent items (R5-A) | Every independent item (target, probe, prerequisite check, independent check, return) is shown with the host line "Here is one to try on your own." only. The model still proposes the item's parameters through the same gate; any learner text it writes with them is discarded unread. Model-written learner text remains in guided steps, hints and explanations. |
@@ -59,10 +61,11 @@ Runtime status counts: AVAILABLE_SCORED 2, PARTIAL_COMPONENTS 8, UNAVAILABLE 195
 
 | Item | Note |
 |---|---|
-| Bundled math renderer (spec 01) | Not bundled. Math is shown as plain text with Unicode signs; no TeX is interpreted anywhere, so unsafe TeX cannot execute. |
+| Bundled math renderer (spec 01) | Not bundled. Math is shown as plain text with Unicode signs; each equation or expression is kept on one line (round UI, U3); no TeX is interpreted anywhere, so unsafe TeX cannot execute. |
 | Model-worded REPORT envelopes | Not used. The report is built by the host from ledger events only. |
 | Solution-set, interval, rational-domain checkers (golden ROOT-*, DOMAIN-01, INTERVAL-01, GRAPH-01) | Not implemented; no beta skill needs them. |
 | MySQL storage adapter | Not implemented; PDO SQLite only (preflight fails clearly without it). |
+| Working box (round UI, U4) | Removed until a reader exists. Nothing read the "Working (optional)" box, so the page no longer shows it and the notices no longer mention working. The API still accepts an empty or missing working field; nothing else changes. |
 
 ## All 205 curriculum skills
 

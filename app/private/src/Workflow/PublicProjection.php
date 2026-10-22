@@ -5,6 +5,7 @@ namespace AlgebraEngine\Workflow;
 
 use AlgebraEngine\Curriculum\BetaScope;
 use AlgebraEngine\Curriculum\CurriculumRepository;
+use AlgebraEngine\Evidence\CriteriaCalculator;
 use AlgebraEngine\Provider\SchemaValidator;
 use AlgebraEngine\Support\LearnerText;
 
@@ -46,7 +47,7 @@ final class PublicProjection
             'active_item' => $active === null || $status === 'CLOSED' ? null : [
                 'item_id' => $active['item_id'],
                 'item_version' => $active['item_version'],
-                'prompt' => $active['prompt'],
+                'prompt' => self::prompt($active),
                 'response_type' => $active['response_type'],
                 'input_help' => $active['input_help'],
                 'support_status' => $active['role'] === 'GUIDED' ? 'ASSISTED' : $active['support_status'],
@@ -61,6 +62,17 @@ final class PublicProjection
         ];
         $this->assertPublic($view);
         return $view;
+    }
+
+    /**
+     * Round UI (U1): a guided step that does not repeat its problem is shown
+     * under it, so the step and any feedback about it never refer to numbers
+     * the learner can no longer see. The stored prompt is unchanged.
+     */
+    private static function prompt(array $active): string
+    {
+        $problem = $active['role'] === 'GUIDED' ? (string) ($active['objects']['plan_problem'] ?? '') : '';
+        return $problem !== '' && !str_contains($active['prompt'], $problem) ? 'Problem: ' . $problem . "\n" . $active['prompt'] : $active['prompt'];
     }
 
     /** @return list<string> */
@@ -100,38 +112,54 @@ final class PublicProjection
         return $actions;
     }
 
+    /**
+     * The label's first line names the skill when it is not the topic; the
+     * lines after it describe the goal for the item on screen (round UI, U6/U7).
+     */
     private function progress(array $snap, array $eng): array
     {
         $skill = $snap['current_skill_id'];
         $episode = $snap['target_episode_id'];
         $streak = 0;
         $whole = false;
+        $covered = [];
         foreach ($snap['criteria'] as $c) {
             if ($c['skill_id'] === $skill && $c['target_episode_id'] === $episode) {
                 $streak = $c['independent_correct_streak'];
                 $whole = $c['whole_skill_requirements_satisfied'] && $c['immediate_status'] === 'IMMEDIATE_CRITERION_MET';
+                $covered = $c['covered_variant_ids'];
             }
         }
-        $title = $skill === null ? '' : $this->curriculum->title($skill);
-        $label = match ($snap['mode']) {
-            'TARGET_SELECTION', 'AWAITING_SESSION_CONTEXT' => 'Choose a skill to start.',
-            'TARGET_ASSESSMENT', 'DIAGNOSTIC_PROBE' => 'Checking: ' . $title . '.',
-            'PREREQUISITE_CHECK' => 'Checking a skill this builds on: ' . $title . '.',
-            'GUIDED_REPAIR' => 'Working step by step with help: ' . $title . '. Practice with help is not counted as independent work.',
-            'INDEPENDENT_CHECK' => 'Checking again: ' . $title . '.',
-            'RETURN_TO_TARGET' => 'Back to: ' . $title . '.',
+        $mode = $snap['mode'];
+        $single = [
+            'TARGET_SELECTION' => 'Choose a skill to start.',
+            'AWAITING_SESSION_CONTEXT' => 'Choose a skill to start.',
             'SESSION_REPORT' => 'Session summary ready.',
             'SESSION_CLOSED' => 'Session ended.',
-            default => $title,
-        };
-        if ($skill !== null && !in_array($snap['mode'], ['SESSION_REPORT', 'SESSION_CLOSED', 'GUIDED_REPAIR'], true)) {
-            $label .= ' Correct in a row without help: ' . min($streak, 3) . ' of 3'
-                . (BetaScope::threeVariant($skill) ? ' (needs a solve, a step-choice and a new-form question).' : '.');
+        ];
+        if (isset($single[$mode]) || $skill === null) {
+            $label = $single[$mode] ?? '';
+        } else {
+            $lines = [$skill !== $snap['original_target_skill_id'] ? 'Building block: ' . $this->curriculum->title($skill) . '.' : ''];
+            $active = $eng['active'];
+            if ($active !== null && in_array($active['role'], CriteriaCalculator::COUNTED_ROLES, true)) {
+                $lines[] = min($streak, CriteriaCalculator::REQUIRED) . ' of ' . CriteriaCalculator::REQUIRED . ' in a row without help';
+                $needed = array_values(array_diff(BetaScope::VARIANTS, $covered));
+                if (BetaScope::threeVariant($skill) && $needed !== []) {
+                    $lines[] = 'Still needed: ' . BetaScope::kinds($skill, $needed) . '.'; // U7
+                }
+                if ($active['support_status'] === 'ASSISTED') {
+                    $lines[] = 'You had help on this one, so the count starts again after your answer.';
+                }
+            } elseif ($active !== null && $active['role'] === 'DIAGNOSTIC') {
+                $lines[] = 'This question helps choose what to practise. It does not count toward the goal.';
+            }
+            $label = implode("\n", $lines);
         }
         if (($terms = LearnerText::internalTerms($label)) !== []) {
             throw new \LogicException('Progress label uses internal terms (' . implode(', ', $terms) . ')'); // R5-B
         }
-        return ['label' => $label, 'independent_successes' => $streak, 'criterion_required' => 3, 'whole_skill_claim' => $whole];
+        return ['label' => $label, 'independent_successes' => $streak, 'criterion_required' => CriteriaCalculator::REQUIRED, 'whole_skill_claim' => $whole];
     }
 
     /** Schema validation of the outgoing projection plus a private-key scan. */

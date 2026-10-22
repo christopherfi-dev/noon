@@ -19,7 +19,7 @@ PASS no dotfiles (no .htaccess) anywhere in the zip
 PASS no private file or private content under algebra-engine/
 PASS api.php default ALGEBRA_PRIVATE_DIR is /var/www/algebra-engine-private
 PASS config.example.php sets base_path '/educational-engines/algebra-engine/'
-PASS zip matches the staged tree that is served below  (664 entries)
+PASS zip matches the staged tree that is served below  (666 entries)
 PASS index.html served
 PASS bootstrap via the VPS api.php finds algebra-engine-private outside the web root  (HTTP 200)
 PASS start Q07 presents a host-accepted item  (HTTP 200)
@@ -27,7 +27,7 @@ PASS hint commits support  (HTTP 200)
 PASS end session  (HTTP 200)
 PASS report is labelled mock  (HTTP 200)
 PASS mutation without CSRF refused  (HTTP 403)
-PASS session cookie path is /educational-engines/algebra-engine/  (Set-Cookie: ae_sid=35b7eb69ae0d3b8e7a230c158dea411d321268f8e169c23eb23e5d641cac4782; Path=/educational-engines/algebra-engine/; Max-Age=604800; HttpOnly; SameSite=Lax)
+PASS session cookie path is /educational-engines/algebra-engine/  (Set-Cookie: ae_sid=ecbaf2b5d5b40c11203a07f7641d6151f807a4b504d4a8cf7efddb3afad57e1f; Path=/educational-engines/algebra-engine/; Max-Age=604800; HttpOnly; SameSite=Lax)
 PASS private path not served: /educational-engines/algebra-engine/config.php  (HTTP 404)
 PASS private path not served: /educational-engines/algebra-engine/bootstrap.php  (HTTP 404)
 PASS private path not served: /educational-engines/algebra-engine/src/App.php  (HTTP 404)

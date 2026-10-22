@@ -1,5 +1,5 @@
 {
-  "ran_at": "2026-10-22T12:16:35.715Z",
+  "ran_at": "2026-10-22T22:56:08.236Z",
   "results": [
     {
       "name": "B1 browser journey (mobile 360x740)",
@@ -15,10 +15,11 @@
           "RETURN_TO_TARGET",
           "SESSION_REPORT"
         ],
+        "namesMissed": true,
         "maxOverflow": 0,
         "internalInSummary": [],
         "consoleErrors": [],
-        "smallerPrompt": "What is 9 × 9?"
+        "smallerPrompt": "What is 3 + 3 + 3?"
       }
     },
     {
@@ -35,10 +36,11 @@
           "RETURN_TO_TARGET",
           "SESSION_REPORT"
         ],
+        "namesMissed": true,
         "maxOverflow": 0,
         "internalInSummary": [],
         "consoleErrors": [],
-        "smallerPrompt": "What is 12 + 12 + 12 + 12?"
+        "smallerPrompt": "What is 6 × 9?"
       }
     },
     {
@@ -108,6 +110,171 @@
         },
         "shownAsText": true,
         "dialogs": [],
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "UI-04 round UI journey (mobile 390x844)",
+      "pass": true,
+      "detail": {
+        "checks": {
+          "u4Welcome": true,
+          "u7Dots0": true,
+          "u5Independent": true,
+          "u5IndependentMenu": true,
+          "u5EscapeCloses": true,
+          "u4NoWorkingBox": true,
+          "u7Dots1": true,
+          "u8Correct": true,
+          "u3IsChoice": true,
+          "u3Labels": true,
+          "u3Stem": true,
+          "u7Dots2": true,
+          "u8NotYet": true,
+          "u7ProbeNoDots": true,
+          "u7BuildingBlockDots": true,
+          "u1": true,
+          "u5Guided": true,
+          "u6": true,
+          "u5GuidedMenu": true,
+          "u5HintAction": true,
+          "reachedReport": true,
+          "u2Collapsed": true,
+          "u2Learner": true,
+          "u2Opened": true,
+          "u2Words": true,
+          "u2Table": true
+        },
+        "overflow": 0,
+        "brokenWords": [],
+        "terms": [],
+        "codes": [],
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "UI-04 round UI journey (desktop 1280x800)",
+      "pass": true,
+      "detail": {
+        "checks": {
+          "u4Welcome": true,
+          "u7Dots0": true,
+          "u5Independent": true,
+          "u5IndependentMenu": true,
+          "u5EscapeCloses": true,
+          "u4NoWorkingBox": true,
+          "u7Dots1": true,
+          "u8Correct": true,
+          "u3IsChoice": true,
+          "u3Labels": true,
+          "u3Stem": true,
+          "u7Dots2": true,
+          "u8NotYet": true,
+          "u7ProbeNoDots": true,
+          "u7BuildingBlockDots": true,
+          "u1": true,
+          "u5Guided": true,
+          "u6": true,
+          "u5GuidedMenu": true,
+          "u5HintAction": true,
+          "reachedReport": true,
+          "u2Collapsed": true,
+          "u2Learner": true,
+          "u2Opened": true,
+          "u2Words": true,
+          "u2Table": true
+        },
+        "overflow": 0,
+        "brokenWords": [],
+        "terms": [],
+        "codes": [],
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "UI-05 help choices, typed stuck entry and streak reset (mobile 390x844)",
+      "pass": true,
+      "detail": {
+        "checks": {
+          "oneDot": true,
+          "probe": true,
+          "reset": true,
+          "hint": true,
+          "explain": true,
+          "typedStuck": true,
+          "notLearned": true
+        },
+        "sent": [
+          "SUBMIT_RESPONSE",
+          "SUBMIT_RESPONSE",
+          "SUBMIT_RESPONSE",
+          "REQUEST_HINT",
+          "REQUEST_EXPLANATION",
+          "SUBMIT_RESPONSE",
+          "NOT_LEARNED"
+        ],
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "UI-05 help choices, typed stuck entry and streak reset (desktop 1280x800)",
+      "pass": true,
+      "detail": {
+        "checks": {
+          "oneDot": true,
+          "probe": true,
+          "reset": true,
+          "hint": true,
+          "explain": true,
+          "typedStuck": true,
+          "notLearned": true
+        },
+        "sent": [
+          "SUBMIT_RESPONSE",
+          "SUBMIT_RESPONSE",
+          "SUBMIT_RESPONSE",
+          "REQUEST_HINT",
+          "REQUEST_EXPLANATION",
+          "SUBMIT_RESPONSE",
+          "NOT_LEARNED"
+        ],
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "UI-06 result blocks meet WCAG AA contrast in light and dark mode",
+      "pass": true,
+      "detail": {
+        "out": {
+          "light": {
+            "correct": {
+              "word": 8.181823963104396,
+              "body": 14.723119218307158,
+              "icon": 5.078795978854816,
+              "bg": "rgb(231, 245, 236)"
+            },
+            "notyet": {
+              "word": 15.048022877113434,
+              "body": 15.048022877113434,
+              "icon": 4.131437346244813,
+              "bg": "rgb(243, 244, 246)"
+            }
+          },
+          "dark": {
+            "correct": {
+              "word": 10.093130558842713,
+              "body": 13.12471782233167,
+              "icon": 7.287280914885737,
+              "bg": "rgb(16, 41, 26)"
+            },
+            "notyet": {
+              "word": 13.416522720913486,
+              "body": 13.416522720913486,
+              "icon": 5.154092376180803,
+              "bg": "rgb(28, 35, 43)"
+            }
+          }
+        },
         "consoleErrors": []
       }
     }

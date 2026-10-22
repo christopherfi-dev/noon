@@ -77,8 +77,8 @@ Set in `private/config.php`: `provider => 'openai_compatible'`,
 `provider_base_url` (e.g. the DeepSeek base URL from its current docs),
 `provider_model` (confirm the model name with the provider), and
 `provider_api_key`. The adapter makes one text-mode binding call, checks the
-exact v1.2 activation line, then uses JSON mode for envelopes. Answers and
-working are sent to that provider.
+exact v1.2 activation line, then uses JSON mode for envelopes. Answers are
+sent to that provider.
 
 Live smoke test (confirms network and adapter compatibility only), with the
 key in a config file kept outside the repository:

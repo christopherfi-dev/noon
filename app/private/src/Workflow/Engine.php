@@ -24,6 +24,7 @@ use AlgebraEngine\Report\ReportBuilder;
 use AlgebraEngine\Storage\Store;
 use AlgebraEngine\Support\Clock;
 use AlgebraEngine\Support\Ids;
+use AlgebraEngine\Support\ProblemText;
 use AlgebraEngine\Support\RandomSource;
 use AlgebraEngine\Support\Time;
 
@@ -674,7 +675,7 @@ final class Engine
         $turn->facts = $facts;
         $turn->event('ITEM_CLOSED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'reason' => $outcome->verdict]);
         $turn->eng['active'] = null;
-        $turn->say('FEEDBACK', $this->verdictSentence($outcome, $active['role'] === 'GUIDED'));
+        $turn->say('FEEDBACK', $this->verdictSentence($outcome));
         if ($outcome->verdict === 'INCORRECT' && $active['role'] !== 'GUIDED') {
             // R4-B: the repair practises the structure of the item the learner failed.
             $turn->eng['last_failed'][$active['skill_id']] = ['template_id' => $active['template_id'], 'params' => $active['params'], 'item_id' => $active['item_id']];
@@ -725,11 +726,12 @@ final class Engine
         return $out;
     }
 
-    private function verdictSentence(CheckOutcome $o, bool $guided): string
+    private function verdictSentence(CheckOutcome $o): string
     {
         return match ($o->verdict) {
-            'CORRECT' => $guided ? 'Yes, that is right.' : 'Correct.',
-            'INCORRECT' => $guided ? 'Not yet.' : 'That is not correct.',
+            // Round UI (U8): one wording for independent items and guided steps.
+            'CORRECT' => 'Correct.',
+            'INCORRECT' => 'Not yet.',
             'PARTIAL' => match ($o->formIssue) {
                 'STILL_GROUPED' => 'That expression is equal, but it still has parentheses. The question asks for it without parentheses.',
                 'NUMBERS_NOT_MULTIPLIED' => 'That expression is equal, but some numbers are not multiplied out yet.',
@@ -1076,6 +1078,13 @@ final class Engine
             'keep' => $keep, 'keep_left' => 1];
         $turn->event('REPAIR_STARTED', ['skill_id' => $skill, 'plan_id' => $plan['plan_id'], 'faded' => false, 'route' => $plan['route'], 'reason' => $reason,
             'kept_features' => $plan['kept_features'], 'unkept_features' => $plan['unkept_features'], 'failed_item_id' => $failed['item_id'] ?? null]);
+        // Round UI (U1): the answered item has left the screen, so name it and the answer before the opening refers to it.
+        if ($turn->lastItem !== null && $turn->lastItem['role'] !== 'GUIDED' && in_array($turn->lastResult['verdict'] ?? null, ['INCORRECT', 'PARTIAL'], true)) {
+            $line = ProblemText::answerLine($turn->lastItem['prompt'], $turn->lastItem['response_type'], $turn->learnerPayload['text'] ?? '');
+            if ($line !== null) {
+                $turn->say('INFORMATION', $line);
+            }
+        }
         // D1: repair may open by stating what the learner's last answer did.
         $this->presentStep($turn, $turn->facts);
     }
