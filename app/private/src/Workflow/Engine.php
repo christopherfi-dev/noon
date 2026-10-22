@@ -1314,7 +1314,7 @@ final class Engine
                     'SMALLER' => EntryInterpreter::LINE_ASK_SMALLER,
                     'ANOTHER_WAY' => EntryInterpreter::LINE_ASK_ANOTHER_WAY,
                     'PREREQUISITE' => EntryInterpreter::LINE_ASK_PREREQUISITE,
-                    default => EntryInterpreter::LINE_ASK_OTHER,
+                    default => EntryInterpreter::LINE_ASK_DIFFERENT_PROBLEM,
                 });
             }
             return;

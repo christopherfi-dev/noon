@@ -168,7 +168,7 @@ final class StuckEntryTest extends TestCase
         } finally {
             $h->cleanup();
         }
-        // Not covered by the ruling: a boundary follows (s3.1 exercises A07, outside the beta) and then a new guided problem.
+        // A boundary follows (s3.1 exercises A07, outside the beta), then a new guided problem: the architect's fifth line.
         $h = self::guided('p1-boundary');
         try {
             $h->answerCorrect();                                    // s1
@@ -176,7 +176,8 @@ final class StuckEntryTest extends TestCase
             $h->submit($h->plainWrong());                           // s3 → s3.1
             [, $shown] = self::send($h, $ask);
             $this->assertSame(['GUIDED_REPAIR', 's1'], [$h->mode(), $h->active()['guided_step']['id']]);
-            $this->assertSame(EntryInterpreter::LINE_ASK_OTHER, $shown[0]);
+            $this->assertSame(EntryInterpreter::LINE_ASK_DIFFERENT_PROBLEM, $shown[0]);
+            $this->assertSame('I won\'t give the answer, but let\'s try a different problem.', $shown[0]);
             foreach ([EntryInterpreter::LINE_ASK_SMALLER, EntryInterpreter::LINE_ASK_ANOTHER_WAY, EntryInterpreter::LINE_ASK_PREREQUISITE, EntryInterpreter::LINE_ASK_HINT] as $line) {
                 $this->assertNotContains($line, $shown);
             }

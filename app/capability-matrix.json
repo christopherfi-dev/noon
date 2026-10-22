@@ -1,5 +1,5 @@
 {
-    "generated_at": "2026-10-22T11:10:01Z",
+    "generated_at": "2026-10-22T11:24:09Z",
     "curriculum": "ACE-ALGEBRA1 1.1.0",
     "architecture": "1.2",
     "counts": {
@@ -4290,7 +4290,7 @@
         },
         {
             "item": "Stuck and off-task entries (R5-C)",
-            "note": "Fixed lists, matched after normalising (lowercase, trimmed, spaces collapsed, apostrophes removed, trailing . ! ? stripped): stuck phrases and \"?\" give a smaller question in guided repair or the hint path on an independent item; asking for the answer adds a line naming what follows (round 5.1 P1: \"…but here is a hint.\", \"…but here is a smaller step.\", \"…but let's look at it another way.\", \"…but let's check something that comes before this.\", or \"I won't give the answer.\" alone when a boundary follows); other words ending in \"?\" and number words zero to twenty get a host line; a readable answer with a trailing \"?\" and \"X = 3\" on an item in x are scored normally. Other phrasings keep the clarification for unreadable input. None is scored as incorrect."
+            "note": "Fixed lists, matched after normalising (lowercase, trimmed, spaces collapsed, apostrophes removed, trailing . ! ? stripped): stuck phrases and \"?\" give a smaller question in guided repair or the hint path on an independent item; asking for the answer adds a line naming what follows (round 5.1 P1: \"…but here is a hint.\", \"…but here is a smaller step.\", \"…but let's look at it another way.\", \"…but let's check something that comes before this.\", or \"…but let's try a different problem.\" when a boundary follows); other words ending in \"?\" and number words zero to twenty get a host line; a readable answer with a trailing \"?\" and \"X = 3\" on an item in x are scored normally. Other phrasings keep the clarification for unreadable input. None is scored as incorrect."
         },
         {
             "item": "Guided-step skill tags",

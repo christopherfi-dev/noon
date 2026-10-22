@@ -60,3 +60,12 @@ New or changed tests:
 - `X =` on expression items.
 - Wider stuck phrase lists.
 - Freshness repairs when the model re-proposes the opening target numbers.
+
+## Addendum: architect rulings on §3 (2026-10-22)
+
+- **(1) Boundary case:** the line is now "I won't give the answer, but let's try a different problem." It is in `EntryInterpreter::LINE_ASK_DIFFERENT_PROBLEM` and asserted in the P1 test (`StuckEntryTest::testAskForAnswerLineNamesWhatFollows`). The capability matrix and acceptance scenarios were updated.
+- **(2)–(4):** accepted as implemented; no change.
+- **Gate, 11:24:29Z–11:25:37Z:** PASS. PHPUnit 198 passed, 0 failed; browser 5/5; the Bluehost upload bundle was rebuilt (677 files) and passed the deployment-layout smoke test (12/12); key-leak scan 0 hits.
+- **Bundle build warning:** it printed Composer's "lock file is not up to date with the latest changes in composer.json". The same warning is in the previous build log and neither Composer file changed this round. The bundle installs from the committed lock file.
+
+Offline only; not deployed.

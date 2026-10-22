@@ -1,4 +1,4 @@
 Configured key present: no
-Tracked files scanned: 326
+Tracked files scanned: 330
 Upload ZIP entries scanned: 677
 KEY-LEAK SCAN PASSED

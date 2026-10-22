@@ -148,3 +148,13 @@ Separate interval. Offline only: no live run, no key needed or used.
 | between 10:56:51Z and 11:10:21Z (exact times not recorded) | Ruling 4: plain words in the session summary (report prose and summary page; field names and stored codes unchanged). P1: the ask-for-answer line names what follows (`stuck()` reports its outcome; a boundary gets "I won't give the answer." alone, conflict reported). P2: an answer after a hint, explanation or stuck entry resets the run (owner-rule override recorded in the capability matrix). P3: five support claims rejected in model text only. P4: a probe answered after help is inconclusive; one more fresh probe; at most two probes per diagnosis | PHPUnit 198 PASS (106 unit, 92 integration); browser 5/5. Tests that pinned the old behaviour updated: B14b, EVID-01, B15 flow, two EvidenceTest wording checks |
 | 2026-10-22T11:10:21Z–11:11:28Z | Round 5.1 gate (mock config, no key) | PASS — every step exit 0; PHPUnit 198 (38932 assertions); browser 5/5; bundle smoke PASS; key-leak scan 0 hits; 2 more PHPUnit runs clean |
 | 2026-10-22T11:13:43Z | **Round 5.1 end**. Report: `ROUND_5_1_REPORT.md`. No live run, no key used. Not deployed | Round 5.1 interval 10:56:51Z–2026-10-22T11:13:43Z |
+
+## Round 5.1 follow-up — architect rulings on ROUND_5_1_REPORT §3
+
+Offline only; no key used.
+
+| UTC time | Action | Result |
+|---|---|---|
+| 2026-10-22T11:23:59Z | **Start**. Ruling (1): the boundary case shows "I won't give the answer, but let's try a different problem."; (2)–(4) accepted as implemented | Line added (`LINE_ASK_DIFFERENT_PROBLEM`), P1 test asserts it; capability matrix and acceptance scenarios updated |
+| 2026-10-22T11:24:29Z–11:25:37Z | Full gate with Bluehost upload bundle rebuild (mock config, no key) | PASS — every step exit 0; PHPUnit 198 (38931 assertions); browser 5/5; bundle rebuilt (677 files), smoke 12/12; key-leak scan 0 hits over 330 tracked files and 677 ZIP entries |
+| 2026-10-22T11:25:57Z | **End**. Not deployed | Interval 11:23:59Z–2026-10-22T11:25:57Z |

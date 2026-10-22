@@ -27,8 +27,8 @@ final class EntryInterpreter
     public const LINE_ASK_SMALLER = 'I won\'t give the answer, but here is a smaller step.';
     public const LINE_ASK_ANOTHER_WAY = 'I won\'t give the answer, but let\'s look at it another way.';
     public const LINE_ASK_PREREQUISITE = 'I won\'t give the answer, but let\'s check something that comes before this.';
-    /** Not in the ruling: a boundary follows (a fresh guided problem or an independent check). States no next step. */
-    public const LINE_ASK_OTHER = 'I won\'t give the answer.';
+    /** Architect ruling on the round 5.1 report: a boundary follows (a fresh guided problem, or an independent check). */
+    public const LINE_ASK_DIFFERENT_PROBLEM = 'I won\'t give the answer, but let\'s try a different problem.';
     public const LINE_QUESTION = 'This box is for your answer. If you\'re stuck, type help.';
     public const LINE_NUMBER_WORD = 'Write the number with digits.';
 
