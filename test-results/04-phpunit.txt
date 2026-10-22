@@ -8,7 +8,7 @@ Configuration: /home/user/noon/app/phpunit.xml
 ............................................................... 189 / 189 (100%)
 
 
-Time: 00:28.714, Memory: 32.00 MB
+Time: 00:46.081, Memory: 32.00 MB
 
 Beta Guards (AlgebraEngine\Tests\Integration\BetaGuards)
  ✔ B 5 non prerequisite proposal rejected
@@ -247,4 +247,4 @@ Templates (AlgebraEngine\Tests\Unit\Items\Templates)
  ✔ Opening facts never contain a step answer
  ✔ Guided plans are questions that never state their answer
 
-OK (189 tests, 38528 assertions)
+OK (189 tests, 38530 assertions)

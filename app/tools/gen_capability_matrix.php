@@ -52,7 +52,7 @@ $json = [
     'curriculum' => 'ACE-ALGEBRA1 1.1.0',
     'architecture' => '1.2',
     'counts' => $counts,
-    'live_provider_smoke_test' => 'Round 4 (2026-10-22): live confirmation with thinking disabled (the chosen setting) against DeepSeek deepseek-flash: the 8 round 3 sessions (5 B1, 3 B3) and the B11 messy-learner session twice; all 10 sessions completed. Results: test-results/live/round4/ and ROUND_4_REPORT.md. Earlier runs: test-results/live/round3/, test-results/live/00-smoke-and-model-check.md, test-results/08-live-smoke.txt. These runs use scripted learners: they confirm provider compatibility and host gating, not teaching quality, learning or deployment. Every other result in this matrix is from mock mode (simulated model).',
+    'live_provider_smoke_test' => 'Round 5 (2026-10-22): live confirmation with thinking disabled against DeepSeek deepseek-flash: the 8 standard sessions (5 B1, 3 B3) and the B11 messy-learner session twice; all 10 sessions completed, 0 holds, no independent item shown with model-written text, no internal vocabulary in learner-visible text. Results: test-results/live/round5/ and ROUND_5_REPORT.md. Earlier runs: test-results/live/round4/, test-results/live/round3/, test-results/live/00-smoke-and-model-check.md, test-results/08-live-smoke.txt. These runs use scripted learners: they confirm provider compatibility and host gating, not teaching quality, learning or deployment. Every other result in this matrix is from mock mode (simulated model).',
     'skills' => $entries,
     'deferred' => array_map(fn ($d) => ['item' => $d[0], 'status' => 'NOT IMPLEMENTED', 'behaviour' => $d[1]], $deferred),
     'other_gaps' => array_map(fn ($d) => ['item' => $d[0], 'status' => 'NOT IMPLEMENTED', 'note' => $d[1]], $otherGaps),
