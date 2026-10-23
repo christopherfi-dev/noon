@@ -2,12 +2,14 @@
 declare(strict_types=1);
 
 /*
- * Builds the Bluehost upload ZIP with two trees:
- *   algebra-private/      -> place in the account home, OUTSIDE public_html
- *   public_html/algebra/  -> place under public_html
- * and (round PHP80) the nginx VPS upload ZIP with two top-level folders:
- *   algebra-engine/          -> /var/www/html/educational-engines/algebra-engine/  (public)
- *   algebra-engine-private/  -> /var/www/algebra-engine-private/                   (outside the web root)
+ * Round 6 (§9): builds the side-by-side nginx VPS upload ZIP of the AI line,
+ * dist/algebra-engine-ai-vps-upload.zip, with two top-level folders:
+ *   algebra-engine-ai/          -> /var/www/html/educational-engines/algebra-engine-ai/  (public)
+ *   algebra-engine-ai-private/  -> /var/www/algebra-engine-ai-private/                   (outside the web root)
+ * Its base path is /educational-engines/algebra-engine-ai/ and its database lives in its own
+ * private folder, so it cannot touch the beta at /educational-engines/algebra-engine/.
+ * The Bluehost layout is still staged in dist/stage (the smoke test serves it) but not zipped,
+ * and the beta's own ZIPs are not built on this branch: they are in tag beta-1.0.
  * Production dependencies are installed without dev packages so no Composer
  * or shell is needed on the host. Nothing here deploys anything.
  *
@@ -23,11 +25,12 @@ foreach (array_slice($argv, 1) as $a) {
     }
 }
 $stage = $out . '/stage';
-$zipPath = $out . '/algebra-engine-bluehost-upload.zip';
-$vpsStage = $out . '/stage-vps';
-$vpsZipPath = $out . '/algebra-engine-vps-upload.zip';
-const VPS_PRIVATE_DIR = '/var/www/algebra-engine-private';
-const VPS_BASE_PATH = '/educational-engines/algebra-engine/';
+$vpsStage = $out . '/stage-ai-vps';
+$vpsZipPath = $out . '/algebra-engine-ai-vps-upload.zip';
+const VPS_PUBLIC = 'algebra-engine-ai';
+const VPS_PRIVATE = 'algebra-engine-ai-private';
+const VPS_PRIVATE_DIR = '/var/www/algebra-engine-ai-private';
+const VPS_BASE_PATH = '/educational-engines/algebra-engine-ai/';
 
 function rmrf(string $p): void
 {
@@ -92,7 +95,6 @@ function zipTree(string $stage, string $zipPath): int
 }
 
 rmrf($stage);
-@unlink($zipPath);
 rmrf($vpsStage);
 @unlink($vpsZipPath);
 $priv = "$stage/algebra-private";
@@ -152,14 +154,13 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($pub, File
     }
 }
 
-$n = zipTree($stage, $zipPath);
-echo "Wrote $zipPath ($n files, " . round(filesize($zipPath) / 1024) . " KiB)\n";
+echo "Staged the Bluehost layout in $stage (not zipped on this branch)\n";
 
 // ------------------------------------------------------------------ nginx VPS bundle (round PHP80)
 // Same code and dependencies; only the layout, the api.php default private path and the
 // example base_path differ. nginx ignores .htaccess, so the VPS bundle carries no dotfiles.
-$vpsPub = "$vpsStage/algebra-engine";
-$vpsPriv = "$vpsStage/algebra-engine-private";
+$vpsPub = "$vpsStage/" . VPS_PUBLIC;
+$vpsPriv = "$vpsStage/" . VPS_PRIVATE;
 copyTree($priv, $vpsPriv, ['.htaccess']);
 // Dependencies' repository metadata (.gitattributes, .github/, .gitignore, .editorconfig) is not needed at run time.
 $dotted = [];
@@ -200,7 +201,7 @@ foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($vpsStage,
         fwrite(STDERR, "Refusing to bundle $rel: no config.php and nothing inside var/\n");
         exit(1);
     }
-    if (str_starts_with($rel, 'algebra-engine/') && !preg_match('#^algebra-engine/(index\.html|api\.php|assets/[^/]+)$#', $rel)) {
+    if (str_starts_with($rel, VPS_PUBLIC . '/') && !preg_match('#^' . VPS_PUBLIC . '/(index\.html|api\.php|assets/[^/]+)$#', $rel)) {
         fwrite(STDERR, "Refusing to place $rel in the public folder\n");
         exit(1);
     }

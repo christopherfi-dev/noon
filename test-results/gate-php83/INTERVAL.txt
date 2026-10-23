@@ -1,1 +1,1 @@
-2026-10-23T00:37:29Z – 2026-10-23T00:38:35Z
+Gate on PHP 8.3.6: 2026-10-23T04:03:22Z to 2026-10-23T04:04:42Z (date -u before and after run_all_tests.sh)

@@ -148,7 +148,10 @@ final class MockProvider implements ProviderAdapter
             $s = trim($m[1]);
             $notes[] = 'kept the answer written before the explanation';
         }
-        $s = (string) preg_replace('/^(the answer is|answer is|i think its|i think it is|i think|its|it is|it\'s|it’s)\s+/u', '', $s);
+        do {
+            $before = $s;
+            $s = (string) preg_replace('/^(the answer is|answer is|i think|its|it is|it\'s|it’s|i got|maybe)\s+/u', '', $s);
+        } while ($s !== $before);
         $s = (string) preg_replace('/\bequals\b/u', '=', $s);
         $s = (string) preg_replace('/\b(?:negative|minus)\s+(?=\d)/u', '-', $s);
         $s = (string) preg_replace('/\b(\p{L})\s+is\s+/u', '$1 = ', $s);
@@ -174,7 +177,12 @@ final class MockProvider implements ProviderAdapter
             $notes[] = 'used x as a multiplication sign';
         }
         $s = trim($s);
-        if ($s === '' || preg_match('/[^0-9a-z+\-*\/=(). ]/u', $s) === 1 || preg_match('/\p{L}{2,}/u', $s) === 1) {
+        // A choice question: the option letters the learner named ("A and C").
+        if (($req['item']['options'] ?? null) !== null && preg_match_all('/(?<![\p{L}])([a-h])(?![\p{L}])/u', $s, $lm) > 0) {
+            $s = strtoupper(implode(',', array_unique($lm[1])));
+            $notes[] = 'read the option letters';
+        }
+        if ($s === '' || preg_match('/[^0-9a-zA-Z+\-*\/=(). ,]/u', $s) === 1 || preg_match('/\p{L}{2,}/u', $s) === 1) {
             return ['kind' => 'unreadable', 'normalized_answer' => null, 'reading_note' => 'could not tell what the answer is', 'clarifying_question' => null,
                 'reply' => 'I couldn\'t read that. Please write your answer again with numbers and symbols only.'];
         }

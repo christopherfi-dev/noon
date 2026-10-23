@@ -40,6 +40,7 @@ final class Config
         'continuation_target_items' => 10,
         'access_gate_token' => '',          // optional private-pilot gate
         'mock_fault_file' => '',            // test harness only; never set in production
+        'mock_random_seed' => '',           // browser tests only (mock provider): seed the host random source; never set in production
         'display_errors' => false,
     ];
 

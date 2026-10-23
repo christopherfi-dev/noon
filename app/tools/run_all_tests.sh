@@ -47,7 +47,13 @@ step "F1 manifest (after preflight)" 00-manifest-after.txt bash "$APP/tools/mani
 step "App preflight" 03-app-preflight.txt php "$APP/private/bin/preflight.php" --public="$APP/public"
 cd "$APP"
 step "PHPUnit unit + integration" 04-phpunit.txt php private/vendor/bin/phpunit --testdox --log-junit "$OUT/04-phpunit-junit.xml"
-step "Browser (B1 x2 widths, UI-01 to UI-07)" 05-browser.txt node tests/Browser/run_browser.mjs "$OUT/browser"
+step "Browser (B1 x2 widths, UI-01 to UI-07, R6-01 to R6-04)" 05-browser.txt node tests/Browser/run_browser.mjs "$OUT/browser"
+# Round 6 (§7): the scripted journeys on the simulated model, for calls per session and per learner entry (exits 4 above 2).
+MOCKCFG="$(mktemp /tmp/ae-mock-XXXXXX.php)"
+echo "<?php return ['provider' => 'mock'];" > "$MOCKCFG"
+rm -rf "$OUT/round6-mock-journeys"
+step "Mock journeys: calls per session (B1 x5, B3 x3, B11 x2, N1 x2)" 05b-mock-journeys.txt env ALGEBRA_CONFIG="$MOCKCFG" php tools/live_sessions.php --out="$OUT/round6-mock-journeys" --b1=5 --b3=3 --b11=2 --n1=2
+rm -f "$MOCKCFG"
 step "Bundle build" 06-bundle-build.txt "$BUILD_PHP" tools/build_bundle.php
 step "Bundle smoke (deploy layout)" 07-bundle-smoke.txt php tools/bundle_smoke.php "$REPO/dist/stage"
 # After the bundle build, so the ZIP just built is scanned. Uses ALGEBRA_CONFIG for the configured key when set.

@@ -1,5 +1,5 @@
 {
-  "ran_at": "2026-10-23T00:39:37.826Z",
+  "ran_at": "2026-10-23T04:06:07.728Z",
   "results": [
     {
       "name": "B1 browser journey (mobile 360x740)",
@@ -19,7 +19,7 @@
         "maxOverflow": 0,
         "internalInSummary": [],
         "consoleErrors": [],
-        "smallerPrompt": "What is 7 × 5?"
+        "smallerPrompt": "What is 7 × 12?"
       }
     },
     {
@@ -40,7 +40,7 @@
         "maxOverflow": 0,
         "internalInSummary": [],
         "consoleErrors": [],
-        "smallerPrompt": "What is 2 + 2 + 2?"
+        "smallerPrompt": "What is 8 × 2?"
       }
     },
     {
@@ -324,6 +324,94 @@
         "consoleErrors": [
           "Failed to load resource: the server responded with a status of 409 (Conflict)"
         ]
+      }
+    },
+    {
+      "name": "R6-01 \"9X + 8\" read as 9x + 8, wrong, x-only observation (mobile 390x844)",
+      "pass": true,
+      "detail": {
+        "checks": {
+          "item": true,
+          "notYet": true,
+          "observation": true,
+          "readAsWritten": true,
+          "noOverflow": true
+        },
+        "shown": "Not yet.On 9(x + 8) you answered 9X + 8.Your answer multiplied only the x by 9.Here is one to try on your own.",
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "R6-02/03 \"16 because it's 4 x 4\" and \"4 x x\" on guided steps (mobile 390x844)",
+      "pass": true,
+      "detail": {
+        "checks": {
+          "guided": true,
+          "case2Correct": true,
+          "case3Correct": true,
+          "case3Rule": true,
+          "noOverflow": true
+        },
+        "shown": "✓Correct.You answered 4 x x.You're right. That is how it always works: the number outside the parentheses multiplies each term inside. Picture the parentheses as equal groups, each holding the same terms.",
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "R6-04 \"7x + 25\" slip: micro-question, retry, paused count (mobile 390x844)",
+      "pass": true,
+      "detail": {
+        "checks": {
+          "micro": true,
+          "paused": true,
+          "retry": true,
+          "continued": true,
+          "noOverflow": true
+        },
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "R6-01 \"9X + 8\" read as 9x + 8, wrong, x-only observation (desktop 1280x800)",
+      "pass": true,
+      "detail": {
+        "checks": {
+          "item": true,
+          "notYet": true,
+          "observation": true,
+          "readAsWritten": true,
+          "noOverflow": true
+        },
+        "shown": "Not yet.On 9(x + 8) you answered 9X + 8.Your answer multiplied only the x by 9.Here is one to try on your own.",
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "R6-02/03 \"16 because it's 4 x 4\" and \"4 x x\" on guided steps (desktop 1280x800)",
+      "pass": true,
+      "detail": {
+        "checks": {
+          "guided": true,
+          "case2Correct": true,
+          "case3Correct": true,
+          "case3Rule": true,
+          "noOverflow": true
+        },
+        "shown": "✓Correct.You answered 4 x x.You're right. That is how it always works: the number outside the parentheses multiplies each term inside. Picture the parentheses as equal groups, each holding the same terms.",
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "R6-04 \"7x + 25\" slip: micro-question, retry, paused count (desktop 1280x800)",
+      "pass": true,
+      "detail": {
+        "checks": {
+          "micro": true,
+          "paused": true,
+          "retry": true,
+          "continued": true,
+          "noOverflow": true
+        },
+        "consoleErrors": []
       }
     }
   ]

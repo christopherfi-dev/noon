@@ -1,6 +1,7 @@
 // Browser tests (mock mode): B1 end to end at 360x740 and 1280x800, UI-01
 // (mobile keyboard and screen-reader status), UI-02 (safe rendering), UI-03
-// (skill map), the round UI checks UI-04 to UI-06 and the round UI v3 check UI-07, at 390 and 1280 wide.
+// (skill map), the round UI checks UI-04 to UI-06, the round UI v3 check UI-07 and the round 6 checks
+// R6-01 to R6-04 (the owner's four live cases), at 390 and 1280 wide.
 // Usage: node app/tests/Browser/run_browser.mjs <out_dir>
 import { createRequire } from 'module';
 import { execFileSync, spawn } from 'child_process';
@@ -513,6 +514,108 @@ try {
     record(`UI-07 progress code, welcome back, take-over and downloaded report (${label} ${w}x${h})`, pass, { checks, consoleErrors: [...A.errors, ...B.errors] });
     await A.ctx.close();
     await B.ctx.close();
+  }
+
+  // ------------------------------------------------------------ Round 6: the owner's four live cases
+  // A second server whose mock-mode host random source is seeded, so "I haven't learned this yet"
+  // on E06 leads to the guided problem 4(x + 4), as in Round6Test. Screenshots: browser/round6/.
+  {
+    const r6Dir = path.join(outDir, 'round6');
+    fs.mkdirSync(r6Dir, { recursive: true });
+    const db6 = path.join(tmp, 'r6.sqlite');
+    const faults6 = path.join(tmp, 'r6-faults.json');
+    fs.writeFileSync(faults6, '[]');
+    fs.writeFileSync(path.join(tmp, 'r6-config.php'), `<?php return ['db_path' => '${db6}', 'mock_fault_file' => '${faults6}', 'mock_random_seed' => 'r6-guided-167'];`);
+    const port6 = await freePort();
+    const server6 = spawn('php', ['-S', `127.0.0.1:${port6}`, '-t', path.join(appRoot, 'public')], { env: { ...process.env, ALGEBRA_CONFIG: path.join(tmp, 'r6-config.php') }, stdio: 'ignore' });
+    await new Promise((r) => setTimeout(r, 700));
+    const base6 = `http://127.0.0.1:${port6}/`;
+    const oracle6 = () => JSON.parse(execFileSync('php', [path.join(here, 'oracle.php'), db6]).toString());
+    const reset6 = () => fs.existsSync(db6) && execFileSync('php', ['-r', `$p=new PDO('sqlite:${db6}'); foreach(['sessions','events','items','checker_results','operations','idempotency','reports','containers','counters','model_calls','progress'] as $t) $p->exec("DELETE FROM $t");`]);
+    const texts = (page) => page.locator('[data-testid="messages"] li').allTextContents();
+    const type = async (page, text) => {
+      await page.getByTestId('answer-input').fill(text);
+      await page.getByTestId('submit').click();
+      await idle(page);
+    };
+    const startE06 = async (page) => {
+      await page.goto(base6);
+      await page.getByTestId('choose-skill').click();
+      await page.getByTestId('start-skill-E06').click();
+      await page.getByTestId('workspace').waitFor();
+      await idle(page);
+    };
+    try {
+      for (const [w, h, label] of [[390, 844, 'mobile'], [1280, 800, 'desktop']]) {
+        const shot = (page, name) => page.screenshot({ path: path.join(r6Dir, `${name}-${w}.png`), fullPage: true });
+        // Case 1: "9X + 8" on Expand 9(x + 8).
+        {
+          reset6();
+          fs.writeFileSync(faults6, JSON.stringify([{ type: 'ITEM_PATCH', patch: { parameters: { a: 9, b: 8 } } }]));
+          const { ctx, page, errors } = await newPage(browser, w, h);
+          await startE06(page);
+          const checks = { item: (await page.getByTestId('prompt').textContent()).includes('9(x + 8)') };
+          await type(page, '9X + 8');
+          const shown = (await texts(page)).join(' | ');
+          checks.notYet = shown.includes('Not yet.');
+          checks.observation = shown.includes('Your answer multiplied only the x by 9.');
+          checks.readAsWritten = oracle6().mode === 'DIAGNOSTIC_PROBE';
+          checks.noOverflow = (await overflow(page)) <= 0;
+          await shot(page, 'r6-01-case1-capital-X-read-as-x');
+          record(`R6-01 "9X + 8" read as 9x + 8, wrong, x-only observation (${label} ${w}x${h})`, Object.values(checks).every(Boolean) && errors.length === 0, { checks, shown, consoleErrors: errors });
+          await ctx.close();
+        }
+        // Cases 2 and 3: the guided problem 4(x + 4).
+        {
+          reset6();
+          fs.writeFileSync(faults6, '[]');
+          const { ctx, page, errors } = await newPage(browser, w, h);
+          await startE06(page);
+          await page.getByTestId('stuck').click();
+          await page.getByTestId('not-learned').click();
+          await idle(page);
+          const checks = { guided: (await page.getByTestId('prompt').textContent()).includes('What is the total of the 4s in all 4 groups?') };
+          await page.getByTestId('answer-input').fill('16 because it\'s 4 x 4');
+          await shot(page, 'r6-02-case2-before-submit');
+          await page.getByTestId('submit').click();
+          await idle(page);
+          checks.case2Correct = (await texts(page))[0]?.includes('Correct.') && oracle6().active?.template === 'GUIDED_STEP' && (await page.getByTestId('prompt').textContent()).includes('How many x');
+          await shot(page, 'r6-02-case2-answer-with-reason-read-as-16');
+          await type(page, '4 x x');
+          const shown = (await texts(page)).join(' | ');
+          checks.case3Correct = shown.includes('Correct.');
+          checks.case3Rule = shown.includes('the number outside the parentheses multiplies each term inside');
+          checks.noOverflow = (await overflow(page)) <= 0;
+          await shot(page, 'r6-03-case3-x-as-times-reply-names-the-rule');
+          record(`R6-02/03 "16 because it's 4 x 4" and "4 x x" on guided steps (${label} ${w}x${h})`, Object.values(checks).every(Boolean) && errors.length === 0, { checks, shown, consoleErrors: errors });
+          await ctx.close();
+        }
+        // Case 4: "7x + 25" on Expand 7(x + 5): slip, micro-question, retry; the count is paused.
+        {
+          reset6();
+          fs.writeFileSync(faults6, JSON.stringify([{ type: 'ITEM_PATCH', patch: { parameters: { a: 7, b: 5 } } }]));
+          const { ctx, page, errors } = await newPage(browser, w, h);
+          await startE06(page);
+          await type(page, '7x + 25');
+          const checks = {};
+          checks.micro = (await page.getByTestId('prompt').textContent()).includes('What is 7 × 5?');
+          checks.paused = (await page.getByTestId('progress').textContent()).includes('Your count is paused, not reset.');
+          await shot(page, 'r6-04a-case4-slip-micro-question');
+          await type(page, '35');
+          checks.retry = (await page.getByTestId('prompt').textContent()).includes('Expand 7(x + 5)') && (await texts(page)).join(' ').includes('try it again');
+          await shot(page, 'r6-04b-case4-retry');
+          await type(page, '7x + 35');
+          const o = oracle6();
+          checks.continued = o.mode === 'TARGET_ASSESSMENT' && o.active !== null;
+          checks.noOverflow = (await overflow(page)) <= 0;
+          await shot(page, 'r6-04c-case4-after-retry-count-paused');
+          record(`R6-04 "7x + 25" slip: micro-question, retry, paused count (${label} ${w}x${h})`, Object.values(checks).every(Boolean) && errors.length === 0, { checks, consoleErrors: errors });
+          await ctx.close();
+        }
+      }
+    } finally {
+      server6.kill();
+    }
   }
 } finally {
   await browser.close();

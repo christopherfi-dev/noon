@@ -104,7 +104,7 @@ foreach ($expected as $rel) {
 $arch = $privateDir . '/resources/architecture/Algebra_Constraint_Architecture_v1.3.md';
 if (is_file($arch)) {
     $sha = hash_file('sha256', $arch);
-    $sha === 'fc1e7b06b990c9585e954dd75ff78febbf6804b7e5132e0e263963a83b52c1c5' // v1.3 (Conductor Round 6)
+    $sha === 'c538baa04aafd3b1bb363a0e4f9f94478a08e56b5f7668d350138a299a3eb410' // v1.3 (Conductor Round 6)
         ? $add('PASS', 'ARCHITECTURE_HASH', 'v1.3 ' . $sha)
         : $add('FAIL', 'ARCHITECTURE_HASH', 'Architecture file differs from the reviewed v1.3 (' . $sha . ').');
 }

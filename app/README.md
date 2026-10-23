@@ -1,15 +1,20 @@
-# Algebra Engine — beta
+# Algebra Engine — AI line (round 6, architecture v1.3)
 
-A PHP host that enforces the Algebra Constraint Architecture **v1.2** for ten
-skills (Q07 target; Q06, Q05, Q04, E06, N18, N03, N04, N05, N06). The model
-only drafts item parameters and wording; the host chooses every operation,
-renders every question, derives every answer key, checks every response and
-owns all state. The beta runs on a **simulated (mock) model** until a provider
-key is configured.
+A PHP host that enforces the Algebra Constraint Architecture **v1.3** for ten
+skills (Q07 target; Q06, Q05, Q04, E06, N18, N03, N04, N05, N06). Round 6:
+the model interprets learner entries, writes the tutor's replies and proposes
+teaching decisions (smaller steps, readiness, prerequisite choice, slips);
+the host verifies and records. The host renders every question, derives every
+answer key, checks every response, decides what counts toward a goal and owns
+all state; each model output that could affect the record passes a host check
+first. It runs on a **simulated (mock) model** until a provider key is
+configured. The deployed beta (architecture v1.2) is frozen at tag
+`beta-1.0`; this line installs beside it (`DEPLOYMENT_VPS_AI.md`).
 
 What is in scope, what is deferred, and how each skill is checked:
 `CAPABILITY_MATRIX.md`. Acceptance-scenario status: `ACCEPTANCE_SCENARIOS.md`.
-Deployment: `DEPLOYMENT.md`.
+Deployment: `DEPLOYMENT.md`; the side-by-side VPS install of this line:
+`DEPLOYMENT_VPS_AI.md`.
 
 ## Layout
 
@@ -20,7 +25,7 @@ app/
     bootstrap.php    loads autoloader + private config.php
     config.example.php
     src/             AlgebraEngine\ classes (see below)
-    resources/       architecture v1.2, curriculum map, runtime contracts
+    resources/       architecture v1.3, curriculum map, runtime contracts
     migrations/      SQLite schema
     bin/             preflight.php, cleanup.php (cron)
     var/             SQLite database (git-ignored)
@@ -84,7 +89,9 @@ Set in `private/config.php`: `provider => 'openai_compatible'`,
 `provider_base_url` (e.g. the DeepSeek base URL from its current docs),
 `provider_model` (confirm the model name with the provider), and
 `provider_api_key`. The adapter makes one text-mode binding call, checks the
-exact v1.2 activation line, then uses JSON mode for envelopes. Answers are
+exact v1.3 activation line, then uses JSON mode for envelopes and for the
+round 6 INTERPRET and DECIDE calls (at most two instructional calls per learner
+entry). Answers are
 sent to that provider.
 
 Live smoke test (confirms network and adapter compatibility only), with the

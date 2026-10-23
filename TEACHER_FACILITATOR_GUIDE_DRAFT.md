@@ -7,6 +7,8 @@ says so on every screen and report ("Simulated tutor (mock mode)").
 
 Updated after the architect's rulings on the round UI v3 report: the working
 box is gone; the session report, its download and the progress code are new.
+On branch `round6-ai-autonomy` (the AI line, not the deployed beta) it also
+describes round 6: answers written in words, slips and the goal wording.
 
 ## Before a session
 
@@ -29,8 +31,22 @@ page has no working box. If an adult supplies a method or answer outside the
 app, treat the result as work with help: the app cannot detect help it is not
 told about. Help inside the app ("I'm stuck": a hint, an explanation, "I
 haven't learned this yet" or, on a step-by-step question, "I don't know") is
-recorded automatically, and an answer given after a hint starts the count of
-correct answers in a row again.
+recorded automatically, and an answer given after a hint starts the count
+again.
+
+The tutor reads answers written in words or with x used as a times sign
+("16 because it's 4 x 4", "4 x x"). Each reading is checked by the app, which
+accepts it only if it uses the numbers the learner wrote. Such answers are
+marked "read from the student's wording" in the teacher details. When the app
+and the tutor read an answer differently, the tutor asks one short question
+before anything is scored.
+
+A slip is an answer that is right except for one small arithmetic error, for
+example 7x + 25 for 7(x + 5). The tutor asks about the faulty part only
+("What is 7 × 5?"). If the learner answers it correctly, they try the problem
+again. Neither answer counts, and the count is paused, not reset. This can
+happen once in a run; a second slip starts the count again. The report names
+each slip.
 
 Let the tutor investigate a wrong answer before explaining the whole solution.
 It may check a building block, work through it step by step with questions,
@@ -38,8 +54,8 @@ and then return to the topic. If it does not return, the topic is unfinished
 and that return still needs to be checked. Stopping, skipping, saying "I
 haven't learned this yet" and changing topic are not mathematical failures.
 
-The goal for a skill is 3 correct answers in a row without help in one
-session (for the two skills with three kinds of question, all three kinds).
+The goal for a skill is 3 correct without help (one slip may pause the count)
+in one session (for the two skills with three kinds of question, all three kinds).
 The dots above each counted question show the run so far.
 
 ## The progress code

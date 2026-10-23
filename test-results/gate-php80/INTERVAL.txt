@@ -1,1 +1,1 @@
-2026-10-23T00:38:41Z – 2026-10-23T00:39:41Z
+Gate on native PHP 8.0.30 (every PHP step, including the bundle build and the browser tests' server): 2026-10-23T04:04:55Z to 2026-10-23T04:06:13Z (date -u before and after run_all_tests.sh)

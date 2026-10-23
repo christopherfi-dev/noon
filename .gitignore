@@ -7,3 +7,4 @@ config.php
 config.local.php
 !app/private/config.example.php
 dist/stage-vps/
+dist/stage-ai-vps/

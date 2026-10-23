@@ -19,6 +19,14 @@ declare(strict_types=1);
  * internal-vocabulary hits in learner-visible text (R5-B), guard rejections
  * on sign steps, provider calls per session and learner wait.
  *
+ * Round 6 (§8): N1, a "natural learner" built from the owner's four live
+ * cases (a capital X with the x-only distribution error, an answer with its
+ * reason, "4 x x", an arithmetic slip), answers written as sentences and
+ * arithmetic slips. Metrics add every rejected model output with its text
+ * and reason (envelope, reading, decision, slip and step proposals),
+ * clarifying questions, slips confirmed and rejected, the forward-looking
+ * audit list of replies before independent items, and calls per entry.
+ *
  * With provider 'openai_compatible' it first lists the provider's models and
  * stops (exit 3) when the configured model is not listed (§4.1), unless
  * --accept-unlisted-model is given with the owner's approval. With the mock
@@ -46,7 +54,7 @@ use AlgebraEngine\Http\Request;
 use AlgebraEngine\Support\LearnerText;
 use AlgebraEngine\Support\RandomSource;
 
-$opts = getopt('', ['out:', 'b1::', 'b3::', 'b11::', 'accept-unlisted-model', 'max-turns::', 'label::']);
+$opts = getopt('', ['out:', 'b1::', 'b3::', 'b11::', 'n1::', 'accept-unlisted-model', 'max-turns::', 'label::']);
 $out = $opts['out'] ?? '';
 $file = getenv('ALGEBRA_CONFIG') ?: '';
 if ($out === '' || $file === '' || !is_file($file)) {
@@ -62,6 +70,7 @@ if ($live && trim((string) ($settings['provider_api_key'] ?? '')) === '') {
 $b1 = (int) ($opts['b1'] ?? 5);
 $b3 = (int) ($opts['b3'] ?? 3);
 $b11 = (int) ($opts['b11'] ?? 0);
+$n1 = (int) ($opts['n1'] ?? 0);
 $maxTurns = (int) ($opts['max-turns'] ?? 80);
 if (!is_dir($out) && !mkdir($out, 0777, true)) {
     fwrite(STDERR, "Cannot create $out\n");
@@ -121,7 +130,9 @@ if ($live) {
             $alloc = [];
             foreach ($req['messages'] ?? [] as $m) {
                 if ($m['role'] === 'user' && str_starts_with((string) $m['content'], 'JSON ')) {
-                    $alloc = json_decode(substr($m['content'], 5), true)['TRUSTED_OUTPUT_ALLOCATION'] ?? [];
+                    $block = json_decode(substr($m['content'], 5), true);
+                    // Round 6: INTERPRET and DECIDE calls carry their own request block.
+                    $alloc = isset($block['INTERPRET_REQUEST']) ? ['operation' => 'INTERPRET'] : (isset($block['DECISION_REQUEST']) ? ['operation' => 'DECIDE:' . $block['DECISION_REQUEST']['question']] : ($block['TRUSTED_OUTPUT_ALLOCATION'] ?? []));
                     break;
                 }
             }
@@ -151,7 +162,57 @@ $scripts = [
     'B1' => [['TARGET_ASSESSMENT', 'Q07', 'DIST_X_ONLY'], ['DIAGNOSTIC_PROBE', 'Q07', 'DIST_X_ONLY'], ['PREREQUISITE_CHECK', 'E06', 'FIRST_TERM_ONLY'], ['GUIDED_REPAIR', 'E06', 'PLAIN_WRONG']],
     'B3' => [['TARGET_ASSESSMENT', 'Q07', 'SIGN_ERROR_B'], ['DIAGNOSTIC_PROBE', 'Q07', 'SIGN_ERROR_B'], ['PREREQUISITE_CHECK', 'Q06', 'MULTIPLY_INSTEAD_OF_DIVIDE'],
         ['PREREQUISITE_CHECK', 'Q05', 'QUOTIENT_SIGN'], ['PREREQUISITE_CHECK', 'N06', 'NO_SIGNATURE']],
+    'N1' => [],
 ];
+$targetOf = fn (string $path) => $path === 'N1' ? 'E06' : 'Q07';
+
+/**
+ * Round 6 N1: the natural learner's entry for the item on screen, or null for a plain correct answer.
+ * Built from the owner's four live cases, plus answers written as sentences and an arithmetic slip.
+ * $done counts how often each case was used in this session.
+ *
+ * @return array{label:string,text:string}|null
+ */
+$naturalFor = function (array $a, string $mode, array &$done) {
+    $spec = $a['answer_spec'];
+    $p = $a['params'];
+    $use = function (string $case, int $max) use (&$done): bool {
+        if (($done[$case] ?? 0) >= $max) {
+            return false;
+        }
+        $done[$case] = ($done[$case] ?? 0) + 1;
+        return true;
+    };
+    $key = is_array($spec['expected']) ? null : (string) $spec['expected'];
+    $spaced = fn (string $e) => trim(preg_replace(['/\*/', '/\+/', '/(?<=\d)-/'], ['', ' + ', ' - '], $e));
+    if ($a['template_id'] === 'POSITIVE_DISTRIBUTION' && in_array($mode, ['TARGET_ASSESSMENT', 'DIAGNOSTIC_PROBE'], true) && $use('capital_x', 2)) {
+        return ['label' => 'case 1: capital X, x-only distribution', 'text' => $p['a'] . 'X + ' . $p['b']];
+    }
+    if ($a['template_id'] === 'POSITIVE_DISTRIBUTION' && in_array($mode, ['INDEPENDENT_CHECK', 'RETURN_TO_TARGET', 'TARGET_ASSESSMENT'], true) && ($done['capital_x'] ?? 0) >= 2 && $use('slip', 1)) {
+        $ab = $p['a'] * $p['b'];
+        $slip = $ab >= 20 ? $ab - 10 : $ab + 1;
+        return ['label' => 'case 4: arithmetic slip in a × b', 'text' => $p['a'] . 'x + ' . $slip];
+    }
+    if ($a['template_id'] === 'GUIDED_STEP' && preg_match('/What is the total of the (\d+)s in all (\d+) groups/', $a['prompt'], $m) && $use('reason', 1)) {
+        return ['label' => 'case 2: answer with its reason', 'text' => $key . ' because it\'s ' . $m[2] . ' x ' . $m[1]];
+    }
+    if ($a['template_id'] === 'GUIDED_STEP' && preg_match('/How many x\'s are in all (\d+) groups/', $a['prompt'], $m) && $use('x_as_times', 1)) {
+        return ['label' => 'case 3: x used as times', 'text' => $m[1] . ' x x'];
+    }
+    if ($a['template_id'] === 'MICRO_CHECK') {
+        return ['label' => 'micro-question answered', 'text' => $key];
+    }
+    if ($spec['kind'] === 'classification' && $use('choice_sentence', 2)) {
+        return ['label' => 'choice written as a sentence', 'text' => 'I think it\'s ' . implode(' and ', (array) $spec['expected'])];
+    }
+    if ($spec['kind'] === 'polynomial' && $a['role'] !== 'GUIDED' && $use('expression_sentence', 2)) {
+        return ['label' => 'expression written as a sentence', 'text' => 'the answer is ' . $spaced($key)];
+    }
+    if ($spec['kind'] === 'exact_rational' && $a['role'] === 'GUIDED' && $use('number_sentence', 2)) {
+        return ['label' => 'number written as a sentence', 'text' => 'it\'s ' . $key];
+    }
+    return null;
+};
 $answerFor = function (array $a, ?string $code): string {
     $spec = $a['answer_spec'];
     $correct = is_array($spec['expected']) ? implode(',', $spec['expected']) : (string) $spec['expected'];
@@ -205,7 +266,7 @@ $usageSum = function (array $calls): array {
     return $t;
 };
 
-$plan = array_merge(array_fill(0, $b1, 'B1'), array_fill(0, $b3, 'B3'), array_fill(0, $b11, 'B11'));
+$plan = array_merge(array_fill(0, $b1, 'B1'), array_fill(0, $b3, 'B3'), array_fill(0, $b11, 'B11'), array_fill(0, $n1, 'N1'));
 
 /**
  * B11 messy inputs, in order. phase 'any': submitted on the next scalar item, before scripted errors
@@ -273,6 +334,7 @@ foreach ($plan as $n => $path) {
     $csrf = $r->body['csrf_token'];
 
     $turns = [];
+    $natural = [];
     $script = $scripts[$path];
     $messy = $path === 'B11' ? $messyList : [];
     $pendingCorrection = null;   // item id that was answered with the typo
@@ -288,8 +350,8 @@ foreach ($plan as $n => $path) {
         $modeBefore = $view['mode'] ?? '(none)';
         $learner = '';
         if ($t === 1) {
-            $action = 'START Q07';
-            [$r, $secs] = $call('POST', 'start', ['idempotency_key' => $key(), 'expected_revision' => 0, 'entry_route' => 'TOPIC', 'target_skill_id' => 'Q07', 'task_token' => null, 'replace_current' => false]);
+            $action = 'START ' . $targetOf($path);
+            [$r, $secs] = $call('POST', 'start', ['idempotency_key' => $key(), 'expected_revision' => 0, 'entry_route' => 'TOPIC', 'target_skill_id' => $targetOf($path), 'task_token' => null, 'replace_current' => false]);
         } else {
             if (($view['status'] ?? '') === 'CLOSED') {
                 break;
@@ -333,7 +395,10 @@ foreach ($plan as $n => $path) {
                     };
                 };
                 $due = $script !== [] && $script[0][0] === $view['mode'] && $script[0][1] === $active['skill_id'];
-                if ($pendingCorrection !== null && $pendingCorrection === $active['item_id']) {
+                if ($path === 'N1') {
+                    $entry = $naturalFor($active, $mode, $natural);
+                    $entry = $entry === null ? null : ['label' => $entry['label'], 'phase' => 'natural', 'text' => fn ($v) => $entry['text']];
+                } elseif ($pendingCorrection !== null && $pendingCorrection === $active['item_id']) {
                     $entry = $correction;
                 } else {
                     foreach ($messy as $i => $e) {
@@ -352,7 +417,7 @@ foreach ($plan as $n => $path) {
                     $action = $entry['action'] . ' (messy input: ' . $entry['label'] . ')';
                 } elseif ($entry !== null) {
                     $learner = ($entry['text'])($expected);
-                    $action = 'SUBMIT_RESPONSE (messy input: ' . $entry['label'] . ')';
+                    $action = 'SUBMIT_RESPONSE (' . ($path === 'N1' ? 'natural learner' : 'messy input') . ': ' . $entry['label'] . ')';
                 } else {
                     if ($due) {
                         $code = array_shift($script)[2];
@@ -383,14 +448,17 @@ foreach ($plan as $n => $path) {
             'seconds' => $secs, 'calls' => $calls, 'verdicts' => [], 'scopes' => [], 'rejections' => [], 'notes' => [], 'accepted' => [], 'holds' => 0,
             'item_before' => $t === 1 ? null : ($active['prompt'] ?? null),
             'sources' => [], 'independent_presented' => 0, 'independent_with_model_text' => 0, 'vocab' => [], 'discarded' => [],
+            'refer_back' => 0, 'readings' => [], 'clarifications' => [], 'slips' => [], 'audit' => [], 'decisions' => [], 'instructional_calls' => 0,
         ];
         // Round 5: who wrote each message (host or model), B14 and internal vocabulary, from the committed turn.
         if ($r->status === 200) {
             $engNow = json_decode((string) $app->store->db->scalar('SELECT engine_json FROM sessions WHERE session_id = ?', [$sid]), true);
             $turn['sources'] = array_map(fn ($m) => $m['source'] ?? 'UNKNOWN', $engNow['messages'] ?? []);
             $a = $engNow['active'] ?? null;
-            if ($a !== null && $a['role'] !== 'GUIDED' && $a['support_status'] === 'INDEPENDENT' && ($view['mode'] ?? '') !== 'SESSION_CLOSED'
-                && array_filter($turn['sources'], fn ($x) => $x !== 'HOST')) {
+            // Round 6: model text with an independent item must be a refer-back reply (B14 replaced); anything else counts here (must be 0).
+            $presentedNow = array_values(array_filter($new, fn ($e) => $e['type'] === 'ITEM_PRESENTED' && $a !== null && $e['data']['item_id'] === $a['item_id']));
+            if ($a !== null && $a['role'] !== 'GUIDED' && $a['support_status'] === 'INDEPENDENT' && ($view['mode'] ?? '') !== 'SESSION_CLOSED' && $presentedNow !== []
+                && array_filter($turn['sources'], fn ($x) => $x !== 'HOST') && !$presentedNow[0]['data']['refer_back_reply'] && !isset($a['slip_stage'])) {
                 $turn['independent_with_model_text'] = 1;
             }
             $visible = array_merge(array_column($r->body['messages'] ?? [], 'text'), [$r->body['progress']['label'] ?? '', $r->body['active_item']['prompt'] ?? '']);
@@ -408,8 +476,9 @@ foreach ($plan as $n => $path) {
                     $turn['scopes'][] = $d['result']['verification_scope'];
                     break;
                 case 'MODEL_OUTPUT_REJECTED':
-                    $text = $jsonCalls[$d['attempt']]['content'] ?? null;
-                    $question = $jsonCalls[$d['attempt']]['host_question'] ?? null;
+                    $ofOp = array_values(array_filter($jsonCalls, fn ($c) => $d['operation'] === 'INTERPRET' ? $c['operation'] === 'INTERPRET' : !in_array(substr((string) $c['operation'], 0, 6), ['INTERP', 'DECIDE'], true)));
+                    $text = $ofOp[$d['attempt']]['content'] ?? null;
+                    $question = $ofOp[$d['attempt']]['host_question'] ?? null;
                     $guard = (bool) array_filter($d['errors'], fn ($x) => str_contains($x, 'expected answer'));
                     $rej = ['session' => $name, 'turn' => $t, 'operation' => $d['operation'], 'attempt' => $d['attempt'], 'errors' => $d['errors'],
                         'guard' => $guard, 'sign_step' => $guard && is_string($question) && preg_match('/positive or negative/i', $question) === 1,
@@ -463,10 +532,62 @@ foreach ($plan as $n => $path) {
                 case 'CRITERION_MET':
                     $turn['notes'][] = 'Criterion: ' . $d['skill_id'] . ' ' . $d['status'];
                     break;
+                // Round 6 events.
+                case 'ENTRY_READ':
+                    $turn['readings'][] = $d;
+                    $turn['notes'][] = 'Model reading: ' . $d['kind'] . ($d['normalized_answer'] !== null ? ' `' . $d['normalized_answer'] . '`' : '') . ' (' . $d['reading_note'] . '); host parse: ' . ($d['host_reading'] ?? 'none') . '; why asked: ' . implode(', ', $d['triggers']);
+                    break;
+                case 'READING_REJECTED':
+                case 'STEP_PROPOSAL_REJECTED':
+                case 'SLIP_PROPOSAL_REJECTED':
+                case 'MODEL_DECISION_REJECTED':
+                    $why = $d['errors'] ?? $d['reasons'] ?? [$d['reason'] ?? ''];
+                    $what = match ($e['type']) {
+                        'READING_REJECTED' => 'reading `' . $d['proposed'] . '`',
+                        'STEP_PROPOSAL_REJECTED' => 'smaller step: ' . json_encode($d['proposal'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                        'SLIP_PROPOSAL_REJECTED' => 'slip proposal on sub-step ' . $d['sub_step_id'],
+                        default => 'decision (' . $d['question'] . ')',
+                    };
+                    $rawOp = $e['type'] === 'READING_REJECTED' ? 'INTERPRET' : ($e['type'] === 'STEP_PROPOSAL_REJECTED' ? null : 'DECIDE');
+                    $raw = $rawOp === null ? null : (array_values(array_filter($jsonCalls, fn ($c) => str_starts_with((string) $c['operation'], $rawOp)))[0]['content'] ?? null);
+                    $rej = ['session' => $name, 'turn' => $t, 'operation' => $e['type'], 'attempt' => 0, 'errors' => array_map(fn ($x) => $what . ': ' . $x, $why),
+                        'guard' => false, 'sign_step' => false, 'vocab' => false, 'question' => null, 'text' => $raw ?? json_encode($d, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)];
+                    $turn['rejections'][] = $rej;
+                    $allRejections[] = $rej;
+                    break;
+                case 'CLARIFICATION_ASKED':
+                    $turn['clarifications'][] = $d;
+                    $turn['notes'][] = 'Clarifying question (' . $d['source'] . '): ' . ($d['question'] ?? '(host line)') . ' — host parse `' . $d['host_reading'] . '`, model reading `' . $d['model_reading'] . '`';
+                    break;
+                case 'SLIP_CANDIDATE':
+                case 'SLIP_CONFIRMED':
+                case 'SLIP_NOT_CONFIRMED':
+                case 'SLIP_VOIDED':
+                case 'SLIP_RETRY_ANSWERED':
+                case 'SLIP_PROPOSAL_ACCEPTED':
+                    $turn['slips'][] = ['type' => $e['type']] + $d;
+                    $turn['notes'][] = $e['type'] . (isset($d['sub_step']['display']) ? ': ' . $d['sub_step']['display'] . (isset($d['wrong_value']) ? ' (answer used ' . $d['wrong_value'] . ', found by ' . $d['source'] . ')' : '') : '') . (isset($d['reason']) ? ': ' . $d['reason'] : '');
+                    break;
+                case 'REPLY_AUDIT':
+                    $turn['audit'][] = $d;
+                    $turn['notes'][] = 'Audit list (forward-looking phrase before an independent item: ' . implode(', ', $d['phrases']) . '): ' . $d['text'];
+                    break;
+                case 'TEACHING_DECISION':
+                    $turn['decisions'][] = $d;
+                    $turn['notes'][] = 'Teaching decision ' . $d['question'] . ' by ' . $d['source'] . ': ' . ($d['decision'] ?? 'host rule') . (isset($d['choice']) && $d['choice'] !== null ? ' ' . $d['choice'] : '') . ' — ' . $d['reason'];
+                    break;
+                case 'STEP_PROPOSAL_ACCEPTED':
+                    $turn['notes'][] = 'Smaller step proposed by the model accepted: ' . $d['proposal']['question'] . ' (' . $d['proposal']['step_expression'] . ')';
+                    break;
+                case 'ITEM_FLAGGED':
+                    $turn['notes'][] = 'Item flagged ' . $d['flag'] . (isset($d['reasons']) ? ': ' . implode(' | ', $d['reasons']) : '');
+                    break;
             }
         }
+        $turn['refer_back'] = count(array_filter($new, fn ($e) => $e['type'] === 'ITEM_PRESENTED' && ($e['data']['refer_back_reply'] ?? false)));
+        $turn['instructional_calls'] = $transport !== null ? count($jsonCalls) : count(array_filter($app->store->db->all('SELECT kind FROM model_calls WHERE session_id = ? ORDER BY rowid', [$sid]), fn ($x) => $x['kind'] !== 'binding')) - array_sum(array_column($turns, 'instructional_calls'));
         $turns[] = $turn;
-        if (preg_match('/^[A-Z_]+ \(messy input: (.*)\)$/', $action, $mm)) {
+        if (preg_match('/^[A-Z_]+ \((?:messy input|natural learner): (.*)\)$/', $action, $mm)) {
             $messyRows[] = ['session' => $name, 'turn' => $t, 'label' => $mm[1], 'text' => $learner, 'item' => $turn['item_before'], 'http' => $r->status,
                 'verdict' => $turn['verdicts'] ? explode(' ', $turn['verdicts'][0])[0] : '(none)', 'scope' => $turn['scopes'][0] ?? '',
                 'shown' => implode(' / ', array_map(fn ($m) => '[' . $m['kind'] . '] ' . $m['text'], $turn['messages'])),
@@ -519,6 +640,13 @@ foreach ($plan as $n => $path) {
         'independent_with_model_text' => array_sum(array_column($turns, 'independent_with_model_text')),
         'discarded' => count(array_merge(...array_column($turns, 'discarded'))),
         'vocab_hits' => array_merge(...array_column($turns, 'vocab')),
+        'refer_back' => array_sum(array_column($turns, 'refer_back')),
+        'readings' => count(array_merge(...array_column($turns, 'readings'))),
+        'clarifications' => array_merge(...array_column($turns, 'clarifications')),
+        'slips' => array_merge(...array_column($turns, 'slips')),
+        'audit' => array_merge(...array_map(fn ($tn) => array_map(fn ($x) => $x + ['turn' => $tn['n']], $tn['audit']), $turns)),
+        'max_calls_per_entry' => max(array_merge([0], array_map(fn ($tn) => $tn['n'] === 1 ? 0 : $tn['instructional_calls'], $turns))),
+        'decisions' => array_merge(...array_column($turns, 'decisions')),
     ];
     $metrics[] = $m;
 
@@ -576,7 +704,8 @@ foreach ($plan as $n => $path) {
     $tx[] = json_encode($report->body, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     $tx[] = '```';
     file_put_contents("$out/$name.md", implode("\n", $tx) . "\n");
-    echo sprintf("%s  %-3s turns=%d calls=%d final=%s report=%s holds=%d rejections=%d\n", $name, $path, $m['turns'], $m['provider_calls'], $m['final_mode'], $m['report_status'], $m['holds'], $m['guard_rejections'] + $m['other_rejections']);
+    echo sprintf("%s  %-3s turns=%d calls=%d max/entry=%d final=%s report=%s holds=%d rejections=%d slips=%d clarifications=%d audit=%d\n", $name, $path, $m['turns'], $m['provider_calls'], $m['max_calls_per_entry'], $m['final_mode'], $m['report_status'], $m['holds'],
+        $m['guard_rejections'] + $m['other_rejections'], count(array_filter($m['slips'], fn ($s) => $s['type'] === 'SLIP_CONFIRMED')), count($m['clarifications']), count($m['audit']));
 }
 
 // ------------------------------------------------------------ metrics file
@@ -641,8 +770,65 @@ if ($live) {
     $mx[] = 'Model name returned in each response (count of calls): ' . implode(', ', array_map(fn ($k, $v) => "$k ($v)", array_keys($counts), $counts)) . '. Each call\'s value is in the transcripts.';
 }
 $mx[] = '';
+// Round 6 (§8) per-session table.
+$mx[] = '## Round 6 metrics per session';
+$mx[] = '';
+$mx[] = '| Session | Path | Provider calls | Most calls for one learner entry | HOLDs | Repairs | Rejected model outputs | Model readings | Clarifying questions | Slips: candidates / confirmed / not confirmed / withdrawn / model proposals rejected | Refer-back replies | Audit list entries | Model teaching decisions | Learner wait median / slowest (s) |';
+$mx[] = '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|';
+$slipCount = fn (array $s, string $type) => count(array_filter($s, fn ($x) => $x['type'] === $type));
+$r6 = ['calls' => 0, 'max' => 0, 'holds' => 0, 'rep' => 0, 'rej' => 0, 'read' => 0, 'clar' => 0, 'cand' => 0, 'conf' => 0, 'notc' => 0, 'void' => 0, 'refer' => 0, 'audit' => 0, 'dec' => 0];
+foreach ($metrics as $m) {
+    $rejected = count(array_filter($allRejections, fn ($x) => $x['session'] === $m['session']));
+    $repairs = array_sum($m['repairs_by_op']);
+    $slipRejected = count(array_filter($allRejections, fn ($x) => $x['session'] === $m['session'] && $x['operation'] === 'SLIP_PROPOSAL_REJECTED'));
+    $modelDecisions = count(array_filter($m['decisions'], fn ($d) => $d['source'] === 'MODEL'));
+    $mx[] = "| {$m['session']} | {$m['path']} | {$m['provider_calls']} | {$m['max_calls_per_entry']} | {$m['holds']} | $repairs | $rejected | {$m['readings']} | " . count($m['clarifications']) . ' | '
+        . $slipCount($m['slips'], 'SLIP_CANDIDATE') . ' / ' . $slipCount($m['slips'], 'SLIP_CONFIRMED') . ' / ' . $slipCount($m['slips'], 'SLIP_NOT_CONFIRMED') . ' / ' . $slipCount($m['slips'], 'SLIP_VOIDED') . " / $slipRejected | {$m['refer_back']} | " . count($m['audit']) . " | $modelDecisions | " . $fmt($m['latency_median']) . ' / ' . $fmt($m['latency_max']) . ' |';
+    $r6['calls'] += $m['provider_calls'];
+    $r6['max'] = max($r6['max'], $m['max_calls_per_entry']);
+    $r6['holds'] += $m['holds'];
+    $r6['rep'] += $repairs;
+    $r6['rej'] += $rejected;
+    $r6['read'] += $m['readings'];
+    $r6['clar'] += count($m['clarifications']);
+    foreach (['cand' => 'SLIP_CANDIDATE', 'conf' => 'SLIP_CONFIRMED', 'notc' => 'SLIP_NOT_CONFIRMED', 'void' => 'SLIP_VOIDED'] as $k => $type) {
+        $r6[$k] += $slipCount($m['slips'], $type);
+    }
+    $r6['refer'] += $m['refer_back'];
+    $r6['audit'] += count($m['audit']);
+    $r6['dec'] += $modelDecisions;
+}
+$mx[] = '| **Total** | ' . count($metrics) . ' sessions | ' . $r6['calls'] . ' (' . ($metrics ? number_format($r6['calls'] / count($metrics), 1) : '-') . ' per session) | ' . $r6['max'] . ' | ' . $r6['holds'] . ' | ' . $r6['rep'] . ' | ' . $r6['rej'] . ' | ' . $r6['read'] . ' | ' . $r6['clar']
+    . ' | ' . $r6['cand'] . ' / ' . $r6['conf'] . ' / ' . $r6['notc'] . ' / ' . $r6['void'] . ' / ' . count(array_filter($allRejections, fn ($x) => $x['operation'] === 'SLIP_PROPOSAL_REJECTED')) . ' | ' . $r6['refer'] . ' | ' . $r6['audit'] . ' | ' . $r6['dec']
+    . ' | ' . $fmt($median($allLatencies)) . ' / ' . $fmt($allLatencies ? max($allLatencies) : null) . ' |';
+$mx[] = '';
+$mx[] = 'Most calls for one learner entry: instructional calls (reading, decision, reply and repairs) made for one learner action after the start; the limit is 2. Rejected model outputs: every rejection listed below (envelope, reading, decision, slip and step proposals).';
+$mx[] = '';
+$mx[] = '## Clarifying questions';
+$mx[] = '';
+$clar = array_merge(...array_map(fn ($m) => array_map(fn ($c) => $m['session'] . ': host parse `' . $c['host_reading'] . '`, model reading `' . $c['model_reading'] . '`; asked (' . $c['source'] . '): ' . ($c['question'] ?? '(host line)'), $m['clarifications']), $metrics));
+$mx = array_merge($mx, $clar === [] ? ['None.'] : array_map(fn ($l) => '- ' . $l, $clar));
+$mx[] = '';
+$mx[] = '## Slips';
+$mx[] = '';
+$slipLines = [];
+foreach ($metrics as $m) {
+    foreach ($m['slips'] as $s) {
+        $slipLines[] = '- ' . $m['session'] . ': ' . $s['type'] . (isset($s['sub_step']['display']) ? ' — ' . $s['sub_step']['display'] . (isset($s['wrong_value']) ? ' (the answer used ' . $s['wrong_value'] . '; found by ' . $s['source'] . ')' : '') : '') . (isset($s['reason']) ? ' — ' . $s['reason'] : '');
+    }
+}
+foreach (array_filter($allRejections, fn ($x) => $x['operation'] === 'SLIP_PROPOSAL_REJECTED') as $x) {
+    $slipLines[] = '- ' . $x['session'] . ': model slip proposal rejected — ' . implode(' | ', $x['errors']);
+}
+$mx = array_merge($mx, $slipLines === [] ? ['None.'] : $slipLines);
+$mx[] = '';
+$mx[] = '## Forward-looking audit list (replies shown before an independent item)';
+$mx[] = '';
+$auditLines = array_merge(...array_map(fn ($m) => array_map(fn ($a) => '- ' . $m['session'] . ' turn ' . $a['turn'] . ' (' . implode(', ', $a['phrases']) . '): ' . $a['text'], $m['audit']), $metrics));
+$mx = array_merge($mx, $auditLines === [] ? ['None.'] : $auditLines);
+$mx[] = '';
 if ($messyRows !== []) {
-    $mx[] = '## B11: messy inputs, one by one';
+    $mx[] = '## B11 messy inputs and N1 natural-learner inputs, one by one';
     $mx[] = '';
     $mx[] = '| Session | Turn | Input | Text submitted | Item | HTTP | Checker verdict | Verification scope | Tutor showed | Host rejections |';
     $mx[] = '|---|---|---|---|---|---|---|---|---|---|';
@@ -673,3 +859,8 @@ foreach (['', '-wal', '-shm'] as $x) {
     @unlink($db . $x);
 }
 echo "Wrote " . count($metrics) . " transcripts and METRICS.md to $out ($label)\n";
+// Round 6 (§7): at most two instructional provider calls per learner entry.
+if ($r6['max'] > 2) {
+    fwrite(STDERR, 'A learner entry used ' . $r6['max'] . " provider calls; the limit is 2.\n");
+    exit(4);
+}

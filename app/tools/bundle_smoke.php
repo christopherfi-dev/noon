@@ -6,15 +6,18 @@ declare(strict_types=1);
  * mode, using PHP's built-in server. Not a substitute for the on-host smoke test.
  *   php app/tools/bundle_smoke.php dist/stage
  *
- * 1. Bluehost: public_html/algebra + algebra-private side by side.
- * 2. nginx VPS (round PHP80): algebra-engine/ served at
- *    /educational-engines/algebra-engine/ and algebra-engine-private/ outside
- *    the web root (dist/stage-vps and dist/algebra-engine-vps-upload.zip).
+ * 1. Bluehost: public_html/algebra + algebra-private side by side (staged layout).
+ * 2. nginx VPS, round 6 side-by-side install: algebra-engine-ai/ served at
+ *    /educational-engines/algebra-engine-ai/ and algebra-engine-ai-private/
+ *    outside the web root (dist/stage-ai-vps, dist/algebra-engine-ai-vps-upload.zip).
  */
 $stage = realpath($argv[1] ?? (dirname(__DIR__, 2) . '/dist/stage'));
 $dist = dirname($stage);
-$vpsStage = realpath($dist . '/stage-vps') ?: $dist . '/stage-vps';
-$vpsZip = $dist . '/algebra-engine-vps-upload.zip';
+$vpsStage = realpath($dist . '/stage-ai-vps') ?: $dist . '/stage-ai-vps';
+$vpsZip = $dist . '/algebra-engine-ai-vps-upload.zip';
+$P = 'algebra-engine-ai';             // public folder
+$Q = 'algebra-engine-ai-private';     // private folder
+$base = '/educational-engines/algebra-engine-ai/';
 $fail = 0;
 
 function req(string $method, string $url, ?array $body, array $headers, string $jar, ?array &$responseHeaders = null): array
@@ -145,27 +148,27 @@ try {
 }
 
 // ---------------------------------------------------------------- 2. nginx VPS layout
-echo "== nginx VPS layout (dist/algebra-engine-vps-upload.zip, dist/stage-vps)\n";
-$check('VPS zip and staged tree exist', is_file($vpsZip) && is_dir("$vpsStage/algebra-engine") && is_dir("$vpsStage/algebra-engine-private"));
+echo "== nginx VPS side-by-side layout (dist/algebra-engine-ai-vps-upload.zip, dist/stage-ai-vps)\n";
+$check('VPS zip and staged tree exist', is_file($vpsZip) && is_dir("$vpsStage/$P") && is_dir("$vpsStage/$Q"));
 if (is_file($vpsZip) && is_dir($vpsStage)) {
     $entries = zipEntries($vpsZip);
     $names = array_keys($entries);
     sort($names);
     $top = array_values(array_unique(array_map(fn ($n) => explode('/', $n)[0], $names)));
     sort($top);
-    $check('zip has exactly two top-level folders', $top === ['algebra-engine', 'algebra-engine-private'], implode(', ', $top));
-    $public = array_values(array_filter($names, fn ($n) => str_starts_with($n, 'algebra-engine/')));
-    $outside = array_values(array_filter($public, fn ($n) => !preg_match('#^algebra-engine/(index\.html|api\.php|assets/[^/]+)$#', $n)));
-    $check('algebra-engine/ holds only index.html, api.php and assets/', $outside === [] && in_array('algebra-engine/index.html', $public, true)
-        && in_array('algebra-engine/api.php', $public, true) && in_array('algebra-engine/assets/app.js', $public, true), $outside === [] ? count($public) . ' files' : implode(', ', $outside));
+    $check('zip has exactly two top-level folders', $top === [$P, $Q], implode(', ', $top));
+    $public = array_values(array_filter($names, fn ($n) => str_starts_with($n, $P . '/')));
+    $outside = array_values(array_filter($public, fn ($n) => !preg_match('#^' . $P . '/(index\.html|api\.php|assets/[^/]+)$#', $n)));
+    $check("$P/ holds only index.html, api.php and assets/", $outside === [] && in_array("$P/index.html", $public, true)
+        && in_array("$P/api.php", $public, true) && in_array("$P/assets/app.js", $public, true), $outside === [] ? count($public) . ' files' : implode(', ', $outside));
     $dotted = array_values(array_filter($names, fn ($n) => preg_match('#(^|/)\.#', $n) === 1));
     $check('no dotfiles (no .htaccess) anywhere in the zip', $dotted === [], implode(', ', array_slice($dotted, 0, 5)));
     $leaks = [];
     foreach ($public as $n) {
-        if (preg_match('#\.(php|sql|sqlite|json|md|lock)$#', $n) && $n !== 'algebra-engine/api.php') {
+        if (preg_match('#\.(php|sql|sqlite|json|md|lock)$#', $n) && $n !== "$P/api.php") {
             $leaks[] = $n;
         }
-        if (preg_match('#(config|bootstrap|composer|vendor|src|resources|migrations|var)(/|\.|$)#', substr($n, strlen('algebra-engine/')))) {
+        if (preg_match('#(config|bootstrap|composer|vendor|src|resources|migrations|var)(/|\.|$)#', substr($n, strlen($P . '/')))) {
             $leaks[] = $n;
         }
         foreach (['provider_api_key', 'answer_spec', 'ACE_BOUND', 'algebra-map'] as $needle) {
@@ -174,11 +177,11 @@ if (is_file($vpsZip) && is_dir($vpsStage)) {
             }
         }
     }
-    $check('no private file or private content under algebra-engine/', $leaks === [], implode(', ', $leaks));
-    $check("api.php default ALGEBRA_PRIVATE_DIR is /var/www/algebra-engine-private",
-        str_contains($entries['algebra-engine/api.php'] ?? '', "const ALGEBRA_PRIVATE_DIR = '/var/www/algebra-engine-private';"));
-    $check("config.example.php sets base_path '/educational-engines/algebra-engine/'",
-        preg_match("#^\s*'base_path' => '/educational-engines/algebra-engine/',#m", $entries['algebra-engine-private/config.example.php'] ?? '') === 1);
+    $check("no private file or private content under $P/", $leaks === [], implode(', ', $leaks));
+    $check("api.php default ALGEBRA_PRIVATE_DIR is /var/www/$Q",
+        str_contains($entries["$P/api.php"] ?? '', "const ALGEBRA_PRIVATE_DIR = '/var/www/$Q';"));
+    $check("config.example.php sets base_path '$base'",
+        preg_match("#^\s*'base_path' => '" . preg_quote($base, '#') . "',#m", $entries["$Q/config.example.php"] ?? '') === 1);
     $staged = [];
     foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($vpsStage, FilesystemIterator::SKIP_DOTS)) as $f) {
         $staged[] = substr($f->getPathname(), strlen($vpsStage) + 1);
@@ -193,19 +196,20 @@ if (is_file($vpsZip) && is_dir($vpsStage)) {
     }
     $check('zip matches the staged tree that is served below', $same, count($names) . ' entries');
 
-    // Serve it as nginx would: the web root contains educational-engines/algebra-engine/; the private folder is elsewhere.
+    // Serve it as nginx would: the web root contains educational-engines/algebra-engine-ai/; the private folder is elsewhere.
     $tmp = sys_get_temp_dir() . '/ae_vps_' . bin2hex(random_bytes(4));
     mkdir($tmp);
-    copyTreeSmoke("$vpsStage/algebra-engine", "$tmp/www/educational-engines/algebra-engine");
-    file_put_contents("$tmp/config.php", "<?php return ['db_path' => '$tmp/db.sqlite', 'base_path' => '/educational-engines/algebra-engine/'];");
-    [$proc, $port] = serve("$tmp/www", ['ALGEBRA_CONFIG' => "$tmp/config.php", 'ALGEBRA_PRIVATE_DIR' => "$vpsStage/algebra-engine-private"]);
+    copyTreeSmoke("$vpsStage/$P", "$tmp/www/educational-engines/$P");
+    file_put_contents("$tmp/config.php", "<?php return ['db_path' => '$tmp/db.sqlite', 'base_path' => '$base'];");
+    [$proc, $port] = serve("$tmp/www", ['ALGEBRA_CONFIG' => "$tmp/config.php", 'ALGEBRA_PRIVATE_DIR' => "$vpsStage/$Q"]);
     $jar = "$tmp/cookies";
     try {
-        $headers = flow("http://127.0.0.1:$port/educational-engines/algebra-engine", $jar, $check, 'bootstrap via the VPS api.php finds algebra-engine-private outside the web root');
+        $headers = flow("http://127.0.0.1:$port/educational-engines/$P", $jar, $check, "bootstrap via the VPS api.php finds $Q outside the web root");
         $cookie = array_values(array_filter($headers, fn ($h) => stripos($h, 'Set-Cookie: ae_sid=') === 0));
-        $check('session cookie path is /educational-engines/algebra-engine/', $cookie !== [] && stripos($cookie[0], 'Path=/educational-engines/algebra-engine/') !== false, $cookie[0] ?? 'no cookie');
-        foreach (['/educational-engines/algebra-engine/config.php', '/educational-engines/algebra-engine/bootstrap.php', '/educational-engines/algebra-engine/src/App.php',
-            '/educational-engines/algebra-engine/../algebra-engine-private/bootstrap.php', '/educational-engines/algebra-engine-private/config.example.php', '/algebra-engine-private/var/README.txt'] as $p) {
+        // The beta's cookies use the path /educational-engines/algebra-engine/, which does not cover this folder (RFC 6265 path matching).
+        $check("session cookie path is $base", $cookie !== [] && stripos($cookie[0], "Path=$base") !== false, $cookie[0] ?? 'no cookie');
+        foreach (["/educational-engines/$P/config.php", "/educational-engines/$P/bootstrap.php", "/educational-engines/$P/src/App.php",
+            "/educational-engines/$P/../$Q/bootstrap.php", "/educational-engines/$Q/config.example.php", "/$Q/var/README.txt"] as $p) {
             [$c, , $raw] = req('GET', "http://127.0.0.1:$port$p", null, [], $jar);
             $check("private path not served: $p", $c === 404 && !str_contains($raw, '<?php'), "HTTP $c");
         }
@@ -216,8 +220,8 @@ if (is_file($vpsZip) && is_dir($vpsStage)) {
     }
 }
 // ---------------------------------------------------------------- 3. upgrade safety (round UI v3, U11)
-echo "== Upgrade safety (both upload zips)\n";
-foreach ([$dist . '/algebra-engine-bluehost-upload.zip', $vpsZip] as $zipPath) {
+echo "== Upgrade safety (the upload zip)\n";
+foreach ([$vpsZip] as $zipPath) {
     $names = array_keys(is_file($zipPath) ? zipEntries($zipPath) : []);
     $config = array_values(array_filter($names, fn ($n) => preg_match('#(^|/)config\.php$#', $n) === 1));
     $var = array_values(array_filter($names, fn ($n) => preg_match('#^[^/]+/var/.#', $n) === 1));

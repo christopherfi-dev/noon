@@ -7,7 +7,7 @@ PASS  CTYPE                loaded
 PASS  CONFIG               config.php found
 WARN  CONFIG_PERMISSIONS   config.php is world-accessible (644); use chmod 600.
 PASS  PROVIDER             mock provider (no outbound calls). Live provider not configured.
-PASS  FILE                 resources/architecture/Algebra_Constraint_Architecture_v1.2.md
+PASS  FILE                 resources/architecture/Algebra_Constraint_Architecture_v1.3.md
 PASS  FILE                 resources/curriculum/algebra-map.json
 PASS  FILE                 resources/contracts/model-envelope.schema.json
 PASS  FILE                 resources/contracts/workflow-policy.json
@@ -15,7 +15,7 @@ PASS  FILE                 migrations/001_init.sql
 PASS  FILE                 migrations/002_model_call_usage.sql
 PASS  FILE                 migrations/003_model_call_transport_detail.sql
 PASS  FILE                 vendor/autoload.php
-PASS  ARCHITECTURE_HASH    v1.2 ef03667dabf7152be63009ec6c1e327a83340b4fff65eef303e3eeb326291390
+PASS  ARCHITECTURE_HASH    v1.3 c538baa04aafd3b1bb363a0e4f9f94478a08e56b5f7668d350138a299a3eb410
 PASS  STORAGE_DIR          writable: /home/user/noon/app/private/var
 PASS  SQLITE_OPEN          database opened and writable
 PASS  SCHEMA               4 update(s) to apply (1, 2, 3, 4); applied automatically on the next request, without deleting or rewriting existing data

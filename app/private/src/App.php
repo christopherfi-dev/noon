@@ -84,7 +84,7 @@ final class App
             $this->schemas,
             $this->projection,
             $this->clock,
-            $rng,
+            $rng ?? ($config->isMock() && $config->string('mock_random_seed') !== '' ? RandomSource::seeded($config->string('mock_random_seed')) : null),
         );
     }
 }

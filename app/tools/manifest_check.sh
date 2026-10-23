@@ -10,4 +10,4 @@ unexpected="$(echo "$failed" | grep -v -x -e 'architecture/CHANGELOG.md' -e 'TEA
 echo "---"
 echo "Differences: ${failed:-none}"
 if [ -n "$unexpected" ]; then echo "UNEXPECTED MISMATCH: $unexpected"; exit 1; fi
-echo "Only expected differences (architecture/CHANGELOG.md: v1.2 entry added per addendum §3; TEACHER_FACILITATOR_GUIDE_DRAFT.md: updated per the architect's ruling on the round UI v3 report)."
+echo "Only expected differences (architecture/CHANGELOG.md: v1.2 entry added per addendum §3 and v1.3 entry per Conductor Round 6; TEACHER_FACILITATOR_GUIDE_DRAFT.md: updated per the architect's ruling on the round UI v3 report and for round 6)."

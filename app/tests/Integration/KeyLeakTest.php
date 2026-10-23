@@ -17,7 +17,7 @@ final class KeyLeakTest extends TestCase
     public function testNoTrackedFileOrZipEntryContainsAKey(): void
     {
         $repo = dirname(ALGEBRA_APP_ROOT);
-        $zip = $repo . '/dist/algebra-engine-bluehost-upload.zip';
+        $zip = $repo . '/dist/algebra-engine-ai-vps-upload.zip';
         $this->assertFileExists($zip, 'the upload ZIP is scanned too');
         $files = array_map(fn ($f) => $repo . '/' . $f, \key_leak_tracked_files($repo));
         $this->assertGreaterThan(100, count($files));

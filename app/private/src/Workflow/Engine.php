@@ -609,6 +609,7 @@ final class Engine
         $turn->snap['issue'] = null;
         $turn->eng['guided'] = null;
         $turn->eng['diagnosis'] = null;
+        $turn->eng['slip'] = null; // a slip left unanswered by a topic change stays unconfirmed: it counts neither way
         $turn->eng['cycles'] = [];
         $turn->eng['path'] = [$skill];
         $turn->eng['menu'] = null;

@@ -153,7 +153,7 @@ Beta Journey (AlgebraEngine\Tests\Integration\BetaJourney)
  ✔ B 10 stuck step goes directly to its prerequisite
  ✔ B 10 stuck step at a boundary is recorded not failed
  ✔ Random scripted journeys complete without holds
- ✔ B 12 re ask shows no model text
+ ✔ B 12 re ask carries a checked model reply
  ✔ B 13 repair keeps the failed sign pattern
  ✔ Every beta skill can start and score
 
@@ -202,8 +202,8 @@ Host (AlgebraEngine\Tests\Integration\Host)
  ✔ Host 17 cost limits
 
 Independent Evidence (AlgebraEngine\Tests\Integration\IndependentEvidence)
- ✔ B 14 independent items show host line only
- ✔ B 14 discarded text is not stored
+ ✔ B 14 model text before independent items refers back only
+ ✔ B 14 reply with a new number is rejected
  ✔ B 14b hint means no without help message
  ✔ B 14b item shown with model text is not counted
 
@@ -260,6 +260,24 @@ Report Download (AlgebraEngine\Tests\Integration\ReportDownload)
  ✔ Downloaded report is self contained
  ✔ Download escapes text
 
+Round6 (AlgebraEngine\Tests\Integration\Round6)
+ ✔ Case 1 capital x is read and the distribution error is observed
+ ✔ Case 2 answer with a reason is read and correct
+ ✔ Case 3 x as times is read and the reply names the rule
+ ✔ Case 4 slip micro check retry and pause
+ ✔ Slip pauses a run of two
+ ✔ Reading that adds a number is rejected
+ ✔ Reading that turns a wrong value right is rejected
+ ✔ Model slip proposals are checked against the structure
+ ✔ Proposed steps are checked
+ ✔ Reply leaking the answer is rejected
+ ✔ Forward looking reply is audited
+ ✔ Scored disagreement asks one clarifying question
+ ✔ Second slip in a run resets it
+ ✔ Readiness decisions
+ ✔ Prerequisite choice when no pattern matched
+ ✔ Call limit per entry
+
 Scenario Map (AlgebraEngine\Tests\Integration\ScenarioMap)
  ✔ Every scenario is implemented or deferred with a reason
 
@@ -291,6 +309,6 @@ Upgrade (AlgebraEngine\Tests\Integration\Upgrade)
  ✔ Live session continues after the upgrade
  ✔ Migration is safe to run twice
 
-Time: 00:31.965, Memory: 382.00 MB
+Time: 00:38.277, Memory: 386.00 MB
 
-OK (229 tests, 42770 assertions)
+OK (245 tests, 47899 assertions)

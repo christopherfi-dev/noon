@@ -74,4 +74,4 @@ sha256sum: WARNING: 2 computed checksums did NOT match
 ---
 Differences: TEACHER_FACILITATOR_GUIDE_DRAFT.md
 architecture/CHANGELOG.md
-Only expected differences (architecture/CHANGELOG.md: v1.2 entry added per addendum §3; TEACHER_FACILITATOR_GUIDE_DRAFT.md: updated per the architect's ruling on the round UI v3 report).
+Only expected differences (architecture/CHANGELOG.md: v1.2 entry added per addendum §3 and v1.3 entry per Conductor Round 6; TEACHER_FACILITATOR_GUIDE_DRAFT.md: updated per the architect's ruling on the round UI v3 report and for round 6).

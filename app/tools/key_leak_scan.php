@@ -138,8 +138,8 @@ if (realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__) {
     $app = dirname(__DIR__);
     $repo = dirname($app);
     $key = key_leak_configured_key($app);
-    // Both upload ZIPs: Bluehost and (round PHP80) the nginx VPS bundle.
-    $zips = [$repo . '/dist/algebra-engine-bluehost-upload.zip', $repo . '/dist/algebra-engine-vps-upload.zip'];
+    // Round 6: the side-by-side nginx VPS bundle of the AI line (the beta's ZIPs are in tag beta-1.0).
+    $zips = [$repo . '/dist/algebra-engine-ai-vps-upload.zip'];
     $present = array_values(array_filter($zips, 'is_file'));
     $files = array_map(fn ($f) => $repo . '/' . $f, key_leak_tracked_files($repo));
     $r = key_leak_scan($files, $present, $key, $repo);

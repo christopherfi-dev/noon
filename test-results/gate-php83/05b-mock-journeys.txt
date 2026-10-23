@@ -1,0 +1,13 @@
+01-B1  B1  turns=17 calls=18 max/entry=2 final=SESSION_CLOSED report=COMPLETED holds=0 rejections=0 slips=0 clarifications=0 audit=0
+02-B1  B1  turns=17 calls=18 max/entry=2 final=SESSION_CLOSED report=COMPLETED holds=0 rejections=0 slips=0 clarifications=0 audit=0
+03-B1  B1  turns=17 calls=18 max/entry=2 final=SESSION_CLOSED report=COMPLETED holds=0 rejections=0 slips=0 clarifications=0 audit=0
+04-B1  B1  turns=17 calls=18 max/entry=2 final=SESSION_CLOSED report=COMPLETED holds=0 rejections=0 slips=0 clarifications=0 audit=0
+05-B1  B1  turns=17 calls=18 max/entry=2 final=SESSION_CLOSED report=COMPLETED holds=0 rejections=0 slips=0 clarifications=0 audit=0
+06-B3  B3  turns=19 calls=21 max/entry=2 final=SESSION_CLOSED report=COMPLETED holds=0 rejections=0 slips=0 clarifications=0 audit=0
+07-B3  B3  turns=19 calls=21 max/entry=2 final=SESSION_CLOSED report=COMPLETED holds=0 rejections=0 slips=0 clarifications=0 audit=0
+08-B3  B3  turns=19 calls=21 max/entry=2 final=SESSION_CLOSED report=COMPLETED holds=0 rejections=0 slips=0 clarifications=0 audit=0
+09-B11  B11 turns=36 calls=39 max/entry=2 final=SESSION_CLOSED report=COMPLETED holds=0 rejections=0 slips=0 clarifications=0 audit=0
+10-B11  B11 turns=36 calls=39 max/entry=2 final=SESSION_CLOSED report=COMPLETED holds=0 rejections=0 slips=0 clarifications=0 audit=0
+11-N1  N1  turns=14 calls=20 max/entry=2 final=SESSION_CLOSED report=COMPLETED holds=0 rejections=0 slips=1 clarifications=0 audit=0
+12-N1  N1  turns=14 calls=20 max/entry=2 final=SESSION_CLOSED report=COMPLETED holds=0 rejections=0 slips=1 clarifications=0 audit=0
+Wrote 12 transcripts and METRICS.md to /home/user/noon/test-results/round6-mock-journeys (MOCK (simulated provider; dry run of this script, not a live result))
