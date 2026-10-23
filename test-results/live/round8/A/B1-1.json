@@ -1,0 +1,649 @@
+{
+    "name": "B1-1",
+    "provider": "LIVE openai_compatible / deepseek-flash, provider_thinking disabled",
+    "turns": [
+        {
+            "input": "(start on Q07)",
+            "status": 200,
+            "ms": 3491,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "BINDING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (binding call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2",
+            "status": 200,
+            "ms": 2830,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-3",
+            "status": 200,
+            "ms": 2841,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "A",
+            "status": 200,
+            "ms": 3164,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2x+8",
+            "status": 200,
+            "ms": 3082,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "B",
+            "status": 200,
+            "ms": 2950,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2",
+            "status": 200,
+            "ms": 2718,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8",
+            "status": 200,
+            "ms": 2768,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-5",
+            "status": 200,
+            "ms": 2181,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "What should I do next?",
+            "status": 200,
+            "ms": 2703,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x+60",
+            "status": 200,
+            "ms": 2302,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "B,D",
+            "status": 200,
+            "ms": 3083,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "7x+7y+35",
+            "status": 200,
+            "ms": 2411,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "12",
+            "status": 200,
+            "ms": 2095,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "28",
+            "status": 200,
+            "ms": 2279,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "100",
+            "status": 200,
+            "ms": 2498,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "1",
+            "status": 200,
+            "ms": 2466,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-4",
+            "status": 200,
+            "ms": 4878,
+            "value_answer": false,
+            "graded": true,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_WITH_SUBSTITUTION"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2",
+            "status": 200,
+            "ms": 2641,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "What should I do next?",
+            "status": 200,
+            "ms": 2906,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "B",
+            "status": 200,
+            "ms": 2729,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6",
+            "status": 200,
+            "ms": 2136,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "What should I do next?",
+            "status": 200,
+            "ms": 2804,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-3",
+            "status": 200,
+            "ms": 2790,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-5",
+            "status": 200,
+            "ms": 5264,
+            "value_answer": false,
+            "graded": true,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_WITH_SUBSTITUTION"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6",
+            "status": 200,
+            "ms": 2415,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6",
+            "status": 200,
+            "ms": 2438,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "What should I do next?",
+            "status": 200,
+            "ms": 2836,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-8",
+            "status": 200,
+            "ms": 2235,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "What should I do next?",
+            "status": 200,
+            "ms": 2325,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6",
+            "status": 200,
+            "ms": 2762,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        }
+    ],
+    "goals_met": [
+        "Q07",
+        "E06",
+        "N18",
+        "Q06"
+    ],
+    "check_answers": {
+        "unassisted": 23,
+        "unassisted_correct": 22,
+        "with_help": 0,
+        "held": 0
+    },
+    "check_causes": {
+        "with_help": [],
+        "held": []
+    },
+    "help_moves_on_open_checks": [],
+    "backstop_holds": 0,
+    "guards": {
+        "CHECK_CARD_INVITATION": 21,
+        "CHECK_CARD_SHARED_NUMBER": 7,
+        "ANSWER_LEAK": 3,
+        "CHECK_CARD_ANSWER_SIGNAL": 3,
+        "MASTERY_OR_GOAL_CLAIM": 3
+    },
+    "guard_phrases": {
+        "CHECK_CARD_INVITATION: try": 19,
+        "CHECK_CARD_INVITATION: next": 2,
+        "CHECK_CARD_INVITATION: one more": 3,
+        "CHECK_CARD_INVITATION: another one": 1
+    },
+    "counters": [],
+    "repairs": [
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: check shows its own answer",
+            "errors": [
+                "item: the question shows its own answer: the answer 3 is also a number in the question; choose numbers so they differ"
+            ],
+            "text": "Correct — x = -4. Distributing a factor over a sum, or dividing both sides by the same nonzero number, keeps an equation's solutions unchanged. Let's try a new kind of equation with parentheses."
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: check shows its own answer",
+            "errors": [
+                "item: the question shows its own answer: the answer 3 is also a number in the question; choose numbers so they differ"
+            ],
+            "text": "Correct — x = -5. Subtracting the same number from both sides and dividing both sides by the same nonzero number keep the solution set unchanged. You've now handled two-step equations and grouped equations well; here's a grouped equation in a slightly different form to try."
+        }
+    ],
+    "holds": [],
+    "held_attempts": [],
+    "substitutions": 2,
+    "readings": {
+        "sent_for_reading": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "readings_differ": 0,
+        "clarifying_questions_shown": 0,
+        "not_an_answer": 0
+    },
+    "ungraded_value_answers": 0,
+    "value_answers_graded": 0,
+    "empty_replies": 0,
+    "binding": {
+        "calls": 1,
+        "accepted": 1,
+        "outcomes": [
+            "ACCEPTED"
+        ]
+    },
+    "calls": 34,
+    "finish_length": 0,
+    "attempts": 25
+}
