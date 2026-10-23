@@ -77,7 +77,59 @@ final class ReportDownloadTest extends TestCase
         $this->assertContains('Twice you multiplied only the x by the number outside the parentheses.', $learner['trouble']);
         $this->assertContains('Once you multiplied only the first term inside the parentheses.', $learner['trouble']);
         $this->assertContains('We went back to “Apply the distributive property with positive factors”, then returned to “Solve equations containing parentheses”.', $learner['worked_on']);
-        $this->assertSame(['Practise with your teacher: Understand grouping with parentheses (not in this tutor yet).'], $learner['next_time']);
+        // Architect ruling: every goal met, so the gap outside the tutor is not listed; the fixed line shows instead.
+        $this->assertSame([], $learner['next_time']);
+    }
+
+    /**
+     * Architect ruling on the round UI v3 report: a skill outside the tutor is listed under "What to work on
+     * next time" only when a goal that depends on it was not met this session; when every goal was met the
+     * heading shows its fixed all-goals line. The teacher details keep the open question in both cases.
+     */
+    public function testOutsideSkillListedOnlyWhileADependentGoalIsUnmet(): void
+    {
+        $gap = 'Practise with your teacher: Understand grouping with parentheses (not in this tutor yet).';
+        $stillOpen = fn (array $teacher) => (bool) array_filter(
+            array_values(array_filter($teacher['sections'], fn ($sec) => $sec['heading'] === 'Still open or not checked'))[0]['lines'],
+            fn ($l) => str_contains($l, 'Understand grouping with parentheses (A07)'));
+        $journey = function (Harness $h, bool $finish): array {
+            $h->start('Q07');
+            $h->submit($h->wrong('DIST_X_ONLY'));
+            $h->submit($h->wrong('DIST_X_ONLY'));
+            $p = $h->active()['params'];
+            $h->submit($p['a'] . 'x+' . $p['b']);   // E06's mistake points to A07, which is not in the tutor
+            $this->assertSame('GUIDED_REPAIR', $h->mode());
+            if ($finish) {
+                for ($n = 0; $n < 40 && $h->mode() !== 'SESSION_REPORT'; $n++) {
+                    $h->answerCorrect();
+                }
+                $this->assertSame('SESSION_REPORT', $h->mode());
+            } else {
+                $h->event('END_SESSION');
+            }
+            return $h->request('GET', 'report')->body;
+        };
+
+        // Case 1: the goals that depend on A07 (E06, and Q07 above it) were not met: A07 is listed.
+        $open = $journey($this->h, false);
+        $this->assertSame([], $open['report']['immediate_criteria']);
+        $this->assertContains($gap, $open['summary']['learner']['next_time']);
+        $this->assertTrue($stillOpen($open['summary']['teacher']));
+
+        // Case 2: every goal met (E06 and Q07): A07 is not listed and the heading shows the fixed all-goals line.
+        $done = new Harness([], null, null, null, null, 'ruling-all-met');
+        try {
+            $met = $journey($done, true);
+            $this->assertSame(['E06', 'Q07'], array_column($met['report']['immediate_criteria'], 'skill_id'));
+            $this->assertSame([], $met['summary']['learner']['next_time']);
+            $this->assertSame('You met every goal available in this tutor so far. Ask your teacher what comes next.', $met['summary']['learner']['empty']['next_time']);
+            $this->assertTrue($stillOpen($met['summary']['teacher']), 'teachers still see the open question');
+            $html = (string) $done->request('GET', 'report', null, ['_query' => ['format' => 'html']])->raw;
+            $this->assertStringContainsString('You met every goal available in this tutor so far. Ask your teacher what comes next.', $html);
+            $this->assertStringNotContainsString($gap, $html);
+        } finally {
+            $done->cleanup();
+        }
     }
 
     /** U9: one self-contained HTML file: inline CSS, no scripts, no external URLs; the four headings, teacher details expanded, the date and the code. */

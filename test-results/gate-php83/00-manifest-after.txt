@@ -5,7 +5,7 @@ HANDOFF_VALIDATION_REPORT.json: OK
 IMPLEMENTATION_CHECKLIST.md: OK
 RESEARCH_AND_DECISIONS.md: OK
 START_HERE.md: OK
-TEACHER_FACILITATOR_GUIDE_DRAFT.md: OK
+TEACHER_FACILITATOR_GUIDE_DRAFT.md: FAILED
 architecture/Algebra_Constraint_Architecture_v1.1.md: OK
 architecture/CHANGELOG.md: FAILED
 contracts/README.md: OK
@@ -70,7 +70,8 @@ specifications/05_STORAGE_AND_DEPLOYMENT.md: OK
 specifications/06_REPORTS_AND_EVIDENCE.md: OK
 specifications/07_BUILD_AND_RELEASE.md: OK
 tools/validate_handoff.py: OK
-sha256sum: WARNING: 1 computed checksum did NOT match
+sha256sum: WARNING: 2 computed checksums did NOT match
 ---
-Differences: architecture/CHANGELOG.md
-Only expected differences (architecture/CHANGELOG.md: v1.2 entry added per addendum §3).
+Differences: TEACHER_FACILITATOR_GUIDE_DRAFT.md
+architecture/CHANGELOG.md
+Only expected differences (architecture/CHANGELOG.md: v1.2 entry added per addendum §3; TEACHER_FACILITATOR_GUIDE_DRAFT.md: updated per the architect's ruling on the round UI v3 report).

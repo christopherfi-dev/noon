@@ -1,4 +1,4 @@
 Configured key present: no
-Tracked files scanned: 407
+Tracked files scanned: 416
 Upload ZIP entries scanned: 1350 (algebra-engine-bluehost-upload.zip, algebra-engine-vps-upload.zip)
 KEY-LEAK SCAN PASSED

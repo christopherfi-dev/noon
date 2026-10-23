@@ -256,6 +256,7 @@ Progress Code (AlgebraEngine\Tests\Integration\ProgressCode)
 Report Download (AlgebraEngine\Tests\Integration\ReportDownload)
  ✔ Empty headings use their fixed lines
  ✔ Learner headings for the b 1 journey
+ ✔ Outside skill listed only while a dependent goal is unmet
  ✔ Downloaded report is self contained
  ✔ Download escapes text
 
@@ -290,6 +291,6 @@ Upgrade (AlgebraEngine\Tests\Integration\Upgrade)
  ✔ Live session continues after the upgrade
  ✔ Migration is safe to run twice
 
-Time: 00:33.648, Memory: 378.00 MB
+Time: 00:31.965, Memory: 382.00 MB
 
-OK (228 tests, 42720 assertions)
+OK (229 tests, 42770 assertions)

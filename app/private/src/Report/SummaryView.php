@@ -150,7 +150,10 @@ final class SummaryView
                     $out['trouble'][] = $this->title($id) . ': not met yet' . $when . '.';
                     break;
                 case 'NOT_IN_BETA':
-                    $out['next_time'][] = 'Practise with your teacher: ' . $this->title($id) . ' (not in this tutor yet).';
+                    // The record keeps no dependencies, so a skill outside the tutor is listed while any recorded goal is unmet.
+                    if (array_filter($record['skills'], fn ($o) => in_array($o['status'], ['NEEDED_HELP', 'UNRESOLVED'], true)) !== []) {
+                        $out['next_time'][] = 'Practise with your teacher: ' . $this->title($id) . ' (not in this tutor yet).';
+                    }
                     break;
             }
             foreach ($r['patterns'] ?? [] as $code) {
@@ -232,14 +235,33 @@ final class SummaryView
                 $next[] = $this->title($t) . ': aim for 3 correct in a row without help' . (BetaScope::threeVariant($t) ? ', including ' . BetaScope::kinds($t) : '') . '.';
             }
         }
+        // A building block is listed when it gave trouble and its goal is still unmet.
         foreach (array_reverse($perSkill) as $s) {
             $id = $s['skill_id'];
-            if (!in_array($id, $targets, true) && !isset($met[$id]) && count($next) < 3) {
+            $troubled = $s['assisted'] > 0 || in_array('INCORRECT', array_column($s['verdicts'], 'verdict'), true);
+            if (!in_array($id, $targets, true) && !isset($met[$id]) && $troubled && count($next) < 3) {
                 $next[] = $this->title($id) . ' (a skill your topic builds on): aim for 3 correct in a row without help.';
             }
         }
+        // Architect ruling on the round UI v3 report: a skill outside the tutor is listed only when a goal that
+        // depends on it was not met this session: the skill whose mistakes pointed to it, or any skill above
+        // that one on the route. When every such goal was met, the heading shows its fixed all-goals line.
+        $above = [];
         foreach ($events as $e) {
-            if ($e['type'] === 'BOUNDARY' && $e['data']['reason'] === 'NOT_AVAILABLE_IN_BETA') {
+            if ($e['type'] === 'DESCENT') {
+                $above[$e['data']['to_skill']] ??= $e['data']['from_skill'];
+            }
+        }
+        foreach ($events as $e) {
+            if ($e['type'] !== 'BOUNDARY' || $e['data']['reason'] !== 'NOT_AVAILABLE_IN_BETA') {
+                continue;
+            }
+            $unmet = false;
+            for ($skill = $e['data']['from_skill'], $seen = []; $skill !== null && !isset($seen[$skill]); $skill = $above[$skill] ?? null) {
+                $seen[$skill] = true;
+                $unmet = $unmet || !isset($met[$skill]);
+            }
+            if ($unmet) {
                 $next[] = 'Practise with your teacher: ' . $this->title($e['data']['skill_id']) . ' (not in this tutor yet).';
             }
         }
