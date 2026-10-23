@@ -1,0 +1,584 @@
+{
+    "name": "N1-1",
+    "provider": "LIVE openai_compatible / deepseek-flash, provider_thinking disabled",
+    "turns": [
+        {
+            "input": "(start on E06)",
+            "status": 200,
+            "ms": 3441,
+            "calls": 2,
+            "purposes": [
+                "BINDING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (binding call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4X + 7",
+            "status": 200,
+            "ms": 2746,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8 x x + 16",
+            "status": 200,
+            "ms": 1747,
+            "calls": 1,
+            "purposes": [
+                "READING"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "is there a quicker way to do these?",
+            "status": 200,
+            "ms": 2835,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8x+16",
+            "status": 200,
+            "ms": 3680,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "7x + 53",
+            "status": 200,
+            "ms": 2898,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "63 because I worked it out in my head",
+            "status": 200,
+            "ms": 6714,
+            "calls": 3,
+            "purposes": [
+                "READING",
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "7x+63",
+            "status": 200,
+            "ms": 3061,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "A,C",
+            "status": 200,
+            "ms": 2328,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4x+36",
+            "status": 200,
+            "ms": 2786,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "5x+5",
+            "status": 200,
+            "ms": 2544,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3x+33",
+            "status": 200,
+            "ms": 2406,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "7x+84",
+            "status": 200,
+            "ms": 2288,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "C",
+            "status": 200,
+            "ms": 2658,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "5x+25",
+            "status": 200,
+            "ms": 2480,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "5x+30",
+            "status": 200,
+            "ms": 2529,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8x+8",
+            "status": 200,
+            "ms": 2351,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "B,D",
+            "status": 200,
+            "ms": 2607,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3x+24",
+            "status": 200,
+            "ms": 2848,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "B",
+            "status": 200,
+            "ms": 2708,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "7x+49",
+            "status": 200,
+            "ms": 2428,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "9x+72",
+            "status": 200,
+            "ms": 2750,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "C,D",
+            "status": 200,
+            "ms": 3096,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4x+12",
+            "status": 200,
+            "ms": 2381,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4x+16",
+            "status": 200,
+            "ms": 2445,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "B,C",
+            "status": 200,
+            "ms": 2743,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2x+18",
+            "status": 200,
+            "ms": 2632,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x+42",
+            "status": 200,
+            "ms": 2247,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x+54",
+            "status": 200,
+            "ms": 2668,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x+12",
+            "status": 200,
+            "ms": 2419,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "A,C",
+            "status": 200,
+            "ms": 2663,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        }
+    ],
+    "guards": {
+        "ANSWER_LEAK": 1,
+        "HELP_CLAIM": 2,
+        "CHECK_CARD_PHRASE": 25,
+        "CHECK_CARD_SHARED_NUMBER": 8
+    },
+    "repairs": [
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "move: slip check not allowed",
+            "errors": [
+                "SLIP_CHECK is only possible right after a slip that code confirmed (SLIP.confirmed is false); code found no slip here",
+                "a slip check is one short practice question, not a check question"
+            ],
+            "text": "Correct — 7 × 9 = 63. The rule at work: a product of two whole numbers can be found by repeated equal groups, and here seven groups of nine make sixty-three. Now let's return to the expansion that didn't come out right. In 7(x + 9), you already multiplied the 7 by the x. What does the 7 multiply next, and what is that product?"
+        }
+    ],
+    "holds": [],
+    "held_attempts": [
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK",
+        "HELP_BEFORE_CHECK"
+    ],
+    "readings": {
+        "sent_for_reading": 2,
+        "accepted": 1,
+        "rejected": 0,
+        "readings_differ": 1,
+        "clarifying_questions_shown": 1,
+        "not_an_answer": 0
+    },
+    "empty_replies": 0,
+    "binding": {
+        "calls": 1,
+        "accepted": 1,
+        "outcomes": [
+            "ACCEPTED"
+        ]
+    },
+    "calls": 34,
+    "tokens": {
+        "prompt": 333926,
+        "cached": 220544,
+        "completion": 10721,
+        "reasoning": 0
+    },
+    "cost_usd": 0.019492883200000005,
+    "finish_length": 0,
+    "attempts": 28,
+    "goals_met": []
+}
