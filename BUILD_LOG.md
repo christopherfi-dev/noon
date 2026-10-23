@@ -211,3 +211,16 @@ Separate interval. Offline only: no live run, no key, nothing deployed. Rulings:
 | 2026-10-23T00:37:29Z–00:38:35Z | Full gate on PHP 8.3.6 | PASS — every step exit 0 (F1 manifest lists the two accepted differences); PHPUnit 229; browser 12/12; both bundles built; smoke PASS; key-leak 0 hits. Saved in `test-results/gate-php83/` |
 | 2026-10-23T00:38:41Z–00:39:41Z | Full gate on native PHP 8.0.30 (every PHP step, including the bundle build) | PASS — every step exit 0; PHPUnit 229; browser 12/12; bundles built (Bluehost 681 files, VPS 669 files); smoke PASS; key-leak 0 hits. Saved in `test-results/gate-php80/`; the committed ZIPs are from this run. VPS bundle sha256 a1f02a0f47643e2c71e9549bd26a331a0ce79dd94815764d1c7bb1d6158efb6e |
 | 2026-10-23T00:40:02Z | **Round UI v3.1 end**. Work in `0b10a50`; addendum in `ROUND_UI_V3_REPORT.md`. VPS bundle sha256 a1f02a0f47643e2c71e9549bd26a331a0ce79dd94815764d1c7bb1d6158efb6e. Not deployed | Round UI v3.1 interval 00:35:55Z–2026-10-23T00:40:02Z |
+
+## Round 6 — the AI is the tutor (`CONDUCTOR_ROUND_6_v3.md`)
+
+Separate interval. Stage 1 only: offline, mock provider, no key needed or used, nothing deployed. Branch `round6-ai-tutor` (no `claude/` prefix was needed for the branch push).
+
+| UTC time | Action | Result |
+|---|---|---|
+| 2026-10-23T03:01:47Z | **Round 6 start** (first command: checkout of `claude/elegant-volta-blu3uj`). Instructions saved as `CONDUCTOR_ROUND_6_v3.md` | Recorded |
+| 2026-10-23T03:02:24Z | §0.1: annotated tag `beta-1.0` on `061239c` with the deployment line and VPS bundle sha256 `a1f02a0f…6efb6e` | Created locally. `git push origin beta-1.0` refused by the git proxy (HTTP 403, twice); branch pushes work. The owner must push the tag |
+| 2026-10-23T03:02:38Z | §0.2: branch `round6-ai-tutor` from `beta-1.0`, pushed | Done |
+| ~03:03Z–03:12Z (not command-stamped) | PHP 8.0 runtime: php.net is blocked; took `php-8.0.30.tar.xz` from the `php:8.0-cli` image (sha256 `216ab305…d777d9`, same as round PHP80); built natively with the same OpenSSL 3 one-line fix, extensions as shared modules | `PHP 8.0.30 (cli) (built: Oct 23 2026 03:06:41) ( NTS )` |
+| ~03:12Z–03:14Z (not command-stamped) | Baseline: beta suite on PHP 8.3.6 and on 8.0.30 | PASS — 229 tests each |
+| 2026-10-23T03:16:42Z | §0.5: `CLAUDE.md` rewritten for the round 6 design; §0.6: `manifest_check.sh` lists `CLAUDE.md` and `architecture/Algebra_Constraint_Architecture_v1.3.md` as ruled differences (`MANIFEST.sha256` unchanged) | F1 check: only ruled differences |
