@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+/** Round 6: the reviewed v1.3 architecture (architecture/Algebra_Constraint_Architecture_v1.3.md). */
+const ARCHITECTURE_SHA256 = 'ba1d52153c86f36466ac660bc03b4e5df41335d245dc3987bd242fcaf6565ead';
+
 /*
  * Installation preflight for the actual hosting plan (spec 05).
  *   php algebra-private/bin/preflight.php [--public=/path/to/public_html/algebra]
@@ -68,16 +71,17 @@ if ($provider === 'openai_compatible') {
         $add('FAIL', 'PROVIDER_HTTPS', 'provider_base_url must use https://');
     }
     // Round 3 ruling 1: thinking is set explicitly; the provider default is never relied on.
+    // Round 6 §3.6: 'per_call' lets code choose thinking call by call, at the configured effort.
     $thinking = (string) ($config['provider_thinking'] ?? '');
     $effort = (string) ($config['provider_reasoning_effort'] ?? '');
-    if (!in_array($thinking, ['disabled', 'enabled'], true)) {
-        $add('FAIL', 'THINKING', "provider_thinking must be 'disabled' or 'enabled'; the provider default is never relied on.");
-    } elseif ($thinking === 'enabled' && !in_array($effort, ['low', 'high', 'max'], true)) {
-        $add('FAIL', 'THINKING', "provider_reasoning_effort must be 'low', 'high' or 'max' when thinking is enabled.");
+    if (!in_array($thinking, ['disabled', 'enabled', 'per_call'], true)) {
+        $add('FAIL', 'THINKING', "provider_thinking must be 'disabled', 'enabled' or 'per_call'; the provider default is never relied on.");
+    } elseif ($thinking !== 'disabled' && !in_array($effort, ['low', 'high', 'max'], true)) {
+        $add('FAIL', 'THINKING', "provider_reasoning_effort must be 'low', 'high' or 'max' when thinking is enabled or per_call.");
     } elseif ($thinking === 'disabled' && $effort !== '') {
-        $add('FAIL', 'THINKING', "provider_reasoning_effort applies only when thinking is enabled; leave it empty.");
+        $add('FAIL', 'THINKING', "provider_reasoning_effort applies only when thinking is enabled or per_call; leave it empty.");
     } else {
-        $add('PASS', 'THINKING', 'thinking ' . $thinking . ($thinking === 'enabled' ? ', reasoning_effort ' . $effort : '') . ', max_tokens ' . (int) ($config['provider_max_tokens'] ?? 4096));
+        $add('PASS', 'THINKING', 'thinking ' . $thinking . ($thinking !== 'disabled' ? ', reasoning_effort ' . $effort : '') . ', max_tokens ' . (int) ($config['provider_max_tokens'] ?? 4096));
     }
     extension_loaded('curl')
         ? $add('PASS', 'CURL', 'loaded (live provider calls use HTTPS with certificate verification)')
@@ -89,24 +93,29 @@ if ($provider === 'openai_compatible') {
 
 // Private resources
 $expected = [
-    'resources/architecture/Algebra_Constraint_Architecture_v1.2.md',
+    'resources/architecture/Algebra_Constraint_Architecture_v1.3.md',
     'resources/curriculum/algebra-map.json',
-    'resources/contracts/model-envelope.schema.json',
-    'resources/contracts/workflow-policy.json',
+    'resources/contracts/tutor-envelope.schema.json',
+    'resources/contracts/tutor-event.schema.json',
+    'resources/contracts/tutor-view.schema.json',
+    'resources/contracts/tutor-session.schema.json',
+    'resources/contracts/report.schema.json',
     'migrations/001_init.sql',
     'migrations/002_model_call_usage.sql',
     'migrations/003_model_call_transport_detail.sql',
+    'migrations/004_progress.sql',
+    'migrations/005_round6_call_detail.sql',
     'vendor/autoload.php',
 ];
 foreach ($expected as $rel) {
     is_file($privateDir . '/' . $rel) ? $add('PASS', 'FILE', $rel) : $add('FAIL', 'FILE', $rel . ' is missing from the private folder.');
 }
-$arch = $privateDir . '/resources/architecture/Algebra_Constraint_Architecture_v1.2.md';
+$arch = $privateDir . '/resources/architecture/Algebra_Constraint_Architecture_v1.3.md';
 if (is_file($arch)) {
     $sha = hash_file('sha256', $arch);
-    $sha === 'ef03667dabf7152be63009ec6c1e327a83340b4fff65eef303e3eeb326291390' // v1.2 after Conductor Round 2 rulings 2 and 3
-        ? $add('PASS', 'ARCHITECTURE_HASH', 'v1.2 ' . $sha)
-        : $add('FAIL', 'ARCHITECTURE_HASH', 'Architecture file differs from the reviewed v1.2 (' . $sha . ').');
+    $sha === ARCHITECTURE_SHA256
+        ? $add('PASS', 'ARCHITECTURE_HASH', 'v1.3 ' . $sha)
+        : $add('FAIL', 'ARCHITECTURE_HASH', 'Architecture file differs from the reviewed v1.3 (' . $sha . ').');
 }
 
 // Storage

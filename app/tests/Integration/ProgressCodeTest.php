@@ -9,20 +9,17 @@ use AlgebraEngine\Support\Json;
 use AlgebraEngine\Tests\Support\Harness;
 use PHPUnit\Framework\TestCase;
 
-/** Conductor round UI v3, U10: progress codes that carry results into a later session. */
+/**
+ * Conductor round UI v3, U10, kept in round 6 (§8): progress codes carry
+ * gradebook statuses and the AI's stated next focus into a later session; on
+ * resume code writes "Welcome back" and the AI continues from the record.
+ */
 final class ProgressCodeTest extends TestCase
 {
     private const NOT_FOUND = "That code wasn't found. Check it, or start fresh.";
 
     /** @var list<Harness> */
     private array $harnesses = [];
-
-    protected function tearDown(): void
-    {
-        foreach ($this->harnesses as $h) {
-            $h->cleanup();
-        }
-    }
 
     private function harness(?Harness $sameDb = null): Harness
     {
@@ -46,15 +43,23 @@ final class ProgressCodeTest extends TestCase
         return $r->body['code'];
     }
 
-    /** B1 up to the first guided problem at E06. */
+    /** Q07, then a distribution-to-x-only answer: the tutor steps back to E06 and poses practice there. */
     private function intoRepair(Harness $h): void
     {
         $h->start('Q07');
-        $h->submit($h->wrong('DIST_X_ONLY'));
-        $h->submit($h->wrong('DIST_X_ONLY'));
-        $p = $h->active()['params'];
-        $h->submit($p['a'] . 'x+' . $p['b']);
-        $this->assertSame('GUIDED_REPAIR', $h->mode());
+        $p = $h->open()['params'];
+        $h->send((string) \AlgebraEngine\Math\Rational::of($p['c'] - $p['b'], $p['a']));
+        $this->assertSame('E06', $h->view['focus']['skill_id']);
+        $this->assertSame('practice', $h->view['open_problem']['purpose']);
+    }
+
+    /** Answer correctly until the tutor wraps up or $skill's goal is met. */
+    private function untilGoal(Harness $h, string $skill): void
+    {
+        for ($n = 0; $n < 30 && !$h->goal($skill)['met'] && $h->view['open_problem'] !== null; $n++) {
+            $this->assertSame(200, $h->answerCorrectly()->status);
+        }
+        $this->assertTrue($h->goal($skill)['met'], $skill . ' goal');
     }
 
     private function lookup(Harness $h, string $code)
@@ -81,22 +86,22 @@ final class ProgressCodeTest extends TestCase
         $this->assertNull($this->row($h), 'no record before an answer');
         $this->assertSame(['linked' => false, 'code' => null], $h->request('GET', 'progress')->body);
 
-        $r = $h->submit($h->wrong('DIST_X_ONLY'));
+        $p = $h->open()['params'];
+        $r = $h->send((string) \AlgebraEngine\Math\Rational::of($p['c'] - $p['b'], $p['a']));
         $this->assertTrue((bool) array_filter($r->cookies, fn ($c) => str_starts_with($c, 'ae_pc=')), 'the code reaches the browser with the first answer');
         $row = $this->row($h);
         $this->assertNotNull($row, 'created at the first answer');
-        $this->assertSame(['route_target', 'next_skill', 'skills'], array_keys($row['record']));
+        $this->assertSame(['route_target', 'next_focus', 'next_skill', 'skills'], array_keys($row['record']));
         $this->assertSame('Q07', $row['record']['route_target']);
-        $this->assertSame('Q07', $row['record']['next_skill']);
-        $this->assertSame(['status' => 'UNRESOLVED', 'date' => '2026-10-21', 'patterns' => ['DIST_X_ONLY']], $row['record']['skills']['Q07']);
+        $this->assertSame('E06', $row['record']['next_focus'], 'the AI\'s stated next focus');
+        $this->assertSame('E06', $row['record']['next_skill']);
+        $this->assertSame(['status' => 'NEEDED_HELP', 'date' => '2026-10-21', 'patterns' => ['DIST_X_ONLY']], $row['record']['skills']['Q07']);
         $code = $this->code($h);
         $this->assertSame($row['code_sha256'], ProgressCode::hash(str_replace('-', '', $code)));
 
         // Updated every turn.
-        $h->submit($h->wrong('DIST_X_ONLY'));
-        $h->submit($h->plainWrong());
+        $h->answerCorrectly();
         $record = $this->row($h)['record'];
-        $this->assertSame('E06', $record['next_skill'], 'the deepest unmet skill on the route');
         $this->assertArrayHasKey('E06', $record['skills']);
 
         // Same transaction: a commit that fails after the record was written leaves the record as it was.
@@ -104,7 +109,7 @@ final class ProgressCodeTest extends TestCase
         $revision = $h->view['revision'];
         $h->app->store->db->exec("CREATE TRIGGER ui_v3_fail BEFORE INSERT ON events WHEN NEW.type = 'STATE_COMMITTED' BEGIN SELECT RAISE(ABORT, 'test'); END");
         try {
-            $h->event('SUBMIT_RESPONSE', ['text' => $h->correct()]);
+            $h->answerCorrectly();
             $this->fail('the commit should have failed');
         } catch (\Throwable $e) {
             $this->assertStringContainsString('test', $e->getMessage());
@@ -132,8 +137,8 @@ final class ProgressCodeTest extends TestCase
         return $found;
     }
 
-    /** Tab closed mid-repair: once that session has expired, the code starts a new session at the repair skill, then offers the route target. */
-    public function testClosedMidRepairResumesAtTheRepairSkillThenOffersNext(): void
+    /** Tab closed mid-repair: once that session has expired, the code starts a new session at the AI's stated next focus; the AI returns to the route target itself. */
+    public function testClosedMidRepairResumesAtTheNextFocusAndTheTutorReturns(): void
     {
         $a = $this->harness();
         $this->intoRepair($a);
@@ -148,34 +153,26 @@ final class ProgressCodeTest extends TestCase
         $this->assertSame('E06', $look->body['next_skill']['skill_id']);
         $this->assertSame('Q07', $look->body['route_target']['skill_id']);
         $this->assertSame(['did_well', 'trouble', 'worked_on', 'next_time', 'headings', 'empty'], array_keys($look->body['summary']));
-        $this->assertSame('Continue with “Apply the distributive property with positive factors”.', $look->body['summary']['next_time'][0]);
+        $this->assertSame('Continue with “Apply the distributive property with positive factors”.', $look->body['summary']['next_time'][0], '"Welcome back" is written by code');
 
         $r = $this->startWith($b, $code);
         $this->assertSame(200, $r->status);
-        $this->assertSame('TARGET_ASSESSMENT', $b->mode());
-        $this->assertSame('E06', $b->skill(), 'resumed at the repair skill');
+        $this->assertSame('Q07', $b->view['topic']['skill_id']);
+        $this->assertSame('E06', $b->view['focus']['skill_id'], 'resumed at the next focus');
+        $ctx = TutorLoopTest::context($b);
+        $this->assertSame('NEEDED_HELP', $ctx['EARLIER_SESSIONS']['Q07']['status'], 'the AI continues from the record');
         $this->assertSame($b->sessionId(), $b->app->store->progressByHash(ProgressCode::hash(str_replace('-', '', $code)), $b->clock->now())['live_session_id']);
         $this->assertSame($code, $this->code($b), 'the same code on the new device');
 
-        for ($i = 0; $i < 3; $i++) {
-            $b->answerCorrect();
-        }
-        $this->assertSame('SESSION_REPORT', $b->mode());
-        $this->assertSame(['menu_id' => 'next-target', 'options' => [['option_id' => 'Q07', 'label' => 'Next: Solve equations containing parentheses', 'action' => 'CHANGE_TARGET']]], $b->view['menu']);
-        $this->assertSame(['CHANGE_TARGET', 'END_SESSION'], $b->view['allowed_actions']);
+        $this->untilGoal($b, 'E06');
+        $this->assertSame('Q07', $b->view['focus']['skill_id'], 'the tutor returned to the route target');
         $this->assertSame('Q07', $this->row($b)['record']['next_skill']);
-        $this->assertSame(409, $b->event('CHANGE_TARGET', ['target_skill_id' => 'N05'])->status, 'only the offered target');
-        $this->assertSame(200, $b->event('CHANGE_TARGET', ['target_skill_id' => 'Q07'])->status);
-        $this->assertSame('TARGET_ASSESSMENT', $b->mode());
-        $this->assertSame('Q07', $b->skill());
-        $this->assertSame([], array_values(array_filter($b->events(), fn ($e) => $e['type'] === 'EPISODE_SUSPENDED')), 'the finished episode is not "interrupted"');
 
         // Earlier results are labelled with their date and never counted as this session's goals.
         $report = $b->request('GET', 'report')->body;
         $this->assertSame(['E06'], array_column($report['report']['immediate_criteria'], 'skill_id'));
         $earlier = $report['summary']['learner']['earlier'];
-        $this->assertContains('Apply the distributive property with positive factors: needed help on 21 October 2026.', $earlier);
-        $this->assertContains('Solve equations containing parentheses: not met yet on 21 October 2026.', $earlier);
+        $this->assertContains('Solve equations containing parentheses: needed help on 21 October 2026.', $earlier);
         $this->assertSame($code, $report['progress_code']);
     }
 
@@ -186,7 +183,7 @@ final class ProgressCodeTest extends TestCase
         $this->intoRepair($a);
         $code = $this->code($a);
         $before = $a->row();
-        $active = $a->view['active_item'];
+        $active = $a->view['open_problem'];
 
         // The same browser entering its own code just continues.
         $same = $this->startWith($a, $code);
@@ -199,13 +196,12 @@ final class ProgressCodeTest extends TestCase
         $r = $this->startWith($b, $code);
         $this->assertSame(200, $r->status);
         $this->assertSame($a->sessionId(), $b->sessionId(), 'the same session');
-        $this->assertSame('GUIDED_REPAIR', $b->mode());
-        $this->assertSame($active, $b->view['active_item'], 'exactly where it stopped');
+        $this->assertSame($active, $b->view['open_problem'], 'exactly where it stopped');
         $this->assertSame($before['revision'] + 1, $b->view['revision'], 'the take-over moves the revision on');
-        $this->assertSame(1, count($b->events('SESSION_CONTINUED_ELSEWHERE')));
+        $this->assertSame(1, count($b->eventsOf('SESSION_CONTINUED_ELSEWHERE')));
 
         // The earlier device can no longer answer.
-        $stale = $a->event('SUBMIT_RESPONSE', ['text' => $a->correct()]);
+        $stale = $a->send('5');
         $this->assertSame(409, $stale->status);
         $this->assertSame(['CONTINUED_ELSEWHERE', 'This progress continued on another device.'], [$stale->body['error_code'], $stale->body['message']]);
         $state = $a->request('GET', 'state');
@@ -214,7 +210,7 @@ final class ProgressCodeTest extends TestCase
         $this->assertSame(409, $a->request('GET', 'report')->status);
 
         // The new device carries on.
-        $this->assertSame(200, $b->submit($b->correct())->status);
+        $this->assertSame(200, $b->answerCorrectly()->status);
         $this->assertSame($code, $this->code($b));
     }
 
@@ -224,7 +220,7 @@ final class ProgressCodeTest extends TestCase
         $a = $this->harness();
         $this->intoRepair($a);
         $code = $this->code($a);
-        $a->app->store->claimOperation($a->sessionId(), $a->view['revision'], 'in-flight', $a->clock->now(), 90);
+        $a->app->store->claimOperation($a->sessionId(), $a->view['revision'], 'in-flight', $a->clock->now(), 150);
         $b = $this->harness($a);
         $b->bootstrap();
         $r = $this->startWith($b, $code);
@@ -238,23 +234,21 @@ final class ProgressCodeTest extends TestCase
     {
         $a = $this->harness();
         $this->intoRepair($a);
-        for ($n = 0; $n < 40 && $a->mode() !== 'SESSION_REPORT'; $n++) {
-            $a->answerCorrect();
-        }
-        $this->assertSame('SESSION_REPORT', $a->mode());
-        $this->assertNull($a->view['menu'], 'no "Next:" when the route target itself was met');
+        $this->untilGoal($a, 'E06');
+        $this->untilGoal($a, 'Q07');
+        $this->assertTrue($a->view['wrap_up']);
         $code = $this->code($a);
+        $this->assertSame(200, $a->event('END_SESSION', [], null, null, false)->status, 'the student finishes after the wrap-up');
         $this->assertNull($this->row($a)['record']['next_skill']);
 
         $b = $this->harness($a);
         $look = $this->lookup($b, $code);
         $this->assertSame([false, true, null], [$look->body['live'], $look->body['all_met'], $look->body['next_skill']]);
-        $this->assertSame([], $look->body['summary']['next_time'] === [] ? [] : array_filter($look->body['summary']['next_time'], fn ($l) => str_starts_with($l, 'Continue')));
         $none = $this->startWith($b, $code);
         $this->assertSame([409, 'ALL_GOALS_MET'], [$none->status, $none->body['error_code']]);
         $this->assertSame(200, $this->startWith($b, $code, 'N05')->status);
-        $this->assertSame('N05', $b->skill());
-        $b->submit($b->correct());
+        $this->assertSame('N05', $b->view['topic']['skill_id']);
+        $b->answerCorrectly();
         $this->assertSame('N05', $this->row($b)['record']['route_target'], 'a newly chosen skill becomes the route target');
         $this->assertSame('GOAL_MET', $this->row($b)['record']['skills']['E06']['status'], 'earlier results stay in the record');
     }
@@ -264,9 +258,7 @@ final class ProgressCodeTest extends TestCase
     {
         $a = $this->harness();
         $this->intoRepair($a);
-        $a->completeGuidedRepair();
-        $a->passChecksAt('E06');
-        $this->assertSame('RETURN_TO_TARGET', $a->mode());
+        $this->untilGoal($a, 'E06');
         $code = $this->code($a);
         $this->assertSame('GOAL_MET', $this->row($a)['record']['skills']['E06']['status']);
         $this->assertSame('Q07', $this->row($a)['record']['next_skill']);
@@ -274,8 +266,9 @@ final class ProgressCodeTest extends TestCase
 
         $b = $this->harness($a);
         $this->assertSame(200, $this->startWith($b, $code)->status);
-        $this->assertSame('Q07', $b->skill());
-        $this->assertSame([], $b->row()['snapshot']['criteria'], 'nothing carried into this session\'s criteria');
+        $this->assertSame('Q07', $b->view['focus']['skill_id']);
+        $this->assertSame([], $b->row()['snapshot']['goals'], 'nothing carried into this session\'s goals');
+        $this->assertFalse($b->goal('E06')['met']);
         $report = $b->request('GET', 'report')->body;
         $this->assertSame([], $report['report']['immediate_criteria']);
         $this->assertSame([], $report['summary']['learner']['did_well']);
@@ -290,7 +283,7 @@ final class ProgressCodeTest extends TestCase
     {
         $a = $this->harness();
         $a->start('Q07');
-        $a->submit($a->correct());
+        $a->answerCorrectly();
         $code = $this->code($a);
         $plain = str_replace('-', '', $code);
         $b = $this->harness($a);
@@ -314,7 +307,7 @@ final class ProgressCodeTest extends TestCase
     {
         $a = $this->harness();
         $a->start('Q07');
-        $a->submit($a->correct());
+        $a->answerCorrectly();
         $code = $this->code($a);
         $b = $this->harness($a);
         for ($i = 0; $i < 10; $i++) {
@@ -332,7 +325,7 @@ final class ProgressCodeTest extends TestCase
     {
         $a = $this->harness();
         $a->start('Q07');
-        $a->submit($a->correct());
+        $a->answerCorrectly();
         $code = $this->code($a);
         $a->clock->advance(89 * 86400); // each visit is a new browser session
         $this->assertSame(200, $this->lookup($this->harness($a), $code)->status, 'still kept, and this use restarts the clock');
@@ -350,7 +343,7 @@ final class ProgressCodeTest extends TestCase
     {
         $a = $this->harness();
         $a->start('Q07');
-        $a->submit($a->correct());
+        $a->answerCorrectly();
         $code = $this->code($a);
         $r = $a->request('POST', 'forget', ['idempotency_key' => Harness::key()]);
         $this->assertSame(200, $r->status);
@@ -372,7 +365,7 @@ final class ProgressCodeTest extends TestCase
         $this->assertNull($this->row($a), 'the fresh session has no code yet');
         $this->assertSame(['linked' => false, 'code' => null], $a->request('GET', 'progress')->body);
         $this->assertSame($before, $a->app->store->db->one('SELECT * FROM progress WHERE code_sha256 = ?', [$hash]));
-        $a->submit($a->correct());
+        $a->answerCorrectly();
         $this->assertNotSame($code, $this->code($a), 'its first answer creates its own code');
         $this->assertSame($before, $a->app->store->db->one('SELECT * FROM progress WHERE code_sha256 = ?', [$hash]));
     }
@@ -382,7 +375,7 @@ final class ProgressCodeTest extends TestCase
     {
         $a = $this->harness();
         $a->start('Q07');
-        $a->submit($a->correct());
+        $a->answerCorrectly();
         unset($a->cookies['ae_pc']); // the response that carried the code never arrived
         $first = $this->code($a);
         unset($a->cookies['ae_pc']);

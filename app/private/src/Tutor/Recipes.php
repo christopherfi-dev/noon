@@ -25,20 +25,22 @@ final class Recipes
      * @param list<string> $skills relevant skills, in order
      * @param list<string> $usedFingerprints problems already shown this session
      * @param array<string,list<string>> $neededVariants per skill, the variants its goal still needs
+     * @param array<string,list<string>> $usedNumberSets per skill, the number sets of problems already shown
      * @return array<string,array> problem records keyed by recipe reference ("R1", "R2", …); purpose is set when one is chosen
      */
-    public function pregenerate(array $skills, RandomSource $rng, array $usedFingerprints, array $neededVariants = []): array
+    public function pregenerate(array $skills, RandomSource $rng, array $usedFingerprints, array $neededVariants = [], array $usedNumberSets = []): array
     {
         $out = [];
         $seen = array_flip($usedFingerprints);
         $n = 0;
         foreach (array_values(array_unique($skills)) as $skill) {
             foreach ($this->variantsFor($skill, $neededVariants[$skill] ?? []) as $variant) {
-                $problem = $this->fresh($skill, $variant, $rng, $seen);
+                $problem = $this->fresh($skill, $variant, $rng, $seen, $usedNumberSets[$skill] ?? []);
                 if ($problem === null) {
                     continue;
                 }
                 $seen[$problem['fingerprint']] = true;
+                $usedNumberSets[$skill][] = ProblemFactory::numberSet($problem);
                 $out['R' . (++$n)] = $problem;
             }
         }
@@ -61,14 +63,14 @@ final class Recipes
         return array_slice(array_values(array_intersect($order, $have)), 0, self::PER_SKILL);
     }
 
-    private function fresh(string $skill, string $variant, RandomSource $rng, array $seen): ?array
+    private function fresh(string $skill, string $variant, RandomSource $rng, array $seen, array $usedSets): ?array
     {
         $template = $this->problems->items()->templateFor($skill, $variant);
         $fallback = null;
         for ($i = 0; $i < self::TRIES; $i++) {
             $params = $template->generate($rng);
             $problem = $this->problems->fromRecipe($template->id(), $params, 'PRACTICE');
-            if (isset($seen[$problem['fingerprint']])) {
+            if (isset($seen[$problem['fingerprint']]) || in_array(ProblemFactory::numberSet($problem), $usedSets, true)) {
                 continue;
             }
             if (!ProblemFactory::answerShownInProblem($problem)) {

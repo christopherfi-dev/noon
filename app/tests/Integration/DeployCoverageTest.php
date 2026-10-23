@@ -14,40 +14,36 @@ final class DeployCoverageTest extends TestCase
     public function testCover01CapabilityMatrix(): void
     {
         $h = new Harness();
-        try {
-            $catalog = $h->bootstrap()->body['catalog'];
-            $this->assertCount(205, $catalog);
-            $counts = array_count_values(array_column($catalog, 'runtime_status'));
-            $this->assertSame(['AVAILABLE_SCORED' => 2, 'PARTIAL_COMPONENTS' => 8, 'UNAVAILABLE' => 195], [
-                'AVAILABLE_SCORED' => $counts['AVAILABLE_SCORED'], 'PARTIAL_COMPONENTS' => $counts['PARTIAL_COMPONENTS'], 'UNAVAILABLE' => $counts['UNAVAILABLE'],
-            ]);
-            foreach ($catalog as $c) {
-                $this->assertNotSame('', $c['title']);
-                $this->assertNotSame('', $c['domain']);
-            }
-            $this->assertSame('SKILL_NOT_IN_BETA', $h->start('Q08')->body['error_code']);
-            // Every registry test reference points at a real test.
-            $registry = new CapabilityRegistry($h->app->curriculum, $h->app->factory);
-            foreach ($registry->all() as $e) {
-                foreach ($e['test_references'] as $ref) {
-                    [$file, $method] = array_pad(explode('::', $ref), 2, null);
-                    $this->assertFileExists(ALGEBRA_APP_ROOT . '/' . $file, $ref);
-                    if ($method !== null) {
-                        $this->assertStringContainsString('function ' . $method . '(', (string) file_get_contents(ALGEBRA_APP_ROOT . '/' . $file), $ref);
-                    }
+        $catalog = $h->bootstrap()->body['catalog'];
+        $this->assertCount(205, $catalog);
+        $counts = array_count_values(array_column($catalog, 'runtime_status'));
+        $this->assertSame(['AVAILABLE_SCORED' => 2, 'PARTIAL_COMPONENTS' => 8, 'UNAVAILABLE' => 195], [
+            'AVAILABLE_SCORED' => $counts['AVAILABLE_SCORED'], 'PARTIAL_COMPONENTS' => $counts['PARTIAL_COMPONENTS'], 'UNAVAILABLE' => $counts['UNAVAILABLE'],
+        ]);
+        foreach ($catalog as $c) {
+            $this->assertNotSame('', $c['title']);
+            $this->assertNotSame('', $c['domain']);
+        }
+        $this->assertSame('SKILL_NOT_IN_BETA', $h->start('Q08')->body['error_code']);
+        // Every registry test reference points at a real test.
+        $registry = new CapabilityRegistry($h->app->curriculum, $h->app->factory);
+        foreach ($registry->all() as $e) {
+            foreach ($e['test_references'] as $ref) {
+                [$file, $method] = array_pad(explode('::', $ref), 2, null);
+                $this->assertFileExists(ALGEBRA_APP_ROOT . '/' . $file, $ref);
+                if ($method !== null) {
+                    $this->assertStringContainsString('function ' . $method . '(', (string) file_get_contents(ALGEBRA_APP_ROOT . '/' . $file), $ref);
                 }
             }
-            // The committed matrix matches the registry.
-            $matrix = json_decode((string) file_get_contents(ALGEBRA_APP_ROOT . '/capability-matrix.json'), true);
-            $this->assertCount(205, $matrix['skills']);
-            $this->assertSame(array_column($registry->all(), 'runtime_status', 'skill_id'), array_column($matrix['skills'], 'runtime_status', 'skill_id'));
-            // The live result is stated with its limits; mock success is never reported as live validation.
-            $this->assertStringContainsString('not teaching quality', $matrix['live_provider_smoke_test']);
-            $this->assertStringContainsString('mock mode', $matrix['live_provider_smoke_test']);
-            $this->assertCount(10, $matrix['deferred']);
-        } finally {
-            $h->cleanup();
         }
+        // The committed matrix matches the registry.
+        $matrix = json_decode((string) file_get_contents(ALGEBRA_APP_ROOT . '/capability-matrix.json'), true);
+        $this->assertCount(205, $matrix['skills']);
+        $this->assertSame(array_column($registry->all(), 'runtime_status', 'skill_id'), array_column($matrix['skills'], 'runtime_status', 'skill_id'));
+        // The live result is stated with its limits; mock success is never reported as live validation.
+        $this->assertStringContainsString('not teaching quality', $matrix['live_provider_smoke_test']);
+        $this->assertStringContainsString('mock mode', $matrix['live_provider_smoke_test']);
+        $this->assertCount(10, $matrix['deferred']);
     }
 
     /** DEPLOY-01: guessed private URLs are unavailable outside the public document root; no keys in client assets. */
@@ -62,7 +58,7 @@ final class DeployCoverageTest extends TestCase
             $this->assertSame(200, $ok['status']);
             $this->assertStringNotContainsString('SECRET', $ok['body']);
             foreach (['/../private/config.example.php', '/private/bootstrap.php', '/../private/var/algebra.sqlite', '/resources/curriculum/algebra-map.json',
-                '/config.php', '/src/App.php', '/vendor/autoload.php', '/../private/resources/architecture/Algebra_Constraint_Architecture_v1.2.md', '/composer.json'] as $path) {
+                '/config.php', '/src/App.php', '/vendor/autoload.php', '/../private/resources/architecture/Algebra_Constraint_Architecture_v1.3.md', '/composer.json'] as $path) {
                 $r = self::get($port, $path);
                 $this->assertSame(404, $r['status'], $path);
                 $this->assertStringNotContainsString('<?php', $r['body'], $path);

@@ -13,7 +13,7 @@ namespace AlgebraEngine\Tutor;
  * Ledger events:
  *   PROBLEM_PRESENTED  problem_id, version, purpose, skill_id, source, kind, template_id, variant_id, prompt, fingerprint, retry_of
  *   HELP_GIVEN         problem_id, version, choice (HINT | EXPLAIN | NOT_LEARNED | TYPED_STUCK)
- *   ATTEMPT_RECORDED   problem_id, version, entry, read_as, reading_note, verdict, normalized, signatures, slip, response_sha256, scope
+ *   ATTEMPT_RECORDED   problem_id, version, entry, read_as, reading_note, verdict, normalized, signatures, points_to, slip, response_sha256, scope
  *   PROBLEM_CLOSED     problem_id, version, reason (ANSWERED | SKIPPED | NOT_LEARNED | SET_ASIDE | SESSION_ENDED)
  */
 final class Gradebook
@@ -57,6 +57,7 @@ final class Gradebook
                         'reading_note' => $d['reading_note'],
                         'verdict' => $d['verdict'],
                         'signatures' => $d['signatures'],
+                        'points_to' => $d['points_to'] ?? [],
                         'slip' => $d['slip'],
                         'help' => $help[$d['problem_id']] ?? [],
                         'at' => $e['created_at'] ?? null,

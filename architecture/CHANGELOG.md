@@ -45,3 +45,31 @@ binding. Hash after round 2:
 (beta hash was `8997b6b88067ebfae26abcbe84beb4b6cdcfc55091a9e86128fc020eb5cca772`).
 Curriculum ACE-ALGEBRA1 1.1.0 is unchanged and keeps the evidence semantics
 declared for 1.1.
+
+## 1.3 — 2026-10-23 (Conductor Round 6, §7: the AI is the tutor)
+
+Created from v1.2 with its role sections rewritten for the round 6 design; v1.1
+and v1.2 are unmodified.
+
+- The AI runs the tutoring session as a conversation and decides every move
+  (explain, ask, pose a problem, hint, check a slip, step back, move on,
+  review, wrap up). Code is its set of instruments: calculator and answer
+  checker, problem checker, problem generator, gradebook with goals, report.
+- Removed: the host-sequenced workflow states and their transition table
+  (v1.2 Sections 7 and 10), the menu-driven entry routes, the item-record
+  envelope in which the model only proposed template parameters, and the rule
+  that learner text may not contain a question.
+- Added Section 5, "What code guarantees": code computes every answer and
+  every verdict; code alone computes goals; check problems stand alone (code
+  wording, distinct card, text before it refers only to the previous answer,
+  conversation pauses); the gradebook is true; code writes the report; guards
+  on every learner-visible AI text; security, privacy and storage stay code's.
+- Added readings of student entries (Section 7), problem specs and check
+  patterns (Section 8), slips confirmed by code with a micro-question and a
+  retry that never counts, and the tutor envelope (Section 11).
+- Kept the principles, including truth over approval, scoped verification
+  over self-certification, coherence through correction, and no mastery
+  claims (now stated as its own principle).
+- No example responses: behaviour is described in words only.
+- Section 16: the activation handshake is now
+  `ACE_BOUND: architecture=1.3 | first_principle=truth_over_approval | scope=algebra | role=tutor`.

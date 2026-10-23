@@ -32,7 +32,7 @@ final class ProblemVerifier
     }
 
     /**
-     * @param array{recipes:array<string,array>,used_fingerprints:list<string>,retry_target:?array,limits?:array} $ctx
+     * @param array{recipes:array<string,array>,used_fingerprints:list<string>,retry_target:?array,limits?:array,used_number_sets?:array<string,list<string>>} $ctx
      * @return array{ok:bool,errors:list<string>,problem:?array,dropped_prompt_chars:int}
      */
     public function verify(array $proposal, array $ctx): array
@@ -58,6 +58,9 @@ final class ProblemVerifier
         }
         if ($purpose === 'CHECK' && in_array($problem['fingerprint'], $ctx['used_fingerprints'], true)) {
             return self::fail(['a check question must be fresh: this one was already shown in this session']);
+        }
+        if ($purpose === 'CHECK' && in_array(ProblemFactory::numberSet($problem), $ctx['used_number_sets'][$skill] ?? [], true)) {
+            return self::fail(['a check question must stand alone: it uses the same numbers (' . ProblemFactory::numberSet($problem) . ') as a question already shown for ' . $skill . '; choose different numbers']);
         }
         if ($purpose !== 'RETRY' && ProblemFactory::answerShownInProblem($problem)) {
             return self::fail(['the question shows its own answer: the answer ' . $problem['answer']['expected'] . ' is also a number in the question; choose numbers so they differ']);

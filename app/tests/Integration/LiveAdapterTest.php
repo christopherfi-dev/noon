@@ -3,19 +3,18 @@ declare(strict_types=1);
 
 namespace AlgebraEngine\Tests\Integration;
 
-use AlgebraEngine\Items\ItemFactory;
 use AlgebraEngine\Provider\CurlTransport;
 use AlgebraEngine\Provider\HttpTransport;
-use AlgebraEngine\Provider\MockProvider;
+use AlgebraEngine\Tutor\MockTutor;
 use AlgebraEngine\Provider\OpenAiCompatibleProvider;
 use AlgebraEngine\Config;
 use AlgebraEngine\Tests\Support\Harness;
 use PHPUnit\Framework\TestCase;
 
 /**
- * The OpenAI-compatible adapter against a simulated server (no network).
- * This checks request format and response handling only; it is not a live
- * provider test.
+ * The OpenAI-compatible adapter against a simulated server (no network),
+ * driven by the round 6 tutor loop. This checks request format and response
+ * handling only; it is not a live provider test.
  */
 final class LiveAdapterTest extends TestCase
 {
@@ -36,11 +35,11 @@ final class LiveAdapterTest extends TestCase
         return new class implements HttpTransport {
             public array $requests = [];
             public array $script = [];
-            private MockProvider $model;
+            private MockTutor $model;
 
             public function __construct()
             {
-                $this->model = new MockProvider(new ItemFactory());
+                $this->model = new MockTutor();
             }
 
             public function post(string $url, array $headers, string $body, int $connectTimeout, int $timeout, int $maxBytes): array
@@ -69,7 +68,7 @@ final class LiveAdapterTest extends TestCase
                 }
                 if ($next === 'INTERNAL_WORDS') {
                     $env = json_decode((string) $content); // objects kept as objects
-                    $env->student_message = 'That step is done, and the host matched it to the key.';
+                    $env->student_message = 'That step is done, and the host matched it to the answer key.';
                     $content = json_encode($env);
                 }
                 return ['status' => 200, 'body' => json_encode([
@@ -88,7 +87,7 @@ final class LiveAdapterTest extends TestCase
         $this->assertInstanceOf(OpenAiCompatibleProvider::class, $app->provider);
         $h->app = $app;
         $h->api = new \AlgebraEngine\Http\Api($app);
-        try {
+        {
             $this->assertSame('live', $h->bootstrap()->body['provider_mode']);
             $r = $h->start('Q07');
             $this->assertSame(200, $r->status);
@@ -111,24 +110,25 @@ final class LiveAdapterTest extends TestCase
             $this->assertTrue($h->row()['snapshot']['binding']['acknowledged']);
             // The key never reaches the browser.
             $this->assertStringNotContainsString('test-key-not-real', json_encode($h->view));
+            // Round 6 §3.3: the JSON envelope, never function calling.
+            $this->assertArrayNotHasKey('tools', $envelope['body']);
+            $this->assertArrayNotHasKey('functions', $envelope['body']);
 
-            // A truncated reply is repaired; a server error or timeout holds without scoring the learner.
+            // A truncated reply is repaired; a server error or timeout holds without recording the answer twice.
             $server->script = ['LENGTH'];
-            $h->submit($h->wrong('DIST_X_ONLY'));
+            $h->send($h->wrong());
             $this->assertSame('READY', $h->view['status']);
-            $this->assertStringContainsString('truncated', $h->events('MODEL_OUTPUT_REJECTED')[0]['data']['errors'][0]);
+            $this->assertStringContainsString('truncated', $h->eventsOf('MODEL_OUTPUT_REJECTED')[0]['data']['errors'][0]);
             $server->script = ['HTTP_500'];
-            $h->event('REQUEST_HINT');
+            $h->stuck('HINT');
             $this->assertSame('HOLD', $h->view['status']);
             $this->assertSame('PROVIDER_UNAVAILABLE', $h->row()['snapshot']['issue']['type']);
             $server->script = ['TIMEOUT'];
-            $h->event('RESUME_SESSION');
+            $h->event('RESUME');
             $this->assertSame('HOLD', $h->view['status']);
-            $h->event('RESUME_SESSION');
+            $h->event('RESUME');
             $this->assertSame('READY', $h->view['status']);
-            $this->assertCount(1, $h->events('CHECKER_RESULT'), 'the learner answer was scored once');
-        } finally {
-            $h->cleanup();
+            $this->assertCount(1, $h->attempts(), 'the learner answer was recorded once');
         }
     }
 
@@ -139,20 +139,18 @@ final class LiveAdapterTest extends TestCase
         $app = new \AlgebraEngine\App($h->app->config, $h->clock, null, null, null, $server);
         $h->app = $app;
         $h->api = new \AlgebraEngine\Http\Api($app);
-        try {
+        {
             $h->bootstrap();
             $h->start('Q07');
-            // A hint is model-written learner text (an independent item's framing is host-only since round 5).
-            $server->script = ['EMPTY', 'INTERNAL_WORDS'];
-            $r = $h->event('REQUEST_HINT');
-            $this->assertSame(200, $r->status);
+            $server->script = ['EMPTY'];
+            $h->stuck('HINT');
             $this->assertSame('READY', $h->view['status']);
-            $errors = array_map(fn ($e) => $e['data']['errors'][0], $h->events('MODEL_OUTPUT_REJECTED'));
-            $this->assertSame('empty content', $errors[0]);
-            $this->assertStringContainsString('uses internal terms: "host"', $errors[1]);
-            $this->assertStringNotContainsString('host', strtolower(json_encode($h->view['messages'])));
-        } finally {
-            $h->cleanup();
+            $this->assertSame('empty content', $h->eventsOf('MODEL_OUTPUT_REJECTED')[0]['data']['errors'][0]);
+            $server->script = ['INTERNAL_WORDS'];
+            $h->stuck('EXPLAIN');
+            $errors = array_map(fn ($e) => $e['data']['errors'][0], $h->eventsOf('MODEL_OUTPUT_REJECTED'));
+            $this->assertStringContainsString('uses internal terms: "answer key", "host"', $errors[1]);
+            $this->assertStringNotContainsString('host', strtolower(json_encode($h->view['conversation'])));
         }
     }
 
@@ -166,9 +164,19 @@ final class LiveAdapterTest extends TestCase
         $this->assertSame(['type' => 'enabled'], $body['thinking']);
         $this->assertSame('low', $body['reasoning_effort']);
         $this->assertArrayNotHasKey('temperature', $body, 'no effect in thinking mode, so not sent');
+        // Round 6 §3.6: per call, code's decision is applied.
+        $per = new OpenAiCompatibleProvider(Config::fromArray(['provider_thinking' => 'per_call', 'provider_reasoning_effort' => 'low'] + self::LIVE, ALGEBRA_APP_ROOT . '/private'), $server);
+        $per->complete([['role' => 'user', 'content' => 'CONTROL']], false, ['thinking' => 'enabled', 'effort' => 'low']);
+        $per->complete([['role' => 'user', 'content' => 'CONTROL']], false, ['thinking' => 'disabled', 'effort' => null]);
+        [, $on, $off] = array_column($server->requests, 'body');
+        $this->assertSame([['type' => 'enabled'], 'low'], [$on['thinking'], $on['reasoning_effort']]);
+        $this->assertSame(['type' => 'disabled'], $off['thinking']);
+        $this->assertArrayHasKey('temperature', $off);
+        $this->assertArrayNotHasKey('reasoning_effort', $off);
         $bad = [
             ['provider_thinking' => ''],                                              // never the provider default
             ['provider_thinking' => 'auto'],
+            ['provider_thinking' => 'per_call'],                                      // effort missing
             ['provider_thinking' => 'enabled'],                                       // effort missing
             ['provider_thinking' => 'enabled', 'provider_reasoning_effort' => 'medium'],
             ['provider_thinking' => 'enabled', 'provider_reasoning_effort' => 'none'],
@@ -195,13 +203,14 @@ final class LiveAdapterTest extends TestCase
         $app = new \AlgebraEngine\App($h->app->config, $h->clock, null, null, null, $server);
         $h->app = $app;
         $h->api = new \AlgebraEngine\Http\Api($app);
-        try {
+        {
             $h->bootstrap();
             $h->start('Q07');
-            $server->script = ['LENGTH', 'EMPTY'];                 // two rejected outputs → two repair requests
-            $h->submit($h->wrong('DIST_X_ONLY'));
+            $server->script = ['LENGTH', 'EMPTY'];                 // the reply and its repair both rejected → code fallback
+            $h->send($h->wrong());
             $this->assertSame('READY', $h->view['status']);
-            $h->event('END_SESSION');
+            $this->assertCount(1, $h->eventsOf('FALLBACK_USED'));
+            $h->event('END_SESSION', [], null, null, false);
             $report = $h->request('GET', 'report')->body;
 
             foreach ($server->requests as $r) {
@@ -222,8 +231,6 @@ final class LiveAdapterTest extends TestCase
                 $this->assertNotNull($c['duration_ms']);
             }
             $this->assertCount(1, array_filter($calls, fn ($c) => $c['finish_reason'] === 'length'), 'finish_reason=length recorded');
-        } finally {
-            $h->cleanup();
         }
     }
 
@@ -235,19 +242,17 @@ final class LiveAdapterTest extends TestCase
         $app = new \AlgebraEngine\App($h->app->config, $h->clock, null, null, null, $server);
         $h->app = $app;
         $h->api = new \AlgebraEngine\Http\Api($app);
-        try {
+        {
             $h->bootstrap();
             $h->start('Q07');
             $server->script = ['NETWORK_DIAG'];
-            $h->submit($h->wrong('DIST_X_ONLY'));
+            $h->send($h->wrong());
             $this->assertSame('HOLD', $h->view['status']);
-            $failure = $h->events('PROVIDER_FAILURE')[0]['data']['failure'];
+            $failure = $h->eventsOf('PROVIDER_FAILURE')[0]['data']['failure'];
             $this->assertSame(['curl_errno' => 56, 'stage' => 'response', 'elapsed_ms' => 5300], $failure['transport']);
             $row = $app->store->db->one("SELECT transport_detail FROM model_calls WHERE outcome = 'TRANSPORT_NETWORK'");
             $this->assertSame(['curl_errno' => 56, 'stage' => 'response', 'elapsed_ms' => 5300], json_decode($row['transport_detail'], true));
             $this->assertStringNotContainsString('curl_errno', json_encode($h->view), 'diagnostics stay server-side');
-        } finally {
-            $h->cleanup();
         }
         // The real transport reports the stage: a closed local port fails at connect.
         $r = (new CurlTransport())->post('https://127.0.0.1:1/', [], '{}', 2, 2, 1000);

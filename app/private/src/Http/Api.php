@@ -12,7 +12,7 @@ use AlgebraEngine\Report\SummaryView;
 use AlgebraEngine\Storage\StorageUnavailable;
 use AlgebraEngine\Support\Json;
 use AlgebraEngine\Support\Time;
-use AlgebraEngine\Workflow\EngineError;
+use AlgebraEngine\Tutor\EngineError;
 
 /**
  * Same-origin JSON API at api.php?action=... Session ownership comes only
@@ -32,14 +32,8 @@ final class Api
     private const MOVED = 'This progress continued on another device.';
     private const START_KEYS = ['idempotency_key', 'expected_revision', 'entry_route', 'target_skill_id', 'task_token', 'replace_current'];
 
-    private array $actionRules;
-
     public function __construct(private App $app)
     {
-        $rules = Json::decode((string) file_get_contents($app->config->string('resources_dir') . '/contracts/public-actions.json'));
-        foreach ($rules['actions'] as $r) {
-            $this->actionRules[$r['action']] = $r;
-        }
     }
 
     public function handle(Request $req): Response
@@ -225,8 +219,8 @@ final class Api
                 'data' => 'Your answers are stored on this server for this browser session so the tutor can continue and build your summary. No name or account is needed. Use "Forget this session" to delete them.',
                 'progress' => 'Progress codes keep skill results only, for up to ' . $days . ' days after last use. Anyone with your code or your downloaded report can continue your progress.',
                 'provider' => $app->config->isMock()
-                    ? 'This beta is running on a simulated tutor model. No answers are sent to an outside AI service.'
-                    : 'Your answers are sent to the configured AI provider to word the tutor\'s messages.',
+                    ? 'This tutor is running on a simulated tutor model. No answers or messages are sent to an outside AI service.'
+                    : 'Your answers and messages are sent to the configured AI provider, which writes the tutor\'s replies. The app checks every answer itself.',
             ],
             'session' => $session,
             'continued_elsewhere' => $moved,
@@ -305,7 +299,7 @@ final class Api
         }
         $currentId = $container['current_session_id'];
         $current = $currentId !== null ? $app->store->session($currentId) : null;
-        $live = $current !== null && !$app->engine->expired($current, $app->clock->now()) && $current['snapshot']['mode'] !== 'SESSION_CLOSED';
+        $live = $app->engine->live($current);
         // Round UI v3 (U10): "Start over" begins a fresh session with no code; any progress record stays as it is.
         if ($live && !$body['replace_current']) {
             return Response::error(409, 'SESSION_EXISTS', 'A session is already in progress. Continue it, or choose to start over.');
@@ -322,7 +316,7 @@ final class Api
         if ($limited !== null) {
             return $limited;
         }
-        $result = $app->engine->createSession($container['container_id'], 'TOPIC', $body['target_skill_id'], $body['idempotency_key'], $hash);
+        $result = $app->engine->createSession($container['container_id'], $body['target_skill_id'] ?? BetaScope::DEFAULT_TARGET, $body['idempotency_key'], $hash);
         $view = $result['view'];
         $resp = new Response(200, $view);
         if ($live) {
@@ -342,21 +336,9 @@ final class Api
         }
         $body = $this->decode($req);
         // Validate the raw object form so {} and [] keep their JSON meaning.
-        $errors = $app->schemas->errors(Json::decodeObject($req->body, 8), 'public-event.schema.json');
+        $errors = $app->schemas->errors(Json::decodeObject($req->body, 8), 'tutor-event.schema.json');
         if ($errors !== []) {
             return Response::error(400, 'INVALID_EVENT', 'Invalid request.');
-        }
-        $rule = $this->actionRules[$body['action']];
-        $keys = array_keys($body['payload']);
-        if (array_diff($rule['required_payload'], $keys) !== [] || array_diff($keys, $rule['allowed_payload']) !== []) {
-            return Response::error(400, 'INVALID_PAYLOAD', 'This action has missing or unexpected fields.');
-        }
-        $hasItem = $body['item_id'] !== null || $body['item_version'] !== null;
-        if ($rule['requires_active_item'] && ($body['item_id'] === null || $body['item_version'] === null)) {
-            return Response::error(400, 'INVALID_ITEM_REFERENCE', 'This action needs the current question.');
-        }
-        if (!$rule['requires_active_item'] && $hasItem) {
-            return Response::error(400, 'INVALID_ITEM_REFERENCE', 'This action does not take a question.');
         }
         $hash = hash('sha256', Json::encode($body));
         $cached = $this->idempotent($sessionId, $body['idempotency_key'], $hash, $container);
@@ -517,7 +499,7 @@ final class Api
         $cookies = [$this->cookie($req, $row['code'], $app->config->int('session_absolute_ttl'), self::CODE_COOKIE)];
         // Like "Start over", leaving this browser's own session in progress rotates the browser credential.
         $own = $container['current_session_id'] !== null ? $app->store->session($container['current_session_id']) : null;
-        $rotate = fn () => $own !== null && $own['session_id'] !== $row['live_session_id'] && !$app->engine->expired($own, $app->clock->now()) && $own['snapshot']['mode'] !== 'SESSION_CLOSED'
+        $rotate = fn () => $own !== null && $own['session_id'] !== $row['live_session_id'] && $app->engine->live($own)
             ? [$this->cookie($req, $app->store->rotateCookie($container['container_id']), $app->config->int('session_absolute_ttl'))] : [];
         $live = $row['live_session_id'] !== null ? $app->store->session($row['live_session_id']) : null;
         if ($app->engine->live($live)) {
@@ -550,10 +532,12 @@ final class Api
         if ($limited !== null) {
             return $limited;
         }
-        // The route target stays the skill the learner set out for, unless they chose a new one.
-        $route = $body['target_skill_id'] !== null && $body['target_skill_id'] !== ($record['next_skill'] ?? null) ? $target : ($record['route_target'] ?? $target);
-        $result = $app->engine->createSession($container['container_id'], 'TOPIC', $target, $body['idempotency_key'], $hash,
-            ['progress_id' => $row['progress_id'], 'record' => $record, 'route_target' => $route]);
+        // Round 6 §8: the topic stays the skill the learner set out for (unless they chose a new one);
+        // the AI continues from the record's next skill, with earlier results as context only.
+        $route = $body['target_skill_id'] !== null ? $target : ($record['route_target'] ?? $target);
+        $focus = $body['target_skill_id'] !== null ? $target : ($record['next_skill'] ?? $route);
+        $result = $app->engine->createSession($container['container_id'], $route, $body['idempotency_key'], $hash,
+            ['progress_id' => $row['progress_id'], 'record' => $record, 'route_target' => $route], $focus);
         $resp = new Response(200, $result['view']);
         $resp->body['csrf_token'] = $container['csrf_token'];
         $resp->cookies = array_merge($cookies, $rotate());

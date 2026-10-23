@@ -7,11 +7,11 @@ use AlgebraEngine\Curriculum\BetaScope;
 use AlgebraEngine\Curriculum\CurriculumRepository;
 
 /**
- * Round UI (U2): the two levels of the session summary page, in plain words.
- * The learner level names skills by title only; the teacher level holds the
- * full record with skill IDs in brackets after titles. Both are built from
- * the same accepted ledger events and computed results as the report; the
- * report record itself (and its stored codes) is unchanged.
+ * Round UI (U2) and UI v3 rules for the session summary, kept in round 6: the
+ * four learner headings and their fixed empty lines, plain words for record
+ * text, skill titles (IDs only in the teacher level, in brackets), the
+ * "From earlier sessions" label, and "Welcome back" from a progress record.
+ * Round 6: the summary itself is built from the gradebook by TutorReport.
  */
 final class SummaryView
 {
@@ -80,7 +80,7 @@ final class SummaryView
      * What an observed mistake pattern did, as an observation (never a cause).
      * Codes without an entry are not described to the learner.
      */
-    private const PATTERNS = [
+    public const PATTERNS = [
         'DIST_X_ONLY' => 'multiplied only the x by the number outside the parentheses',
         'DIST_X_ONLY_CHOICE' => 'chose a step that multiplied only the x by the number outside the parentheses',
         'FIRST_TERM_ONLY' => 'multiplied only the first term inside the parentheses',
@@ -110,26 +110,6 @@ final class SummaryView
 
     public function __construct(private CurriculumRepository $curriculum)
     {
-    }
-
-    /**
-     * @param array $built   the report payload from ReportBuilder::build() without 'summary'
-     * @param list<array{event_id:string,type:string,data:array}> $events
-     * @param array<string,array{status:string,date:string,patterns:list<string>}> $earlier results from earlier sessions (round UI v3, U10)
-     */
-    public function build(array $built, array $events, string $provider, array $earlier = []): array
-    {
-        $report = $built['report'];
-        $perSkill = $built['per_skill'];
-        $targets = $report['targets_attempted'];
-        $met = [];
-        foreach ($report['immediate_criteria'] as $c) {
-            $met[$c['skill_id']] = $c['component_id'] === 'three_variant_criterion' ? 'IMMEDIATE_CRITERION_MET' : 'COMPONENT_CRITERION_MET';
-        }
-        return [
-            'learner' => $this->learner($perSkill, $targets, $met, $events) + ['earlier' => $this->earlier($earlier, false)],
-            'teacher' => $this->teacher($built, $events, $met, $provider, $earlier),
-        ];
     }
 
     /** Round UI v3 (U10): "Welcome back" from a progress record alone, in the same four headings. */
@@ -169,134 +149,13 @@ final class SummaryView
         return array_map(fn ($lines) => self::unique($lines), $out) + ['headings' => self::HEADINGS, 'empty' => self::EMPTY];
     }
 
-    // ------------------------------------------------------------ learner
-
-    /** Round UI v3 (U2): every line is built from recorded evidence; titles only, no IDs. */
-    private function learner(array $perSkill, array $targets, array $met, array $events): array
-    {
-        $itemSkill = [];
-        $support = [];
-        $patterns = [];
-        foreach ($events as $e) {
-            $d = $e['data'];
-            if ($e['type'] === 'ITEM_PRESENTED') {
-                $itemSkill[$d['item_id'] . '#' . $d['item_version']] = $d['skill_id'];
-            } elseif ($e['type'] === 'SUPPORT_GIVEN') {
-                $skill = $itemSkill[$d['item_id'] . '#' . $d['item_version']] ?? null;
-                if ($skill !== null) {
-                    $support[$skill] = ($support[$skill] ?? 0) + 1;
-                }
-            } elseif ($e['type'] === 'OBSERVATION' && isset($d['code'], self::PATTERNS[$d['code']])) {
-                $patterns[self::PATTERNS[$d['code']]] = ($patterns[self::PATTERNS[$d['code']]] ?? 0) + 1;
-            }
-        }
-        $didWell = [];
-        $trouble = [];
-        $workedOn = [];
-        foreach ($perSkill as $s) {
-            $id = $s['skill_id'];
-            $title = $this->title($id);
-            $correct = count(array_filter($s['verdicts'], fn ($v) => $v['independent'] && $v['verdict'] === 'CORRECT'));
-            $wrong = count(array_filter($s['verdicts'], fn ($v) => $v['role'] !== 'GUIDED' && $v['verdict'] === 'INCORRECT'));
-            $guided = count(array_filter($s['verdicts'], fn ($v) => $v['role'] === 'GUIDED'));
-            if (isset($met[$id])) {
-                $didWell[] = $title . ' — goal met: 3 correct in a row without help'
-                    . ($met[$id] === 'COMPONENT_CRITERION_MET' ? ' (the tutor checks the numeric part of this skill only).' : ', including ' . BetaScope::kinds($id) . '.');
-            } elseif ($correct > 0) {
-                $didWell[] = $title . ': ' . $correct . ' correct ' . ($correct === 1 ? 'answer' : 'answers') . ' without help.';
-            }
-            $parts = [];
-            if ($wrong > 0) {
-                $parts[] = $wrong . ' ' . ($wrong === 1 ? 'answer was' : 'answers were') . ' not right yet';
-            }
-            if ($guided > 0 || isset($support[$id])) {
-                $parts[] = 'you used help';
-            }
-            if ($parts !== []) {
-                $trouble[] = $title . ': ' . implode('; ', $parts) . '.';
-            }
-            if ($guided > 0) {
-                $workedOn[] = 'We practised “' . $title . '” step by step, with help (' . $guided . ' ' . ($guided === 1 ? 'question' : 'questions') . ').';
-            }
-            if (isset($support[$id])) {
-                $workedOn[] = 'You asked for help ' . ($support[$id] === 1 ? 'once' : $support[$id] . ' times') . ' on “' . $title . '”.';
-            }
-        }
-        foreach ($patterns as $what => $n) {
-            $trouble[] = ($n === 1 ? 'Once' : ($n === 2 ? 'Twice' : 'Several times')) . ' you ' . $what . '.';
-        }
-        $route = $this->route($events);
-        if ($route !== null) {
-            $workedOn[] = $route;
-        }
-        $next = [];
-        foreach ($targets as $t) {
-            if (!isset($met[$t])) {
-                $next[] = $this->title($t) . ': aim for 3 correct in a row without help' . (BetaScope::threeVariant($t) ? ', including ' . BetaScope::kinds($t) : '') . '.';
-            }
-        }
-        // A building block is listed when it gave trouble and its goal is still unmet.
-        foreach (array_reverse($perSkill) as $s) {
-            $id = $s['skill_id'];
-            $troubled = $s['assisted'] > 0 || in_array('INCORRECT', array_column($s['verdicts'], 'verdict'), true);
-            if (!in_array($id, $targets, true) && !isset($met[$id]) && $troubled && count($next) < 3) {
-                $next[] = $this->title($id) . ' (a skill your topic builds on): aim for 3 correct in a row without help.';
-            }
-        }
-        // Architect ruling on the round UI v3 report: a skill outside the tutor is listed only when a goal that
-        // depends on it was not met this session: the skill whose mistakes pointed to it, or any skill above
-        // that one on the route. When every such goal was met, the heading shows its fixed all-goals line.
-        $above = [];
-        foreach ($events as $e) {
-            if ($e['type'] === 'DESCENT') {
-                $above[$e['data']['to_skill']] ??= $e['data']['from_skill'];
-            }
-        }
-        foreach ($events as $e) {
-            if ($e['type'] !== 'BOUNDARY' || $e['data']['reason'] !== 'NOT_AVAILABLE_IN_BETA') {
-                continue;
-            }
-            $unmet = false;
-            for ($skill = $e['data']['from_skill'], $seen = []; $skill !== null && !isset($seen[$skill]); $skill = $above[$skill] ?? null) {
-                $seen[$skill] = true;
-                $unmet = $unmet || !isset($met[$skill]);
-            }
-            if ($unmet) {
-                $next[] = 'Practise with your teacher: ' . $this->title($e['data']['skill_id']) . ' (not in this tutor yet).';
-            }
-        }
-        return [
-            'did_well' => self::unique($didWell),
-            'trouble' => self::unique($trouble),
-            'worked_on' => self::unique($workedOn),
-            'next_time' => self::unique($next),
-            'headings' => self::HEADINGS,
-            'empty' => self::EMPTY,
-            'note' => 'These results describe this session only. They are not a grade and not a long-term judgement.',
-        ];
-    }
-
-    /** "We went back to “B”, then returned to “A”." from the descents and returns, in order. */
-    private function route(array $events): ?string
-    {
-        $steps = [];
-        foreach ($events as $e) {
-            if ($e['type'] === 'DESCENT') {
-                $steps[] = ($steps === [] ? 'We went back to “' : 'then back to “') . $this->title($e['data']['to_skill']) . '”';
-            } elseif ($e['type'] === 'RETURN') {
-                $steps[] = ($steps === [] ? 'We returned to “' : 'then returned to “') . $this->title($e['data']['to_skill']) . '”';
-            }
-        }
-        return $steps === [] ? null : implode(', ', $steps) . '.';
-    }
-
     /**
      * Round UI v3 (U2, U10): earlier sessions' results, each with its date. They are listed
      * on their own and never counted as this session's goals.
      *
      * @return list<string>
      */
-    private function earlier(array $earlier, bool $withIds): array
+    public function earlier(array $earlier, bool $withIds): array
     {
         $words = ['GOAL_MET' => 'goal met', 'NEEDED_HELP' => 'needed help', 'UNRESOLVED' => 'not met yet', 'NOT_IN_BETA' => 'not in this tutor yet'];
         $out = [];
@@ -306,139 +165,10 @@ final class SummaryView
         return $out;
     }
 
-    private static function date(string $ymd): string
+    public static function date(string $ymd): string
     {
         $d = \DateTimeImmutable::createFromFormat('!Y-m-d', $ymd, new \DateTimeZone('UTC'));
         return $d === false ? $ymd : $d->format('j F Y');
-    }
-
-    // ------------------------------------------------------------ teacher
-
-    private function teacher(array $built, array $events, array $met, string $provider, array $earlier = []): array
-    {
-        $report = $built['report'];
-        $skills = [];
-        foreach ($built['per_skill'] as $s) {
-            $observed = [];
-            foreach ($s['error_signatures_observed'] as $o) {
-                $line = $this->text($o);
-                $observed[$line] = ($observed[$line] ?? 0) + 1;
-            }
-            $skills[] = [
-                'name' => $this->title($s['skill_id']) . ' (' . $s['skill_id'] . ')',
-                'items_attempted' => $s['items_attempted'],
-                'independent' => $s['independent'],
-                'assisted' => $s['assisted'],
-                'goal' => match ($s['criterion_status']) {
-                    'IMMEDIATE_CRITERION_MET' => 'goal met: 3 correct in a row without help',
-                    'COMPONENT_CRITERION_MET' => 'goal met: 3 correct in a row without help (numeric part only)',
-                    default => 'not met yet',
-                },
-                'checked' => BetaScope::threeVariant($s['skill_id']) ? 'all three kinds of question' : 'the numeric part only',
-                'observed' => array_map(fn ($line, $n) => $line . ($n > 1 ? ' Seen ' . $n . ' times.' : ''), array_keys($observed), array_values($observed)),
-                'route' => self::unique(array_map(fn ($p) => $this->text(preg_replace(['/^to /', '/^from /'], ['moved down to ', 'came from '], $p)), $s['descent_path'])),
-                'notes' => self::unique(array_map(fn ($n) => $this->text(str_replace(
-                    ['(branch unresolved)', 'stuck at the smallest guided question; no declared prerequisite to check (unresolved)'],
-                    ['(still open)', 'stuck at the smallest step-by-step question; no listed building block to check (still open)'], $n)), $s['boundary_notes'])),
-            ];
-        }
-
-        $goals = [];
-        foreach ($met as $skill => $status) {
-            $goals[] = $skill . ' — goal met: 3 correct in a row without help'
-                . ($status === 'COMPONENT_CRITERION_MET'
-                    ? ', on the numeric part of the skill only (other parts are not checked in the beta).'
-                    : ', including ' . BetaScope::kinds($skill) . '.')
-                . ' A check from this session only; no long-term learning claim.';
-        }
-        $transfer = array_map(fn ($t) => 'New kind of question answered correctly without help: ' . preg_replace('/^Transfer variant answered correctly without help: /', '', $t['statement']), $report['transfer_evidence']);
-        $guided = array_map(fn ($g) => $g['skill_id'] . ': ' . count($g['event_ids']) . ' step-by-step question(s) answered with help. Work with help does not count toward any goal.', $report['guided_work']);
-
-        $repairs = [];
-        $open = [];
-        foreach ($events as $e) {
-            $d = $e['data'];
-            switch ($e['type']) {
-                case 'DESCENT':
-                    $repairs[] = 'Moved down from ' . $d['from_skill'] . ' to ' . $d['to_skill'] . ', a skill it builds on, following the error pattern the app matched (a routing choice, not a diagnosis of cause).';
-                    break;
-                case 'RETURN':
-                    $repairs[] = 'Returned from ' . $d['from_skill'] . ' to ' . $d['to_skill'] . ': ' . ReportBuilder::plain($d['reason']);
-                    break;
-                case 'REPAIR_STARTED':
-                    $repairs[] = 'Step-by-step questions at ' . $d['skill_id'] . ($d['faded'] ? ', with less help' : '') . ': ' . ReportBuilder::plain($d['reason']);
-                    break;
-                case 'BOUNDARY':
-                    $open[] = match ($d['reason']) {
-                        'NOT_AVAILABLE_IN_BETA' => 'The error pattern at ' . $d['from_skill'] . ' pointed to ' . $d['skill_id'] . ', which is not available in beta. That question stays open; it is not a learner failure.',
-                        'NOT_A_DECLARED_PREREQUISITE' => 'At ' . $d['from_skill'] . ', the learner was stuck at the smallest step-by-step question, which practises '
-                            . ($d['skill_id'] === $d['from_skill'] ? 'that skill itself' : $d['skill_id']) . '; there was no listed building block to check. That stays open; it is not a learner failure.',
-                        'NO_IMPLICATED_BRANCH' => 'At ' . $d['from_skill'] . ', no error pattern pointed to one building block; the cause stays open.',
-                        'DEPTH_LIMIT' => 'Moving down from ' . $d['from_skill'] . ' stopped: the limit on how far to go down was reached.',
-                        'ALREADY_ON_PATH' => 'Moving down from ' . $d['from_skill'] . ' stopped: ' . $d['skill_id'] . ' was already on the path.',
-                        default => 'Moving down from ' . $d['from_skill'] . ' stopped.',
-                    };
-                    break;
-                case 'EPISODE_SUSPENDED':
-                    $open[] = 'Work on ' . $d['original_target_skill_id'] . ' was interrupted by a topic change while at ' . $d['current_skill_id'] . ', with '
-                        . count($d['return_stack']) . ' step(s) back still to do. Interrupted work is not a failure.';
-                    break;
-                case 'ISSUE':
-                    $open[] = 'A system problem: ' . ReportBuilder::plain($d['detail']);
-                    break;
-                case 'PENDING_INPUT_UNSCORED':
-                    $open[] = 'An answer sent while the tutor was still preparing the next step has no result and is not scored.';
-                    break;
-            }
-        }
-        foreach ($report['unresolved_or_untested'] as $u) {
-            if (str_starts_with($u, 'A goal recorded as met for ')) {
-                $open[] = $u;
-            }
-        }
-        foreach ($built['per_skill'] as $s) {
-            if (!BetaScope::threeVariant($s['skill_id'])) {
-                $open[] = $s['skill_id'] . ': the beta checks only the numeric part of this skill; its other parts are not checked yet.';
-            }
-        }
-        $open[] = 'Skills not listed above were not tested in this session and carry no pass or fail label.';
-        $open[] = 'The beta has no later review check, so nothing here shows what is remembered over time.';
-
-        $next = [];
-        foreach ($report['targets_attempted'] as $t) {
-            $next[] = isset($met[$t])
-                ? 'A later independent review of ' . $t . ' would be needed to say whether it is remembered over time (the beta has no review checks yet).'
-                : 'Fresh work on ' . $t . ' without help' . (BetaScope::threeVariant($t) ? ', including ' . BetaScope::kinds($t) : '') . ', to meet the goal: 3 correct in a row without help.';
-        }
-
-        $about = 'Goal: 3 correct in a row without help in one session. For ' . $this->title('Q07') . ' (Q07) and ' . $this->title('E06') . ' (E06) the three must include three kinds of question. '
-            . 'An answer given after a hint starts the count again. This is a check from this session only, not a long-term learning claim. '
-            . ($provider === 'mock'
-                ? 'Simulated tutor (mock mode): the wording came from a simulated model, so this is not evidence of how a live model behaves or of learning.'
-                : 'Live provider: ' . $provider . '.');
-
-        $section = fn (string $heading, array $lines, string $empty) => ['heading' => $heading, 'lines' => self::unique(array_map(fn ($l) => $this->text($l), $lines)), 'empty' => $empty];
-        return [
-            'status' => match ($report['status']) {
-                'COMPLETED' => 'Completed',
-                'INTERRUPTED' => 'Interrupted',
-                'BOUNDARY_REACHED' => 'Stopped at the edge of this beta',
-                default => 'In progress',
-            },
-            'topics' => array_map(fn ($t) => $this->title($t) . ' (' . $t . ')', $report['targets_attempted']),
-            'skills' => $skills,
-            'sections' => [
-                $section('Goals met', $goals, 'No goal was met in this session.'),
-                $section('New kinds of question answered without help', $transfer, 'No new kind of question was answered correctly without help.'),
-                $section('Work with help', $guided, 'No step-by-step work in this session.'),
-                $section('Step-by-step work and returns', $repairs, 'No step-by-step work was needed.'),
-                $section('Route taken', $built['descent_path'], 'The session stayed on the topic.'),
-                $section('Still open or not checked', $open, 'Nothing listed.'),
-                $section('What would show more', $next, 'Nothing listed.'),
-                $section(self::EARLIER, $this->earlier($earlier, true), 'No results from earlier sessions.'),
-                $section('About these results', [$about], ''),
-            ],
-        ];
     }
 
     // ------------------------------------------------------------ text
@@ -446,18 +176,53 @@ final class SummaryView
     /** Plain words for record text, then "title (ID)" for every skill ID. */
     public function text(string $line): string
     {
-        $line = (string) preg_replace(array_keys(self::WORDS), array_values(self::WORDS), ReportBuilder::plain($line));
+        $line = (string) preg_replace(array_keys(self::WORDS), array_values(self::WORDS), self::plain($line));
         return (string) preg_replace_callback('/(?<![\w(])([A-Z]\d{2})(?![\w)])/', fn ($m) => $this->curriculum->has($m[1]) ? $this->title($m[1]) . ' (' . $m[1] . ')' : $m[1], $line);
     }
 
-    private function title(string $skillId): string
+    public function title(string $skillId): string
     {
         return $this->curriculum->has($skillId) ? $this->curriculum->title($skillId) : $skillId;
     }
 
     /** @param list<string> $lines @return list<string> */
-    private static function unique(array $lines): array
+    public static function unique(array $lines): array
     {
         return array_values(array_unique(array_filter($lines, fn ($l) => trim($l) !== '')));
+    }
+
+    /** Plain words for text copied from stored records into the learner-visible summary (R5-B). */
+    public static function plain(string $text): string
+    {
+        static $map = [
+            '/\b(?:a|the) host-derived key\b/i' => 'the answer the app computed',
+            '/\bhost-derived key\b/i' => 'answer the app computed',
+            '/\bhost-matched\b/' => 'app-matched',
+            '/\bHost\b/' => 'App',
+            '/\bhost\b/' => 'app',
+            '/\bIMMEDIATE_CRITERION_MET\b/' => 'goal met: 3 correct in a row without help',
+            '/\bCOMPONENT_CRITERION_MET\b/' => 'goal met: 3 correct in a row without help (numeric part only)',
+            '/\b[Cc]riterion met\b/' => 'goal met (3 correct in a row without help)',
+            '/\bImmediate criterion\b/' => 'Goal',
+            '/\bimmediate criterion\b/' => 'goal',
+            '/\bcriteria\b/' => 'goals',
+            '/\bCriterion\b/' => 'Goal',
+            '/\bcriterion\b/' => 'goal',
+            '/\bwas assisted\b/' => 'was answered with help',
+            '/\bAssisted independent-check attempt\b/' => 'An independent-check attempt answered with help',
+            '/\bAssisted\b/' => 'With help',
+            '/\bassisted\b/' => 'with help',
+            '/\b([Gg])uided step\(s\)/' => 'step-by-step question(s)',
+            '/\bGuided steps\b/' => 'Step-by-step questions',
+            '/\bGuided step\b/' => 'Step-by-step question',
+            '/\bguided steps\b/' => 'step-by-step questions',
+            '/\bguided step\b/' => 'step-by-step question',
+            '/\bverdicts\b/' => 'results',
+            '/\bverdict\b/' => 'result',
+            '/\bexpected (?:value|answer)\b/' => 'correct answer',
+            '/\banswer key\b/' => 'correct answer',
+            '/\bmatched the key\b/' => 'matched the correct answer',
+        ];
+        return (string) preg_replace(array_keys($map), array_values($map), $text);
     }
 }

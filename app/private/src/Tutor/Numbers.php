@@ -105,7 +105,7 @@ final class Numbers
         if (preg_match('/(\b(is|was|be|equals|equal to|comes to|get|gets|got|give|gives|make|makes|answer|value|times|plus|minus|and)|=)\s*$/', $before)) {
             return false;
         }
-        if (preg_match('/\b(each|this|that|no|which|every|any)\s+$/', $before)) {
+        if (preg_match('/\b(each|this|that|no|which|every|any|another|the|a|next|last|first|other|new|harder|easier|different|same|right|wrong)\s+$/', $before)) {
             return true;
         }
         return (bool) preg_match('/^\s+[a-z]/', substr($text, $end));

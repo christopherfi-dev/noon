@@ -10,7 +10,7 @@ use AlgebraEngine\Support\Time;
 /** Table access for containers, sessions, the event ledger, items, verdicts, operations and idempotency. */
 final class Store
 {
-    public const ARCHITECTURE_VERSION = '1.2';
+    public const ARCHITECTURE_VERSION = '1.3';
     public const CURRICULUM_VERSION = '1.1.0';
 
     public function __construct(public Database $db)
@@ -349,13 +349,20 @@ final class Store
 
     // ------------------------------------------------------------- call log
 
-    /** @param array{finish_reason?:?string,duration_ms?:?int,prompt_tokens?:?int,completion_tokens?:?int,reasoning_tokens?:?int,transport_detail?:?array} $meta */
+    /**
+     * Metadata only: never prompts, learner text, keys or reasoning text. Round 6 §3.6 adds the
+     * reasoning setting code chose, what the call was for, and the learner turn it belongs to.
+     *
+     * @param array{finish_reason?:?string,duration_ms?:?int,prompt_tokens?:?int,completion_tokens?:?int,reasoning_tokens?:?int,transport_detail?:?array,
+     *   thinking?:?string,reasoning_effort?:?string,call_purpose?:?string,turn_id?:?string} $meta
+     */
     public function logModelCall(?string $sessionId, ?string $operationId, string $kind, string $provider, string $model, string $outcome, \DateTimeImmutable $now, array $meta = []): void
     {
-        $this->db->exec('INSERT INTO model_calls (call_id, session_id, operation_id, kind, provider, model, outcome, created_at, finish_reason, prompt_tokens, completion_tokens, reasoning_tokens, duration_ms, transport_detail) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        $this->db->exec('INSERT INTO model_calls (call_id, session_id, operation_id, kind, provider, model, outcome, created_at, finish_reason, prompt_tokens, completion_tokens, reasoning_tokens, duration_ms, transport_detail, thinking, reasoning_effort, call_purpose, turn_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
             [Ids::make('call'), $sessionId, $operationId, $kind, $provider, $model, $outcome, Time::iso($now),
                 $meta['finish_reason'] ?? null, $meta['prompt_tokens'] ?? null, $meta['completion_tokens'] ?? null, $meta['reasoning_tokens'] ?? null, $meta['duration_ms'] ?? null,
-                isset($meta['transport_detail']) ? Json::encode($meta['transport_detail']) : null]);
+                isset($meta['transport_detail']) ? Json::encode($meta['transport_detail']) : null,
+                $meta['thinking'] ?? null, $meta['reasoning_effort'] ?? null, $meta['call_purpose'] ?? null, $meta['turn_id'] ?? null]);
     }
 
     public function modelCallCount(string $sessionId): int

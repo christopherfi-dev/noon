@@ -1,0 +1,335 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Round 6 public view: the only session data the browser receives.",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "READY",
+        "PENDING",
+        "HOLD",
+        "CLOSED"
+      ]
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "topic": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "skill_id": {
+              "type": "string",
+              "pattern": "^[A-Z][0-9]{2}$"
+            },
+            "title": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          },
+          "required": [
+            "skill_id",
+            "title"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "focus": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "skill_id": {
+              "type": "string",
+              "pattern": "^[A-Z][0-9]{2}$"
+            },
+            "title": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          },
+          "required": [
+            "skill_id",
+            "title"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "conversation": {
+      "type": "array",
+      "maxItems": 60,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "tutor",
+              "student",
+              "app"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "message",
+              "result",
+              "problem",
+              "check",
+              "notice",
+              "clarify",
+              "error"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 6000
+          },
+          "result": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "correct",
+                  "notyet",
+                  "partial"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "role",
+          "kind",
+          "text",
+          "result"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "open_problem": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "problem_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "problem_version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "purpose": {
+              "type": "string",
+              "enum": [
+                "practice",
+                "check",
+                "retry"
+              ]
+            },
+            "label": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "prompt": {
+              "type": "string",
+              "maxLength": 6000
+            },
+            "response_type": {
+              "type": "string",
+              "enum": [
+                "scalar",
+                "expression",
+                "classification"
+              ]
+            },
+            "input_help": {
+              "type": "string",
+              "maxLength": 2000
+            },
+            "options": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "maxItems": 6,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "letter": {
+                        "type": "string",
+                        "pattern": "^[A-F]$"
+                      },
+                      "text": {
+                        "type": "string",
+                        "maxLength": 500
+                      }
+                    },
+                    "required": [
+                      "letter",
+                      "text"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "with_help": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "problem_id",
+            "problem_version",
+            "purpose",
+            "label",
+            "prompt",
+            "response_type",
+            "input_help",
+            "options",
+            "with_help"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "goal": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "skill_id": {
+              "type": "string",
+              "pattern": "^[A-Z][0-9]{2}$"
+            },
+            "title": {
+              "type": "string",
+              "maxLength": 2000
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "required": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "met": {
+              "type": "boolean"
+            },
+            "paused": {
+              "type": "boolean"
+            },
+            "label": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          },
+          "required": [
+            "skill_id",
+            "title",
+            "count",
+            "required",
+            "met",
+            "paused",
+            "label"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "allowed_actions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "SEND",
+          "STUCK",
+          "SKIP",
+          "CHANGE_TOPIC",
+          "END_SESSION",
+          "RESUME"
+        ]
+      },
+      "maxItems": 6
+    },
+    "wrap_up": {
+      "type": "boolean"
+    },
+    "csrf_token": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "pending_operation_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "status",
+    "revision",
+    "topic",
+    "focus",
+    "conversation",
+    "open_problem",
+    "goal",
+    "allowed_actions",
+    "wrap_up",
+    "csrf_token",
+    "pending_operation_id",
+    "error_code"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,82 @@
+# Tests retired in round 6
+
+Conductor round 6 §1 retired the beta's state machine as the controller of the
+session. The tests below asserted its sequencing (target, probe, prerequisite
+check, guided repair, independent check, return) or its fixed host lines, and
+were retired with it. Where the behaviour still matters, the replacement is
+named.
+
+| Retired test | Reason | Replacement |
+|---|---|---|
+| BetaJourneyTest::testB1DistributionJourney | Asserted the fixed probe → descent → guided → independent → return sequence. | TutorLoopTest::testJourneyStepsBackAndReturnsWithGoalsComputedByCode (FLOW-01) |
+| BetaJourneyTest::testB2ProbeCorrectNoDescent | Probe step of the retired controller. | TutorLoopTest::testFlow04CorrectEasierAnswerIsNoSlipAndNoPass |
+| BetaJourneyTest::testB3DeepDescentAndReturn | Descent stack of the retired controller. | TutorLoopTest::testFlow02DeeperStepBackKeepsTheTopic |
+| BetaJourneyTest::testB3PrerequisiteSuccessStopsDescent | Descent stopping rule; the AI now chooses when to return. | None (the topic is kept: FLOW-02) |
+| BetaJourneyTest::testB4BetaBoundary | Boundary record written by the descent. | TutorLoopTest::testMovesStayInsideTheTutorsSkills; ReportTest::testOutsideSkillIsListedOnlyWhileADependentGoalIsUnmet |
+| BetaJourneyTest::testB10StuckStepGoesDirectlyToItsPrerequisite | Guided steps are retired. | None |
+| BetaJourneyTest::testB10StuckStepAtABoundaryIsRecordedNotFailed | Guided steps are retired. | Set-aside problems are not failures: TutorLoopTest::testChangeTopicSetsTheOpenProblemAsideAndTheTutorContinues |
+| BetaJourneyTest::testRandomScriptedJourneysCompleteWithoutHolds | Scripted the old controller. | TutorLoopTest::testRandomLearnersMostTurnsUseExactlyOneCall |
+| BetaJourneyTest::testB12ReAskShowsNoModelText | Guided re-ask lines are retired. | None |
+| BetaJourneyTest::testB13RepairKeepsTheFailedSignPattern | The structural-feature planner is retired; the AI chooses practice problems and code verifies them. | ProblemInstrumentsTest (problem verification) |
+| BetaJourneyTest::testEveryBetaSkillCanStartAndScore | Ran through the old controller. | TutorLoopTest::testEveryBetaSkillCanStartAndScore |
+| BetaGuardsTest::testB5NonPrerequisiteProposalRejected | Proposal rules of the state machine. | TutorLoopTest::testMovesStayInsideTheTutorsSkills |
+| BetaGuardsTest::testB6HostKeyGovernsAndItemFlagged | Old acceptance gate. | CheatingTest::testTheAiPosesAProblemWithAWrongAnswer |
+| BetaGuardsTest::testB7HintMakesItemAssisted | Old evidence events. | TutorLoopTest::testEvid01HelpIsRecordedBeforeTheHint |
+| BetaGuardsTest::testB8DisclosureGuardRejectsLeak | Old repair path. | CheatingTest::testTextLeaksAnAnswer |
+| BetaGuardsTest::testInternalVocabularyIsRepairedNotShown | Old repair path. | CheatingTest::testTextClaimsMasteryOrUsesInternalTerms |
+| BetaGuardsTest::testSupportClaimInModelTextIsRepairedNotShown | Old repair path. | EngineUnitsTest::testSupportClaimsInModelTextOnly; LearnerInstrumentsTest::testGuardsOnLearnerVisibleText |
+| BetaGuardsTest::testB8RepeatedLeakHolds | A repeated failure now uses a code fallback, not a hold (§3.5). | TutorLoopTest::testFallbackAfterTheRepairFailsToo |
+| BetaGuardsTest::testD1HintAndIDontKnowGiveSmallerQuestions | Guided smaller questions are retired. | CheatingTest::testWithoutHelpIsNeverRecordedAfterAStuckEntry |
+| BetaGuardsTest::testRepairOpeningNeverHoldsOnItsOwnFacts | Guided repair openings are retired. | None |
+| BetaGuardsTest::testB9PromptsCarryNoAnchorOrExampleContent | Old prompt assembler. | EngineUnitsTest::testTutorPromptSkeletonAndShape; TutorLoopTest::testEveryCallCarriesFreshPreparedProblemsAndIsBuiltAnew |
+| EvidenceTest::testEvid01HintIndependence | Old evidence ledger. | TutorLoopTest::testEvid01HelpIsRecordedBeforeTheHint |
+| EvidenceTest::testEvid02Freshness | Old evidence ledger. | TutorLoopTest::testEvid02ReusedCheckQuestionIsRejected |
+| EvidenceTest::testEvid03NumericOnlySkill | Old criteria calculator. | ReportTest::testEvid03NumericOnlySkill |
+| EvidenceTest::testEvid04ImmediateVersusRetention | Old criteria calculator. | ReportTest::testEvid04ImmediateVersusRetention |
+| EvidenceTest::testEvid05CorrectionCascade | The operator correction tool belonged to the old evidence ledger and is not rebuilt; verdicts are recomputed from the gradebook (the harness checks every verdict after every request). | None (EVID-05 retired) |
+| EvidenceTest::testEvid06UntestedMap | Old report builder. | ReportTest::testEvid06UntestedSkillsCarryNoLabel |
+| FlowTest::testEntry01KnownTopic | Old target episode. | TutorLoopTest::testEntry01KnownTopic |
+| FlowTest::testFlow01DistributionJourney | Old controller. | TutorLoopTest::testJourneyStepsBackAndReturnsWithGoalsComputedByCode |
+| FlowTest::testFlow02DeeperRepair | Old descent stack. | TutorLoopTest::testFlow02DeeperStepBackKeepsTheTopic |
+| FlowTest::testFlow03SwitchTarget | Old episode suspension. | TutorLoopTest::testChangeTopicSetsTheOpenProblemAsideAndTheTutorContinues |
+| FlowTest::testFlow04SingleCorrectProbe | Old probe. | TutorLoopTest::testFlow04CorrectEasierAnswerIsNoSlipAndNoPass |
+| FlowTest::testFlow05AlternativeDependencies | Moved, unchanged in substance. | CurriculumPathsTest::testFlow05AlternativeDependencies |
+| FlowTest::testFlow06BudgetBoundary | Repair-cycle budget of the old controller; the AI decides when to change approach. Observations stay observations. | None (FLOW-06 retired); TutorLoopTest::testFlow04CorrectEasierAnswerIsNoSlipAndNoPass checks the wording |
+| FlowTest::testFlow07StopWhilePending | Old engine. | HostTest::testEndWhilePending |
+| IndependentEvidenceTest::testB14IndependentItemsShowHostLineOnly | Round 6 §5.2 allows tutor text before a check card under the number and leak rules. | CheatingTest::testTextBeforeACheckCardContainsItsNumbers; ReportTest::testNoAiTextInTheReportAndTheAuditList |
+| IndependentEvidenceTest::testB14DiscardedTextIsNotStored | AI text before a check card is now kept for the audit list. | ReportTest::testNoAiTextInTheReportAndTheAuditList |
+| IndependentEvidenceTest::testB14bHintMeansNoWithoutHelpMessage | Old fixed lines. | CheatingTest::testWithoutHelpIsNeverRecordedAfterAStuckEntry |
+| IndependentEvidenceTest::testB14bItemShownWithModelTextIsNotCounted | A check card after guarded tutor text now counts (§5.2). | None |
+| MessyLearnerTest::testB11UnreadableInputsAreNeverScoredAsWrong | Old entry interpreter. | MathScenarioTest::testMath08UnsafeSyntax, testMath09Ambiguity; LearnerInstrumentsTest::testOtherEntries |
+| MessyLearnerTest::testB11CorrectAnswersInLooseFormsAreAccepted | Old entry interpreter. | OwnerCasesTest; LearnerInstrumentsTest::testOwnerCasesAreClassifiedBeforeAnyCall |
+| ProbeAfterHelpTest (4 tests) | Probe sequencing after help (round 5.1 P4) of the old controller. | Help still resets the run: TutorLoopTest::testEvid01HelpIsRecordedBeforeTheHint |
+| StuckEntryTest::testStuckAndAskForAnswerInGuidedRepair | Guided repair is retired. | None |
+| StuckEntryTest::testStuckAndAskForAnswerOnIndependentItem | Old modes. | CheatingTest::testWithoutHelpIsNeverRecordedAfterAStuckEntry |
+| StuckEntryTest::testAskForAnswerLineNamesWhatFollows | Fixed host lines; the AI now writes the reply. | None |
+| StuckEntryTest::testOffTaskQuestionAndNumberWords | Questions now go to the AI (§2.6 allows questions). | LearnerInstrumentsTest::testOtherEntries |
+| StuckEntryTest::testCapitalXIsReadAsX | Old entry interpreter. | OwnerCasesTest::testCapitalXOnDistributionIsReadAsXAndTheSignatureReachesTheAi |
+| StuckEntryTest::testTrailingQuestionMarkIsScoredNormally | Old entry interpreter. | LearnerInstrumentsTest::testOtherEntries |
+| StuckEntryTest::testNormalisation | Old entry interpreter. | LearnerInstrumentsTest::testOwnerCasesAreClassifiedBeforeAnyCall |
+| StuckEntryTest::testStuckEntryFlowInEachIndependentMode | Old modes. | None |
+| UiRoundTest::testU1FeedbackBeforeFirstGuidedProblemNamesTheMissedProblem | Guided feedback is retired; the result line echoes the entry. | OwnerCasesTest (result lines with "Read as …") |
+| UiRoundTest::testU1GuidedStepsKeepTheirProblemOnScreen | Guided steps are retired; the open problem is pinned above the input. | Browser test (M3) |
+| UiRoundTest::testU7GoalLineAndReset | Old goal line. | Browser test and projection (M3) |
+| UiRoundTest::testU7BuildingBlockAndNumericOnlySkill | Old goal line. | ReportTest::testEvid03NumericOnlySkill |
+| UiRoundTest::testU6GuidedLabelCarriesNoNotice | Guided labels are retired. | None |
+| UiRoundTest::testU8ResultWords | Old result sentences. | CheatingTest::testTheAiOverrulesAVerdict; MathScenarioTest::testMath06RequestedForm |
+| UiRoundTest::testU4WorkingRemoved | The event contract has no working field. | None |
+| UpgradeTest::testLiveSessionContinuesAfterTheUpgrade | Round 6 is a separate install with its own database (§11); there is no in-place upgrade from the beta. Its fixture and fixture tool are removed. | None |
+| UpgradeTest::testMigrationIsSafeToRunTwice | Used the beta fixture. | HostTest::testMigrationsAreSafeToRunTwice |
+| SummaryWordingTest::testSummaryProseUsesPlainWords | Old report builder. | ReportTest::testSummaryLevelsUsePlainWordsAndNoCodes |
+| SummaryWordingTest::testSummaryLevelsUsePlainWordsAndNoCodes | Old report builder. | ReportTest::testSummaryLevelsUsePlainWordsAndNoCodes |
+| SummaryWordingTest::testPlainWordsForStoredText | Old report builder. | ReportTest::testPlainWordsForStoredText |
+| ReportDownloadTest (5 tests) | Old report builder. | ReportTest (same five behaviours) |
+| EngineUnitsTest::testTransitionGuardFollowsWorkflowPolicy | The workflow policy is retired. | None |
+| EngineUnitsTest::testCriteriaRequireConsecutiveVariedIndependentSuccesses | The criteria calculator is retired. | LearnerInstrumentsTest (goals) |
+| EngineUnitsTest::testHostLinesUseNoInternalVocabulary | Scanned the old engine. | EngineUnitsTest::testCodeLinesUseNoInternalVocabulary |
+| EngineUnitsTest::testEnvelopeSkeletonHasPlaceholdersOnly | Old prompt assembler. | EngineUnitsTest::testTutorPromptSkeletonAndShape |
+| TemplatesTest::testEveryGuidedStepIsTaggedWithTheSkillItExercises | Guided plans are retired. | None |
+| TemplatesTest::testStructuralFeaturesAreKeptByThePlanner | The planner is retired. | None |
+| TemplatesTest::testGateRejectsAProposalThatChangesAKeptFeature | The acceptance gate is retired. | ProblemInstrumentsTest |
+| TemplatesTest::testOpeningFactsNeverContainAStepAnswer | Guided plans are retired. | None |
+| TemplatesTest::testGuidedPlansAreQuestionsThatNeverStateTheirAnswer | Guided plans are retired. | ProblemInstrumentsTest::testPracticeWordingMustShowTheSpecAndNotItsAnswer |

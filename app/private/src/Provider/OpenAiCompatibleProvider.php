@@ -28,14 +28,17 @@ final class OpenAiCompatibleProvider implements ProviderAdapter
         }
     }
 
-    /** Null when the thinking settings are explicit and consistent, else the reason. */
+    /**
+     * Null when the thinking settings are explicit and consistent, else the reason.
+     * Round 6 §3.6: 'per_call' lets code enable thinking (at the configured effort) call by call.
+     */
     public static function thinkingProblem(string $thinking, string $effort): ?string
     {
-        if (!in_array($thinking, ['disabled', 'enabled'], true)) {
-            return "provider_thinking must be 'disabled' or 'enabled' (the provider default is never relied on)";
+        if (!in_array($thinking, ['disabled', 'enabled', 'per_call'], true)) {
+            return "provider_thinking must be 'disabled', 'enabled' or 'per_call' (the provider default is never relied on)";
         }
-        if ($thinking === 'enabled' && !in_array($effort, ['low', 'high', 'max'], true)) {
-            return "provider_reasoning_effort must be 'low', 'high' or 'max' when provider_thinking is 'enabled'";
+        if (($thinking === 'enabled' || $thinking === 'per_call') && !in_array($effort, ['low', 'high', 'max'], true)) {
+            return "provider_reasoning_effort must be 'low', 'high' or 'max' when provider_thinking is '" . $thinking . "'";
         }
         if ($thinking === 'disabled' && $effort !== '') {
             return "provider_reasoning_effort applies only when provider_thinking is 'enabled'; leave it empty";
@@ -53,9 +56,10 @@ final class OpenAiCompatibleProvider implements ProviderAdapter
         return $this->config->string('provider_model');
     }
 
-    public function complete(array $messages, bool $jsonMode): ProviderResponse
+    public function complete(array $messages, bool $jsonMode, ?array $reasoning = null): ProviderResponse
     {
-        $thinking = $this->config->string('provider_thinking');
+        $setting = $reasoning ?? ReasoningPolicy::configured($this->config);
+        $thinking = $setting['thinking'];
         $body = [
             'model' => $this->model(),
             'messages' => $messages,
@@ -64,7 +68,7 @@ final class OpenAiCompatibleProvider implements ProviderAdapter
             'thinking' => ['type' => $thinking],
         ];
         if ($thinking === 'enabled') {
-            $body['reasoning_effort'] = $this->config->string('provider_reasoning_effort');
+            $body['reasoning_effort'] = $setting['effort'] ?? $this->config->string('provider_reasoning_effort');
         } else {
             $body['temperature'] = 0.2; // has no effect in thinking mode, so it is sent only without it
         }

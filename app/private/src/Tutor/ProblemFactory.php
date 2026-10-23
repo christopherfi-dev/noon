@@ -153,6 +153,20 @@ final class ProblemFactory
     }
 
     /**
+     * The numbers of the problem's main equation or expression, sorted ("7,11"
+     * for 7(x + 11)). Two problems with the same set show the same mathematics
+     * (one may be the other's answer), so a check problem must not repeat one.
+     */
+    public static function numberSet(array $problem): string
+    {
+        $stem = preg_split('/\n(?=[A-D]\) )/u', $problem['prompt'])[0];
+        $main = \AlgebraEngine\Support\ProblemText::main($stem);
+        $n = Numbers::digits($main === '' ? $stem : $main);
+        sort($n);
+        return implode(',', $n);
+    }
+
+    /**
      * True when the answer's value is also a number written in the problem
      * (x = 3 in 3(x + 4) = 21). Round 5.1 post-beta item: avoided at the source.
      */

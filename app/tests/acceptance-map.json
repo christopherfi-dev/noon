@@ -5,7 +5,7 @@
       "id": "ENTRY-01",
       "title": "Known topic",
       "status": "IMPLEMENTED",
-      "test": "tests/Integration/FlowTest.php::testEntry01KnownTopic",
+      "test": "tests/Integration/TutorLoopTest.php::testEntry01KnownTopic",
       "note": ""
     },
     {
@@ -61,49 +61,49 @@
       "id": "FLOW-01",
       "title": "Distribution journey",
       "status": "IMPLEMENTED",
-      "test": "tests/Integration/FlowTest.php::testFlow01DistributionJourney",
+      "test": "tests/Integration/TutorLoopTest.php::testJourneyStepsBackAndReturnsWithGoalsComputedByCode",
       "note": ""
     },
     {
       "id": "FLOW-02",
       "title": "Deeper repair",
       "status": "IMPLEMENTED",
-      "test": "tests/Integration/FlowTest.php::testFlow02DeeperRepair",
-      "note": ""
+      "test": "tests/Integration/TutorLoopTest.php::testFlow02DeeperStepBackKeepsTheTopic",
+      "note": "Round 6: the AI steps back; code keeps the topic (invariant 8) and each goal counts only its own check questions."
     },
     {
       "id": "FLOW-03",
       "title": "Switch target",
       "status": "IMPLEMENTED (beyond addendum list)",
-      "test": "tests/Integration/FlowTest.php::testFlow03SwitchTarget",
-      "note": "Implemented although not in the addendum list: CHANGE_TARGET is offered in the beta, so invariant 8 (interrupted work survives topic changes) needs it."
+      "test": "tests/Integration/TutorLoopTest.php::testChangeTopicSetsTheOpenProblemAsideAndTheTutorContinues",
+      "note": "Implemented although not in the addendum list: CHANGE_TOPIC is offered, so invariant 8 needs it."
     },
     {
       "id": "FLOW-04",
       "title": "Single correct probe",
       "status": "IMPLEMENTED",
-      "test": "tests/Integration/FlowTest.php::testFlow04SingleCorrectProbe",
+      "test": "tests/Integration/TutorLoopTest.php::testFlow04CorrectEasierAnswerIsNoSlipAndNoPass",
       "note": ""
     },
     {
       "id": "FLOW-05",
       "title": "Alternative dependencies",
       "status": "IMPLEMENTED",
-      "test": "tests/Integration/FlowTest.php::testFlow05AlternativeDependencies",
-      "note": ""
+      "test": "tests/Unit/Curriculum/CurriculumPathsTest.php::testFlow05AlternativeDependencies",
+      "note": "Round 6: the curriculum reader is kept as an instrument; moved to a unit test."
     },
     {
       "id": "FLOW-06",
       "title": "Budget boundary",
-      "status": "IMPLEMENTED",
-      "test": "tests/Integration/FlowTest.php::testFlow06BudgetBoundary",
-      "note": ""
+      "status": "RETIRED",
+      "test": null,
+      "note": "Retired in round 6: the repair-cycle budget belonged to the retired state machine; the AI decides when to change approach (conductor round 6 \u00a71). Observations stay observations: TutorLoopTest::testFlow04CorrectEasierAnswerIsNoSlipAndNoPass."
     },
     {
       "id": "FLOW-07",
       "title": "Stop while pending",
       "status": "IMPLEMENTED",
-      "test": "tests/Integration/FlowTest.php::testFlow07StopWhilePending",
+      "test": "tests/Integration/HostTest.php::testEndWhilePending",
       "note": ""
     },
     {
@@ -117,42 +117,42 @@
       "id": "EVID-01",
       "title": "Hint independence",
       "status": "IMPLEMENTED",
-      "test": "tests/Integration/EvidenceTest.php::testEvid01HintIndependence",
+      "test": "tests/Integration/TutorLoopTest.php::testEvid01HelpIsRecordedBeforeTheHint",
       "note": ""
     },
     {
       "id": "EVID-02",
       "title": "Freshness",
       "status": "IMPLEMENTED",
-      "test": "tests/Integration/EvidenceTest.php::testEvid02Freshness",
+      "test": "tests/Integration/TutorLoopTest.php::testEvid02ReusedCheckQuestionIsRejected",
       "note": ""
     },
     {
       "id": "EVID-03",
       "title": "Numeric-only skill",
       "status": "IMPLEMENTED",
-      "test": "tests/Integration/EvidenceTest.php::testEvid03NumericOnlySkill",
+      "test": "tests/Integration/ReportTest.php::testEvid03NumericOnlySkill",
       "note": ""
     },
     {
       "id": "EVID-04",
       "title": "Immediate versus retention",
       "status": "IMPLEMENTED (beyond addendum list)",
-      "test": "tests/Integration/EvidenceTest.php::testEvid04ImmediateVersusRetention",
+      "test": "tests/Integration/ReportTest.php::testEvid04ImmediateVersusRetention",
       "note": "Implemented although not listed: protects invariant 10 (three successes are an immediate criterion only)."
     },
     {
       "id": "EVID-05",
       "title": "Correction cascade",
-      "status": "IMPLEMENTED (beyond addendum list)",
-      "test": "tests/Integration/EvidenceTest.php::testEvid05CorrectionCascade",
-      "note": "Implemented although not listed: protects invariants 6 and 9 (results bound to evidence; corrections recompute claims). Operator-only correction, no public endpoint."
+      "status": "RETIRED",
+      "test": null,
+      "note": "Retired in round 6: the operator correction tool belonged to the retired evidence ledger and is not rebuilt. Verdicts are recomputed from the gradebook; the test harness checks every recorded verdict against code after every request."
     },
     {
       "id": "EVID-06",
       "title": "Untested map",
       "status": "IMPLEMENTED",
-      "test": "tests/Integration/EvidenceTest.php::testEvid06UntestedMap",
+      "test": "tests/Integration/ReportTest.php::testEvid06UntestedSkillsCarryNoLabel",
       "note": ""
     },
     {
@@ -264,7 +264,7 @@
       "id": "HOST-07",
       "title": "Missing curriculum",
       "status": "IMPLEMENTED",
-      "test": "tests/Integration/HostTest.php::testHost07MissingCurriculum",
+      "test": "tests/Integration/TutorLoopTest.php::testMissingCurriculumRecordHoldsWithoutInventingOne",
       "note": ""
     },
     {
@@ -320,7 +320,7 @@
       "id": "HOST-15",
       "title": "Counter binding",
       "status": "IMPLEMENTED",
-      "test": "tests/Integration/HostTest.php::testHost15CounterBinding",
+      "test": "tests/Integration/HostTest.php::testHost15VerdictBinding",
       "note": ""
     },
     {

@@ -4,40 +4,44 @@ declare(strict_types=1);
 namespace AlgebraEngine;
 
 use AlgebraEngine\Curriculum\CurriculumRepository;
-use AlgebraEngine\Items\AcceptanceGate;
 use AlgebraEngine\Items\ItemFactory;
-use AlgebraEngine\Items\SocraticPlanner;
 use AlgebraEngine\Provider\CurlTransport;
 use AlgebraEngine\Provider\HttpTransport;
-use AlgebraEngine\Provider\MockProvider;
-use AlgebraEngine\Provider\ModelCoordinator;
 use AlgebraEngine\Provider\OpenAiCompatibleProvider;
-use AlgebraEngine\Provider\PromptAssembler;
 use AlgebraEngine\Provider\ProviderAdapter;
 use AlgebraEngine\Provider\SchemaValidator;
-use AlgebraEngine\Report\ReportBuilder;
+use AlgebraEngine\Report\TutorReport;
 use AlgebraEngine\Storage\Database;
 use AlgebraEngine\Storage\Store;
 use AlgebraEngine\Support\Clock;
 use AlgebraEngine\Support\RandomSource;
 use AlgebraEngine\Support\SystemClock;
-use AlgebraEngine\Workflow\Engine;
-use AlgebraEngine\Workflow\PublicProjection;
-use AlgebraEngine\Workflow\TransitionGuard;
+use AlgebraEngine\Tutor\AnswerCheck;
+use AlgebraEngine\Tutor\MockTutor;
+use AlgebraEngine\Tutor\PatternMatcher;
+use AlgebraEngine\Tutor\ProblemFactory;
+use AlgebraEngine\Tutor\ProblemVerifier;
+use AlgebraEngine\Tutor\Recipes;
+use AlgebraEngine\Tutor\TutorCoordinator;
+use AlgebraEngine\Tutor\TutorEngine;
+use AlgebraEngine\Tutor\TutorProjection;
+use AlgebraEngine\Tutor\TutorPrompt;
 
 /** Builds the object graph from private configuration. */
 final class App
 {
+    public const ARCHITECTURE_FILE = 'Algebra_Constraint_Architecture_v1.3.md';
+
     public Store $store;
     public CurriculumRepository $curriculum;
     public ItemFactory $factory;
+    public ProblemFactory $problems;
     public SchemaValidator $schemas;
     public ProviderAdapter $provider;
-    public PromptAssembler $assembler;
-    public ModelCoordinator $model;
-    public Engine $engine;
-    public PublicProjection $projection;
-    public TransitionGuard $guard;
+    public TutorPrompt $prompt;
+    public TutorCoordinator $ai;
+    public TutorEngine $engine;
+    public TutorProjection $projection;
     public Clock $clock;
     public string $architecture;
 
@@ -54,35 +58,27 @@ final class App
         $this->store = new Store(new Database($config->string('db_path'), dirname(__DIR__) . '/migrations'));
         $this->curriculum = $curriculum ?? CurriculumRepository::fromFile($res . '/curriculum/algebra-map.json');
         $this->factory = new ItemFactory();
+        $this->problems = new ProblemFactory($this->factory);
         $this->schemas = new SchemaValidator($res . '/contracts');
-        $this->architecture = (string) file_get_contents($res . '/architecture/Algebra_Constraint_Architecture_v1.2.md');
+        $this->architecture = (string) file_get_contents($res . '/architecture/' . self::ARCHITECTURE_FILE);
         $this->provider = $provider ?? ($config->isMock()
-            ? new MockProvider($this->factory, $config->string('mock_fault_file'))
+            ? new MockTutor($config->string('mock_fault_file'))
             : new OpenAiCompatibleProvider($config, $transport ?? new CurlTransport()));
-        $this->guard = new TransitionGuard($res . '/contracts/workflow-policy.json');
-        $this->assembler = new PromptAssembler($this->schemas);
-        $this->model = new ModelCoordinator(
-            $this->provider,
-            $this->assembler,
-            $this->schemas,
-            new AcceptanceGate($this->factory, $this->schemas),
-            $this->curriculum,
-            $this->guard,
-            $this->architecture,
-            $config->int('provider_result_max'),
-        );
-        $this->projection = new PublicProjection($this->curriculum, $this->schemas);
-        $this->engine = new Engine(
+        $this->prompt = new TutorPrompt($this->schemas);
+        $patterns = new PatternMatcher($this->factory);
+        $this->ai = new TutorCoordinator($this->provider, $this->prompt, $this->schemas, new ProblemVerifier($this->problems, $patterns), $this->architecture, $config->int('provider_result_max'));
+        $this->projection = new TutorProjection($this->curriculum, $this->schemas);
+        $this->engine = new TutorEngine(
             $config,
             $this->store,
             $this->curriculum,
-            $this->factory,
-            new SocraticPlanner($this->factory),
-            $this->model,
-            $this->guard,
-            new ReportBuilder($this->curriculum, $this->schemas),
+            $this->problems,
+            new Recipes($this->problems),
+            new AnswerCheck($this->factory),
+            $this->ai,
             $this->schemas,
             $this->projection,
+            new TutorReport($this->curriculum, $this->schemas),
             $this->clock,
             $rng,
         );
