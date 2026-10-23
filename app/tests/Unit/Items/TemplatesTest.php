@@ -62,12 +62,13 @@ final class TemplatesTest extends TestCase
         $t = (new ItemFactory())->get('GROUPED_LINEAR');
         $p = ['a' => 3, 'b' => 4, 'c' => 27];  // 3(x+4)=27, x=5
         $sig = fn (string $r) => array_column($t->matchSignatures($p, $r, ExactRationalChecker::check(Rational::fromInt(5), $r)), 'branch', 'code');
-        $this->assertSame(['DIST_X_ONLY' => 'E06'], $sig('23/3'));      // 3x+4=27
+        $this->assertSame(['FIRST_TERM_ONLY' => 'E06'], $sig('23/3'));      // 3x+4=27 (round 7 §8.3: one code on Q07 and E06)
         $this->assertSame(['SIGN_ERROR_B' => 'Q06', 'DIVIDE_THEN_ADD_B' => 'Q06'], $sig('13'));
         $this->assertSame(['ARITH_FINAL_PLUS' => 'Q06'], $sig('6'));
         $this->assertSame([], $sig('40'));
         $this->assertSame([], $sig('5'), 'no signature for a correct answer');
-        $this->assertSame('Your answer multiplied only the x by 3.', $t->signatureFeedback($p, 'DIST_X_ONLY'));
+        $this->assertSame('Your answer multiplied only the first term inside the parentheses by 3.', $t->signatureFeedback($p, 'FIRST_TERM_ONLY'));
+        $this->assertSame($t->signatureFeedback($p, 'FIRST_TERM_ONLY'), (new ItemFactory())->get('POSITIVE_DISTRIBUTION')->signatureFeedback(['a' => 3, 'b' => 4], 'FIRST_TERM_ONLY'), 'one description on Q07 and E06');
     }
 
     public function testContrastKeysAreDerivedFromTheDisplayedEquations(): void

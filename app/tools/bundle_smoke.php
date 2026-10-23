@@ -67,7 +67,7 @@ function flow(string $base, string $jar, callable $check, string $bootstrapLabel
     [$c, $v3] = req('POST', "$base/api.php?action=event", ['idempotency_key' => bin2hex(random_bytes(10)), 'expected_revision' => $v2['revision'] ?? 0, 'action' => 'END_SESSION', 'problem_id' => null, 'problem_version' => null, 'payload' => new stdClass()], ["X-CSRF-Token: $csrf"], $jar);
     $check('end session', $c === 200 && ($v3['status'] ?? '') === 'CLOSED', "HTTP $c");
     [$c, $r] = req('GET', "$base/api.php?action=report", null, [], $jar);
-    $check('report is labelled mock and written by code', $c === 200 && str_starts_with($r['provider_label'] ?? '', 'MOCK') && ($r['report']['architecture_version'] ?? '') === '1.3', "HTTP $c");
+    $check('report is labelled mock and written by code', $c === 200 && str_starts_with($r['provider_label'] ?? '', 'MOCK') && ($r['report']['architecture_version'] ?? '') === '1.5', "HTTP $c");
     [$c] = req('POST', "$base/api.php?action=event", ['idempotency_key' => bin2hex(random_bytes(10)), 'expected_revision' => 0, 'action' => 'END_SESSION', 'problem_id' => null, 'problem_version' => null, 'payload' => new stdClass()], [], $jar);
     $check('mutation without CSRF refused', $c === 403, "HTTP $c");
     return $headers;
@@ -207,10 +207,10 @@ $names = array_keys(is_file($vpsZip) ? zipEntries($vpsZip) : []);
 $config = array_values(array_filter($names, fn ($n) => preg_match('#(^|/)config\.php$#', $n) === 1));
 $var = array_values(array_filter($names, fn ($n) => preg_match('#^[^/]+/var/.#', $n) === 1));
 $check(basename($vpsZip) . ': no config.php, nothing inside var/', $names !== [] && $config === [] && $var === [], implode(', ', array_merge($config, $var)) ?: count($names) . ' entries');
-foreach (['004_progress.sql', '005_round6_call_detail.sql'] as $migration) {
+foreach (['004_progress.sql', '005_round6_call_detail.sql', '006_round7_cached_tokens.sql'] as $migration) {
     $check(basename($vpsZip) . ': carries migration ' . $migration, (bool) array_filter($names, fn ($n) => str_ends_with($n, '/migrations/' . $migration)));
 }
-$check(basename($vpsZip) . ': carries architecture v1.3 and no older architecture', (bool) array_filter($names, fn ($n) => str_ends_with($n, '/Algebra_Constraint_Architecture_v1.3.md'))
-    && !array_filter($names, fn ($n) => str_ends_with($n, '/Algebra_Constraint_Architecture_v1.2.md')));
+$check(basename($vpsZip) . ': carries architecture v1.5 and no older architecture', (bool) array_filter($names, fn ($n) => str_ends_with($n, '/Algebra_Constraint_Architecture_v1.5.md'))
+    && !array_filter($names, fn ($n) => preg_match('#/Algebra_Constraint_Architecture_v1\.[0-4]\.md$#', $n) === 1));
 echo $fail === 0 ? "BUNDLE SMOKE PASSED\n" : "BUNDLE SMOKE FAILED ($fail)\n";
 exit($fail === 0 ? 0 : 1);

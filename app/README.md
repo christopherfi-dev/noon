@@ -1,23 +1,30 @@
-# Algebra Engine — AI tutor (round 6, Stage 1)
+# Algebra Engine — AI tutor (round 7: architecture v1.5)
 
 The AI runs the tutoring session as a conversation, governed by the Algebra
-Constraint Architecture **v1.3**; code is its set of instruments and keeps the
-guarantees that truth requires (`CONDUCTOR_ROUND_6_v3.md` §1–§2, `CLAUDE.md`):
+Constraint Architecture **v1.5**; code is its set of instruments and keeps the
+guarantees that truth requires (`CONDUCTOR_ROUND_7.md`, `CONDUCTOR_ROUND_6_v3.md`,
+`CLAUDE.md`):
 
 - code computes every answer, checks every entry and records every verdict;
 - code alone computes goals (3 check questions correct in a row without help;
   for Q07 and E06 a solve or expansion, a choice question and a new form; one
   code-confirmed slip may pause the count);
-- check questions are worded by code from a pattern of their skill and stand
-  alone (the conversation pauses while one is open);
-- the gradebook is true, and code writes the report from it;
-- every learner-visible AI text is guarded (answer leaks, internal terms,
-  mastery and goal claims, claims about help); questions are allowed.
+- every problem, practice or check, is worded by code from its verified spec;
+  check questions match a pattern of their skill and stand alone; messages
+  during an open check reach the AI, and help with it comes only from
+  "I'm stuck";
+- the gradebook is true, and code writes the report from it; an attempt with
+  possible help before its check card, or a verdict the AI disputes, is held
+  (counted neither for nor against the goal);
+- text guards on every learner-visible AI text (answer leaks, internal terms,
+  mastery and goal claims, claims about help, verdict contradiction) log their
+  findings and never change the text; envelopes and problems that fail
+  acceptance are repaired once, then the turn is held with a retry.
 
 Ten skills are available (Q07, E06, Q06, Q05, Q04, N18, N03, N04, N05, N06);
-all 205 curriculum skills stay browsable. Stage 1 runs on a **simulated (mock)
-tutor** only: no key was used, nothing about a live model, about learning or
-about deployment has been tested. What is in scope and how each skill is
+all 205 curriculum skills stay browsable. The tests run on a **simulated
+(mock) tutor**; the round 7 live runs (`test-results/live/round7/`) are
+scripted learners against DeepSeek, not deployment or learning evidence. What is in scope and how each skill is
 checked: `CAPABILITY_MATRIX.md`. Acceptance-scenario status:
 `ACCEPTANCE_SCENARIOS.md`. Tests retired with the beta's state machine:
 `tests/RETIRED_TESTS.md`. Deployment next to the beta: `DEPLOYMENT_VPS.md`.
@@ -31,8 +38,8 @@ app/
     bootstrap.php    loads autoloader + private config.php
     config.example.php
     src/             AlgebraEngine\ classes (see below)
-    resources/       architecture v1.3, curriculum map, runtime contracts
-    migrations/      SQLite schema (001–005)
+    resources/       architecture v1.5, curriculum map, runtime contracts
+    migrations/      SQLite schema (001–006)
     bin/             preflight.php, cleanup.php (cron)
     var/             SQLite database (git-ignored)
   tests/             PHPUnit Unit + Integration, Browser (Playwright)
@@ -45,9 +52,10 @@ Main classes:
   idempotency, revision checks), the context for the AI, applying its moves,
   problems and messages, and the commit.
 - `Tutor\TutorCoordinator`: the binding call, one call per turn, the envelope
-  checks, problem verification and text guards; one repair, then code's
-  fallback.
-- `Tutor\TutorPrompt`: the five-message request, built anew each turn.
+  checks and problem verification; one repair, then a hold. The text guards'
+  findings are returned for logging.
+- `Tutor\TutorPrompt`: the five-message request, built anew each turn: the
+  architecture, the output contract, the binding exchange, one JSON block.
 - `Tutor\MockTutor`: the scripted mock tutor and its adversarial faults.
 - Instruments: `SpecMath`, `PatternMatcher` (the recipes in reverse),
   `ProblemFactory`, `ProblemVerifier`, `Recipes`, `EntryReader`,
@@ -107,16 +115,16 @@ provider), `provider_api_key`, and `provider_thinking`:
 - `'disabled'` or `'enabled'`: the same setting on every call.
 
 The setting is always sent explicitly; temperature only when thinking is
-disabled. The adapter makes one text-mode binding call (the v1.3 activation
+disabled. The adapter makes one text-mode binding call (the v1.5 activation
 line), then JSON mode for envelopes; no function calling. Reasoning text
 (`reasoning_content`) is never read, stored, shown or sent back. Every call
 is logged with its purpose, its reasoning setting and the turn it belongs to.
 
-Stage 2 runs (conductor round 6 §10) use the session runner with the key in a
+Live runs (conductor round 7 §10) use the session runner with the key in a
 config file kept outside the repository:
 
 ```bash
-ALGEBRA_CONFIG=/path/outside/repo/config.php php tools/tutor_sessions.php --out=../test-results/live/round6/RUN --b1=5 --descent=3 --b11=2 --n1=2
+ALGEBRA_CONFIG=/path/outside/repo/config.php php tools/tutor_sessions.php --out=../test-results/live/round7/ARM --b1=2 --descent=0 --b11=1 --n1=2 --help-seeker=1 --breaker=1
 ```
 
 It writes one transcript per session (learner input, what the student saw,

@@ -74,7 +74,8 @@ final class GroupedLinear extends AbstractTemplate
         $s = intdiv($c, $a) - $b;
         $signB = Rational::of($c, $a)->add(Rational::fromInt($b));
         return [
-            ['DIST_X_ONLY', Rational::of($c - $b, $a)],
+            // Round 7 §8.3: one code and one description for this mistake on Q07 and E06.
+            ['FIRST_TERM_ONLY', Rational::of($c - $b, $a)],
             ['SIGN_ERROR_B', $signB],
             ['DIVIDE_THEN_ADD_B', $signB],
             ['ARITH_FINAL_PLUS', Rational::fromInt($s + 1)],
@@ -127,7 +128,7 @@ final class GroupedLinear extends AbstractTemplate
     public static function groupedSignatures(CheckOutcome $outcome, array $values, callable $matcher): array
     {
         $labels = [
-            'DIST_X_ONLY' => ['matches distribution-to-x-only', 'E06'],
+            'FIRST_TERM_ONLY' => ['matches distribution-to-first-term-only (the factor multiplied only the first term inside the parentheses)', 'E06'],
             'SIGN_ERROR_B' => ['matches sign-error-on-b', 'Q06'],
             'DIVIDE_THEN_ADD_B' => ['matches dividing-c-by-a-then-adding-b', 'Q06'],
             'ARITH_FINAL_PLUS' => ['matches an arithmetic error in the final step', 'Q06'],
@@ -148,7 +149,7 @@ final class GroupedLinear extends AbstractTemplate
     public static function groupedFeedback(int $a, int $b, string $code): ?string
     {
         return match ($code) {
-            'DIST_X_ONLY' => 'Your answer multiplied only the x by ' . $a . '.',
+            'FIRST_TERM_ONLY' => DistributionTransfer::firstTermOnly($a),
             'SIGN_ERROR_B', 'DIVIDE_THEN_ADD_B' => 'Your answer moved the ' . Fmt::n($b) . ' to the other side without changing its sign.',
             default => null,
         };

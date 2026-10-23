@@ -20,7 +20,9 @@ use AlgebraEngine\Curriculum\BetaScope;
  *   answer and its retry don't count, the run is not reset); a second slip
  *   in the same run resets it;
  * - partially correct (right value, not the form asked): neither;
- * - practice and retry attempts, skipped or not-learned problems: neither.
+ * - practice and retry attempts, skipped or not-learned problems: neither;
+ * - a held attempt (possible help before the check question, or a result
+ *   under review; round 7 §5): neither; the run neither advances nor resets.
  * A goal met in this session stays met in this session. Goals are an
  * in-session criterion only; nothing here is a mastery claim.
  */
@@ -39,7 +41,7 @@ final class Goals
     {
         $state = [];
         foreach ($attempts as $a) {
-            if ($a['purpose'] !== 'CHECK') {
+            if ($a['purpose'] !== 'CHECK' || ($a['held'] ?? null) !== null) {
                 continue;
             }
             $s = $a['skill_id'];

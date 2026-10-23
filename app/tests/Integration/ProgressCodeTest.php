@@ -95,7 +95,7 @@ final class ProgressCodeTest extends TestCase
         $this->assertSame('Q07', $row['record']['route_target']);
         $this->assertSame('E06', $row['record']['next_focus'], 'the AI\'s stated next focus');
         $this->assertSame('E06', $row['record']['next_skill']);
-        $this->assertSame(['status' => 'NEEDED_HELP', 'date' => '2026-10-21', 'patterns' => ['DIST_X_ONLY']], $row['record']['skills']['Q07']);
+        $this->assertSame(['status' => 'NEEDED_HELP', 'date' => '2026-10-21', 'patterns' => ['FIRST_TERM_ONLY']], $row['record']['skills']['Q07']);
         $code = $this->code($h);
         $this->assertSame($row['code_sha256'], ProgressCode::hash(str_replace('-', '', $code)));
 

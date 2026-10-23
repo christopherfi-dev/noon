@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-/** Round 6: the reviewed v1.3 architecture (architecture/Algebra_Constraint_Architecture_v1.3.md). */
-const ARCHITECTURE_SHA256 = 'ba1d52153c86f36466ac660bc03b4e5df41335d245dc3987bd242fcaf6565ead';
+/** Round 7: the reviewed v1.5 architecture (architecture/Algebra_Constraint_Architecture_v1.5.md). */
+const ARCHITECTURE_SHA256 = 'd021eb2a1dba333a2caabc3efe73ae3cd2405d04e6a017716528ca5ac8b27e12';
 
 /*
  * Installation preflight for the actual hosting plan (spec 05).
@@ -93,7 +93,7 @@ if ($provider === 'openai_compatible') {
 
 // Private resources
 $expected = [
-    'resources/architecture/Algebra_Constraint_Architecture_v1.3.md',
+    'resources/architecture/Algebra_Constraint_Architecture_v1.5.md',
     'resources/curriculum/algebra-map.json',
     'resources/contracts/tutor-envelope.schema.json',
     'resources/contracts/tutor-event.schema.json',
@@ -105,17 +105,18 @@ $expected = [
     'migrations/003_model_call_transport_detail.sql',
     'migrations/004_progress.sql',
     'migrations/005_round6_call_detail.sql',
+    'migrations/006_round7_cached_tokens.sql',
     'vendor/autoload.php',
 ];
 foreach ($expected as $rel) {
     is_file($privateDir . '/' . $rel) ? $add('PASS', 'FILE', $rel) : $add('FAIL', 'FILE', $rel . ' is missing from the private folder.');
 }
-$arch = $privateDir . '/resources/architecture/Algebra_Constraint_Architecture_v1.3.md';
+$arch = $privateDir . '/resources/architecture/Algebra_Constraint_Architecture_v1.5.md';
 if (is_file($arch)) {
     $sha = hash_file('sha256', $arch);
     $sha === ARCHITECTURE_SHA256
-        ? $add('PASS', 'ARCHITECTURE_HASH', 'v1.3 ' . $sha)
-        : $add('FAIL', 'ARCHITECTURE_HASH', 'Architecture file differs from the reviewed v1.3 (' . $sha . ').');
+        ? $add('PASS', 'ARCHITECTURE_HASH', 'v1.5 ' . $sha)
+        : $add('FAIL', 'ARCHITECTURE_HASH', 'Architecture file differs from the reviewed v1.5 (' . $sha . ').');
 }
 
 // Storage

@@ -10,7 +10,7 @@
 
 (() => {
   const PROBLEM_ACTIONS = ['SEND', 'STUCK', 'SKIP'];
-  const STUCK_CHOICES = [['HINT', 'Give me a hint', 'hint'], ['EXPLAIN', 'Explain the idea', 'explain'], ['NOT_LEARNED', "I haven't learned this yet", 'not-learned']];
+  const STUCK_CHOICES = [['HINT', 'Give me a hint', 'hint'], ['NOT_LEARNED', "I haven't learned this yet", 'not-learned']];
   const CHECK_LABEL = 'Check question: on your own';
   const AVAILABILITY = {
     AVAILABLE_SCORED: 'Available in this tutor',

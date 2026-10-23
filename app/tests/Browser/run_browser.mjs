@@ -1,5 +1,6 @@
-// Browser tests (mock mode) for the round 6 conversation UI, at 390 and 1280
-// wide: the conversation journey (step back, check card, pause, help, wrap-up,
+// Browser tests (mock mode) for the conversation UI (round 6, updated for
+// round 7), at 390 and 1280 wide: the conversation journey (step back, check
+// card, a message during the check reaching the tutor, help, wrap-up,
 // summary), the slip pause, UI-01 (mobile keyboard, screen-reader status and
 // no lost answers at 360 wide), UI-02 (safe rendering), UI-03 (skill map),
 // UI-06 (result and check-card contrast) and UI-07 (progress code, welcome
@@ -139,17 +140,18 @@ try {
       && (await page.getByTestId('open-problem-label').textContent()) === 'Check question: on your own';
     await shot('03-check-card');
 
-    // While a check question is open, a message is not sent to the tutor.
+    // Round 7 §6.1: while a check question is open, a message reaches the tutor; the check stays open and unassisted.
     const callsBefore = oracle().calls;
     await send(page, 'can you explain this to me first?');
-    const afterPause = await lines(page);
-    checks.pause = afterPause[afterPause.length - 1].kind === 'notice' && afterPause[afterPause.length - 1].text === "Let's finish this check question first. Answer it, or tap I'm stuck."
-      && oracle().calls === callsBefore && (await page.getByTestId('open-problem').getAttribute('data-purpose')) === 'check';
-    await shot('04-conversation-paused');
+    const afterMessage = await lines(page);
+    checks.messageDuringCheck = afterMessage[afterMessage.length - 1].role === 'tutor' && afterMessage[afterMessage.length - 1].kind === 'message'
+      && oracle().calls === callsBefore + 1 && (await page.getByTestId('open-problem').getAttribute('data-purpose')) === 'check'
+      && (await page.getByTestId('with-help').count()) === 0;
+    await shot('04-message-during-check');
 
-    // "I'm stuck": three choices; a hint makes the answer one with help.
+    // "I'm stuck": two choices (round 7 §6.4); a hint makes the answer one with help.
     await page.getByTestId('stuck').click();
-    checks.stuckMenu = JSON.stringify(await menuLabels(page)) === JSON.stringify(['Give me a hint', 'Explain the idea', "I haven't learned this yet"]);
+    checks.stuckMenu = JSON.stringify(await menuLabels(page)) === JSON.stringify(['Give me a hint', "I haven't learned this yet"]);
     await page.getByTestId('hint').click();
     await idle(page);
     checks.withHelp = (await page.getByTestId('with-help').count()) === 1 && (await page.getByTestId('goal').textContent()).includes('You had help on this one');
@@ -192,7 +194,7 @@ try {
     await measure();
     await shot('06-summary');
     const pass = Object.values(checks).every(Boolean) && maxOverflow <= 0 && errors.length === 0;
-    record(`Conversation journey: step back, check card, pause, help, wrap-up, summary (${label} ${w}x${h})`, pass, { checks, maxOverflow, consoleErrors: errors });
+    record(`Conversation journey: step back, check card, message during the check, help, wrap-up, summary (${label} ${w}x${h})`, pass, { checks, maxOverflow, consoleErrors: errors });
     await ctx.close();
   }
 
@@ -208,15 +210,17 @@ try {
     await idle(page);
     await answerCorrectly(page); // practice; the tutor follows with a check question
     // The owner's case: after one check answered correctly, the tutor poses 7(x + 5); the learner answers 7x + 25.
+    // A check question must use fresh numbers, so when the mock's own problems already used 5 and 7, an equivalent case stands in.
+    const used = oracle().used_sets;
+    const [fa, fb, slip] = [[7, 5, '7x + 25'], [6, 4, '6x + 14'], [8, 3, '8x + 14']].find(([a, b]) => !used.includes([a, b].sort((p, q) => p - q).join(',')));
     fs.writeFileSync(faultFile, JSON.stringify([{ type: 'ENVELOPE', set: { message_type: 'QUESTION', student_message: 'Good.', item: {
-      purpose: 'check', skill_id: 'E06', source: 'spec', recipe_ref: null, spec: { kind: 'expand', expression: '7(x + 5)' }, prompt: '', stated_answer: '7x + 35' } } }]));
-    await answerCorrectly(page); // the first check question; the tutor follows with 7(x + 5)
-    checks.posed = oracle().open.purpose === 'CHECK' && oracle().open.prompt.includes('7(x + 5)');
-    const slip = '7x + 25';
+      purpose: 'check', skill_id: 'E06', source: 'spec', recipe_ref: null, spec: { kind: 'expand', expression: `${fa}(x + ${fb})` }, prompt: '', stated_answer: `${fa}x + ${fa * fb}` } } }]));
+    await answerCorrectly(page); // the first check question; the tutor follows with the slip case
+    checks.posed = oracle().open.purpose === 'CHECK' && oracle().open.prompt.includes(`${fa}(x + ${fb})`);
     await send(page, slip);
     const after = await lines(page);
     checks.notYet = after.some((l) => l.kind === 'result' && l.text.includes('Not yet.') && l.text.includes(slip));
-    checks.micro = oracle().open.purpose === 'PRACTICE' && oracle().open.prompt === 'Wait, what is 7 × 5?';
+    checks.micro = oracle().open.purpose === 'PRACTICE' && oracle().open.prompt === `Calculate ${fa} × ${fb}.`; // round 7 §8.1: code renders the wording
     const d = await dots(page);
     checks.paused = d.text.includes('Paused after a small slip: the count was kept.') && d.filled === 1;
     await page.screenshot({ path: path.join(outDir, `07-slip-pause-${w}.png`), fullPage: true });
@@ -246,7 +250,7 @@ try {
     await idle(page);
     await page.waitForFunction(() => document.activeElement?.getAttribute('data-testid') === 'entry-input', null, { timeout: 2000 }).catch(() => {});
     const focusOnInput = await page.evaluate(() => document.activeElement?.getAttribute('data-testid'));
-    // An ambiguous entry is asked about again, never marked wrong.
+    // An ambiguous entry is never marked wrong: the tutor (not code) asks about it again (round 7 §7.4).
     await page.keyboard.type('1 1/2');
     await page.keyboard.press('Enter');
     await idle(page);
@@ -273,7 +277,7 @@ try {
     const ov = await overflow(page);
     await page.screenshot({ path: path.join(outDir, 'ui01-mobile-keyboard-360.png'), fullPage: true });
     const failedLoads = errors.filter((e) => !e.includes('net::ERR_FAILED') && !e.includes('Failed to fetch'));
-    const pass = reached && focusOnInput === 'entry-input' && ambiguous.kind === 'notice' && ambiguous.text.includes('can be read more than one way') && notMarked
+    const pass = reached && focusOnInput === 'entry-input' && ambiguous.role === 'tutor' && notMarked
       && keptAfterFailure === typed && banner.includes('Your typed text is kept') && resultShown && statusRegion === 'polite' && logRegion === 'log,polite,0'
       && labelled && focusVisible && ov <= 0 && failedLoads.length === 0;
     record('UI-01 mobile keyboard, status and no lost answers (360x740)', pass, { reached, focusOnInput, ambiguous, notMarked, keptAfterFailure, banner, resultShown, statusRegion, logRegion, labelled, focusVisible, overflow: ov, consoleErrors: errors });

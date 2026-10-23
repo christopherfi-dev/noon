@@ -1,8 +1,8 @@
 {
-  "ran_at": "2026-10-23T04:36:31.039Z",
+  "ran_at": "2026-10-23T09:00:11.900Z",
   "results": [
     {
-      "name": "Conversation journey: step back, check card, pause, help, wrap-up, summary (mobile 390x844)",
+      "name": "Conversation journey: step back, check card, message during the check, help, wrap-up, summary (mobile 390x844)",
       "pass": true,
       "detail": {
         "checks": {
@@ -16,7 +16,7 @@
           "inputCleared": true,
           "resultCorrect": true,
           "checkCard": true,
-          "pause": true,
+          "messageDuringCheck": true,
           "stuckMenu": true,
           "withHelp": true,
           "helpResets": true,
@@ -31,7 +31,7 @@
       }
     },
     {
-      "name": "Conversation journey: step back, check card, pause, help, wrap-up, summary (desktop 1280x800)",
+      "name": "Conversation journey: step back, check card, message during the check, help, wrap-up, summary (desktop 1280x800)",
       "pass": true,
       "detail": {
         "checks": {
@@ -45,7 +45,7 @@
           "inputCleared": true,
           "resultCorrect": true,
           "checkCard": true,
-          "pause": true,
+          "messageDuringCheck": true,
           "stuckMenu": true,
           "withHelp": true,
           "helpResets": true,
@@ -96,12 +96,12 @@
         "reached": true,
         "focusOnInput": "entry-input",
         "ambiguous": {
-          "role": "app",
-          "kind": "notice",
-          "text": "A space between a whole number and a fraction can be read more than one way. Write it as one fraction, such as 3/2, or as a decimal."
+          "role": "tutor",
+          "kind": "message",
+          "text": "TutorI am not sure how to read that. Could you write just your answer, with numbers and symbols?"
         },
         "notMarked": true,
-        "keptAfterFailure": "2",
+        "keptAfterFailure": "6",
         "banner": "The connection failed. Your typed text is kept; please try again.",
         "resultShown": true,
         "statusRegion": "polite",

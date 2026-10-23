@@ -103,6 +103,9 @@ final class OpenAiCompatibleProvider implements ProviderAdapter
             'prompt_tokens' => isset($u['prompt_tokens']) ? (int) $u['prompt_tokens'] : null,
             'completion_tokens' => isset($u['completion_tokens']) ? (int) $u['completion_tokens'] : null,
             'reasoning_tokens' => isset($u['completion_tokens_details']['reasoning_tokens']) ? (int) $u['completion_tokens_details']['reasoning_tokens'] : null,
+            // Round 7 §10: cached prompt tokens, for the cost of the live runs (DeepSeek, then OpenAI-style).
+            'cached_prompt_tokens' => isset($u['prompt_cache_hit_tokens']) ? (int) $u['prompt_cache_hit_tokens']
+                : (isset($u['prompt_tokens_details']['cached_tokens']) ? (int) $u['prompt_tokens_details']['cached_tokens'] : null),
         ];
         return new ProviderResponse(is_string($content) ? $content : null, $choice['finish_reason'] ?? null, null, $result['status'], $usage,
             (int) round((microtime(true) - $start) * 1000));

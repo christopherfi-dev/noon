@@ -58,7 +58,6 @@
           "type": "string",
           "enum": [
             "HINT",
-            "EXPLAIN",
             "NOT_LEARNED"
           ]
         },

@@ -155,27 +155,25 @@ final class ProblemInstrumentsTest extends TestCase
         $this->assertTrue($this->verifier->verify($this->spec('practice', 'E06', 'expand', '7(x + 5)', '35 + 7x', 'Expand 7(x + 5).'), $this->ctx())['ok']);
     }
 
-    public function testPracticeWordingMustShowTheSpecAndNotItsAnswer(): void
+    /** Round 7 §8.1: code renders the displayed wording of a practice problem from its verified spec; the AI's prompt is not shown. */
+    public function testPracticeWordingIsRenderedByCodeFromTheSpec(): void
     {
-        // The AI may phrase practice in its own words, but the spec's numbers must be shown...
-        $r = $this->verifier->verify($this->spec('practice', 'Q07', 'linear_equation', '3(x + 4) = 21', '3', 'Solve 3(x + 4) = 12 for x.'), $this->ctx());
-        $this->assertFalse($r['ok']);
-        $this->assertStringContainsString('missing: 21', $r['errors'][0]);
-        // ...and the wording may not contain its own answer.
-        $r = $this->verifier->verify($this->spec('practice', 'E06', 'expand', '7(x + 5)', '7x + 35', 'Expand 7(x + 5), which gives 7x + 35.'), $this->ctx());
-        $this->assertFalse($r['ok']);
-        $this->assertStringContainsString('gives away the answer', $r['errors'][0]);
-        // Number words count as the number.
-        $r = $this->verifier->verify($this->spec('practice', 'N18', 'numeric_step', '7 * 5', '35', 'Wait, what is seven times 5?'), $this->ctx());
+        // Wording that does not match the spec is never shown: the problem shows the spec.
+        $r = $this->verifier->verify($this->spec('practice', 'Q07', 'linear_equation', '3(x + 4) = 27', '5', 'Solve 3(x + 4) = 12 for x.'), $this->ctx());
         $this->assertTrue($r['ok'], implode('; ', $r['errors']));
-        $this->assertSame('Wait, what is seven times 5?', $r['problem']['prompt']);
+        $this->assertSame('Solve 3(x + 4) = 27 for x.', $r['problem']['prompt']);
+        $this->assertSame(mb_strlen('Solve 3(x + 4) = 12 for x.'), $r['dropped_prompt_chars'], 'the AI wording is recorded as discarded');
+        // Wording that gives away the answer is never shown either.
+        $r = $this->verifier->verify($this->spec('practice', 'E06', 'expand', '7(x + 5)', '7x + 35', 'Expand 7(x + 5), which gives 7x + 35.'), $this->ctx());
+        $this->assertTrue($r['ok']);
+        $this->assertStringNotContainsString('35', $r['problem']['prompt']);
+        // A spec with no recipe gets the default wording for its kind.
+        $r = $this->verifier->verify($this->spec('practice', 'N18', 'numeric_step', '7 * 5', '35', 'Wait, what is seven times 5?'), $this->ctx());
+        $this->assertSame('Calculate 7 × 5.', $r['problem']['prompt']);
         // A question whose answer is a number shown in it is rejected (round 5.1 post-beta item).
         $r = $this->verifier->verify($this->spec('practice', 'Q07', 'linear_equation', '3(x + 3) = 18', '3', 'Solve 3(x + 3) = 18.'), $this->ctx());
         $this->assertFalse($r['ok']);
         $this->assertStringContainsString('answer', $r['errors'][0]);
-        // Internal terms and mastery claims are not allowed in a prompt either.
-        $r = $this->verifier->verify($this->spec('practice', 'N18', 'numeric_step', '7 * 5', '35', 'Since you mastered this, what is 7 × 5?'), $this->ctx());
-        $this->assertFalse($r['ok']);
     }
 
     public function testRecipeChoicesAndFreshness(): void

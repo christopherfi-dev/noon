@@ -8,7 +8,7 @@ use AlgebraEngine\Provider\ProviderResponse;
 use AlgebraEngine\Support\Json;
 
 /**
- * Round 6 M2: a deterministic simulated tutor. It makes no network calls; its
+ * A deterministic simulated tutor (round 6 M2, updated for round 7). It makes no network calls; its
  * envelopes go through exactly the same checks as a live provider's. It
  * follows a scripted teaching policy (practice, step back to the skill an
  * error points to, check problems until code reports the goal met, slip
@@ -118,9 +118,7 @@ final class MockTutor implements ProviderAdapter
                     $back = $this->easier($ctx, $focus);
                     return $this->pose($env, $ctx, $back, 'practice', 'That is fine. Let\'s build up to it with something smaller first.', 'STEP_BACK');
                 }
-                $env['student_message'] = ($turn['choice'] ?? '') === 'EXPLAIN'
-                    ? 'Here is the idea: each step should give an equivalent problem, one that keeps the same answer. Which operation is applied to x last? Undo that one first.'
-                    : 'Here is a hint: look at what is being done to x, and in what order. What could you undo first while keeping both sides equal?';
+                $env['student_message'] = 'Here is a hint: look at what is being done to x, and in what order. What could you undo first while keeping both sides equal?';
                 $env['proposed_transition'] = $this->move('HINT', $focus);
                 return $env;
             case 'SKIP':
@@ -138,6 +136,8 @@ final class MockTutor implements ProviderAdapter
             case 'ANSWER':
             case 'RESUMED':
                 return $this->afterAnswer($env, $ctx, $result, $focus, $topic, $slip);
+            case 'ENTRY_NOT_READ':
+                return $this->say($env, 'I am not sure how to read that. Could you write just your answer, with numbers and symbols?', $focus);
         }
         return $this->say($env, 'Let\'s keep going.', $focus);
     }
@@ -195,8 +195,8 @@ final class MockTutor implements ProviderAdapter
         $env = $this->base($ctx, 'CONTROL');
         $entry = (string) ($ctx['TURN']['entry'] ?? '');
         $text = mb_strtolower($entry);
-        foreach (EntryReader::NUMBER_WORDS as $value => $word) {
-            $text = preg_replace('/(?<![\p{L}])' . $word . '(?![\p{L}])/u', (string) $value, $text) ?? $text;
+        foreach (array_reverse(Numbers::phrases($text)) as $p) {
+            $text = substr($text, 0, $p['start']) . $p['value'] . substr($text, $p['end']);
         }
         $text = (string) preg_replace('/(?<![\p{L}])(?:negative|minus) (\d)/u', '-$1', $text);
         $vars = $ctx['OPEN_PROBLEM']['variables'] ?? ['x'];
@@ -216,6 +216,9 @@ final class MockTutor implements ProviderAdapter
             if (preg_match('/(-?\d+)\s+or\s+(-?\d+)/', $text, $or)) {
                 $others[] = $or[2];
             }
+        }
+        if ($reading !== null && strlen($reading) > 80) {
+            $reading = null; // longer than any reading the envelope allows: not an answer
         }
         $env['reading'] = [
             'is_answer' => $reading !== null,
@@ -298,7 +301,7 @@ final class MockTutor implements ProviderAdapter
     {
         $s = $ctx['TRUSTED_SESSION'];
         return [
-            'architecture_version' => '1.3',
+            'architecture_version' => '1.5',
             'session_id' => $s['session_id'],
             'state_revision' => $s['state_revision'],
             'reply_to_event_id' => $s['event_id'],
@@ -404,7 +407,13 @@ final class MockTutor implements ProviderAdapter
                 }
                 break;
             case 'LEAK':
-                $env['student_message'] = 'The answer is ' . ($open['answer_for_your_teaching_never_state'] ?? '0') . '.';
+                $env['student_message'] = 'The answer is ' . ($open['answer'] ?? '0') . '.';
+                break;
+            case 'VERDICT_CONFLICT':
+                $answered = $ctx['ANSWERED_PROBLEM'] ?? null;
+                $env['student_message'] = 'I want to look at that result again; it needs a review.';
+                $env['issue'] = ['type' => 'VERIFICATION_CONFLICT', 'affected_scope' => 'the answered problem',
+                    'detail' => 'Problem ' . ($answered['text'] ?? '') . ', entry ' . ($answered['entry'] ?? '') . ': the mock disputes the recorded result.', 'next_action' => 'review'];
                 break;
             case 'MASTERY':
                 $env['student_message'] = 'You know this now.';

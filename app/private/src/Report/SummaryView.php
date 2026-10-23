@@ -81,9 +81,11 @@ final class SummaryView
      * Codes without an entry are not described to the learner.
      */
     public const PATTERNS = [
-        'DIST_X_ONLY' => 'multiplied only the x by the number outside the parentheses',
-        'DIST_X_ONLY_CHOICE' => 'chose a step that multiplied only the x by the number outside the parentheses',
+        // Round 7 §8.3: one description for this mistake on Q07 and E06; the round 6 codes read the same way.
         'FIRST_TERM_ONLY' => 'multiplied only the first term inside the parentheses',
+        'FIRST_TERM_ONLY_CHOICE' => 'chose a step that multiplied only the first term inside the parentheses',
+        'DIST_X_ONLY' => 'multiplied only the first term inside the parentheses',
+        'DIST_X_ONLY_CHOICE' => 'chose a step that multiplied only the first term inside the parentheses',
         'SECOND_TERM_ONLY' => 'multiplied only the number inside the parentheses, not the x',
         'NOT_EVERY_TERM' => 'multiplied some terms inside the parentheses but not all of them',
         'FACTOR_NOT_EVERY_TERM_CHOICE' => 'chose an expression where the number outside did not multiply every term',

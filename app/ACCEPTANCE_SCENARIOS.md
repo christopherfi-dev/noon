@@ -1,10 +1,29 @@
-# Acceptance scenarios — status in the round 6 AI tutor (Stage 1)
+# Acceptance scenarios — status in the AI tutor (round 6, updated for round 7)
 
 Source: `contracts/acceptance-scenarios.json` (53 scenarios). Map file: `app/tests/acceptance-map.json` (checked by `tests/Integration/ScenarioMapTest.php`). Every result is from mock mode (the scripted mock tutor); none is a live-provider, deployment or learning result.
 
 The beta's own tests (B1–B16, P3, the round UI checks) asserted the retired state machine's sequencing or its fixed lines; they are listed with one-line reasons and their replacements in `tests/RETIRED_TESTS.md`.
 
+## Round 7 tests (CONDUCTOR_ROUND_7.md §9)
+
+| Item | What is checked | Test |
+|---|---|---|
+| Shared number before a check | Logged as a signal (CHECK_CARD_SHARED_NUMBER); no hold, no repair; the attempt counts | `CheatingTest::testTextBeforeACheckCardSharesANumber` |
+| Strategy phrase or answer before a check | Logged, text shown unchanged, attempt held (counts neither for nor against the goal) | `CheatingTest::testTextBeforeACheckCardWithAStrategyPhraseHoldsTheAttempt`, `::testTextBeforeACheckCardWithItsAnswerHoldsTheAttempt` |
+| Message during an open check | Reaches the AI; the check stays open and unassisted | `CheatingTest::testAFreeTextMessageDuringAnOpenCheckProblem`; browser journey |
+| "I'm stuck" during a check | Recorded as assisted before the AI call (also when the call fails) | `CheatingTest::testIAmStuckDuringACheckIsRecordedBeforeTheAiCall` |
+| Typed "idk" during a check | A message, not help | `CheatingTest::testTypedIdkDuringACheckIsAMessageNotHelp` |
+| Readings | `16 because it's 4 x 4` → 16 accepted; `2 x x + 2` → 2x, `2x plus 2` → 2x, `2(x + 1)` → 2x + 1, `2 - 5` → 5 - 2, `minus five` → 5 rejected; `twenty five` is 25; `3 = x` is correct | `OwnerCasesTest::testReadingsAreAcceptedOnlyWhenTheyReExpressTheEntry`, `::testNumberWordsAndReversedEquations`; `LearnerInstrumentsTest` |
+| Hold after a failed repair | HOLD with a retry; HOLD_LINE is the only code-written line | `TutorLoopTest::testHoldAfterTheRepairFailsToo`, `HostTest::testHost05EmptyAndTruncatedOutput`, `EngineUnitsTest::testCodeLinesUseNoInternalVocabulary` |
+| Verdict conflict | An `issue` of type VERIFICATION_CONFLICT holds the attempt; the report says "result under review" | `CheatingTest::testAVerdictConflictHoldsTheAttempt` |
+| Text guards log | Each finding recorded with the exact text, guard, problem and response; text shown unchanged; never repaired | `CheatingTest` (`loggedAndShown`), `LiveAdapterTest::testEmptyContentIsRepairedAndInternalWordsAreLogged` |
+| Output contract | The second system message holds only the output contract | `EngineUnitsTest::testTheOutputContractHoldsNoBehaviourRules` |
+| Problem identity | ANSWERED_PROBLEM and OPEN_PROBLEM carry id, version and text; both logged with each AI message | `TutorLoopTest::testAnsweredAndOpenProblemIdentities` |
+| v1.5 binding | The app loads v1.5 only; a session bound to 1.3 is rebound | `HostTest::testHost13BindingModes`, `HostTest::testASessionBoundTo13IsReboundTo15` |
+
 ## Round 6 Stage 1 tests (conductor §9)
+
+Rows below describe round 6; where round 7 changed the behaviour (the pause, the code fallback, typed stuck phrases, rejected guard text), the round 7 rows above replace them.
 
 | Item | What is checked | Test |
 |---|---|---|

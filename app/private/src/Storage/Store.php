@@ -10,7 +10,7 @@ use AlgebraEngine\Support\Time;
 /** Table access for containers, sessions, the event ledger, items, verdicts, operations and idempotency. */
 final class Store
 {
-    public const ARCHITECTURE_VERSION = '1.3';
+    public const ARCHITECTURE_VERSION = '1.5';
     public const CURRICULUM_VERSION = '1.1.0';
 
     public function __construct(public Database $db)
@@ -358,11 +358,11 @@ final class Store
      */
     public function logModelCall(?string $sessionId, ?string $operationId, string $kind, string $provider, string $model, string $outcome, \DateTimeImmutable $now, array $meta = []): void
     {
-        $this->db->exec('INSERT INTO model_calls (call_id, session_id, operation_id, kind, provider, model, outcome, created_at, finish_reason, prompt_tokens, completion_tokens, reasoning_tokens, duration_ms, transport_detail, thinking, reasoning_effort, call_purpose, turn_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        $this->db->exec('INSERT INTO model_calls (call_id, session_id, operation_id, kind, provider, model, outcome, created_at, finish_reason, prompt_tokens, completion_tokens, reasoning_tokens, duration_ms, transport_detail, thinking, reasoning_effort, call_purpose, turn_id, cached_prompt_tokens) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
             [Ids::make('call'), $sessionId, $operationId, $kind, $provider, $model, $outcome, Time::iso($now),
                 $meta['finish_reason'] ?? null, $meta['prompt_tokens'] ?? null, $meta['completion_tokens'] ?? null, $meta['reasoning_tokens'] ?? null, $meta['duration_ms'] ?? null,
                 isset($meta['transport_detail']) ? Json::encode($meta['transport_detail']) : null,
-                $meta['thinking'] ?? null, $meta['reasoning_effort'] ?? null, $meta['call_purpose'] ?? null, $meta['turn_id'] ?? null]);
+                $meta['thinking'] ?? null, $meta['reasoning_effort'] ?? null, $meta['call_purpose'] ?? null, $meta['turn_id'] ?? null, $meta['cached_prompt_tokens'] ?? null]);
     }
 
     public function modelCallCount(string $sessionId): int

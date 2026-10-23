@@ -4,52 +4,43 @@ declare(strict_types=1);
 namespace AlgebraEngine\Tutor;
 
 /**
- * Round 6 §3.1: what code does with a typed entry before any AI call.
+ * What code does with a typed entry before any AI call (round 6 §3.1, as
+ * changed by round 7 §6.3 and §7).
  *
- * - STUCK: a stuck phrase from the round 5 table ("idk", "help", "???"); it
- *   is the "I'm stuck" choice (a hint), because the choice matters for evidence.
  * - MESSAGE: no number, number word or variable in it; or no problem is open.
+ *   Code never classifies typed text as "stuck": "idk" or "???" is a message
+ *   to the tutor (round 7 §6.3).
  * - AMBIGUOUS: words, "×", "times", or the variable letter standing alone
  *   between spaces next to a number or another variable ("4 x 4", "4 x x").
- *   Not parsed; the AI reads it (§4.1).
+ *   Not parsed; the AI reads it.
  * - ANSWER: standard notation code can read, after the safe normalisation (a
  *   capital letter becomes the item's single variable when the entry uses no
- *   other letters; a trailing "?" is ignored when the rest is readable).
- * - UNREADABLE: math-like but not readable; the student is asked to rewrite it.
+ *   other letters; a trailing "?" is ignored when the rest is readable; an
+ *   entry that is only a number written in words, such as "twenty five", is
+ *   that number).
+ * - UNREADABLE: math-like but not readable by code; the AI reads it (round 7
+ *   §7.4), and the student never sees a code-written rewrite request.
  *
  * Nothing here is ever a verdict.
  */
 final class EntryReader
 {
-    /** The round 5 table, unchanged. */
-    public const STUCK = ['idk', 'i dont know', 'dont know', 'dunno', 'no idea', 'no clue', 'not sure', 'im stuck', 'stuck', 'help'];
-    /** The existing number-word list (zero to twenty). */
+    /** Number words zero to twenty (Numbers reads compounds up to 999). */
     public const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve',
         'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
 
     public const NOTE_CAPITAL = 'capital letter read as the variable';
     public const NOTE_QUESTION_MARK = 'trailing "?" ignored';
     public const NOTE_AI_READING = 'read from the student\'s wording';
-
-    public static function normalise(string $text): string
-    {
-        $s = mb_strtolower($text, 'UTF-8');
-        $s = str_replace(["'", "\u{2019}", "\u{2018}", '`', "\u{00B4}"], '', $s);
-        $s = trim((string) preg_replace('/\s+/u', ' ', $s));
-        return trim(rtrim($s, '.!?'));
-    }
+    public const NOTE_NUMBER_WORDS = 'number words read as digits';
 
     /**
      * @param array|null $problem the open problem record, or null
-     * @return array{kind:string,read_as:?string,note:?string,clarification:?string}
+     * @return array{kind:string,read_as:?string,note:?string}
      */
     public static function classify(string $text, ?array $problem): array
     {
         $raw = trim($text);
-        $norm = self::normalise($raw);
-        if (in_array($norm, self::STUCK, true) || ($raw !== '' && preg_match('/^\?+$/', $raw) === 1)) {
-            return self::out('STUCK');
-        }
         if ($problem === null) {
             return self::out('MESSAGE');
         }
@@ -60,6 +51,9 @@ final class EntryReader
             return preg_match('/(?<![\p{L}])[a-dA-D](?![\p{L}])/u', $raw) ? self::out('AMBIGUOUS') : self::out('MESSAGE');
         }
         $vars = $problem['variables'] ?: ['x'];
+        if ($problem['answer']['kind'] === 'exact_rational' && ($value = Numbers::phraseValue($raw)) !== null) {
+            return self::out('ANSWER', (string) $value, self::NOTE_NUMBER_WORDS);
+        }
         if (!self::hasMath($raw, $vars)) {
             return self::out('MESSAGE');
         }
@@ -87,7 +81,7 @@ final class EntryReader
                 return self::out('ANSWER', $without, $note === null ? self::NOTE_QUESTION_MARK : $note . '; ' . self::NOTE_QUESTION_MARK);
             }
         }
-        return self::out('UNREADABLE', null, null, $outcome->clarification);
+        return self::out('UNREADABLE');
     }
 
     /** A digit, a number word or a standalone variable letter. */
@@ -127,8 +121,8 @@ final class EntryReader
         return false;
     }
 
-    private static function out(string $kind, ?string $readAs = null, ?string $note = null, ?string $clarification = null): array
+    private static function out(string $kind, ?string $readAs = null, ?string $note = null): array
     {
-        return ['kind' => $kind, 'read_as' => $readAs, 'note' => $note, 'clarification' => $clarification];
+        return ['kind' => $kind, 'read_as' => $readAs, 'note' => $note];
     }
 }

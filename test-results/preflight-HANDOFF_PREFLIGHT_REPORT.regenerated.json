@@ -9,7 +9,7 @@
     },
     {
       "check": "json_syntax",
-      "count": 649,
+      "count": 662,
       "status": "PASS"
     },
     {

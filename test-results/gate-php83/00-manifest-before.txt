@@ -75,4 +75,4 @@ sha256sum: WARNING: 3 computed checksums did NOT match
 Differences: CLAUDE.md
 TEACHER_FACILITATOR_GUIDE_DRAFT.md
 architecture/CHANGELOG.md
-Only ruled differences (architecture/CHANGELOG.md TEACHER_FACILITATOR_GUIDE_DRAFT.md CLAUDE.md architecture/Algebra_Constraint_Architecture_v1.3.md).
+Only ruled differences (architecture/CHANGELOG.md TEACHER_FACILITATOR_GUIDE_DRAFT.md CLAUDE.md architecture/Algebra_Constraint_Architecture_v1.3.md architecture/Algebra_Constraint_Architecture_v1.5.md).

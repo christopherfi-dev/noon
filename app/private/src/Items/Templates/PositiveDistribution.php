@@ -66,7 +66,7 @@ final class PositiveDistribution extends AbstractTemplate
     {
         [$a, $b] = [$p['a'], $p['b']];
         return PolynomialSignatures::match($outcome, ['x'], [
-            ['FIRST_TERM_ONLY', 'matches distribution-to-first-term-only (the factor multiplied only the x)', 'A07', "$a*x+$b"],
+            ['FIRST_TERM_ONLY', 'matches distribution-to-first-term-only (the factor multiplied only the first term inside the parentheses)', 'A07', "$a*x+$b"],
             ['SECOND_TERM_ONLY', 'matches distribution-to-second-term-only (the factor multiplied only the constant)', 'A07', 'x+' . ($a * $b)],
         ], ['PRODUCT_FACT', 'matches the correct structure with a multiplication-fact error in a coefficient', 'N18', $this->answerSpec($p)['expected']]);
     }
@@ -74,7 +74,7 @@ final class PositiveDistribution extends AbstractTemplate
     public function signatureFeedback(array $p, string $code): ?string
     {
         return match ($code) {
-            'FIRST_TERM_ONLY' => 'Your answer multiplied only the x by ' . $p['a'] . '.',
+            'FIRST_TERM_ONLY' => DistributionTransfer::firstTermOnly($p['a']),
             'SECOND_TERM_ONLY' => 'Your answer multiplied only the ' . $p['b'] . ' by ' . $p['a'] . '.',
             default => null,
         };

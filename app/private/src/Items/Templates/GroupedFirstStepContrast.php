@@ -131,7 +131,7 @@ final class GroupedFirstStepContrast extends AbstractTemplate
         }
         $chosen = CS::selectedCodes($outcome, $this->lettered($p));
         if (in_array('MULTIPLY_X_ONLY', $chosen, true)) {
-            return [['code' => 'DIST_X_ONLY_CHOICE', 'label' => 'matches distribution-to-x-only (accepted multiplying only the x)', 'branch' => 'E06']];
+            return [['code' => 'FIRST_TERM_ONLY_CHOICE', 'label' => 'matches distribution-to-first-term-only (chose a step that multiplied only the first term inside the parentheses)', 'branch' => 'E06']];
         }
         if (array_intersect($chosen, ['SUBTRACT_INSIDE', 'DIVIDE_LEFT_ONLY']) !== []) {
             return [['code' => 'INVERSE_OPERATION_CHOICE', 'label' => 'matches accepting a step that does not keep both sides equal', 'branch' => 'Q06']];
@@ -141,6 +141,6 @@ final class GroupedFirstStepContrast extends AbstractTemplate
 
     public function signatureFeedback(array $p, string $code): ?string
     {
-        return $code === 'DIST_X_ONLY_CHOICE' ? 'One step you chose multiplies only the x by ' . $p['a'] . '.' : null;
+        return $code === 'FIRST_TERM_ONLY_CHOICE' ? 'One step you chose multiplies only the first term inside the parentheses by ' . $p['a'] . '.' : null;
     }
 }

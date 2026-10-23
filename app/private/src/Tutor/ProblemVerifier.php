@@ -10,14 +10,16 @@ use AlgebraEngine\Math\Polynomial;
 use AlgebraEngine\Math\ScalarParser;
 
 /**
- * Round 6 §4.2: problem verification. The AI proposes at most one next
- * problem per turn, as its own spec, a pre-generated recipe problem, or the
- * retry of a slipped check problem. Code computes the answer and rejects the
- * problem when the AI's stated answer differs, there is no unique solution,
- * numbers are out of range, or the wording contains its own answer. Check
- * problems must also match their skill's pattern (a recipe used in reverse)
- * and be fresh; their wording is always code's. Choice check problems come
- * only from the contrast recipes.
+ * Problem verification (round 6 §4.2; architecture v1.5 §8). The AI proposes
+ * at most one next problem per turn, as its own spec, a pre-generated recipe
+ * problem, or the retry of a slipped check problem. Code computes the answer
+ * and rejects the problem when the AI's stated answer differs, there is no
+ * unique solution, numbers are out of range, or the problem shows its own
+ * answer. Check problems must also match their skill's pattern (a recipe used
+ * in reverse) and be fresh. Choice check problems come only from the contrast
+ * recipes. The displayed wording of every problem, practice or check, is
+ * rendered by code from its verified spec (round 7 §8.1), so wording and spec
+ * correspond by construction; the AI's prompt is recorded, never displayed.
  *
  * Proposal (the envelope's item): purpose practice|check|retry, skill_id,
  * source recipe|spec|retry, recipe_ref, spec {kind, expression}, prompt,
@@ -25,8 +27,6 @@ use AlgebraEngine\Math\ScalarParser;
  */
 final class ProblemVerifier
 {
-    public const MAX_PROMPT = 400;
-
     public function __construct(private ProblemFactory $problems, private PatternMatcher $patterns)
     {
     }
@@ -101,16 +101,7 @@ final class ProblemVerifier
         }
         $problem = $recipe;
         $problem['purpose'] = $purpose;
-        $wording = trim((string) ($proposal['prompt'] ?? ''));
-        $dropped = 0;
-        if ($purpose === 'CHECK' || $recipe['response_type'] === 'classification') {
-            $dropped = mb_strlen($wording); // code writes check and choice wording
-        } elseif ($wording !== '') {
-            $this->checkWording($wording, $recipe, $recipe['numbers']);
-            $problem['prompt'] = $wording;
-            $problem['numbers'] = Numbers::digits($wording);
-        }
-        return [$problem, $dropped];
+        return [$problem, mb_strlen(trim((string) ($proposal['prompt'] ?? '')))];
     }
 
     /** @return array{0:array,1:int} */
@@ -142,40 +133,8 @@ final class ProblemVerifier
             return [$problem, mb_strlen(trim((string) ($proposal['prompt'] ?? '')))];
         }
         $match ??= $this->patterns->match($computed['kind'], $computed['nodes']);
-        $wording = trim((string) ($proposal['prompt'] ?? ''));
-        $numbers = [];
-        foreach ($computed['nodes'] as $node) {
-            foreach (SpecMath::literals($node) as $v) {
-                $numbers[] = (string) abs($v->num());
-            }
-        }
-        $numbers = array_values(array_unique($numbers));
-        $problem = $this->problems->fromSpec($computed, $match, $purpose, $skill, $wording === '' ? null : $wording);
-        if ($wording !== '') {
-            $this->checkWording($wording, $problem, $numbers);
-        }
-        return [$problem, 0];
-    }
-
-    /**
-     * Practice wording is the AI's own; the math must still be the spec's.
-     *
-     * @param list<string> $numbers numbers the spec contains
-     */
-    private function checkWording(string $wording, array $problem, array $numbers): void
-    {
-        if (mb_strlen($wording) > self::MAX_PROMPT) {
-            throw new SpecError('WORDING', 'item.prompt is too long (limit ' . self::MAX_PROMPT . ' characters)');
-        }
-        $written = Numbers::all($wording);
-        $missing = array_values(array_diff($numbers, $written));
-        if ($missing !== []) {
-            throw new SpecError('WORDING', 'item.prompt must show the problem the spec describes; these numbers from the spec are missing: ' . implode(', ', $missing));
-        }
-        $reasons = TextGuard::violations($wording, [$problem]);
-        if ($reasons !== []) {
-            throw new SpecError('WORDING', 'item.prompt: ' . implode('; ', $reasons));
-        }
+        $problem = $this->problems->fromSpec($computed, $match, $purpose, $skill, null);
+        return [$problem, mb_strlen(trim((string) ($proposal['prompt'] ?? '')))];
     }
 
     /** The AI's stated answer equals the answer code computed. */

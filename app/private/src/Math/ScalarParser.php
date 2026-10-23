@@ -22,8 +22,9 @@ final class ScalarParser
             throw new MathInputError('EMPTY');
         }
         if ($variable !== null) {
-            $pattern = '/^' . preg_quote($variable, '/') . ' ?= ?(.+)$/';
-            if (preg_match($pattern, $s, $m) === 1) {
+            $v = preg_quote($variable, '/');
+            // "x = 3", and the reversed "3 = x" (round 7 §7.3).
+            if (preg_match('/^' . $v . ' ?= ?(.+)$/', $s, $m) === 1 || preg_match('/^(.+?) ?= ?' . $v . '$/', $s, $m) === 1) {
                 $s = trim($m[1]);
                 if ($s === '') {
                     throw new MathInputError('NOT_A_SINGLE_NUMBER');

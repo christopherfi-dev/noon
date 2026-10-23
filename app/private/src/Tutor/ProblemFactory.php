@@ -65,9 +65,9 @@ final class ProblemFactory
     }
 
     /**
-     * A problem from a computed spec. A check problem's wording is always the
-     * matched recipe's (code writes it); a practice problem may carry the AI's
-     * own wording, checked separately by the verifier.
+     * A problem from a computed spec. Code writes the wording: the matched
+     * recipe's when there is one, else the default wording for the spec kind
+     * (round 7 §8.1). A check problem always has a matched recipe.
      *
      * @param array $computed SpecMath::compute() output
      * @param array|null $match PatternMatcher::match() output
@@ -115,7 +115,9 @@ final class ProblemFactory
     {
         return match ($computed['kind']) {
             'linear_equation' => 'Solve ' . $computed['display'] . ' for x.',
-            'expand' => 'Write ' . $computed['display'] . ' without parentheses, with like terms combined.',
+            'expand' => str_contains($computed['display'], '(')
+                ? 'Write ' . $computed['display'] . ' without parentheses, with like terms combined.'
+                : 'Simplify ' . $computed['display'] . ' by combining like terms.',
             default => 'Calculate ' . $computed['display'] . '.',
         };
     }

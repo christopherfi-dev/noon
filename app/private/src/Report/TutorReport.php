@@ -16,9 +16,10 @@ use AlgebraEngine\Tutor\Gradebook;
  * and its rules are kept: four learner headings in order with their fixed
  * empty lines, plain words, titles only for the learner and "title (ID)" for
  * teachers, earlier sessions under their own label, never merged, nothing
- * invented to fill a heading. No AI-written text appears in it: the §5.2
- * audit list names the forward-looking words and the check question they
- * preceded; the AI's text itself stays in the ledger for review.
+ * invented to fill a heading. No AI-written text appears in it: the audit
+ * list names the phrases and the check question they preceded; the AI's text
+ * itself stays in the ledger for review. Held attempts (round 7 §5) are
+ * listed as held and counted neither as successes nor as failures.
  */
 final class TutorReport
 {
@@ -75,6 +76,7 @@ final class TutorReport
                     $open[] = 'An answer sent while the tutor was still preparing its reply has no result and is not recorded as an attempt.';
                     break;
                 case 'FALLBACK_USED':
+                    // Round 6 records only: round 7 holds the turn instead of a code fallback.
                     $open[] = 'Once the tutor model\'s reply failed its checks twice; the app showed a practice question instead.';
                     break;
             }
@@ -90,12 +92,20 @@ final class TutorReport
         }
 
         $perSkill = [];
+        $held = [];
         foreach ($attempts as $a) {
             $s = $a['skill_id'];
             $perSkill[$s] ??= ['skill_id' => $s, 'title' => $this->curriculum->title($s), 'items_attempted' => 0, 'independent' => 0, 'assisted' => 0,
-                'check_correct' => 0, 'check_not_yet' => 0, 'practice' => 0, 'practice_correct' => 0, 'not_yet' => 0, 'observed' => [], 'slips' => 0, 'points_to' => []];
+                'check_correct' => 0, 'check_not_yet' => 0, 'practice' => 0, 'practice_correct' => 0, 'not_yet' => 0, 'observed' => [], 'slips' => 0, 'points_to' => [], 'held' => 0];
             $p = &$perSkill[$s];
             $p['items_attempted']++;
+            if (($a['held'] ?? null) !== null) {
+                // Round 7 §5: kept in the record with its verdict; neither a success nor a failure.
+                $p['held']++;
+                $held[] = $a;
+                unset($p);
+                continue;
+            }
             $checkNoHelp = $a['purpose'] === 'CHECK' && $a['help'] === [];
             $checkNoHelp ? $p['independent']++ : $p['assisted']++;
             if ($checkNoHelp) {
@@ -119,18 +129,18 @@ final class TutorReport
         }
 
         $learner = $this->learner($perSkill, $topics, $goals, $help, $moves);
-        $teacher = $this->teacher($perSkill, $topics, $goals, $help, $moves, $audit, $slips, $readings, $open, $status, $provider, $row['engine']['progress']['earlier'] ?? []);
+        $teacher = $this->teacher($perSkill, $topics, $goals, $help, $moves, $audit, $slips, $readings, $open, $status, $provider, $row['engine']['progress']['earlier'] ?? [], $held);
         $report = $this->record($snap, $attempts, $goals, $perSkill, $topics, $moves, $status, $provider, $now);
         return [
             'report' => $report,
             'per_skill' => array_values($perSkill),
             'provider' => $provider,
             'provider_label' => $provider === 'mock' ? 'MOCK (simulated tutor; no live provider was used)' : 'LIVE PROVIDER',
-            'architecture' => ['version' => '1.3', 'sha256' => $snap['binding']['architecture_sha256'], 'binding_acknowledged' => $snap['binding']['acknowledged'],
+            'architecture' => ['version' => '1.5', 'sha256' => $snap['binding']['architecture_sha256'], 'binding_acknowledged' => $snap['binding']['acknowledged'],
                 'binding_note' => 'An acknowledged binding is not evidence of enforcement; the app enforces the guarantees.'],
             'audit' => array_map(fn ($a) => ['problem_id' => $a['problem_id'], 'phrases' => $a['phrases']], $audit),
             'summary' => ['learner' => $learner + ['earlier' => $this->words->earlier($row['engine']['progress']['earlier'] ?? [], false)], 'teacher' => $teacher],
-            'policy_version' => '1.3',
+            'policy_version' => '1.5',
         ];
     }
 
@@ -235,7 +245,14 @@ final class TutorReport
 
     // ------------------------------------------------------------ teacher
 
-    private function teacher(array $perSkill, array $topics, array $goals, array $help, array $moves, array $audit, array $slips, array $readings, array $open, string $status, string $provider, array $earlier): array
+    /** Round 7 §5: how a held attempt is listed. */
+    public const HELD_WORDS = [
+        'HELP_BEFORE_CHECK' => 'held: possible help before the check question',
+        'HELP_DURING_CHECK' => 'held: possible help during the check question',
+        'VERDICT_CONFLICT' => 'result under review',
+    ];
+
+    private function teacher(array $perSkill, array $topics, array $goals, array $help, array $moves, array $audit, array $slips, array $readings, array $open, string $status, string $provider, array $earlier, array $held = []): array
     {
         $skills = [];
         foreach ($perSkill as $id => $s) {
@@ -257,7 +274,10 @@ final class TutorReport
                 'route' => SummaryView::unique(array_merge(
                     array_map(fn ($m) => 'moved to ' . $this->words->title($m['to']) . ' (' . $m['to'] . ')', array_filter($moves, fn ($m) => $m['from'] === $id)),
                     array_map(fn ($m) => 'came from ' . $this->words->title($m['from']) . ' (' . $m['from'] . ')', array_filter($moves, fn ($m) => $m['to'] === $id)))),
-                'notes' => $s['slips'] > 0 ? [$s['slips'] . ' small ' . ($s['slips'] === 1 ? 'slip' : 'slips') . ' confirmed by the app (the structure was right; one calculation went wrong).'] : [],
+                'notes' => array_values(array_filter([
+                    $s['slips'] > 0 ? $s['slips'] . ' small ' . ($s['slips'] === 1 ? 'slip' : 'slips') . ' confirmed by the app (the structure was right; one calculation went wrong).' : null,
+                    $s['held'] > 0 ? $s['held'] . ' check ' . ($s['held'] === 1 ? 'answer' : 'answers') . ' held: not counted as correct or as not yet.' : null,
+                ])),
             ];
         }
         $goalLines = [];
@@ -277,7 +297,26 @@ final class TutorReport
             . ($a['purpose'] === 'CHECK' ? 'The count was paused, not reset; the answer and its retry did not count.' : 'It was a practice question.'), $slips);
         $readLines = array_map(fn ($a) => 'The entry “' . mb_substr($a['entry'], 0, 80) . '” was read from the student\'s wording as ' . $a['read_as'] . ' (' . ($a['purpose'] === 'CHECK' ? 'check question' : 'practice') . ').', $readings);
         $problems = $this->problemPrompts;
-        $auditLines = array_map(fn ($a) => 'Before the check question “' . ($problems[$a['problem_id']] ?? 'a check question') . '”, the tutor used forward-looking words: ' . implode(', ', $a['phrases']) . ' (audit list only; the tutor\'s own text is not part of this report).', $audit);
+        $auditLines = [];
+        foreach ($audit as $a) {
+            $what = [];
+            if (($a['phrases'] ?? []) !== []) {
+                $what[] = 'phrases directed at it: ' . implode(', ', $a['phrases']);
+            }
+            if ($a['answer_in_text'] ?? false) {
+                $what[] = 'its answer';
+            }
+            if (($a['shared_numbers'] ?? []) !== []) {
+                $what[] = 'numbers it shares (' . implode(', ', $a['shared_numbers']) . '; a signal only)';
+            }
+            if ($what === []) {
+                continue;
+            }
+            $auditLines[] = 'Before the check question “' . ($problems[$a['problem_id']] ?? 'a check question') . '”, the tutor\'s text had ' . implode('; ', $what)
+                . (($a['held'] ?? false) ? '. The answer to it is held.' : '.') . ' (Audit list only; the tutor\'s own text is not part of this report.)';
+        }
+        $heldLines = array_map(fn ($a) => 'On “' . $a['prompt'] . '” the answer ' . $a['entry'] . ' was recorded as ' . strtolower($a['verdict']) . ', ' . (self::HELD_WORDS[$a['held']] ?? 'held')
+            . '. It counts neither toward nor against the goal.', $held);
         foreach ($goals as $id => $g) {
             if ($g['met'] && !BetaScope::threeVariant($id)) {
                 $open[] = $id . ': the goal covers the numeric part only; explaining a method or rejecting a wrong one was not checked.';
@@ -309,6 +348,7 @@ final class TutorReport
                 $section('Route taken', $routeLines, 'The session stayed on the topic.'),
                 $section('Small slips', $slipLines, 'No slips were confirmed.'),
                 $section('Answers read from the student\'s wording', $readLines, 'Every answer was read as typed.'),
+                $section('Held check answers', $heldLines, 'No check answers were held.'),
                 ['heading' => 'Before check questions (audit)', 'lines' => SummaryView::unique($auditLines), 'empty' => 'No forward-looking words were used before a check question.'],
                 $section('Still open or not checked', $open, 'Nothing listed.'),
                 $section('What would show more', $next, 'Nothing listed.'),
@@ -326,7 +366,12 @@ final class TutorReport
         $groups = [];
         $transfer = [];
         $hyp = [];
+        $heldNotes = [];
         foreach ($attempts as $a) {
+            if (($a['held'] ?? null) !== null) {
+                $heldNotes[] = $a['skill_id'] . ': a check answer is ' . (self::HELD_WORDS[$a['held']] ?? 'held') . '; it is not counted as correct or as not yet.';
+                continue;
+            }
             if ($a['purpose'] === 'CHECK' && $a['help'] === []) {
                 $k = $a['skill_id'] . '|' . $a['verdict'];
                 $groups[$k] ??= ['skill_id' => $a['skill_id'], 'verdict' => $a['verdict'], 'ids' => []];
@@ -343,12 +388,12 @@ final class TutorReport
                 }
             }
         }
-        $unresolved = ['Skills not listed above were not tested in this session and carry no pass or fail label.', 'No later review check exists yet, so no retention evidence was collected.'];
+        $unresolved = array_merge(array_slice($heldNotes, 0, 20), ['Skills not listed above were not tested in this session and carry no pass or fail label.', 'No later review check exists yet, so no retention evidence was collected.']);
         $report = [
             'report_id' => Ids::make('rep'),
             'session_id' => $snap['session_id'],
             'state_revision' => $snap['revision'],
-            'architecture_version' => '1.3',
+            'architecture_version' => '1.5',
             'curriculum_version' => CurriculumRepository::CURRICULUM_VERSION,
             'status' => $status,
             'targets_attempted' => $topics,

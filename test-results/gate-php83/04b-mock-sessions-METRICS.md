@@ -2,64 +2,75 @@
 
 MOCK (simulated tutor; not a live result, not evidence of learning, latency not meaningful)
 
-Generated 2026-10-23T04:35:23Z by `app/tools/tutor_sessions.php`.
+Generated 2026-10-23T08:58:55Z by `app/tools/tutor_sessions.php` from 14 session files.
 
 **MOCK:** the tutor is the scripted mock. These numbers show how the loop spends calls; they are not live results, not evidence of learning, and the waits are not a latency measurement.
+
+## Sessions
+
+| Session | Turns | Calls | Answers recorded | Goals met (code) | Wait median / slowest ms | Tokens prompt (cached) / completion (reasoning) | Est. USD |
+|---|---|---|---|---|---|---|---|
+| B1-1 | 12 | 13 | 11 | Q07, Q06 | 15 / 31 | 0 (0) / 0 (0) | 0.0000 |
+| B1-2 | 12 | 13 | 11 | Q07, Q06 | 12 / 15 | 0 (0) / 0 (0) | 0.0000 |
+| B1-3 | 12 | 13 | 11 | Q07, Q06 | 11 / 12 | 0 (0) / 0 (0) | 0.0000 |
+| B1-4 | 12 | 13 | 11 | Q07, Q06 | 11 / 18 | 0 (0) / 0 (0) | 0.0000 |
+| B1-5 | 12 | 13 | 11 | Q07, Q06 | 12 / 25 | 0 (0) / 0 (0) | 0.0000 |
+| B11-1 | 9 | 10 | 4 | Q06 | 11 / 35 | 0 (0) / 0 (0) | 0.0000 |
+| B11-2 | 9 | 10 | 4 | E06 | 8 / 13 | 0 (0) / 0 (0) | 0.0000 |
+| BREAKER-1 | 9 | 11 | 5 | Q07 | 12 / 15 | 0 (0) / 0 (0) | 0.0000 |
+| HELP-SEEKER-1 | 23 | 24 | 7 | Q06 | 11 / 19 | 0 (0) / 0 (0) | 0.0000 |
+| N1-1 | 10 | 13 | 8 | E06 | 11 / 20 | 0 (0) / 0 (0) | 0.0000 |
+| N1-2 | 10 | 13 | 8 | E06 | 10 / 14 | 0 (0) / 0 (0) | 0.0000 |
+| descent-1 | 13 | 14 | 11 | E06, Q07 | 12 / 21 | 0 (0) / 0 (0) | 0.0000 |
+| descent-2 | 13 | 14 | 11 | E06, Q07 | 13 / 21 | 0 (0) / 0 (0) | 0.0000 |
+| descent-3 | 13 | 14 | 11 | E06, Q07 | 17 / 24 | 0 (0) / 0 (0) | 0.0000 |
 
 ## Calls per turn
 
 | Calls in the turn | Turns |
 |---|---|
-| 0 | 2 |
-| 1 | 121 |
-| 2 | 16 |
+| 1 | 150 |
+| 2 | 19 |
 
-Turns with exactly one call: 121 of 139 (87%). The first turn of each session also makes the architecture-binding call; a turn with an entry the AI must read makes a reading call first; a rejected output makes one repair call.
+Turns with exactly one call: 150 of 169 (89%). The first turn of each session also makes the binding call; an entry the AI must read makes a reading call first; a rejected output makes one repair call.
 
-## Learner wait (§3.7: median ≤ 4000 ms, slowest ≤ 10000 ms)
+## Latency per turn (round 6 §3.7 targets: median ≤ 4000 ms, slowest ≤ 10000 ms)
 
-Median 7 ms, slowest 30 ms over 139 turns. (Mock: not meaningful.)
+Median 12 ms, slowest 35 ms over 169 turns. (Mock: not meaningful.)
 
-## Sessions
-
-| Session | Turns | Calls | Answers recorded | Goals met (code) | Tokens prompt / completion / reasoning |
-|---|---|---|---|---|---|
-| B1-1 | 12 | 13 | 11 | Q07, Q06 | 0 / 0 / 0 |
-| B1-2 | 12 | 13 | 11 | Q07, E06 | 0 / 0 / 0 |
-| B1-3 | 12 | 13 | 11 | Q07, Q06 | 0 / 0 / 0 |
-| B1-4 | 12 | 13 | 11 | Q07, Q06 | 0 / 0 / 0 |
-| B1-5 | 12 | 13 | 11 | Q07, E06 | 0 / 0 / 0 |
-| descent-1 | 13 | 14 | 11 | E06, Q07 | 0 / 0 / 0 |
-| descent-2 | 13 | 14 | 11 | E06, Q07 | 0 / 0 / 0 |
-| descent-3 | 13 | 14 | 11 | E06, Q07 | 0 / 0 / 0 |
-| B11-1 | 10 | 10 | 5 | Q06 | 0 / 0 / 0 |
-| B11-2 | 10 | 10 | 5 | E06 | 0 / 0 / 0 |
-| N1-1 | 10 | 13 | 8 | E06 | 0 / 0 / 0 |
-| N1-2 | 10 | 13 | 8 | E06 | 0 / 0 / 0 |
-
-## Rejected AI output (0)
+## Guard findings by type (logged only; text shown unchanged)
 
 None.
 
-## Clarifying questions (0)
+## Held attempts by cause
 
 None.
 
-## Slips
-
-Confirmed by code (2):
-
-- N1-1: 6x + 20 on Expand 6(x + 5). Write your answer without parentheses.
-- N1-2: 7x + 74 on Expand 7(x + 12). Write your answer without parentheses.
-
-Claimed by the AI and rejected (0):
+## Repairs by cause
 
 None.
 
-## Forward-looking words before a check question (audit list, 0)
+## Holds by cause
 
 None.
 
-## HOLDs
+## Readings
 
-0
+| | Count |
+|---|---|
+| sent_for_reading | 5 |
+| accepted | 5 |
+| rejected | 0 |
+| readings_differ | 0 |
+| clarifying_questions_shown | 0 |
+| not_an_answer | 0 |
+
+## Empty replies, truncation and binding
+
+- Empty replies (empty content or empty student_message, each repaired): 0
+- Calls cut off at the token limit (finish_reason length): 0
+- Binding: 14 accepted in 14 sessions, 14 binding calls
+
+## Tokens and cost
+
+Prompt 0 (cached 0), completion 0 (reasoning 0). No price given.

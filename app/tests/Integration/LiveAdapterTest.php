@@ -132,7 +132,8 @@ final class LiveAdapterTest extends TestCase
         }
     }
 
-    public function testEmptyContentAndInternalWordsAreRepairedNotShown(): void
+    /** Round 7 §4: empty content is an envelope failure and is repaired; internal words are a text-guard finding, logged and shown unchanged. */
+    public function testEmptyContentIsRepairedAndInternalWordsAreLogged(): void
     {
         $server = self::fakeServer();
         $h = new Harness(self::LIVE, null, null);
@@ -147,10 +148,11 @@ final class LiveAdapterTest extends TestCase
             $this->assertSame('READY', $h->view['status']);
             $this->assertSame('empty content', $h->eventsOf('MODEL_OUTPUT_REJECTED')[0]['data']['errors'][0]);
             $server->script = ['INTERNAL_WORDS'];
-            $h->stuck('EXPLAIN');
-            $errors = array_map(fn ($e) => $e['data']['errors'][0], $h->eventsOf('MODEL_OUTPUT_REJECTED'));
-            $this->assertStringContainsString('uses internal terms: "answer key", "host"', $errors[1]);
-            $this->assertStringNotContainsString('host', strtolower(json_encode($h->view['conversation'])));
+            $h->stuck('HINT');
+            $this->assertCount(1, $h->eventsOf('MODEL_OUTPUT_REJECTED'), 'no repair for a guard finding');
+            $f = array_values(array_filter($h->eventsOf('GUARD_FINDING'), fn ($e) => $e['data']['guard'] === 'INTERNAL_VOCABULARY'));
+            $this->assertStringContainsString('answer key', $f[0]['data']['detail']);
+            $this->assertStringContainsString('host', strtolower(json_encode($h->view['conversation'])), 'the student sees the AI text unchanged');
         }
     }
 
@@ -206,10 +208,10 @@ final class LiveAdapterTest extends TestCase
         {
             $h->bootstrap();
             $h->start('Q07');
-            $server->script = ['LENGTH', 'EMPTY'];                 // the reply and its repair both rejected → code fallback
+            $server->script = ['LENGTH', 'EMPTY'];                 // the reply and its repair both rejected → a hold (round 7 §4.2)
             $h->send($h->wrong());
-            $this->assertSame('READY', $h->view['status']);
-            $this->assertCount(1, $h->eventsOf('FALLBACK_USED'));
+            $this->assertSame('HOLD', $h->view['status']);
+            $this->assertCount(1, $h->eventsOf('TURN_HELD'));
             $h->event('END_SESSION', [], null, null, false);
             $report = $h->request('GET', 'report')->body;
 

@@ -48,14 +48,14 @@ step "App preflight" 03-app-preflight.txt php "$APP/private/bin/preflight.php" -
 cd "$APP"
 step "PHPUnit unit + integration" 04-phpunit.txt php private/vendor/bin/phpunit --testdox --log-junit "$OUT/04-phpunit-junit.xml"
 # Round 6 §9.5: calls per turn on scripted mock sessions (never a live config here).
-step "Mock tutor sessions (calls per turn)" 04b-mock-sessions.txt env -u ALGEBRA_CONFIG php tools/tutor_sessions.php --out="$OUT/mock-sessions"
+step "Mock tutor sessions (calls per turn)" 04b-mock-sessions.txt env -u ALGEBRA_CONFIG php tools/tutor_sessions.php --out="$OUT/mock-sessions" --help-seeker=1 --breaker=1
 step "Browser (conversation UI, 360/390/1280)" 05-browser.txt node tests/Browser/run_browser.mjs "$OUT/browser"
 step "Bundle build (side-by-side VPS)" 06-bundle-build.txt "$BUILD_PHP" tools/build_bundle.php
 step "Bundle smoke (deploy layout)" 07-bundle-smoke.txt php tools/bundle_smoke.php "$REPO/dist"
 # After the bundle build, so the ZIP just built is scanned. Uses ALGEBRA_CONFIG for the configured key when set.
 step "Key-leak scan (tracked files + ZIP)" 09-key-leak-scan.txt php tools/key_leak_scan.php
 echo "" >> "$SUMMARY"
-echo "Note: the F1 manifest check lists only ruled differences (architecture/CHANGELOG.md, TEACHER_FACILITATOR_GUIDE_DRAFT.md, CLAUDE.md and architecture/Algebra_Constraint_Architecture_v1.3.md; round 6 §0.6), and HANDOFF_PREFLIGHT_REPORT.json is restored after the preflight rewrites it; see BUILD_LOG.md." >> "$SUMMARY"
+echo "Note: the F1 manifest check lists only ruled differences (architecture/CHANGELOG.md, TEACHER_FACILITATOR_GUIDE_DRAFT.md, CLAUDE.md and architecture/Algebra_Constraint_Architecture_v1.3.md and v1.5.md; round 6 §0.6, round 7 §2.5), and HANDOFF_PREFLIGHT_REPORT.json is restored after the preflight rewrites it; see BUILD_LOG.md." >> "$SUMMARY"
 echo "" >> "$SUMMARY"
-echo "Every result here is from mock mode (simulated tutor). Live runs need a key and are not part of this runner; the round 6 live runs are Stage 2 (\`app/tools/tutor_sessions.php\` with a live config)." >> "$SUMMARY"
+echo "Every result here is from mock mode (simulated tutor). Live runs need a key and are not part of this runner; the round 7 live runs are in \`test-results/live/round7/\` (\`app/tools/tutor_sessions.php\` with a live config)." >> "$SUMMARY"
 exit $overall

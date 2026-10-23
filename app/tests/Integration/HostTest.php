@@ -134,7 +134,7 @@ final class HostTest extends TestCase
         $this->assertSame(1, $this->attempts($h));
     }
 
-    /** HOST-05: empty, invalid or truncated output → one repair, then the code fallback; no learner failure; no raw output shown. */
+    /** HOST-05: empty, invalid or truncated output → one repair, then a hold (round 7 §4.2: no code fallback); no learner failure; no raw output shown. */
     public function testHost05EmptyAndTruncatedOutput(): void
     {
         $h = new Harness();
@@ -151,7 +151,9 @@ final class HostTest extends TestCase
         $h2->send($h2->wrong());
         $errors = array_merge(...array_map(fn ($e) => $e['data']['errors'], $h2->eventsOf('MODEL_OUTPUT_REJECTED')));
         $this->assertSame("output is not valid JSON: Syntax error (character 0: expected a value, found 'H')", $errors[0]);
-        $this->assertCount(1, $h2->eventsOf('FALLBACK_USED'));
+        $this->assertSame('HOLD', $h2->view['status'], 'the repair failed too: the turn is held, with a retry');
+        $this->assertCount(1, $h2->eventsOf('TURN_HELD'));
+        $this->assertSame([], $h2->eventsOf('FALLBACK_USED'));
         $this->assertSame('INCORRECT', $h2->attempts()[0]['verdict'], 'the answer was recorded once on its own merits');
         $text = json_encode($h2->view);
         $this->assertStringNotContainsString('Here is my reply', $text);
@@ -290,11 +292,13 @@ final class HostTest extends TestCase
         $this->assertFalse($log[1]['json'], 'one bounded activation repair, still text mode');
         $this->assertTrue($log[2]['json']);
         $this->assertSame(['system', 'system', 'user', 'assistant', 'user'], array_column($log[2]['messages'], 'role'));
-        $this->assertSame('ACE_BOUND: architecture=1.3 | first_principle=truth_over_approval | scope=algebra | role=tutor', $log[2]['messages'][3]['content']);
+        $this->assertSame('ACE_BOUND: architecture=1.5 | first_principle=truth_over_approval | scope=algebra | role=tutor', $log[2]['messages'][3]['content']);
         $binding = $h->eventsOf('BINDING_ACCEPTED')[0]['data'];
         $this->assertStringContainsString('not evidence of enforcement', $binding['note']);
-        $this->assertSame(hash_file('sha256', ALGEBRA_REPO_ROOT . '/architecture/Algebra_Constraint_Architecture_v1.3.md'), $binding['architecture_sha256']);
-        $this->assertSame(hash_file('sha256', ALGEBRA_APP_ROOT . '/private/resources/architecture/Algebra_Constraint_Architecture_v1.3.md'), $binding['architecture_sha256']);
+        $this->assertSame('d021eb2a1dba333a2caabc3efe73ae3cd2405d04e6a017716528ca5ac8b27e12', $binding['architecture_sha256'], 'round 7 §2.1: the owner\'s v1.5, byte-identical');
+        $this->assertSame(hash_file('sha256', ALGEBRA_REPO_ROOT . '/architecture/Algebra_Constraint_Architecture_v1.5.md'), $binding['architecture_sha256']);
+        $this->assertSame(hash_file('sha256', ALGEBRA_APP_ROOT . '/private/resources/architecture/Algebra_Constraint_Architecture_v1.5.md'), $binding['architecture_sha256']);
+        $this->assertSame(['Algebra_Constraint_Architecture_v1.5.md'], array_values(array_map('basename', glob(ALGEBRA_APP_ROOT . '/private/resources/architecture/*.md'))), 'the app loads v1.5 only');
         $h->answerCorrectly();
         $this->assertCount(1, $h->eventsOf('BINDING_ACCEPTED'), 'no second handshake');
         // A provider that will not bind holds before any tutoring.
@@ -429,6 +433,27 @@ final class HostTest extends TestCase
     }
 
     /** Two requests opening a fresh database together: every migration is applied once. */
+    /** Round 7 §2.3: a session stored under architecture 1.3 is rebound to 1.5 on its next turn. */
+    public function testASessionBoundTo13IsReboundTo15(): void
+    {
+        $h = new Harness();
+        $h->start('Q07');
+        $sid = $h->sessionId();
+        $row = $h->app->store->session($sid);
+        $old = hash_file('sha256', ALGEBRA_REPO_ROOT . '/architecture/Algebra_Constraint_Architecture_v1.3.md');
+        $snap = $row['snapshot'];
+        $snap['architecture_version'] = '1.3';
+        $snap['binding']['architecture_sha256'] = $old;
+        $h->app->store->db->exec('UPDATE sessions SET snapshot_json = ? WHERE session_id = ?', [json_encode($snap), $sid]);
+        $calls = $h->mock->calls;
+        $this->assertSame(200, $h->send($h->wrong())->status);
+        $this->assertSame(2, $h->mock->calls - $calls, 'a binding call to v1.5, then the reply');
+        $bindings = $h->eventsOf('BINDING_ACCEPTED');
+        $this->assertCount(2, $bindings);
+        $this->assertSame([$old, 'd021eb2a1dba333a2caabc3efe73ae3cd2405d04e6a017716528ca5ac8b27e12'], [$bindings[1]['data']['rebound_from_architecture_sha256'], $bindings[1]['data']['architecture_sha256']]);
+        $this->assertSame('1.5', $h->row()['snapshot']['architecture_version']);
+    }
+
     public function testMigrationsAreSafeToRunTwice(): void
     {
         $db = sys_get_temp_dir() . '/ae_migrate_' . bin2hex(random_bytes(4)) . '.sqlite';
@@ -436,7 +461,7 @@ final class HostTest extends TestCase
         new \AlgebraEngine\Storage\Database($db, $dir);
         new \AlgebraEngine\Storage\Database($db, $dir);
         $pdo = new \PDO('sqlite:' . $db);
-        $this->assertSame([1, 2, 3, 4, 5], array_map('intval', $pdo->query('SELECT version FROM schema_migrations ORDER BY version')->fetchAll(\PDO::FETCH_COLUMN)));
+        $this->assertSame([1, 2, 3, 4, 5, 6], array_map('intval', $pdo->query('SELECT version FROM schema_migrations ORDER BY version')->fetchAll(\PDO::FETCH_COLUMN)));
         $pdo->exec((string) file_get_contents($dir . '/004_progress.sql'));
         $this->assertSame(1, (int) $pdo->query("SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = 'progress'")->fetchColumn());
         $pdo = null;

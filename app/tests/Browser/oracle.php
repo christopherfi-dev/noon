@@ -16,7 +16,14 @@ if (!$row) {
 $eng = json_decode($row['engine_json'], true);
 $o = $eng['open'];
 $calls = (int) $db->query("SELECT COUNT(*) FROM model_calls WHERE session_id = " . $db->quote($row['session_id']))->fetchColumn();
-$out = ['topic' => $eng['topic'], 'focus' => $eng['focus'], 'status' => $eng['status'], 'wrap_up' => (bool) ($eng['wrap_up'] ?? false), 'calls' => $calls, 'open' => null];
+$sets = [];
+$stmt = $db->prepare("SELECT data_json FROM events WHERE session_id = ? AND type = 'PROBLEM_PRESENTED'");
+$stmt->execute([$row['session_id']]);
+foreach ($stmt->fetchAll(PDO::FETCH_COLUMN) as $json) {
+    $d = json_decode($json, true);
+    $sets[] = $d['number_set'] ?? '';
+}
+$out = ['topic' => $eng['topic'], 'focus' => $eng['focus'], 'status' => $eng['status'], 'wrap_up' => (bool) ($eng['wrap_up'] ?? false), 'calls' => $calls, 'used_sets' => $sets, 'open' => null];
 if ($o !== null) {
     $e = $o['answer']['expected'];
     $out['open'] = [

@@ -63,7 +63,7 @@ final class ReportTest extends TestCase
         foreach ($learner['did_well'] as $line) {
             $this->assertStringContainsString('goal met: 3 correct without help (one slip may pause the count)', $line);
         }
-        $this->assertContains('Once you multiplied only the x by the number outside the parentheses.', $learner['trouble'], 'an observation, in plain words');
+        $this->assertContains('Once you multiplied only the first term inside the parentheses.', $learner['trouble'], 'an observation, in plain words (round 7 §8.3: one description on Q07 and E06)');
         $this->assertContains('Solve equations containing parentheses: 1 answer was not right yet.', $learner['trouble']);
         $this->assertContains('Apply the distributive property with positive factors: you used help.', $learner['trouble'], 'the hint was on the step-back practice');
         $this->assertContains('We went back to “Apply the distributive property with positive factors”, then returned to “Solve equations containing parentheses”.', $learner['worked_on'], 'the route as a sentence');
@@ -133,7 +133,7 @@ final class ReportTest extends TestCase
         $h->event('END_SESSION', [], null, null, false);
         $report = $h->request('GET', 'report')->body;
         $section = array_values(array_filter($report['summary']['teacher']['sections'], fn ($s) => $s['heading'] === 'Before check questions (audit)'))[0];
-        $this->assertSame(['Before the check question “Solve 3x + 4 = 19 for x.”, the tutor used forward-looking words: next, try, remember (audit list only; the tutor\'s own text is not part of this report).'], $section['lines']);
+        $this->assertSame(['Before the check question “Solve 3x + 4 = 19 for x.”, the tutor\'s text had phrases directed at it: next, try, remember. The answer to it is held. (Audit list only; the tutor\'s own text is not part of this report.)'], $section['lines']);
         $json = json_encode($report);
         foreach (array_column(array_filter($h->lines(), fn ($l) => $l['role'] === 'tutor' && $l['kind'] === 'message'), 'text') as $tutorText) {
             $this->assertStringNotContainsString(json_encode($tutorText), $json, 'no AI-written text appears in the report');

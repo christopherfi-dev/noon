@@ -6,9 +6,9 @@ namespace AlgebraEngine\Tutor;
 use AlgebraEngine\Math\Normalizer;
 
 /**
- * Numbers written in a piece of text, as digits or as number words from the
- * existing list (zero to twenty). Used by the reading check (§4.1), the
- * problem checks (§4.2) and the check-card rule (§5.2).
+ * Numbers written in a piece of text, as digits or as number words (zero to
+ * 999, round 7 §7.2). Used by the reading check, the problem checks and the
+ * before-check-card audit.
  */
 final class Numbers
 {
@@ -38,8 +38,10 @@ final class Numbers
     }
 
     /**
-     * Values written as number words (zero to twenty). "One" used as a
-     * determiner or pronoun ("one way", "each one") is not the value 1.
+     * Values written as number words, including compounds up to 999 (round 7
+     * §7.2): "twenty five", "twenty-five", "one hundred and four", "a hundred".
+     * "One" used as a determiner or pronoun ("one way", "each one") is not the
+     * value 1.
      *
      * @return list<int>
      */
@@ -47,43 +49,107 @@ final class Numbers
     {
         $lower = mb_strtolower($text, 'UTF-8');
         $out = [];
-        foreach (EntryReader::NUMBER_WORDS as $value => $word) {
-            if (!preg_match_all('/(?<![\p{L}])' . $word . '(?![\p{L}])/u', $lower, $m, PREG_OFFSET_CAPTURE)) {
+        foreach (self::phrases($lower) as $p) {
+            if ($p['text'] === 'one' && self::oneAsDeterminer($lower, $p['start'], $p['end'])) {
                 continue;
             }
-            foreach ($m[0] as [$found, $offset]) {
-                if ($value === 1 && self::oneAsDeterminer($lower, $offset, $offset + strlen($found))) {
-                    continue;
-                }
-                $out[] = $value;
-                break;
+            $out[] = $p['value'];
+        }
+        return array_values(array_unique($out));
+    }
+
+    /** Kept for callers of the round 6 name; words() now reads compounds itself. @return list<int> */
+    public static function wordsExtended(string $text): array
+    {
+        return self::words($text);
+    }
+
+    private const UNITS = ['zero' => 0, 'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 6, 'seven' => 7, 'eight' => 8, 'nine' => 9,
+        'ten' => 10, 'eleven' => 11, 'twelve' => 12, 'thirteen' => 13, 'fourteen' => 14, 'fifteen' => 15, 'sixteen' => 16, 'seventeen' => 17,
+        'eighteen' => 18, 'nineteen' => 19];
+    private const TENS = ['twenty' => 20, 'thirty' => 30, 'forty' => 40, 'fifty' => 50, 'sixty' => 60, 'seventy' => 70, 'eighty' => 80, 'ninety' => 90];
+
+    /**
+     * Number-word phrases in lower-case text, longest first at each position:
+     * [unit] hundred [and] [tens[-unit] | unit], tens[-unit], or a unit.
+     * Words in a phrase are separated by spaces or one hyphen only.
+     *
+     * @return list<array{value:int,start:int,end:int,text:string}> byte offsets
+     */
+    public static function phrases(string $lower): array
+    {
+        preg_match_all('/\p{L}+/u', $lower, $m, PREG_OFFSET_CAPTURE);
+        $w = array_map(fn ($x) => ['t' => $x[0], 's' => $x[1], 'e' => $x[1] + strlen($x[0])], $m[0]);
+        $joined = function (int $a, int $b) use ($w, $lower): bool {
+            if (!isset($w[$a], $w[$b])) {
+                return false;
             }
+            $gap = substr($lower, $w[$a]['e'], $w[$b]['s'] - $w[$a]['e']);
+            return preg_match('/^(?:\s+|-)$/', $gap) === 1;
+        };
+        $out = [];
+        $n = count($w);
+        for ($i = 0; $i < $n;) {
+            $t = $w[$i]['t'];
+            $value = null;
+            $j = $i;
+            $lead = self::UNITS[$t] ?? ($t === 'a' ? 1 : null);
+            if ($lead !== null && $lead > 0 && $lead < 10 && ($w[$i + 1]['t'] ?? '') === 'hundred' && $joined($i, $i + 1)) {
+                $value = $lead * 100;
+                $j = $i + 2;
+                $k = $j;
+                if (($w[$k]['t'] ?? '') === 'and' && $joined($k - 1, $k)) {
+                    $k++;
+                }
+                if ($k < $n && $joined($k - 1, $k)) {
+                    [$v, $next] = self::belowHundred($w, $k, $joined);
+                    if ($v !== null && $v > 0) {
+                        $value += $v;
+                        $j = $next;
+                    }
+                }
+            } elseif ($t !== 'a') {
+                [$value, $j] = self::belowHundred($w, $i, $joined);
+            }
+            if ($value === null) {
+                $i++;
+                continue;
+            }
+            $out[] = ['value' => $value, 'start' => $w[$i]['s'], 'end' => $w[$j - 1]['e'], 'text' => substr($lower, $w[$i]['s'], $w[$j - 1]['e'] - $w[$i]['s'])];
+            $i = $j;
         }
         return $out;
     }
 
-    private const TENS = ['twenty' => 20, 'thirty' => 30, 'forty' => 40, 'fifty' => 50, 'sixty' => 60, 'seventy' => 70, 'eighty' => 80, 'ninety' => 90];
-
-    /**
-     * Number words beyond the existing list, for detection only (the
-     * check-card rule): the tens and compounds such as "twenty-eight". The
-     * reading check does not use these; it accepts only the existing list.
-     *
-     * @return list<int>
-     */
-    public static function wordsExtended(string $text): array
+    /** The whole text is one number-word phrase, optionally after "negative": its value, else null. */
+    public static function phraseValue(string $text): ?int
     {
-        $lower = mb_strtolower($text, 'UTF-8');
-        $out = self::words($text);
-        $units = array_slice(EntryReader::NUMBER_WORDS, 1, 9);
-        foreach (self::TENS as $word => $value) {
-            if (preg_match_all('/(?<![\p{L}])' . $word . '(?:[\s\-]+(' . implode('|', $units) . '))?(?![\p{L}])/u', $lower, $m)) {
-                foreach ($m[1] as $unit) {
-                    $out[] = $unit === '' ? $value : $value + (int) array_search($unit, EntryReader::NUMBER_WORDS, true);
-                }
-            }
+        $lower = trim((string) preg_replace('/\s+/u', ' ', mb_strtolower(trim($text), 'UTF-8')));
+        $lower = rtrim($lower, '.!');
+        $sign = 1;
+        if (str_starts_with($lower, 'negative ')) {
+            $sign = -1;
+            $lower = substr($lower, 9);
         }
-        return array_values(array_unique($out));
+        $p = self::phrases($lower);
+        return count($p) === 1 && $p[0]['start'] === 0 && $p[0]['end'] === strlen($lower) ? $sign * $p[0]['value'] : null;
+    }
+
+    /** @return array{0:?int,1:int} a value below 100 starting at word $i, and the index after it */
+    private static function belowHundred(array $w, int $i, callable $joined): array
+    {
+        $t = $w[$i]['t'] ?? '';
+        if (isset(self::TENS[$t])) {
+            $u = $w[$i + 1]['t'] ?? '';
+            if (isset(self::UNITS[$u]) && self::UNITS[$u] > 0 && self::UNITS[$u] < 10 && $joined($i, $i + 1)) {
+                return [self::TENS[$t] + self::UNITS[$u], $i + 2];
+            }
+            return [self::TENS[$t], $i + 1];
+        }
+        if (isset(self::UNITS[$t])) {
+            return [self::UNITS[$t], $i + 1];
+        }
+        return [null, $i];
     }
 
     /** Every number in the text, as digit strings and number-word values (as strings). @return list<string> */

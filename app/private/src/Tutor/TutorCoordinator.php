@@ -11,13 +11,14 @@ use AlgebraEngine\Support\Json;
 use AlgebraEngine\Support\JsonSyntax;
 
 /**
- * Round 6 §3: the AI calls. A text-mode binding call once per session; then
- * per learner turn one reply call (and, for an entry only the AI can read, a
- * reading call first). Every envelope is checked after the call: schema,
- * identity, the text guards, the verdict rule, the check-card rule, and the
- * proposed problem through ProblemVerifier. A failing envelope gets exactly
- * one repair call; if that fails too, the caller uses the code fallback. The
- * provider's reasoning text is never read.
+ * The AI calls (round 6 §3, round 7 §4). A text-mode binding call once per
+ * session; then per learner turn one reply call (and, for an entry only the AI
+ * can read, a reading call first). Every envelope is checked after the call:
+ * schema, identity, the output contract's field rules, and the proposed
+ * problem through ProblemVerifier. Only those failures get a repair: exactly
+ * one repair call, and if that fails too the caller holds the turn. The text
+ * guards run on the accepted envelope and are returned as findings to log;
+ * they never cause a repair. The provider's reasoning text is never read.
  */
 final class TutorCoordinator
 {
@@ -81,7 +82,7 @@ final class TutorCoordinator
             $messages[] = ['role' => 'assistant', 'content' => mb_substr($text, 0, 2000)];
             $messages[] = ['role' => 'user', 'content' => 'CONTROL: That reply is not the exact activation line. Respond with only the exact line from Section 16, or the exact halt line.'];
         }
-        return ['ok' => false, 'failure' => ['type' => 'BINDING_NOT_ESTABLISHED', 'detail' => 'The provider did not return the exact architecture 1.3 activation line after one repair.']];
+        return ['ok' => false, 'failure' => ['type' => 'BINDING_NOT_ESTABLISHED', 'detail' => 'The provider did not return the exact architecture 1.5 activation line after one repair.']];
     }
 
     /**
@@ -97,7 +98,8 @@ final class TutorCoordinator
     /**
      * The reply call: one envelope, at most one next problem, verified by code.
      *
-     * @return array{ok:bool,failure?:array,fallback?:bool,repairs:list<array>,message?:string,problem?:?array,move?:?array,proposals?:list<array>,forward?:list<string>,dropped_prompt_chars?:int,discarded_chars?:int}
+     * @return array{ok:bool,failure?:array,invalid?:bool,repairs:list<array>,message?:string,problem?:?array,move?:?array,proposals?:list<array>,
+     *   findings?:list<array>,card?:?array,issue?:?array,ai_prompt?:string,dropped_prompt_chars?:int,discarded_chars?:int}
      */
     public function reply(array $context, array $expect, array $reasoning, callable $budget, callable $log): array
     {
@@ -137,7 +139,7 @@ final class TutorCoordinator
                 $messages = $this->prompt->repair($messages, $resp->content, $errors);
             }
         }
-        return ['ok' => false, 'fallback' => true, 'invalid' => true, 'repairs' => $repairs, 'discarded_chars' => $discarded];
+        return ['ok' => false, 'invalid' => true, 'repairs' => $repairs, 'discarded_chars' => $discarded];
     }
 
     /** @return array{0:?array,1:mixed,2:list<string>} */
@@ -172,7 +174,8 @@ final class TutorCoordinator
      */
     private function check(array $env, object $raw, array $x): array
     {
-        $out = ['errors' => [], 'message' => '', 'problem' => null, 'move' => null, 'proposals' => [], 'forward' => [], 'dropped_prompt_chars' => 0, 'reading' => null];
+        $out = ['errors' => [], 'message' => '', 'problem' => null, 'move' => null, 'proposals' => [], 'findings' => [], 'card' => null,
+            'issue' => null, 'ai_prompt' => '', 'dropped_prompt_chars' => 0, 'reading' => null];
         $errors = $this->schemas->errors($raw, 'tutor-envelope.schema.json');
         if ($errors !== []) {
             $out['errors'] = $errors;
@@ -216,27 +219,9 @@ final class TutorCoordinator
                 } else {
                     $problem = $v['problem'];
                     $out['dropped_prompt_chars'] = $v['dropped_prompt_chars'];
+                    $out['ai_prompt'] = mb_substr(trim($item['prompt']), 0, 600);
                 }
             }
-        }
-        $protected = $x['protected'] ?? [];
-        if ($problem !== null) {
-            $protected[] = $problem;
-        }
-        foreach (TextGuard::violations($message, $protected) as $v) {
-            $errors[] = 'student_message: ' . $v;
-        }
-        if (($x['verdict'] ?? null) !== null) {
-            foreach (TextGuard::contradicts($message, $x['verdict']) as $v) {
-                $errors[] = 'student_message: ' . $v;
-            }
-        }
-        if ($problem !== null && $problem['purpose'] === 'CHECK') {
-            $card = TextGuard::beforeCheckCard($message, $problem);
-            foreach ($card['violations'] as $v) {
-                $errors[] = 'student_message: ' . $v;
-            }
-            $out['forward'] = $card['forward'];
         }
         $move = $env['proposed_transition'];
         if ($move !== null) {
@@ -251,12 +236,24 @@ final class TutorCoordinator
             }
         }
         $out['errors'] = $errors;
-        if ($errors === []) {
-            $out['message'] = $message;
-            $out['problem'] = $problem;
-            $out['move'] = $move;
-            $out['proposals'] = $this->reviewProposals($env, $x['known_event_ids'] ?? []);
+        if ($errors !== []) {
+            return $out;
         }
+        // Accepted. The detectors log; nothing they find changes the text (round 7 §4).
+        $protected = $x['protected'] ?? [];
+        if ($problem !== null) {
+            $protected[] = $problem;
+        }
+        $out['findings'] = TextGuard::findings($message, $protected, $x['verdict'] ?? null);
+        if ($problem !== null && $problem['purpose'] === 'CHECK') {
+            $out['card'] = TextGuard::beforeCheckCard($message, $problem);
+            $out['findings'] = array_merge($out['findings'], $out['card']['findings']);
+        }
+        $out['message'] = $message;
+        $out['problem'] = $problem;
+        $out['move'] = $move;
+        $out['issue'] = $env['issue'];
+        $out['proposals'] = $this->reviewProposals($env, $x['known_event_ids'] ?? []);
         return $out;
     }
 
@@ -284,7 +281,9 @@ final class TutorCoordinator
             $out[] = ['kind' => 'resource', 'proposal' => $r, 'status' => 'RECORDED_NOT_ACTED_ON', 'reason' => 'the curriculum slice is supplied with every request'];
         }
         if ($env['issue'] !== null) {
-            $out[] = ['kind' => 'issue', 'proposal' => $env['issue'], 'status' => 'RECORDED_NOT_ACTED_ON', 'reason' => 'model-raised issue recorded for review'];
+            $conflict = $env['issue']['type'] === 'VERIFICATION_CONFLICT';
+            $out[] = ['kind' => 'issue', 'proposal' => $env['issue'], 'status' => $conflict ? 'RECORDED_ATTEMPT_HELD' : 'RECORDED_NOT_ACTED_ON',
+                'reason' => $conflict ? 'a verdict conflict: the answered attempt is held for review (round 7 §5)' : 'model-raised issue recorded for review'];
         }
         return $out;
     }

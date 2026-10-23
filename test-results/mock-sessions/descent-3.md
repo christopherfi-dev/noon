@@ -1,76 +1,151 @@
 # descent-3 — MOCK (simulated tutor; not a live result, not evidence of learning, latency not meaningful)
 
-| # | Learner input | Calls (purpose: reasoning) | Wait ms |
-|---|---|---|---|
-| 0 | (start on Q07) | 2 — BINDING: disabled (binding call); REPLY: disabled (per call: none of the three cases) | 6 |
-| 1 | -15/4 | 1 — REPLY: disabled (per call: none of the three cases) | 7 |
-| 2 | 4x+48 | 1 — REPLY: disabled (per call: none of the three cases) | 12 |
-| 3 | 3x+18 | 1 — REPLY: disabled (per call: none of the three cases) | 9 |
-| 4 | I'm stuck: HINT | 1 — REPLY: disabled (per call: none of the three cases) | 8 |
-| 5 | A,C | 1 — REPLY: disabled (per call: none of the three cases) | 8 |
-| 6 | 3x+30 | 1 — REPLY: disabled (per call: none of the three cases) | 9 |
-| 7 | D | 1 — REPLY: disabled (per call: none of the three cases) | 9 |
-| 8 | 15x+60 | 1 — REPLY: disabled (per call: none of the three cases) | 18 |
-| 9 | 1 | 1 — REPLY: disabled (per call: none of the three cases) | 8 |
-| 10 | 2 | 1 — REPLY: disabled (per call: none of the three cases) | 8 |
-| 11 | C | 1 — REPLY: disabled (per call: none of the three cases) | 8 |
-| 12 | -8 | 1 — REPLY: disabled (per call: none of the three cases) | 8 |
+| # | Learner input | Calls (purpose: reasoning setting) | Outcomes | Wait ms |
+|---|---|---|---|---|
+| 0 | (start on Q07) | 2 — BINDING: disabled (binding call); REPLY: disabled (per call: none of the three cases) | ACCEPTED, ACCEPTED | 10 |
+| 1 | 49/8 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 2 | 2x+14 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 3 | 4x+16 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 4 | I'm stuck: HINT | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 5 | A,C | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 6 | 2x+8 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 7 | B,C | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 10 |
+| 8 | 21x+56 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 15 |
+| 9 | 12 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 16 |
+| 10 | 5 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 21 |
+| 11 | A | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 25 |
+| 12 | 11 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 13 |
 
-## Conversation as the student saw it
+## Conversation as the student saw it (the last 80 lines the session keeps)
 
+- **tutor (message):** Let's work on solve equations containing parentheses. Start with this practice question, and tell me if anything is unclear.
+- **tutor (problem):** Solve 8(x + 7) = 56 for x.
+- **student (message):** 49/8
+- **app (result):** Not yet. / On 8(x + 7) = 56 you answered 49/8.
+- **tutor (message):** Your answer multiplied only the first term inside the parentheses by 8. Let's practise that part on its own first. What happens to each term inside the parentheses?
+- **tutor (problem):** Expand 2(x + 7). Write your answer without parentheses.
+- **student (message):** 2x+14
+- **app (result):** Correct. / On 2(x + 7) you answered 2x+14.
 - **tutor (message):** Yes: you used the distributive property: the number outside multiplies every term inside the parentheses.
-- **app (check):** Expand 3(x + 6). Write your answer without parentheses.
-- **student (message):** 3x+18
-- **app (result):** Correct. / On 3(x + 6) you answered 3x+18.
+- **app (check):** Expand 4(x + 4). Write your answer without parentheses.
+- **student (message):** 4x+16
+- **app (result):** Correct. / On 4(x + 4) you answered 4x+16.
 - **tutor (message):** Yes: you used the distributive property: the number outside multiplies every term inside the parentheses.
-- **app (check):** Which of these expressions are equal to 6(x + 8) for every value of x? Select every one that is. / A) 6x + 48 / B) x + 48 / C) 6 · x + 6 · 8 / D) x + 14
+- **app (check):** Which of these expressions are equal to 4(x + 7) for every value of x? Select every one that is. / A) 4x + 28 / B) 4x + 7 / C) 4 · x + 4 · 7 / D) x + 11
 - **student (message):** I'm stuck: give me a hint.
 - **tutor (message):** Here is a hint: look at what is being done to x, and in what order. What could you undo first while keeping both sides equal?
 - **student (message):** A,C
-- **app (result):** Correct. / On 6(x + 8) you chose A and C.
+- **app (result):** Correct. / On 4(x + 7) you chose A and C.
 - **tutor (message):** Yes: you used the distributive property: the number outside multiplies every term inside the parentheses.
-- **app (check):** Expand 3(x + 10). Write your answer without parentheses.
-- **student (message):** 3x+30
-- **app (result):** Correct. / On 3(x + 10) you answered 3x+30.
+- **app (check):** Expand 2(x + 4). Write your answer without parentheses.
+- **student (message):** 2x+8
+- **app (result):** Correct. / On 2(x + 4) you answered 2x+8.
 - **tutor (message):** Yes: you used the distributive property: the number outside multiplies every term inside the parentheses.
-- **app (check):** Which of these expressions are equal to 9(x + 7) for every value of x? Select every one that is. / A) x + 63 / B) x + 16 / C) 9x + 7 / D) 9 · x + 9 · 7
-- **student (message):** D
-- **app (result):** Correct. / On 9(x + 7) you chose D.
+- **app (check):** Which of these expressions are equal to 5(x + 1) for every value of x? Select every one that is. / A) x + 5 / B) 5 · x + 5 · 1 / C) 5x + 5 / D) x + 6
+- **student (message):** B,C
+- **app (result):** Correct. / On 5(x + 1) you chose B and C.
 - **tutor (message):** Yes: you used the distributive property: the number outside multiplies every term inside the parentheses.
-- **app (check):** Expand 5(3x + 12). Write your answer without parentheses.
-- **student (message):** 15x+60
-- **app (result):** Correct. / On 5(3x + 12) you answered 15x+60.
+- **app (check):** Expand 7(3x + 8). Write your answer without parentheses.
+- **student (message):** 21x+56
+- **app (result):** Correct. / On 7(3x + 8) you answered 21x+56.
 - **tutor (message):** Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. Let's go back to the topic you started with.
-- **tutor (problem):** Solve 3(x − 5) = −12 for x.
-- **student (message):** 1
-- **app (result):** Correct. / On 3(x − 5) = −12 you answered 1.
+- **tutor (problem):** Solve 7(x + 4) = 112 for x.
+- **student (message):** 12
+- **app (result):** Correct. / On 7(x + 4) = 112 you answered 12.
 - **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal.
-- **app (check):** Solve 8(x + 8) = 80 for x.
-- **student (message):** 2
-- **app (result):** Correct. / On 8(x + 8) = 80 you answered 2.
+- **app (check):** Solve 2(x − 9) = −8 for x.
+- **student (message):** 5
+- **app (result):** Correct. / On 2(x − 9) = −8 you answered 5.
 - **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal.
-- **app (check):** Here is an equation: 2(x − 7) = −22. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply only the x by 2: 2x − 7 = −22 / B) Divide only the left side by 2: x − 7 = −22 / C) Divide both sides by 2: x − 7 = −11 / D) Add 7 to undo the −7: 2x = −15
-- **student (message):** C
-- **app (result):** Correct. / On 2(x − 7) = −22 you chose C.
+- **app (check):** Here is an equation: 8(x + 4) = 56. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply both terms in the parentheses by 8: 8x + 32 = 56 / B) Multiply only the x by 8: 8x + 4 = 56 / C) Divide only the left side by 8: x + 4 = 56 / D) Subtract 4 to undo the 4: 8x = 52
+- **student (message):** A
+- **app (result):** Correct. / On 8(x + 4) = 56 you chose A.
 - **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal.
-- **app (check):** Solve −42 = 3(x − 6) for x.
-- **student (message):** -8
-- **app (result):** Correct. / On −42 = 3(x − 6) you answered -8.
+- **app (check):** Solve 5(x − 5) + 13 = 43 for x.
+- **student (message):** 11
+- **app (result):** Correct. / On 5(x − 5) + 13 = 43 you answered 11.
 - **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. That completes the work planned for this session. You can look at your summary now.
-- **app (notice):** This session has ended. Your summary is ready.
+
+## Every tutor message, with the answered and open problem it was written for
+
+| Field | Text | Answered problem (attempt) | Open problem |
+|---|---|---|---|
+| student_message | Let's work on solve equations containing parentheses. Start with this practice question, and tell me if anything is unclear. | — | — |
+| student_message | Your answer multiplied only the first term inside the parentheses by 8. Let's practise that part on its own first. What happens to each term inside the parentheses? | prb_151ae4a61ab3f850271d0726 (evt_48bf0d4851852fcf74eb55c4) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_3b4ddda3741e57e786766cdb (evt_2d7e383ac13300bed730c1bd) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_354382f7c7aff5393deea9f9 (evt_71970fdcd3f1aa6060735a9d) | — |
+| student_message | Here is a hint: look at what is being done to x, and in what order. What could you undo first while keeping both sides equal? | prb_354382f7c7aff5393deea9f9 (evt_71970fdcd3f1aa6060735a9d) | prb_cb66542771556343c4429a09 check |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_cb66542771556343c4429a09 (evt_fc9959db0dc517c478b5e554) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_bb0ed54f1ad36b0cec7a89b2 (evt_b95819a05242c5c57b8b5ec5) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_f4315e4a5a27cd046d681797 (evt_185abfe1fd84572ac9741442) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. Let's go back to the topic you started with. | prb_a5f15c53020acb0a686127b2 (evt_5220b706936de453664ab068) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_e39dbd73257cea3929d84dde (evt_93e42d8960c5745829064c3f) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_4f9711c947eb9100d9e9fb85 (evt_5f6d7cad8b59209bc821ac81) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_6dd09fce4178443d4fc33a95 (evt_da3eb932fdd73ff4b0cc7311) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. That completes the work planned for this session. You can look at your summary now. | prb_8c793d09a619a01a4ca1e8f6 (evt_b106584eba0fa3bc6d8fcc48) | — |
 
 ## Verdicts recorded by code
 
-| Problem | Purpose | Entry | Read as | Verdict | Help | Slip |
-|---|---|---|---|---|---|---|
-| Solve 8(x + 6) = −24 for x. | PRACTICE | -15/4 | -15/4 | INCORRECT |  |  |
-| Expand 4(x + 12). Write your answer without parentheses. | PRACTICE | 4x+48 | 4x+48 | CORRECT |  |  |
-| Expand 3(x + 6). Write your answer without parentheses. | CHECK | 3x+18 | 3x+18 | CORRECT |  |  |
-| Which of these expressions are equal to 6(x + 8) for every value of x? Select every one that is. / A) 6x + 48 / B) x + 48 / C) 6 · x + 6 · 8 / D) x + 14 | CHECK | A,C | A,C | CORRECT | HINT |  |
-| Expand 3(x + 10). Write your answer without parentheses. | CHECK | 3x+30 | 3x+30 | CORRECT |  |  |
-| Which of these expressions are equal to 9(x + 7) for every value of x? Select every one that is. / A) x + 63 / B) x + 16 / C) 9x + 7 / D) 9 · x + 9 · 7 | CHECK | D | D | CORRECT |  |  |
-| Expand 5(3x + 12). Write your answer without parentheses. | CHECK | 15x+60 | 15x+60 | CORRECT |  |  |
-| Solve 3(x − 5) = −12 for x. | PRACTICE | 1 | 1 | CORRECT |  |  |
-| Solve 8(x + 8) = 80 for x. | CHECK | 2 | 2 | CORRECT |  |  |
-| Here is an equation: 2(x − 7) = −22. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply only the x by 2: 2x − 7 = −22 / B) Divide only the left side by 2: x − 7 = −22 / C) Divide both sides by 2: x − 7 = −11 / D) Add 7 to undo the −7: 2x = −15 | CHECK | C | C | CORRECT |  |  |
-| Solve −42 = 3(x − 6) for x. | CHECK | -8 | -8 | CORRECT |  |  |
+| Problem | Purpose | Entry | Read as | Verdict | Help | Slip | Held |
+|---|---|---|---|---|---|---|---|
+| Solve 8(x + 7) = 56 for x. | PRACTICE | 49/8 | 49/8 | INCORRECT |  |  |  |
+| Expand 2(x + 7). Write your answer without parentheses. | PRACTICE | 2x+14 | 2x+14 | CORRECT |  |  |  |
+| Expand 4(x + 4). Write your answer without parentheses. | CHECK | 4x+16 | 4x+16 | CORRECT |  |  |  |
+| Which of these expressions are equal to 4(x + 7) for every value of x? Select every one that is. / A) 4x + 28 / B) 4x + 7 / C) 4 · x + 4 · 7 / D) x + 11 | CHECK | A,C | A,C | CORRECT | HINT |  |  |
+| Expand 2(x + 4). Write your answer without parentheses. | CHECK | 2x+8 | 2x+8 | CORRECT |  |  |  |
+| Which of these expressions are equal to 5(x + 1) for every value of x? Select every one that is. / A) x + 5 / B) 5 · x + 5 · 1 / C) 5x + 5 / D) x + 6 | CHECK | B,C | B,C | CORRECT |  |  |  |
+| Expand 7(3x + 8). Write your answer without parentheses. | CHECK | 21x+56 | 21x+56 | CORRECT |  |  |  |
+| Solve 7(x + 4) = 112 for x. | PRACTICE | 12 | 12 | CORRECT |  |  |  |
+| Solve 2(x − 9) = −8 for x. | CHECK | 5 | 5 | CORRECT |  |  |  |
+| Here is an equation: 8(x + 4) = 56. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply both terms in the parentheses by 8: 8x + 32 = 56 / B) Multiply only the x by 8: 8x + 4 = 56 / C) Divide only the left side by 8: x + 4 = 56 / D) Subtract 4 to undo the 4: 8x = 52 | CHECK | A | A | CORRECT |  |  |  |
+| Solve 5(x − 5) + 13 = 43 for x. | CHECK | 11 | 11 | CORRECT |  |  |  |
+
+## Guard findings (logged; the text was shown unchanged)
+
+None.
+
+## Repairs (rejected output, never shown)
+
+None.
+
+## Holds
+
+None.
+
+## Readings
+
+
+## Tutor moves
+
+- POSE_PROBLEM → Q07 (from Q07): scripted mock policy
+- STEP_BACK → E06 (from Q07): scripted mock policy
+- POSE_PROBLEM → E06 (from E06): scripted mock policy
+- POSE_PROBLEM → E06 (from E06): scripted mock policy
+- HINT → E06 (from E06): scripted mock policy
+- POSE_PROBLEM → E06 (from E06): scripted mock policy
+- POSE_PROBLEM → E06 (from E06): scripted mock policy
+- POSE_PROBLEM → E06 (from E06): scripted mock policy
+- MOVE_ON → Q07 (from E06): scripted mock policy
+- POSE_PROBLEM → Q07 (from Q07): scripted mock policy
+- POSE_PROBLEM → Q07 (from Q07): scripted mock policy
+- POSE_PROBLEM → Q07 (from Q07): scripted mock policy
+- WRAP_UP → Q07 (from Q07): scripted mock policy
+
+## Model calls
+
+| # | Purpose | Thinking | Effort | Outcome | Finish | ms | Prompt (cached) | Completion (reasoning) |
+|---|---|---|---|---|---|---|---|---|
+| 1 | BINDING | disabled |  | ACCEPTED | stop |  | 0 (0) | 0 (0) |
+| 2 | REPLY | disabled |  | ACCEPTED | stop | 1 | 0 (0) | 0 (0) |
+| 3 | REPLY | disabled |  | ACCEPTED | stop | 1 | 0 (0) | 0 (0) |
+| 4 | REPLY | disabled |  | ACCEPTED | stop | 1 | 0 (0) | 0 (0) |
+| 5 | REPLY | disabled |  | ACCEPTED | stop | 1 | 0 (0) | 0 (0) |
+| 6 | REPLY | disabled |  | ACCEPTED | stop | 1 | 0 (0) | 0 (0) |
+| 7 | REPLY | disabled |  | ACCEPTED | stop | 1 | 0 (0) | 0 (0) |
+| 8 | REPLY | disabled |  | ACCEPTED | stop | 1 | 0 (0) | 0 (0) |
+| 9 | REPLY | disabled |  | ACCEPTED | stop | 1 | 0 (0) | 0 (0) |
+| 10 | REPLY | disabled |  | ACCEPTED | stop | 1 | 0 (0) | 0 (0) |
+| 11 | REPLY | disabled |  | ACCEPTED | stop | 1 | 0 (0) | 0 (0) |
+| 12 | REPLY | disabled |  | ACCEPTED | stop | 1 | 0 (0) | 0 (0) |
+| 13 | REPLY | disabled |  | ACCEPTED | stop | 1 | 0 (0) | 0 (0) |
+| 14 | REPLY | disabled |  | ACCEPTED | stop | 1 | 0 (0) | 0 (0) |

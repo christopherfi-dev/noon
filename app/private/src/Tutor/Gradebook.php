@@ -12,9 +12,14 @@ namespace AlgebraEngine\Tutor;
  *
  * Ledger events:
  *   PROBLEM_PRESENTED  problem_id, version, purpose, skill_id, source, kind, template_id, variant_id, prompt, fingerprint, retry_of
- *   HELP_GIVEN         problem_id, version, choice (HINT | EXPLAIN | NOT_LEARNED | TYPED_STUCK)
+ *   HELP_GIVEN         problem_id, version, choice (HINT | NOT_LEARNED; EXPLAIN and TYPED_STUCK in round 6 records)
  *   ATTEMPT_RECORDED   problem_id, version, entry, read_as, reading_note, verdict, normalized, signatures, points_to, slip, response_sha256, scope
  *   PROBLEM_CLOSED     problem_id, version, reason (ANSWERED | SKIPPED | NOT_LEARNED | SET_ASIDE | SESSION_ENDED)
+ *   CHECK_HELD         problem_id, version, reason (HELP_BEFORE_CHECK | HELP_DURING_CHECK): attempts on it are held
+ *   ATTEMPT_HELD       attempt_id, problem_id, reason (VERDICT_CONFLICT): that attempt is held
+ *
+ * A held attempt keeps its verdict but counts neither for nor against a goal
+ * (round 7 §5).
  */
 final class Gradebook
 {
@@ -27,6 +32,15 @@ final class Gradebook
         $problems = [];
         $help = [];
         $out = [];
+        $heldProblems = [];
+        $heldAttempts = [];
+        foreach ($events as $e) {
+            if ($e['type'] === 'CHECK_HELD') {
+                $heldProblems[$e['data']['problem_id']] ??= $e['data']['reason'];
+            } elseif ($e['type'] === 'ATTEMPT_HELD') {
+                $heldAttempts[$e['data']['attempt_id']] ??= $e['data']['reason'];
+            }
+        }
         foreach ($events as $e) {
             $d = $e['data'];
             switch ($e['type']) {
@@ -60,6 +74,7 @@ final class Gradebook
                         'points_to' => $d['points_to'] ?? [],
                         'slip' => $d['slip'],
                         'help' => $help[$d['problem_id']] ?? [],
+                        'held' => $heldAttempts[$e['event_id']] ?? $heldProblems[$d['problem_id']] ?? null,
                         'at' => $e['created_at'] ?? null,
                     ];
                     break;

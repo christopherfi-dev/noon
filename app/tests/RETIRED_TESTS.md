@@ -25,7 +25,7 @@ named.
 | BetaGuardsTest::testB8DisclosureGuardRejectsLeak | Old repair path. | CheatingTest::testTextLeaksAnAnswer |
 | BetaGuardsTest::testInternalVocabularyIsRepairedNotShown | Old repair path. | CheatingTest::testTextClaimsMasteryOrUsesInternalTerms |
 | BetaGuardsTest::testSupportClaimInModelTextIsRepairedNotShown | Old repair path. | EngineUnitsTest::testSupportClaimsInModelTextOnly; LearnerInstrumentsTest::testGuardsOnLearnerVisibleText |
-| BetaGuardsTest::testB8RepeatedLeakHolds | A repeated failure now uses a code fallback, not a hold (§3.5). | TutorLoopTest::testFallbackAfterTheRepairFailsToo |
+| BetaGuardsTest::testB8RepeatedLeakHolds | A repeated failure now uses a code fallback, not a hold (§3.5). Round 7 restores the hold. | TutorLoopTest::testHoldAfterTheRepairFailsToo |
 | BetaGuardsTest::testD1HintAndIDontKnowGiveSmallerQuestions | Guided smaller questions are retired. | CheatingTest::testWithoutHelpIsNeverRecordedAfterAStuckEntry |
 | BetaGuardsTest::testRepairOpeningNeverHoldsOnItsOwnFacts | Guided repair openings are retired. | None |
 | BetaGuardsTest::testB9PromptsCarryNoAnchorOrExampleContent | Old prompt assembler. | EngineUnitsTest::testTutorPromptSkeletonAndShape; TutorLoopTest::testEveryCallCarriesFreshPreparedProblemsAndIsBuiltAnew |
@@ -80,3 +80,19 @@ named.
 | TemplatesTest::testGateRejectsAProposalThatChangesAKeptFeature | The acceptance gate is retired. | ProblemInstrumentsTest |
 | TemplatesTest::testOpeningFactsNeverContainAStepAnswer | Guided plans are retired. | None |
 | TemplatesTest::testGuidedPlansAreQuestionsThatNeverStateTheirAnswer | Guided plans are retired. | ProblemInstrumentsTest::testPracticeWordingMustShowTheSpecAndNotItsAnswer |
+
+## Round 7 (CONDUCTOR_ROUND_7.md)
+
+Tests whose behaviour round 7 changed on purpose; each is replaced, none was deleted to get green.
+
+| Round 6 test | Why it changed | Replaced by |
+| --- | --- | --- |
+| TutorLoopTest::testFallbackAfterTheRepairFailsToo | §4.2: no code fallback; a repeated failure holds the turn with a retry | TutorLoopTest::testHoldAfterTheRepairFailsToo |
+| CheatingTest::testAFreeTextMessageDuringAnOpenCheckProblem (pause) | §6.1: the pause is deleted; the message reaches the AI | CheatingTest::testAFreeTextMessageDuringAnOpenCheckProblem (rewritten) |
+| CheatingTest::testWithoutHelpIsNeverRecordedAfterAStuckEntry | §6.3: typed "idk" is a message, not "I'm stuck" | CheatingTest::testTypedIdkDuringACheckIsAMessageNotHelp, ::testIAmStuckDuringACheckIsRecordedBeforeTheAiCall |
+| CheatingTest::testTextBeforeACheckCardContainsItsNumbers | §5: a shared number is a signal, not a rejection | CheatingTest::testTextBeforeACheckCardSharesANumber, ::testTextBeforeACheckCardWithAStrategyPhraseHoldsTheAttempt, ::testTextBeforeACheckCardWithItsAnswerHoldsTheAttempt |
+| CheatingTest: mastery, overrule, leak, internal terms (rejected and repaired) | §4.1: text guards log; the text is shown unchanged | The same tests, asserting the logged finding and the unchanged text |
+| ProblemInstrumentsTest::testPracticeWordingMustShowTheSpecAndNotItsAnswer | §8.1: code renders practice wording from the spec | ProblemInstrumentsTest::testPracticeWordingIsRenderedByCodeFromTheSpec |
+| LiveAdapterTest::testEmptyContentAndInternalWordsAreRepairedNotShown | §4: internal words are a logged finding; empty content is still repaired | LiveAdapterTest::testEmptyContentIsRepairedAndInternalWordsAreLogged |
+| MathScenarioTest::testMath09Ambiguity (code rewrite line) | §7.4: unreadable entries go to the AI for a reading | MathScenarioTest::testMath09Ambiguity (rewritten) |
+

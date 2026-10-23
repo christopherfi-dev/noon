@@ -11,8 +11,9 @@ use AlgebraEngine\Tests\Support\Harness;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Round 6 M2: the tutor loop — one call per turn, pre-generated problems,
- * reasoning chosen per call, one repair then a code fallback, holds — driven
+ * Round 6 M2, updated for round 7: the tutor loop — one call per turn,
+ * pre-generated problems, reasoning chosen per call, one repair then a hold
+ * (no code fallback), the answered and open problems' identities — driven
  * through the real API with the scripted mock tutor. Mock results say nothing
  * about a live provider or about learning.
  */
@@ -55,9 +56,9 @@ final class TutorLoopTest extends TestCase
         $this->assertSame('practice', $h->view['open_problem']['purpose']);
         $p = $h->open()['params'];
         $h->send((string) Rational::of($p['c'] - $p['b'], $p['a'])); // distribution to x only
-        $this->assertSame('DIST_X_ONLY', $h->attempts()[0]['signatures'][0]);
+        $this->assertSame('FIRST_TERM_ONLY', $h->attempts()[0]['signatures'][0], 'round 7 §8.3: one code on Q07 and E06');
         $ctx = self::context($h);
-        $this->assertSame('DIST_X_ONLY', $ctx['CODE_RESULT']['signatures'][0]['code'], 'the signature reaches the AI');
+        $this->assertSame('FIRST_TERM_ONLY', $ctx['CODE_RESULT']['signatures'][0]['code'], 'the signature reaches the AI');
         $this->assertSame('E06', $h->view['focus']['skill_id'], 'the tutor stepped back to the skill the error points to');
         $this->assertSame('Q07', $h->view['topic']['skill_id'], 'the topic is kept');
         $moves = array_column(array_column($h->eventsOf('AI_MOVE'), 'data'), 'move');
@@ -98,7 +99,7 @@ final class TutorLoopTest extends TestCase
                     $open === null => $h->send('what should I do next'),
                     $roll <= 5 => $h->answerCorrectly(),
                     $roll <= 7 => $h->send($h->wrong()),
-                    $roll === 8 => $h->stuck($rng->pick(['HINT', 'EXPLAIN'])),
+                    $roll === 8 => $h->stuck($rng->pick(['HINT', 'NOT_LEARNED'])),
                     $roll === 9 => $h->send('why does that work'),
                     default => $h->send('i think it is ' . $h->answer()),
                 };
@@ -127,18 +128,19 @@ final class TutorLoopTest extends TestCase
         $bySkill = [];
         foreach ($ctx['PREPARED_PROBLEMS'] as $p) {
             $bySkill[$p['skill_id']] = ($bySkill[$p['skill_id']] ?? 0) + 1;
-            $this->assertArrayHasKey('answer_for_your_teaching_never_state', $p);
+            $this->assertArrayHasKey('answer', $p);
         }
         $this->assertSame(['Q07' => 2, 'Q06' => 2, 'E06' => 2], $bySkill, 'two prepared problems per relevant skill');
         $this->assertCount(10, $ctx['CURRICULUM'], 'the ten-skill slice');
-        foreach (['TRUSTED_SESSION', 'TURN', 'CODE_RESULT', 'OPEN_PROBLEM', 'GOALS', 'GRADEBOOK', 'RECENT_CONVERSATION', 'TOPIC', 'FOCUS', 'CHECK_PATTERNS', 'OUTPUT_CONTRACT'] as $block) {
+        foreach (['TRUSTED_SESSION', 'TURN', 'CODE_RESULT', 'ANSWERED_PROBLEM', 'OPEN_PROBLEM', 'GOALS', 'GRADEBOOK', 'RECENT_CONVERSATION', 'TOPIC', 'FOCUS', 'CHECK_PATTERNS', 'PROBLEM_LIMITS', 'OUTPUT_CONTRACT'] as $block) {
             $this->assertArrayHasKey($block, $ctx);
         }
         $calls = array_values(array_filter($h->mock->log, fn ($c) => $c['json']));
         foreach ($calls as $c) {
-            $this->assertCount(5, $c['messages'], 'every request is built anew: architecture, rules, binding exchange, one context block');
+            $this->assertCount(5, $c['messages'], 'every request is built anew: architecture, output contract, binding exchange, one context block');
+            $this->assertStringStartsWith('OUTPUT CONTRACT', $c['messages'][1]['content']);
         }
-        $this->assertStringContainsString('ACE_BOUND: architecture=1.3', $calls[0]['messages'][3]['content']);
+        $this->assertStringContainsString('ACE_BOUND: architecture=1.5', $calls[0]['messages'][3]['content']);
         // A prepared problem is never one already shown in the session.
         foreach ($h->app->store->db->all('SELECT fingerprint FROM items') as $row) {
             $this->assertContains($row['fingerprint'], $shown);
@@ -195,20 +197,58 @@ final class TutorLoopTest extends TestCase
         }
     }
 
-    public function testFallbackAfterTheRepairFailsToo(): void
+    /** Round 7 §4.2 and §9: an envelope that still fails after one repair holds the turn, with a retry; code writes no tutoring line. */
+    public function testHoldAfterTheRepairFailsToo(): void
     {
         $h = new Harness();
         $h->start('Q07');
         $h->mock->queue('OFF_PATTERN_CHECK', ['persist' => true]);
         $before = $h->lines();
         $h->send('next please');
-        $this->assertCount(1, $h->eventsOf('FALLBACK_USED'));
-        $this->assertCount(2, $h->eventsOf('MODEL_OUTPUT_REJECTED'));
+        $this->assertCount(2, $h->eventsOf('MODEL_OUTPUT_REJECTED'), 'the first output and its one repair');
+        $this->assertSame('HOLD', $h->view['status']);
+        $this->assertSame(['RESUME', 'END_SESSION'], $h->view['allowed_actions'], 'the student can retry');
+        $this->assertSame('REPAIR_LIMIT_REACHED', $h->row()['snapshot']['issue']['type']);
         $new = $h->lastLines($before);
-        $this->assertSame(['student', 'app', 'tutor'], array_column($new, 'role'), 'the AI text was dropped; code wrote the line and showed a prepared problem');
-        $this->assertSame('Let\'s practise with this one.', $new[1]['text']);
-        $this->assertSame('practice', $h->view['open_problem']['purpose']);
-        $this->assertSame('RECIPE', $h->open()['source']);
+        $this->assertSame([['student', 'message'], ['app', 'error']], array_map(fn ($l) => [$l['role'], $l['kind']], $new));
+        $this->assertSame(\AlgebraEngine\Tutor\TutorEngine::HOLD_LINE, $new[1]['text']);
+        $this->assertSame([], $h->eventsOf('FALLBACK_USED'), 'no code fallback exists');
+        $this->assertSame('practice', $h->view['open_problem']['purpose'], 'the open problem is kept');
+        // The retry reruns the reply.
+        $h->event('RESUME');
+        $this->assertSame('READY', $h->view['status']);
+        $this->assertSame('MESSAGE', self::context($h)['TURN']['kind']);
+        // Across the whole session, the only line code wrote is the hold line.
+        $app = array_values(array_filter($h->lines(), fn ($l) => $l['role'] === 'app' && !in_array($l['kind'], ['result', 'check'], true)));
+        $this->assertSame([\AlgebraEngine\Tutor\TutorEngine::HOLD_LINE], array_values(array_unique(array_column($app, 'text'))));
+    }
+
+    /** Round 7 §8.2: every request carries the answered problem and the open problem with their identities, and both are logged with each AI message. */
+    public function testAnsweredAndOpenProblemIdentities(): void
+    {
+        $h = new Harness();
+        $h->start('Q07');
+        $first = $h->open();
+        $ctx = self::context($h);
+        $this->assertNull($ctx['ANSWERED_PROBLEM'], 'nothing answered yet');
+        $h->send($h->wrong());
+        $ctx = self::context($h);
+        $attempt = $h->attempts()[0];
+        $this->assertSame([$first['problem_id'], $first['version'], $attempt['attempt_id'], 'INCORRECT', true],
+            [$ctx['ANSWERED_PROBLEM']['problem_id'], $ctx['ANSWERED_PROBLEM']['version'], $ctx['ANSWERED_PROBLEM']['attempt_id'], $ctx['ANSWERED_PROBLEM']['result'], $ctx['ANSWERED_PROBLEM']['answered_in_this_turn']]);
+        $this->assertSame($first['prompt'], $ctx['ANSWERED_PROBLEM']['text']);
+        $this->assertNull($ctx['OPEN_PROBLEM'], 'the answered problem is closed before the reply');
+        $open = $h->open();
+        $h->send('why does that work?');
+        $ctx = self::context($h);
+        $this->assertSame([$first['problem_id'], false], [$ctx['ANSWERED_PROBLEM']['problem_id'], $ctx['ANSWERED_PROBLEM']['answered_in_this_turn']]);
+        $this->assertSame([$open['problem_id'], $open['version'], $open['prompt']], [$ctx['OPEN_PROBLEM']['problem_id'], $ctx['OPEN_PROBLEM']['version'], $ctx['OPEN_PROBLEM']['text']]);
+        $this->assertArrayNotHasKey('answer_for_your_teaching_never_state', $ctx['OPEN_PROBLEM'], 'round 7 §3: no behavioural labels');
+        $messages = $h->eventsOf('TUTOR_MESSAGE');
+        $last = end($messages)['data'];
+        $this->assertSame([$first['problem_id'], $attempt['attempt_id']], [$last['answered']['problem_id'], $last['answered']['attempt_id']]);
+        $this->assertSame($open['problem_id'], $last['open_problem']['problem_id']);
+        $this->assertSame(count(array_filter($h->lines(), fn ($l) => $l['role'] === 'tutor' && $l['kind'] === 'message')), count($messages), 'every AI message is logged with both identities');
     }
 
     public function testTransportFailureHoldsAndResumeRetriesTheReply(): void
@@ -315,7 +355,7 @@ final class TutorLoopTest extends TestCase
         $h->send((string) Rational::of($p['c'] - $p['b'], $p['a']));
         $h->answerCorrectly(); // E06 practice
         [$wrong, $right] = $h->attempts();
-        $this->assertSame(['INCORRECT', 'Q07', ['DIST_X_ONLY']], [$wrong['verdict'], $wrong['skill_id'], $wrong['signatures']]);
+        $this->assertSame(['INCORRECT', 'Q07', ['FIRST_TERM_ONLY']], [$wrong['verdict'], $wrong['skill_id'], $wrong['signatures']]);
         $this->assertSame(['CORRECT', 'E06', 'PRACTICE'], [$right['verdict'], $right['skill_id'], $right['purpose']]);
         $this->assertSame([null, null], [$wrong['slip'], $right['slip']], 'no slip is confirmed');
         $this->assertSame([0, false, 0, false], [$h->goal('Q07')['count'], $h->goal('Q07')['met'], $h->goal('E06')['count'], $h->goal('E06')['met']], 'no automatic pass');

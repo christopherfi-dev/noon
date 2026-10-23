@@ -73,3 +73,30 @@ and v1.2 are unmodified.
 - No example responses: behaviour is described in words only.
 - Section 16: the activation handshake is now
   `ACE_BOUND: architecture=1.3 | first_principle=truth_over_approval | scope=algebra | role=tutor`.
+
+## 1.5 — 2026-10-23
+
+Governing architecture for the AI tutor; replaces 1.3 at runtime.
+
+- Teaching is through questions, in smaller steps when the student is stuck. The
+  tutor may name a rule or definition in one sentence (amends D1). Worked examples,
+  worked solutions, and new solved values, terms, transformations or intermediate
+  results for a problem not yet answered correctly do not exist.
+- The tutor never describes work as independent, on the student's own or without help.
+- Text before a check card refers only to the previous answer; nothing in it is
+  directed at the new problem. A shared number is a signal, not a violation.
+- Learner-facing text describes nothing of how the tutor works inside; review notices
+  and rewrite requests belong to the student's world.
+- Text guards log; they do not block, repair or replace. Problems and envelopes are
+  still repaired once, then held.
+- Feedback describes the problem the answer was for; text about the open problem
+  matches the current request.
+- A reading may leave out only words or working separated from the answer by words
+  other than operation words; nothing joined by an operation, relation or grouping is
+  dropped or changed.
+- Messages reach the tutor during an open check; help with the check comes only
+  through "I'm stuck". "Explain the idea" is removed from "I'm stuck".
+- The Status, Revision note, Compatibility and Runtime contract header lines moved
+  out of the architecture; they bound nothing. Runtime contract: the tutor envelope,
+  problem verification and gradebook contracts, CONDUCTOR_ROUND_6_v3.md and
+  CONDUCTOR_ROUND_7.md.

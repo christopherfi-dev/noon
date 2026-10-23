@@ -93,7 +93,7 @@ final class MathScenarioTest extends TestCase
         $this->assertSame([], array_filter($h->attempts(), fn ($a) => $a['verdict'] === 'INCORRECT'), 'unreadable input is never recorded as a wrong answer');
     }
 
-    /** MATH-09: ambiguous mixed-number notation asks for a rewrite and keeps the problem; then a clean answer is checked. */
+    /** MATH-09: ambiguous mixed-number notation is not graded: the AI reads it (round 7 §7.4), code rejects a reading that drops part of it, the AI asks; then a clean answer is checked. */
     public function testMath09Ambiguity(): void
     {
         $h = new Harness();
@@ -101,7 +101,8 @@ final class MathScenarioTest extends TestCase
         $problem = $h->view['open_problem']['problem_id'];
         $h->send('1 1/2');
         $this->assertSame([], $h->attempts());
-        $this->assertStringContainsString('can be read more than one way', end($h->view['conversation'])['text']);
+        $this->assertCount(1, $h->eventsOf('READING_REJECTED'));
+        $this->assertSame('tutor', end($h->view['conversation'])['role'], 'the AI asks for a rewrite; code writes no line');
         $h->send('[1, 2');
         $this->assertSame([], $h->attempts());
         $h->answerCorrectly();

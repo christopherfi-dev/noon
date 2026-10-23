@@ -1,75 +1,84 @@
-# Build instructions — Algebra Engine, round 6 design (the AI is the tutor)
+# Build instructions — Algebra Engine, round 7 design (v1.5 governs the AI tutor)
 
-This file describes the design on branch `round6-ai-tutor`, set by
-`CONDUCTOR_ROUND_6_v3.md`. Where that conductor file and this file differ, the
-conductor file governs. The beta that ran the old design is frozen at tag
-`beta-1.0` (commit `061239c`); do not rebuild it here.
+This file describes the design on branch `round7-v1-5`, set by
+`CONDUCTOR_ROUND_7.md` on top of `CONDUCTOR_ROUND_6_v3.md`. Where a conductor
+file and this file differ, the newer conductor file governs. The beta that ran
+the old host-sequenced design is frozen at commit `061239c` (tag `beta-1.0`,
+branch `claude/elegant-volta-blu3uj`); do not rebuild it and do not commit to
+that branch. Do not merge `round6-ai-autonomy`.
 
-**Do not rebuild the retired design.** The beta's host state machine (target →
-diagnostic probe → prerequisite check → guided repair → independent check →
-return, with the model drafting inside a host-chosen operation) is retired as
-the controller of the session. Do not reintroduce host-sequenced modes, fixed
-repair scripts, Socratic step plans, or a rule that model text may not contain
-a question mark.
+## Governing architecture
 
-## The design
+`architecture/Algebra_Constraint_Architecture_v1.5.md` governs the tutor. It is
+loaded byte-identical from `app/private/resources/architecture/` (sha256
+`d021eb2a1dba333a2caabc3efe73ae3cd2405d04e6a017716528ca5ac8b27e12`, no trailing
+newline). Activation line:
+`ACE_BOUND: architecture=1.5 | first_principle=truth_over_approval | scope=algebra | role=tutor`.
+v1.1, v1.2 and v1.3 stay in `architecture/` as history; the app loads v1.5
+only. A stored session bound to an older version is rebound on its next turn.
 
-The AI runs the tutoring session as a conversation, governed by the constraint
-architecture (`architecture/Algebra_Constraint_Architecture_v1.3.md`). It
-decides every move: explain, ask, pose a problem, hint, check a slip, step back
-to an easier skill, move on, review, wrap up. It chooses its own route and when
-to give a check problem.
+## Working method (CONDUCTOR_ROUND_7.md §0)
 
-Code is the AI's set of instruments, not its supervisor:
-- a calculator and answer checker (parsers, exact checkers, recipe signatures);
-- a problem checker (spec verification, check-problem pattern validators);
-- a problem generator (the 14 recipes in `ItemFactory`, pre-generated);
-- a gradebook that records what happened and computes goals;
-- the report.
+1. **The AI is the tutor.** The constraint architecture governs it. Code checks
+   the math, keeps the gradebook, computes goals, writes the report, and handles
+   plumbing and security. Code does not write tutoring text, choose replies from
+   templates, or make teaching decisions.
+2. **Never edit the architecture file.** If it conflicts with the code or the
+   conductor instructions, report the conflict. Do not fix it in the file and do
+   not work around it in code.
+3. **Behaviour guards log; they do not block.** Problems and envelopes that fail
+   mathematical or structural acceptance are still repaired once, then held.
+4. **No example responses** in any prompt or model-facing string.
+5. Do not touch `claude/elegant-volta-blu3uj` (the deployed beta, frozen) or
+   `round6-ai-autonomy` (not to be merged). Deploy nothing unless the owner asks.
+6. Stop where the conductor says to stop, push, and report.
 
-Code takes control only where the invariants below say truth requires it.
+## The prompt
 
-One learner turn (an answer, a free-text message, or an "I'm stuck" choice) is
-one AI call in most cases. Code does what it can deterministically before the
-call (safe normalisation, parsing, checking, signatures, slips), then one call
-returns one JSON envelope (reply plus at most one next problem), and code
-verifies the envelope after the call. An entry only the AI can read takes a
-reading call first. A failed problem gets one repair call, then a code
-fallback (a pre-generated recipe problem with a code-written line).
+Each AI call is built anew: the architecture (system), a message headed
+`OUTPUT CONTRACT` that defines only the envelope's fields and when each value is
+valid, the accepted binding exchange, then one JSON context block. The output
+contract holds no behaviour rules; the architecture carries all of them.
 
-## What code still guarantees (the round 6 invariants)
+## What code does (architecture §5, as implemented)
 
-1. **Code computes every answer.** Every math question whose answer the
-   student types (problem, guided step, micro-check) reaches the student only
-   after code computed its answer from a machine-readable spec. The AI never
-   decides whether a student's math answer is correct and never overrules
-   code's verdict.
-2. **Code alone computes goals**, from the gradebook. The AI sees goal status
-   and plans with it; it cannot mark a goal met.
-3. **Check problems stand alone.** The AI decides when and which skill; code
-   writes the wording from the spec and shows it in a distinct card ("Check
-   question: on your own"). The AI's text before the card refers only to the
-   previous answer and contains no number from the new problem and no answer.
-   While a check problem is open the conversation pauses.
-4. **The gradebook is true.** Every attempt records the problem, the skill,
-   practice or check, the student's entry, any reading note, the verdict, and
-   any help given between presentation and answer.
-5. **Code writes the report** from the gradebook (UI v3 report and its rules).
-6. **Guards on every learner-visible AI text:** the answer-leak guard for any
-   open problem; the internal-vocabulary filter; no mastery claims; the
-   support-claim phrases. The AI may ask questions.
-7. **Kept as built:** security (CSRF, idempotency, revisions, cookie rules,
-   provider-in-flight leases), privacy and storage; progress codes and the
-   report download; no answer keys, raw envelopes or internal diagnoses in any
-   public payload; no secrets in the repository; PHP 8.0 compatibility.
+- **Answers and verdicts.** Code computes every typed-answer key from a spec
+  (`SpecMath`, the 14 recipes in `ItemFactory`) and records every verdict. The
+  displayed wording of every scored problem, practice or check, is rendered by
+  code from its verified spec; the AI's wording is not shown as the problem.
+- **Problem acceptance.** Stated answer equals code's, unique solution, numbers
+  in range, no self-revealing answer, check pattern, fresh numbers. A failing
+  problem or envelope gets one repair; if that fails, the turn is a HOLD
+  (`HOLD_LINE`, with a retry). There is no code-written fallback reply.
+- **Text guards are detectors.** Answer leak, internal vocabulary, mastery and
+  goal claims, help claims, verdict contradiction and the before-check-card
+  phrase audit are recorded (session log and transcript, with the exact text,
+  the guard and the problem and response ids). The student sees the AI's text
+  unchanged.
+- **Held attempts.** A check attempt is held, counting neither for nor against
+  the goal, when a guard flags text before its card as containing its answer or
+  a hint, method, strategy or reminder directed at it, or when the AI raises a
+  verdict conflict in `issue`. A shared number alone is logged and holds nothing.
+- **Open checks.** Messages during an open check go to the AI; the check stays
+  open and unassisted. Help comes only from "I'm stuck" (a hint, or "I haven't
+  learned this yet"), recorded as assisted before the AI call. Code never
+  classifies typed text as stuck.
+- **Readings.** Entries code cannot read go to the AI for a reading. Code rejects
+  a reading that adds numbers or variables, drops anything joined to the answer
+  by an operation sign or word, or changes grouping or operand order; then the
+  student sees the AI's clarifying question. Number words are normalised up to
+  999. `3 = x` is accepted as `x = 3`.
+- **Goals** (architecture §5): three qualifying check problems correct without
+  help; Q07 and E06 also need a solve or expansion, a choice question and a new
+  form. One code-matched arithmetic-error signature pauses the run; a second in
+  the run resets it. Code alone computes goals and writes the report.
+- **Kept as built:** CSRF, idempotency, revision checks, cookie rules,
+  provider-in-flight leases, privacy and storage, progress codes, the report
+  download, no answer keys or internal data in public payloads, no secrets in
+  the repository, PHP 8.0 source compatibility.
 
-Goals (code): 3 check problems correct in a row without help per skill; Q07
-and E06 also need a solve or expansion, a choice question and a new form. One
-code-confirmed slip may pause a run (micro-check, retry, not counted); a second
-slip in the run resets it. Mock or unit-test success is never reported as live
-provider, deployment or learner-effectiveness validation.
-
-Nothing else from the old invariants constrains the AI's teaching.
+Mock or unit-test success is never reported as live provider, deployment or
+learner-effectiveness validation.
 
 ## Stack (unchanged)
 
@@ -79,8 +88,7 @@ database server in production; PDO SQLite private storage, failing preflight
 clearly if unavailable. Account-free; reports belong to the current browser
 session. Real OpenAI-compatible adapter plus a deterministic mock tutor; keys
 only on the server; no raw model streaming into the UI; JSON envelope, not
-function calling. Reasoning (thinking) is chosen per call by code and logged;
-`reasoning_content` is never shown or stored.
+function calling. `reasoning_content` is never shown or stored.
 
 ## Practice
 
@@ -88,6 +96,7 @@ Keep the handoff (`START_HERE.md`, `specifications/`, `contracts/`,
 `curriculum/`, `MANIFEST.sha256`) intact; the full 205-skill curriculum stays
 browsable, and runtime coverage is the 10 beta skills, declared and tested.
 Parsers never use eval or shell and fail closed. Record each round as a
-separate interval in `BUILD_LOG.md`. Do not deploy until the owner asks; the
-side-by-side bundle (`dist/algebra-engine-ai-vps-upload.zip`) installs beside
-the live beta with its own database and leaves the beta untouched.
+separate interval in `BUILD_LOG.md`. Run the key-leak scan before every commit.
+Do not deploy until the owner asks; the side-by-side bundle
+(`dist/algebra-engine-ai-vps-upload.zip`) installs beside the live beta with its
+own database and leaves the beta untouched.

@@ -21,15 +21,19 @@ use AlgebraEngine\Support\RandomSource;
 use AlgebraEngine\Support\Time;
 
 /**
- * Round 6: the tutor loop. The AI leads the conversation and decides every
- * move; this engine holds the instruments and the guarantees.
+ * The tutor loop (round 6, as changed by round 7). The AI leads the
+ * conversation and decides every move under architecture v1.5; this engine
+ * holds the instruments and the guarantees.
  *
  * One learner turn (an answer, a free-text message, or an "I'm stuck"
  * choice): code does what it can first (safe normalisation, parsing,
  * checking, signatures, slips, recording the attempt and any help), then one
  * AI call builds the reply from a context assembled anew, and code verifies
  * the envelope after the call. An entry only the AI can read takes a reading
- * call first. While a check problem is open the conversation pauses.
+ * call first. Messages during an open check reach the AI; the check stays
+ * open and unassisted. Text guards log findings and never change the text;
+ * an envelope or problem that still fails after one repair holds the turn.
+ * HOLD_LINE is the only line code writes into the conversation.
  *
  * Mutation algorithm (unchanged from the beta): validate and claim a lease in
  * a short transaction; call the provider with no transaction or lock held;
@@ -38,14 +42,9 @@ use AlgebraEngine\Support\Time;
  */
 final class TutorEngine
 {
-    public const PAUSE_LINE = 'Let\'s finish this check question first. Answer it, or tap I\'m stuck.';
-    public const REWRITE_LINE = 'I couldn\'t read that as an answer. Please write it again, using numbers and symbols.';
-    public const CLARIFY_AGAIN_LINE = 'Please type just your answer, using numbers and symbols.';
     public const HOLD_LINE = 'Your work is saved, but the tutor\'s reply could not be prepared right now. You can try again or end the session.';
-    public const FALLBACK_LINE = 'Let\'s practise with this one.';
-    public const FALLBACK_CHECK_LINE = 'Take another look at the check question. You can answer it, skip it, or tap I\'m stuck.';
-    public const FALLBACK_PLAIN_LINE = 'Let\'s keep going.';
-    public const STUCK_LABELS = ['HINT' => 'I\'m stuck: give me a hint.', 'EXPLAIN' => 'I\'m stuck: explain the idea.', 'NOT_LEARNED' => 'I\'m stuck: I haven\'t learned this yet.'];
+    /** Round 7 §6.4: a hint, or "I haven't learned this yet". */
+    public const STUCK_LABELS = ['HINT' => 'I\'m stuck: give me a hint.', 'NOT_LEARNED' => 'I\'m stuck: I haven\'t learned this yet.'];
     public const SKIP_LABEL = 'Skip this question.';
     public const RESULT_WORDS = ['CORRECT' => 'Correct.', 'INCORRECT' => 'Not yet.', 'PARTIAL' => 'Equal, but not in the form asked.'];
     public const HISTORY_LIMIT = 12;
@@ -108,7 +107,7 @@ final class TutorEngine
         $t = new TutorTurn($row['snapshot'], $row['engine'], $now, 'START');
         $t->event('SESSION_STARTED', [
             'provider' => $this->ai->provider()->name(), 'model' => $this->ai->provider()->model(),
-            'architecture_version' => '1.3', 'curriculum_version' => CurriculumRepository::CURRICULUM_VERSION,
+            'architecture_version' => Store::ARCHITECTURE_VERSION, 'curriculum_version' => CurriculumRepository::CURRICULUM_VERSION,
             'topic_skill_id' => $topic, 'focus_skill_id' => $focus, 'continued_from_code' => $progress !== null,
         ], $t->triggerEventId);
         try {
@@ -220,7 +219,7 @@ final class TutorEngine
                 return;
             case 'STUCK':
                 $t->line('student', 'message', self::STUCK_LABELS[$req['payload']['choice']]);
-                $this->stuck($t, $req['payload']['choice'], false, $committed);
+                $this->stuck($t, $req['payload']['choice'], $committed);
                 return;
             case 'SKIP':
                 $t->line('student', 'message', self::SKIP_LABEL);
@@ -234,7 +233,6 @@ final class TutorEngine
                 $t->eng['slip'] = null;
                 $t->eng['topic'] = $topic;
                 $t->eng['focus'] = $topic;
-                $t->line('app', 'notice', 'New topic: ' . $this->curriculum->title($topic) . '.');
                 $this->reply($t, ['kind' => 'TOPIC_CHANGE'], $committed);
                 return;
             case 'RESUME':
@@ -259,21 +257,13 @@ final class TutorEngine
         $open = $t->eng['open'];
         $c = EntryReader::classify($text, $open);
         switch ($c['kind']) {
-            case 'STUCK':
-                $this->stuck($t, 'HINT', true, $committed);
-                return;
             case 'MESSAGE':
-                if ($open !== null && $open['purpose'] === 'CHECK') {
-                    $this->pause($t);
-                    return;
-                }
+                // Round 7 §6.1 and §6.3: a message reaches the AI, during an open check too; the check stays open and unassisted.
                 $this->reply($t, ['kind' => 'MESSAGE', 'text' => $text], $committed);
                 return;
-            case 'UNREADABLE':
-                $t->event('ENTRY_UNREADABLE', ['problem_id' => $open['problem_id'], 'entry' => $text, 'note' => 'Not recorded as an attempt; the student is asked to rewrite it.']);
-                $t->line('app', 'notice', $c['clarification'] ?? self::REWRITE_LINE);
-                return;
             case 'AMBIGUOUS':
+            case 'UNREADABLE':
+                // Round 7 §7.4: anything code cannot read goes to the AI for a reading.
                 $this->readEntry($t, $text, $committed);
                 return;
             default:
@@ -281,30 +271,22 @@ final class TutorEngine
         }
     }
 
-    /** §5.3: a free-text message while a check problem is open gets the code line; no AI call. */
-    private function pause(TutorTurn $t): void
-    {
-        $t->event('CONVERSATION_PAUSED', ['problem_id' => $t->eng['open']['problem_id'], 'note' => 'A message during an open check question; code line shown, no AI call.']);
-        $t->line('app', 'notice', self::PAUSE_LINE);
-    }
-
-    /** "I'm stuck" (or a typed stuck phrase): help is recorded before any AI text is shown. */
-    private function stuck(TutorTurn $t, string $choice, bool $typed, array $committed): void
+    /** "I'm stuck": help is recorded before any AI text is generated or shown (round 7 §6.2). */
+    private function stuck(TutorTurn $t, string $choice, array $committed): void
     {
         $open = $t->eng['open'];
         if ($open === null) {
-            $this->reply($t, ['kind' => 'MESSAGE', 'text' => $typed ? 'I am stuck.' : self::STUCK_LABELS[$choice]], $committed);
+            $this->reply($t, ['kind' => 'MESSAGE', 'text' => self::STUCK_LABELS[$choice]], $committed);
             return;
         }
-        $recorded = $typed ? 'TYPED_STUCK' : $choice;
-        $t->event('HELP_GIVEN', ['problem_id' => $open['problem_id'], 'version' => $open['version'], 'choice' => $recorded, 'purpose' => $open['purpose'],
+        $t->event('HELP_GIVEN', ['problem_id' => $open['problem_id'], 'version' => $open['version'], 'choice' => $choice, 'purpose' => $open['purpose'],
             'note' => 'Recorded before the AI text is generated or shown; an answer to this problem after help does not count toward a goal.']);
         if ($choice === 'NOT_LEARNED') {
             $this->close($t, 'NOT_LEARNED');
         } else {
-            $t->eng['open']['help'][] = $recorded;
+            $t->eng['open']['help'][] = $choice;
         }
-        $this->reply($t, ['kind' => 'STUCK', 'choice' => $choice, 'typed' => $typed], $committed);
+        $this->reply($t, ['kind' => 'STUCK', 'choice' => $choice], $committed);
     }
 
     /** An entry code can read: check it, record the attempt, show code's result, then the AI replies. */
@@ -313,7 +295,8 @@ final class TutorEngine
         $open = $t->eng['open'];
         $r = $this->checker->check($open, $readAs);
         if ($r['verdict'] === 'UNSCORABLE') {
-            $t->line('app', 'notice', $r['clarification'] ?? self::REWRITE_LINE);
+            // Not reachable from send(), which passes only readings code can score; never a code-written line.
+            $this->reply($t, ['kind' => 'ENTRY_NOT_READ', 'entry' => $raw, 'reading' => $readAs, 'reasons' => ['code cannot score this reading as an answer']], $committed);
             return;
         }
         $sha = hash('sha256', $readAs);
@@ -327,13 +310,16 @@ final class TutorEngine
         ]);
         $t->results[] = ['checker_result_id' => Ids::make('chk'), 'item_id' => $open['problem_id'], 'item_version' => $open['version'], 'event_id' => $attemptId,
             'response_sha256' => $sha, 'verdict' => $r['verdict'], 'verification_scope' => $r['scope'], 'created_at' => Time::iso($t->now)];
+        // Round 7 §8.2: the answered problem's identity, carried in every later request until the next answer.
+        $t->eng['answered'] = ['attempt_id' => $attemptId, 'problem_id' => $open['problem_id'], 'version' => $open['version'], 'response_sha256' => $sha,
+            'purpose' => $open['purpose'], 'skill_id' => $open['skill_id'], 'prompt' => $open['prompt'], 'entry' => $raw, 'read_as' => $readAs, 'verdict' => $r['verdict']];
         $this->close($t, 'ANSWERED');
         $lines = [self::RESULT_WORDS[$r['verdict']]];
         $echo = ProblemText::answerLine($open['prompt'], $open['response_type'], $raw);
         if ($echo !== null) {
             $lines[] = $echo;
         }
-        if ($note === EntryReader::NOTE_AI_READING || $note === EntryReader::NOTE_CAPITAL) {
+        if (in_array($note, [EntryReader::NOTE_AI_READING, EntryReader::NOTE_CAPITAL, EntryReader::NOTE_NUMBER_WORDS], true)) {
             $lines[] = 'Read as ' . $readAs . '.';
         }
         $t->line('app', 'result', implode("\n", $lines), ['CORRECT' => 'correct', 'INCORRECT' => 'notyet', 'PARTIAL' => 'partial'][$r['verdict']]);
@@ -350,13 +336,19 @@ final class TutorEngine
         $slip = $r['slip'] === null ? null : ['code' => $r['slip']['code'], 'detail' => $r['slip']['detail'], 'sub_step' => $r['slip']['micro'] + [
             'display' => SpecMath::compute('numeric_step', $r['slip']['micro']['expression'])['display']]];
         $this->reply($t, [
-            'kind' => 'ANSWER', 'verdict' => $r['verdict'], 'signatures' => $signatures, 'slip' => $slip, 'attempt_id' => $attemptId,
-            'problem' => ['purpose' => strtolower($open['purpose']), 'skill_id' => $open['skill_id'], 'prompt' => $open['prompt']],
+            'kind' => 'ANSWER', 'verdict' => $r['verdict'], 'signatures' => $signatures, 'slip' => $slip, 'attempt_id' => $attemptId, 'response_sha256' => $sha,
+            'problem' => ['problem_id' => $open['problem_id'], 'version' => $open['version'], 'purpose' => strtolower($open['purpose']), 'skill_id' => $open['skill_id'], 'prompt' => $open['prompt']],
             'entry' => $raw, 'read_as' => $readAs, 'reading_note' => $note, 'form_issue' => $r['form_issue'], 'result_line' => self::RESULT_WORDS[$r['verdict']],
         ], $committed);
     }
 
-    /** §3.4 and §4.1: an entry only the AI can read. */
+    /**
+     * An entry only the AI can read (round 6 §3.4; round 7 §7). Code checks
+     * the reading; when it fails, or plausible readings would be scored
+     * differently, nothing is graded and the student sees the AI's own
+     * clarifying question. With no question from the AI, the reply call
+     * answers the student instead; code never writes the line.
+     */
     private function readEntry(TutorTurn $t, string $text, array $committed): void
     {
         $open = $t->eng['open'];
@@ -369,57 +361,52 @@ final class TutorEngine
         $reasoning = ReasoningPolicy::decide($this->config, 'READING', ['kind' => 'READING']);
         $res = $this->ai->read($context, $expect, $reasoning, $budget, $log);
         $this->recordRejections($t, $res['repairs'], 'READING');
-        if (!$res['ok'] && isset($res['failure'])) {
-            $this->hold($t, ['kind' => 'READING', 'entry' => $text], $res['failure']);
-            return;
-        }
         if (!$res['ok']) {
-            $t->event('READING_REJECTED', ['problem_id' => $open['problem_id'], 'entry' => $text, 'reading' => null, 'reasons' => ['the reading output failed its checks after one repair']]);
-            $t->line('app', 'notice', self::REWRITE_LINE);
+            $this->hold($t, ['kind' => 'READING', 'entry' => $text], $res['failure'] ?? self::repairFailure($res), isset($res['failure']) ? 'PROVIDER_UNAVAILABLE' : 'REPAIR_LIMIT_REACHED');
             return;
         }
         $reading = $res['reading'];
         if (!$reading['is_answer'] || $reading['text'] === null || trim($reading['text']) === '') {
-            $t->event('READING_NOT_AN_ANSWER', ['problem_id' => $open['problem_id'], 'entry' => $text]);
-            if ($open['purpose'] === 'CHECK') {
-                $this->pause($t);
-                return;
-            }
+            $t->event('READING_NOT_AN_ANSWER', ['problem_id' => $open['problem_id'], 'entry' => $text, 'clarifying_question' => $reading['clarifying_question']]);
             $this->reply($t, ['kind' => 'MESSAGE', 'text' => $text], $committed);
             return;
         }
         $reasons = ReadingCheck::check($text, $reading['text'], $open['variables'] ?: ['x']);
         if ($reasons === [] && AnswerCheck::outcome($open, $reading['text'])->verdict === 'UNSCORABLE') {
-            $reasons[] = 'code cannot read the reading as an answer to this problem';
+            $reasons[] = 'code cannot score the reading as an answer to this problem';
         }
         if ($reasons !== []) {
-            $t->event('READING_REJECTED', ['problem_id' => $open['problem_id'], 'entry' => $text, 'reading' => $reading['text'], 'reasons' => $reasons]);
-            $t->line('app', 'notice', self::REWRITE_LINE);
+            $t->event('READING_REJECTED', ['problem_id' => $open['problem_id'], 'version' => $open['version'], 'entry' => $text, 'reading' => $reading['text'], 'reasons' => $reasons,
+                'note' => 'Not recorded as an attempt.']);
+            $this->clarify($t, $text, $reading, ['kind' => 'ENTRY_NOT_READ', 'entry' => $text, 'reading' => $reading['text'], 'reasons' => $reasons], $committed);
             return;
         }
-        if ($open['purpose'] === 'CHECK') {
-            $others = $this->differentReadings($open, $text, $reading);
-            if ($others !== []) {
-                if (!($open['clarified'] ?? false)) {
-                    $question = trim((string) ($reading['clarifying_question'] ?? ''));
-                    $source = 'AI';
-                    if ($question === '' || TextGuard::violations($question, [$open]) !== []) {
-                        $question = 'Did you mean ' . $reading['text'] . ' or ' . $others[0] . '?';
-                        $source = 'CODE';
-                    }
-                    $t->eng['open']['clarified'] = true;
-                    $t->event('CLARIFICATION_ASKED', ['problem_id' => $open['problem_id'], 'entry' => $text, 'readings' => array_merge([$reading['text']], $others), 'question_source' => $source,
-                        'note' => 'A check question with another plausible reading: nothing is recorded until the student clarifies.']);
-                    $t->line($source === 'AI' ? 'tutor' : 'app', 'clarify', $question);
-                    return;
-                }
-                $t->event('CLARIFICATION_NOT_RESOLVED', ['problem_id' => $open['problem_id'], 'entry' => $text]);
-                $t->line('app', 'notice', self::CLARIFY_AGAIN_LINE);
-                return;
-            }
+        $others = $this->differentReadings($open, $text, $reading);
+        if ($others !== []) {
+            // Architecture v1.5 §7: plausible readings that would change the verdict are clarified before anything is graded.
+            $t->event('READINGS_DIFFER', ['problem_id' => $open['problem_id'], 'version' => $open['version'], 'entry' => $text, 'readings' => array_merge([$reading['text']], $others),
+                'note' => 'Plausible readings would be scored differently; nothing is recorded until the student clarifies.']);
+            $this->clarify($t, $text, $reading, ['kind' => 'ENTRY_NOT_READ', 'entry' => $text, 'reading' => $reading['text'], 'other_readings' => $others,
+                'reasons' => ['plausible readings would be scored differently']], $committed);
+            return;
         }
         $t->event('READING_ACCEPTED', ['problem_id' => $open['problem_id'], 'entry' => $text, 'reading' => $reading['text'], 'other_readings' => $reading['other_readings']]);
         $this->answer($t, $text, $reading['text'], EntryReader::NOTE_AI_READING, $committed);
+    }
+
+    /** The AI's clarifying question, shown as the AI wrote it (findings logged); without one, the reply call answers. */
+    private function clarify(TutorTurn $t, string $entry, array $reading, array $info, array $committed): void
+    {
+        $question = trim((string) ($reading['clarifying_question'] ?? ''));
+        if ($question === '') {
+            $this->reply($t, $info, $committed);
+            return;
+        }
+        $open = $t->eng['open'];
+        $t->event('CLARIFICATION_ASKED', ['problem_id' => $open['problem_id'], 'version' => $open['version'], 'entry' => $entry, 'question' => $question, 'question_source' => 'AI']);
+        $this->logFindings($t, TextGuard::findings($question, [self::stripOpen($open)]), $question, 'clarifying_question');
+        $this->identity($t, $question, 'clarifying_question');
+        $t->line('tutor', 'clarify', $question);
     }
 
     /** Other readings that pass the reading check and would be scored differently. @return list<string> */
@@ -484,12 +471,9 @@ final class TutorEngine
         $reasoning = ReasoningPolicy::decide($this->config, 'REPLY', $info);
         $res = $this->ai->reply($context, $expect, $reasoning, $budget, $log);
         $this->recordRejections($t, $res['repairs'], 'REPLY');
-        if (!$res['ok'] && isset($res['failure'])) {
-            $this->hold($t, $info, $res['failure']);
-            return;
-        }
         if (!$res['ok']) {
-            $this->fallback($t, $info, $recipes, $res);
+            // Round 7 §4.2: a provider failure, or an envelope that still fails after one repair, holds the turn; there is no code-written reply.
+            $this->hold($t, $info, $res['failure'] ?? self::repairFailure($res), isset($res['failure']) ? 'PROVIDER_UNAVAILABLE' : 'REPAIR_LIMIT_REACHED');
             return;
         }
         $t->event('MODEL_OUTPUT_ACCEPTED', ['kind' => $info['kind'], 'attempts' => count($res['repairs']) + 1]);
@@ -510,45 +494,99 @@ final class TutorEngine
                 $t->eng['wrap_up'] = true;
             }
         }
+        $this->logFindings($t, $res['findings'], $res['message'], 'student_message');
+        $this->heldAttempts($t, $info, $res, $open);
+        $this->identity($t, $res['message'], 'student_message');
         $t->line('tutor', 'message', $res['message']);
         $p = $res['problem'];
         if ($p !== null) {
-            if ($p['purpose'] === 'CHECK' && $res['forward'] !== []) {
-                $t->event('CHECK_CARD_AUDIT', ['problem_id' => $p['problem_id'], 'phrases' => $res['forward'], 'text' => $res['message'],
-                    'note' => 'Forward-looking phrases in the text before a check question (audit list; not rejected).']);
-            }
             if ($res['dropped_prompt_chars'] > 0) {
-                $t->event('MODEL_TEXT_DISCARDED', ['what' => 'problem wording; code writes check and choice wording', 'characters' => $res['dropped_prompt_chars']]);
+                $t->event('MODEL_TEXT_DISCARDED', ['what' => 'problem wording: code renders every problem from its verified spec (round 7 §8.1)',
+                    'characters' => $res['dropped_prompt_chars'], 'text' => $res['ai_prompt'], 'problem_id' => $p['problem_id']]);
             }
             $this->present($t, $p);
+            if ($res['card'] !== null) {
+                $card = $res['card'];
+                $t->event('CHECK_CARD_AUDIT', ['problem_id' => $p['problem_id'], 'version' => $p['version'], 'phrases' => $card['phrases'], 'shared_numbers' => $card['shared'],
+                    'answer_in_text' => $card['hold'] && $card['phrases'] === [], 'held' => $card['hold'], 'text' => $res['message'],
+                    'note' => 'Text before a check question: the answer or a phrase directed at the new problem holds the attempt; a shared number is a signal only.']);
+                if ($card['hold']) {
+                    $t->event('CHECK_HELD', ['problem_id' => $p['problem_id'], 'version' => $p['version'], 'reason' => 'HELP_BEFORE_CHECK', 'phrases' => $card['phrases'],
+                        'note' => 'Held: possible help before the check question. The attempt keeps its verdict but counts neither for nor against the goal.']);
+                }
+            }
         }
     }
 
-    /** §3.5: after a failed repair, code shows a prepared problem with a code line and drops the AI's text. */
-    private function fallback(TutorTurn $t, array $info, array $recipes, array $res): void
+    /**
+     * Round 7 §4.1: each guard finding is recorded with the exact text, the
+     * guard's name, and the problem and response it relates to. The student
+     * sees the text unchanged.
+     */
+    private function logFindings(TutorTurn $t, array $findings, string $text, string $field): void
     {
-        $last = end($res['repairs']) ?: ['errors' => []];
-        $t->event('FALLBACK_USED', ['kind' => $info['kind'], 'errors' => $last['errors'], 'discarded_characters' => $res['discarded_chars'] ?? 0,
-            'note' => 'The AI output failed its checks after one repair; its text for this turn was dropped and code wrote the line.']);
-        $open = $t->eng['open'];
-        if ($open !== null && $open['purpose'] === 'CHECK') {
-            $t->line('app', 'notice', self::FALLBACK_CHECK_LINE);
-            return;
+        $answered = $this->answeredIdentity($t);
+        foreach ($findings as $f) {
+            $t->event('GUARD_FINDING', $f + [
+                'field' => $field, 'text' => $text, 'reply_to_event_id' => $t->triggerEventId,
+                'open_problem' => $t->eng['open'] === null ? null : ['problem_id' => $t->eng['open']['problem_id'], 'version' => $t->eng['open']['version']],
+                'answered' => $answered,
+                'note' => 'Logged only; the text was shown unchanged.',
+            ]);
         }
-        $pick = null;
-        foreach ($recipes as $p) {
-            if ($p['skill_id'] === $t->eng['focus'] && $p['response_type'] !== 'classification') {
-                $pick = $p;
-                break;
+    }
+
+    /**
+     * Round 7 §5, the held attempts:
+     * - the AI raises a verdict conflict in issue: the answered attempt is held ("result under review");
+     * - the AI's text while a check question is open contains that check's answer: the check is held
+     *   (possible help during the check question; see ROUND_7_REPORT.md, conflicts).
+     * The before-card case is recorded where the check card is presented.
+     */
+    private function heldAttempts(TutorTurn $t, array $info, array $res, ?array $openBefore): void
+    {
+        if (($res['issue']['type'] ?? null) === 'VERIFICATION_CONFLICT') {
+            $answered = $this->answeredIdentity($t);
+            if ($answered !== null) {
+                $t->event('ATTEMPT_HELD', ['attempt_id' => $answered['attempt_id'], 'problem_id' => $answered['problem_id'], 'version' => $answered['version'],
+                    'reason' => 'VERDICT_CONFLICT', 'issue' => $res['issue'],
+                    'note' => 'Result under review: the AI raised a conflict with code\'s verdict. The verdict stays in the record; the attempt counts neither for nor against the goal until reviewed.']);
+            } else {
+                $t->event('ISSUE_WITHOUT_ATTEMPT', ['issue' => $res['issue'], 'note' => 'A verdict conflict was raised, but no answered problem exists in this session; nothing is held.']);
             }
         }
-        if ($pick === null) {
-            $t->line('app', 'notice', self::FALLBACK_PLAIN_LINE);
-            return;
+        $open = $t->eng['open'];
+        if ($open !== null && $openBefore !== null && $open['problem_id'] === $openBefore['problem_id'] && $open['purpose'] === 'CHECK') {
+            foreach ($res['findings'] as $f) {
+                if ($f['guard'] === 'ANSWER_LEAK' && $f['problem_id'] === $open['problem_id'] && ($open['help'] ?? []) === []) {
+                    $t->event('CHECK_HELD', ['problem_id' => $open['problem_id'], 'version' => $open['version'], 'reason' => 'HELP_DURING_CHECK',
+                        'note' => 'Held: the tutor\'s text shown while the check question was open contains its answer.']);
+                    break;
+                }
+            }
         }
-        $pick['purpose'] = 'PRACTICE';
-        $t->line('app', 'notice', self::FALLBACK_LINE);
-        $this->present($t, $pick);
+    }
+
+    /** The last answered problem and its attempt (round 7 §8.2). */
+    private function answeredIdentity(TutorTurn $t): ?array
+    {
+        $a = $t->eng['answered'] ?? null;
+        return $a === null ? null : ['attempt_id' => $a['attempt_id'], 'problem_id' => $a['problem_id'], 'version' => $a['version'], 'response_sha256' => $a['response_sha256']];
+    }
+
+    /** Round 7 §8.2: the answered and the open problem's identities, logged with each emitted AI message. */
+    private function identity(TutorTurn $t, string $text, string $field): void
+    {
+        $open = $t->eng['open'];
+        $t->event('TUTOR_MESSAGE', ['field' => $field, 'text' => $text, 'reply_to_event_id' => $t->triggerEventId,
+            'answered' => $this->answeredIdentity($t),
+            'open_problem' => $open === null ? null : ['problem_id' => $open['problem_id'], 'version' => $open['version'], 'purpose' => $open['purpose']]]);
+    }
+
+    private static function repairFailure(array $res): array
+    {
+        $last = end($res['repairs']) ?: ['errors' => []];
+        return ['type' => 'REPAIR_LIMIT_REACHED', 'detail' => 'The tutor\'s reply failed its checks after one repair.', 'errors' => array_slice($last['errors'], 0, 12)];
     }
 
     private function present(TutorTurn $t, array $p): void
@@ -569,7 +607,7 @@ final class TutorEngine
             'prompt' => $p['prompt'], 'fingerprint' => $p['fingerprint'], 'retry_of' => $p['retry_of'], 'response_type' => $p['response_type'],
             'number_set' => ProblemFactory::numberSet($p),
         ]);
-        $t->eng['open'] = $p + ['help' => [], 'clarified' => false];
+        $t->eng['open'] = $p + ['help' => []];
         $t->line($p['purpose'] === 'CHECK' ? 'app' : 'tutor', $p['purpose'] === 'CHECK' ? 'check' : 'problem', $p['prompt']);
     }
 
@@ -591,7 +629,7 @@ final class TutorEngine
             'detail' => ($type === 'PROVIDER_UNAVAILABLE' ? 'Model provider: ' . $failure['type'] . ' (' . $failure['detail'] . ').' : $failure['detail']) . ' Recorded work is preserved; this is not a learner failure.',
             'next_action' => 'Retry, or end the session for a partial summary.',
         ];
-        $t->event('PROVIDER_FAILURE', ['failure' => $failure, 'kind' => $info['kind']]);
+        $t->event($type === 'PROVIDER_UNAVAILABLE' ? 'PROVIDER_FAILURE' : 'TURN_HELD', ['failure' => $failure, 'kind' => $info['kind'], 'hold_type' => $type]);
         $t->event('ISSUE', $issue);
         $t->snap['issue'] = $issue;
         $t->eng['status'] = 'HOLD';
@@ -634,6 +672,7 @@ final class TutorEngine
             $this->store->logModelCall($sessionId, null, $purpose === 'BINDING' ? 'binding' : 'envelope', $provider->name(), $provider->model(), $outcome, $this->clock->now(), $resp === null ? [] : [
                 'finish_reason' => $resp->finishReason, 'duration_ms' => $resp->durationMs,
                 'prompt_tokens' => $resp->usage['prompt_tokens'] ?? null, 'completion_tokens' => $resp->usage['completion_tokens'] ?? null, 'reasoning_tokens' => $resp->usage['reasoning_tokens'] ?? null,
+                'cached_prompt_tokens' => $resp->usage['cached_prompt_tokens'] ?? null,
                 'transport_detail' => $resp->diagnostics,
                 'thinking' => $reasoning['thinking'], 'reasoning_effort' => $reasoning['effort'] ?? null, 'call_purpose' => $purpose, 'turn_id' => $t->triggerEventId,
             ]);
@@ -654,8 +693,9 @@ final class TutorEngine
             $this->hold($t, $info, $bound['failure']);
             return false;
         }
+        $previous = $b['acknowledged'] ? $b['architecture_sha256'] : null;
         $t->snap['binding'] = $bound['binding'];
-        $t->event('BINDING_ACCEPTED', $bound['binding'] + ['handshake' => $this->ai->handshake(),
+        $t->event('BINDING_ACCEPTED', $bound['binding'] + ['handshake' => $this->ai->handshake(), 'rebound_from_architecture_sha256' => $previous,
             'note' => 'Exact activation line received in text mode. This acknowledges the contract; it is not evidence of enforcement.']);
         return true;
     }
@@ -704,23 +744,30 @@ final class TutorEngine
         $goalSkills = array_values(array_unique(array_merge($skills, array_column($attempts, 'skill_id'))));
         $code = null;
         if ($info['kind'] === 'ANSWER') {
-            $code = ['problem' => $info['problem'], 'entry' => $info['entry'], 'read_as' => $info['read_as'], 'reading_note' => $info['reading_note'],
+            $code = ['problem' => $info['problem'], 'attempt_id' => $info['attempt_id'], 'entry' => $info['entry'], 'read_as' => $info['read_as'], 'reading_note' => $info['reading_note'],
                 'result' => $info['verdict'], 'result_line' => $info['result_line'], 'form_issue' => $info['form_issue'],
                 'signatures' => $info['signatures'], 'slip' => $info['slip']];
         }
         $slip = $t->eng['slip'];
+        $answered = $t->eng['answered'] ?? null;
         return [
             'TRUSTED_SESSION' => ['session_id' => $t->snap['session_id'], 'state_revision' => $t->snap['revision'], 'event_id' => $t->triggerEventId],
             'TURN' => ['kind' => ($info['resumed'] ?? false) && $info['kind'] === 'ANSWER' ? 'RESUMED' : $info['kind'], 'entry' => $info['text'] ?? ($info['entry'] ?? null),
-                'choice' => $info['choice'] ?? null, 'typed_stuck_phrase' => $info['typed'] ?? false],
+                'choice' => $info['choice'] ?? null]
+                + ($info['kind'] === 'ENTRY_NOT_READ' ? ['reading' => $info['reading'] ?? null, 'other_readings' => $info['other_readings'] ?? [], 'not_read_because' => $info['reasons'] ?? []] : []),
             'CODE_RESULT' => $code,
+            // Round 7 §8.2: the problem the last answer was for, and the open problem, each with its identity.
+            'ANSWERED_PROBLEM' => $answered === null ? null : [
+                'problem_id' => $answered['problem_id'], 'version' => $answered['version'], 'attempt_id' => $answered['attempt_id'],
+                'purpose' => strtolower($answered['purpose']), 'skill_id' => $answered['skill_id'], 'text' => $answered['prompt'],
+                'entry' => $answered['entry'], 'read_as' => $answered['read_as'], 'result' => $answered['verdict'], 'answered_in_this_turn' => $info['kind'] === 'ANSWER',
+            ],
             'OPEN_PROBLEM' => $open === null ? null : self::openBlock($open),
             'SLIP' => [
                 'confirmed' => $slipAllowed,
                 'skill_id' => ($info['slip'] ?? null) !== null ? $info['problem']['skill_id'] : ($slip['problem']['skill_id'] ?? null),
                 'sub_step' => $info['slip']['sub_step'] ?? null,
                 'retry_available' => $retryTarget !== null && ($slip['micro_asked'] ?? false),
-                'note' => 'A confirmed slip on a check question pauses its count once: the slipped answer and its retry do not count.',
             ],
             'ALLOWED' => ['may_pose_problem' => $allowItem, 'may_pose_check' => $allowItem],
             'TOPIC' => $skillBlock($t->eng['topic']),
@@ -737,10 +784,10 @@ final class TutorEngine
             'PREPARED_PROBLEMS' => array_map(fn ($ref, $p) => [
                 'ref' => $ref, 'skill_id' => $p['skill_id'], 'variant' => $p['variant_id'], 'kind' => self::kindWords($p),
                 'prompt' => $p['options'] === null ? $p['prompt'] : explode("\n", $p['prompt'])[0], 'options' => $p['options'] === null ? null : array_map(fn ($o) => $o['letter'] . ') ' . $o['text'], $p['options']),
-                'answer_for_your_teaching_never_state' => is_array($p['answer']['expected']) ? implode(', ', $p['answer']['expected']) : $p['answer']['expected'],
+                'answer' => is_array($p['answer']['expected']) ? implode(', ', $p['answer']['expected']) : $p['answer']['expected'],
             ], array_keys($recipes), array_values($recipes)),
-            'CHECK_PATTERNS' => ['typed' => array_values(PatternMatcher::DESCRIPTIONS), 'choice' => 'Q07 and E06 choice questions: use a prepared problem whose kind is choice question.'],
-            'PROBLEM_RULES' => ['spec_kinds' => SpecMath::KINDS, 'number_limit' => $this->config->int('spec_number_limit'),
+            'CHECK_PATTERNS' => ['typed' => array_values(PatternMatcher::DESCRIPTIONS), 'choice' => 'Q07 and E06 choice check questions are the prepared problems whose kind is choice question.'],
+            'PROBLEM_LIMITS' => ['spec_kinds' => SpecMath::KINDS, 'number_limit' => $this->config->int('spec_number_limit'),
                 'answer_limit' => $this->config->int('spec_answer_limit'), 'denominator_limit' => $this->config->int('spec_denominator_limit')],
             'EARLIER_SESSIONS' => ($t->eng['progress']['earlier'] ?? []) === [] ? null : array_map(fn ($r) => ['status' => $r['status'], 'date' => $r['date']], $t->eng['progress']['earlier']),
         ];
@@ -750,7 +797,7 @@ final class TutorEngine
     {
         return [
             'TRUSTED_SESSION' => ['session_id' => $t->snap['session_id'], 'state_revision' => $t->snap['revision'], 'event_id' => $t->triggerEventId],
-            'TURN' => ['kind' => 'READING', 'entry' => $text],
+            'TURN' => ['kind' => 'READING', 'entry' => $text, 'choice' => null],
             'OPEN_PROBLEM' => self::openBlock($t->eng['open']),
             'RECENT_CONVERSATION' => array_map(fn ($l) => ['role' => $l['role'], 'text' => mb_substr($l['text'], 0, 600)], array_slice($t->eng['conversation'], -6)),
         ];
@@ -758,9 +805,10 @@ final class TutorEngine
 
     private static function openBlock(array $open): array
     {
-        return ['purpose' => strtolower($open['purpose']), 'skill_id' => $open['skill_id'], 'prompt' => $open['prompt'], 'response_type' => $open['response_type'],
+        return ['problem_id' => $open['problem_id'], 'version' => $open['version'], 'purpose' => strtolower($open['purpose']), 'skill_id' => $open['skill_id'],
+            'text' => $open['prompt'], 'response_type' => $open['response_type'],
             'variables' => $open['variables'], 'options' => $open['options'] === null ? null : array_map(fn ($o) => $o['letter'] . ') ' . $o['text'], $open['options']),
-            'answer_for_your_teaching_never_state' => is_array($open['answer']['expected']) ? implode(', ', $open['answer']['expected']) : $open['answer']['expected'],
+            'answer' => is_array($open['answer']['expected']) ? implode(', ', $open['answer']['expected']) : $open['answer']['expected'],
             'help_given' => $open['help'] ?? []];
     }
 
@@ -773,11 +821,13 @@ final class TutorEngine
             $b[$k . '_correct'] = ($b[$k . '_correct'] ?? 0) + ($a['verdict'] === 'CORRECT' ? 1 : 0);
             $b[$k . '_not_yet'] = ($b[$k . '_not_yet'] ?? 0) + ($a['verdict'] !== 'CORRECT' ? 1 : 0);
             $b['answered_after_help'] = ($b['answered_after_help'] ?? 0) + ($a['help'] !== [] ? 1 : 0);
+            $b['held'] = ($b['held'] ?? 0) + (($a['held'] ?? null) !== null ? 1 : 0);
             unset($b);
         }
         return ['by_skill' => $by, 'recent_attempts' => array_map(fn ($a) => [
-            'skill_id' => $a['skill_id'], 'purpose' => strtolower($a['purpose']), 'problem' => $a['prompt'], 'entry' => $a['entry'], 'result' => $a['verdict'],
-            'help' => $a['help'], 'signatures' => $a['signatures'], 'slip' => $a['slip']['code'] ?? null,
+            'attempt_id' => $a['attempt_id'], 'problem_id' => $a['problem_id'], 'skill_id' => $a['skill_id'], 'purpose' => strtolower($a['purpose']), 'problem' => $a['prompt'],
+            'entry' => $a['entry'], 'result' => $a['verdict'], 'help' => $a['help'], 'signatures' => $a['signatures'], 'slip' => $a['slip']['code'] ?? null,
+            'held' => $a['held'] ?? null,
         ], array_slice($attempts, -6))];
     }
 
@@ -789,8 +839,6 @@ final class TutorEngine
             'skill_id' => $id, 'statement' => $s['statement'], 'observable_performance' => $s['observable_performance'], 'scope' => $s['scope']['included'] ?? null,
             'prerequisites_in_tutor' => array_values(array_filter($prereq, fn ($p) => BetaScope::contains($p))),
             'prerequisites_outside_tutor' => array_values(array_map(fn ($p) => $p . ' ' . ($this->curriculum->has($p) ? $this->curriculum->title($p) : ''), array_filter($prereq, fn ($p) => !BetaScope::contains($p)))),
-            'probe_focus' => $s['diagnostic_guidance']['probe_focus'] ?? null,
-            'bridge' => $s['instructional_guidance']['bridge'] ?? null,
         ];
     }
 
@@ -811,7 +859,7 @@ final class TutorEngine
 
     private static function stripOpen(array $open): array
     {
-        unset($open['help'], $open['clarified']);
+        unset($open['help'], $open['clarified']); // 'clarified' exists only in round 6 records
         return $open;
     }
 
@@ -820,7 +868,7 @@ final class TutorEngine
     private function initialState(string $sessionId, string $topic, string $focus, \DateTimeImmutable $now): array
     {
         $snap = [
-            'session_id' => $sessionId, 'revision' => 0, 'architecture_version' => '1.3',
+            'session_id' => $sessionId, 'revision' => 0, 'architecture_version' => Store::ARCHITECTURE_VERSION,
             'curriculum_id' => CurriculumRepository::CURRICULUM_ID, 'curriculum_version' => CurriculumRepository::CURRICULUM_VERSION,
             'status' => 'READY', 'topic_skill_id' => $topic, 'focus_skill_id' => $focus, 'next_focus_skill_id' => null,
             'open_problem_id' => null, 'open_problem_version' => null, 'pending_operation_id' => null,
@@ -840,6 +888,7 @@ final class TutorEngine
         if ($row === null || $this->expired($row, $now)) {
             throw new EngineError(404, 'SESSION_NOT_FOUND', 'This session is no longer available. Start a new session.');
         }
+        $row = self::upgrade($row);
         if ($row['pending_operation_id'] !== null) {
             $op = $this->store->operation($row['pending_operation_id']);
             if ($op !== null && $op['status'] === 'ACTIVE' && Time::iso($now) < $op['expires_at']) {
@@ -850,6 +899,20 @@ final class TutorEngine
             }
             $this->store->setPendingOperation($sessionId, null);
             $row['pending_operation_id'] = null;
+        }
+        return $row;
+    }
+
+    /**
+     * Round 7 §2.3: a session stored under architecture 1.3 continues under
+     * 1.5. Its snapshot takes the new version, and because the binding's
+     * architecture hash no longer matches, ensureBinding() rebinds it to v1.5
+     * before the next AI call.
+     */
+    private static function upgrade(array $row): array
+    {
+        if (($row['snapshot']['architecture_version'] ?? null) !== Store::ARCHITECTURE_VERSION) {
+            $row['snapshot']['architecture_version'] = Store::ARCHITECTURE_VERSION;
         }
         return $row;
     }
@@ -935,12 +998,20 @@ final class TutorEngine
             $goals = Goals::compute(Gradebook::attempts($events));
             $recorded = [];
             foreach ($events as $e) {
-                if ($e['type'] === 'GOAL_MET') {
-                    $recorded[$e['data']['skill_id']] = true;
+                if ($e['type'] === 'GOAL_MET' || $e['type'] === 'GOAL_SUSPENDED') {
+                    $recorded[$e['data']['skill_id']] = $e['type'] === 'GOAL_MET';
+                }
+            }
+            foreach ($recorded as $skill => $met) {
+                // Architecture v1.5 §10: an attempt held after its goal was met suspends that goal; the earlier record stays.
+                if ($met && !($goals[$skill]['met'] ?? false)) {
+                    $this->store->appendEvent($sessionId, 'GOAL_SUSPENDED', $revision, ['skill_id' => $skill,
+                        'reason' => 'An attempt that met this goal is held for review; the goal is recomputed without it.'], $now);
+                    $recorded[$skill] = false;
                 }
             }
             foreach ($goals as $g) {
-                if ($g['met'] && !isset($recorded[$g['skill_id']])) {
+                if ($g['met'] && !($recorded[$g['skill_id']] ?? false)) {
                     $this->store->appendEvent($sessionId, 'GOAL_MET', $revision, ['skill_id' => $g['skill_id'], 'attempt_ids' => $g['met_attempt_ids'],
                         'scope' => 'Three check questions correct in a row without help in this session' . ($g['three_variant'] ? ', covering a solve or expansion, a choice question and a new form' : '') . '. An in-session goal only; no retention or long-term learning claim.'], $now);
                 }
@@ -1037,6 +1108,7 @@ final class TutorEngine
             if ($row === null || $this->expired($row, $now)) {
                 throw new EngineError(404, 'SESSION_NOT_FOUND', 'This session is no longer available.');
             }
+            $row = self::upgrade($row);
             if ($row['revision'] !== $req['expected_revision']) {
                 throw new EngineError(409, 'STALE_REVISION', 'This page is out of date. Reload to continue.');
             }
@@ -1068,7 +1140,6 @@ final class TutorEngine
             $t->eng['pending'] = null;
             $t->snap['issue'] = null;
             $t->event('SESSION_ENDED', ['reason' => 'Learner ended the session.']);
-            $t->line('app', 'notice', 'This session has ended. Your summary is ready.');
             $t->reportNeeded = true;
             $this->metrics($t);
             $op = $this->store->claimOperation($sessionId, $row['revision'], $requestHash, $now, $this->config->int('lease_seconds'));

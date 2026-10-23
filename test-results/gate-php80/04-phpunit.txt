@@ -10,6 +10,7 @@ Engine Units (AlgebraEngine\Tests\Unit\Engine\EngineUnits)
  ✔ Support claims in model text only
  ✔ Code lines use no internal vocabulary
  ✔ Tutor prompt skeleton and shape
+ ✔ The output contract holds no behaviour rules
 
 Templates (AlgebraEngine\Tests\Unit\Items\Templates)
  ✔ Every template generates valid items whose host key checks correct
@@ -131,6 +132,8 @@ Problem Text (AlgebraEngine\Tests\Unit\Support\ProblemText)
 Learner Instruments (AlgebraEngine\Tests\Unit\Tutor\LearnerInstruments)
  ✔ Readings that only re express the entry pass
  ✔ Readings that add numbers or variables are rejected
+ ✔ Readings that drop or rearrange what the student wrote are rejected
+ ✔ Compound number words
  ✔ Owner cases are classified before any call
  ✔ Other entries
  ✔ Distribution to x only is not a slip
@@ -151,7 +154,7 @@ Problem Instruments (AlgebraEngine\Tests\Unit\Tutor\ProblemInstruments)
  ✔ Recipes in reverse match every typed recipe and its bounds
  ✔ Off pattern check problems are rejected
  ✔ Wrong stated answer is rejected
- ✔ Practice wording must show the spec and not its answer
+ ✔ Practice wording is rendered by code from the spec
  ✔ Recipe choices and freshness
  ✔ Pregenerated problems rarely show their answer
  ✔ Retry only after a slip
@@ -164,11 +167,17 @@ Cheating (AlgebraEngine\Tests\Integration\Cheating)
  ✔ The ai poses an off pattern check problem
  ✔ A reading adds numbers
  ✔ A slip that the structure contradicts
- ✔ Text before a check card contains its numbers
- ✔ Text leaks an answer
+ ✔ Text before a check card shares a number
+ ✔ Text before a check card with a strategy phrase holds the attempt
+ ✔ Text before a check card with its answer holds the attempt
+ ✔ Text leaks an answer after i am stuck
  ✔ Text claims mastery or uses internal terms
  ✔ A free text message during an open check problem
- ✔ Without help is never recorded after a stuck entry
+ ✔ I am stuck during a check is recorded before the ai call
+ ✔ Typed idk during a check is a message not help
+ ✔ Explain the idea is no longer a choice
+ ✔ An answer leak during an open check holds the attempt
+ ✔ A verdict conflict holds the attempt
  ✔ The ai poses a problem while a check is open
 
 Deploy Coverage (AlgebraEngine\Tests\Integration\DeployCoverage)
@@ -196,6 +205,7 @@ Host (AlgebraEngine\Tests\Integration\Host)
  ✔ Host 16 forget and expiry
  ✔ Host 17 cost limits
  ✔ End while pending
+ ✔ A session bound to 13 is rebound to 15
  ✔ Migrations are safe to run twice
 
 Key Leak (AlgebraEngine\Tests\Integration\KeyLeak)
@@ -204,7 +214,7 @@ Key Leak (AlgebraEngine\Tests\Integration\KeyLeak)
 
 Live Adapter (AlgebraEngine\Tests\Integration\LiveAdapter)
  ✔ Adapter request format and full journey start
- ✔ Empty content and internal words are repaired not shown
+ ✔ Empty content is repaired and internal words are logged
  ✔ Thinking settings are explicit
  ✔ Reasoning content is never kept and truncation is recorded
  ✔ Network failure diagnostics are logged
@@ -223,6 +233,8 @@ Owner Cases (AlgebraEngine\Tests\Integration\OwnerCases)
  ✔ Answer in a sentence is read by the ai and marked correct by code
  ✔ Four x x in a how many x context is read as four x
  ✔ Slip is confirmed micro checked retried and the run paused
+ ✔ Readings are accepted only when they re express the entry
+ ✔ Number words and reversed equations
 
 Progress Code (AlgebraEngine\Tests\Integration\ProgressCode)
  ✔ Created at first answer and updated in the same transaction
@@ -262,7 +274,8 @@ Tutor Loop (AlgebraEngine\Tests\Integration\TutorLoop)
  ✔ Every call carries fresh prepared problems and is built anew
  ✔ Reasoning is chosen per call and logged
  ✔ One repair then accepted
- ✔ Fallback after the repair fails too
+ ✔ Hold after the repair fails too
+ ✔ Answered and open problem identities
  ✔ Transport failure holds and resume retries the reply
  ✔ Every beta skill can start and score
  ✔ Change topic sets the open problem aside and the tutor continues
@@ -274,6 +287,6 @@ Tutor Loop (AlgebraEngine\Tests\Integration\TutorLoop)
  ✔ Moves stay inside the tutors skills
  ✔ Missing curriculum record holds without inventing one
 
-Time: 00:08.361, Memory: 106.00 MB
+Time: 00:13.666, Memory: 106.00 MB
 
-OK (222 tests, 27104 assertions)
+OK (235 tests, 27933 assertions)

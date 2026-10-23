@@ -14,10 +14,10 @@ use AlgebraEngine\Tutor\TextGuard;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Round 6 M1: the reading check (§4.1), safe normalisation and ambiguous
- * entries (§3.1), slip confirmation (§4.4), the gradebook and goals (§2.2,
- * §2.4, §5.4–5.5) and the text guards (§2.6, §5.2), each also tried with an
- * attempt to cheat it.
+ * Round 6 M1, updated for round 7: the reading check with its drop check
+ * (§7.1), number words (§7.2), safe normalisation and ambiguous entries,
+ * slip confirmation, the gradebook and goals with held attempts (§5), and the
+ * text guards as detectors (§4), each also tried with an attempt to cheat it.
  */
 final class LearnerInstrumentsTest extends TestCase
 {
@@ -55,6 +55,44 @@ final class LearnerInstrumentsTest extends TestCase
         $this->assertNotSame([], ReadingCheck::check('16', 'system(16)', ['x']));
     }
 
+    /** Round 7 §9: the drop check, grouping and order. */
+    public function testReadingsThatDropOrRearrangeWhatTheStudentWroteAreRejected(): void
+    {
+        $this->assertSame([], ReadingCheck::check('16 because it\'s 4 x 4', '16', ['x']), 'working separated by words may be left out');
+        $this->assertStringContainsString('leaves out "+ 2"', ReadingCheck::check('2 x x + 2', '2x', ['x'])[0]);
+        $this->assertStringContainsString('leaves out "plus 2"', ReadingCheck::check('2x plus 2', '2x', ['x'])[0]);
+        $this->assertStringContainsString('changes the grouping, the order', ReadingCheck::check('2(x + 1)', '2x + 1', ['x'])[0]);
+        $this->assertStringContainsString('changes the grouping, the order', ReadingCheck::check('2 - 5', '5 - 2', ['x'])[0]);
+        $this->assertStringContainsString('leaves out "minus"', ReadingCheck::check('minus five', '5', ['x'])[0]);
+        $this->assertStringContainsString('leaves out "negative"', ReadingCheck::check('negative 3', '3', ['x'])[0]);
+        $this->assertNotSame([], ReadingCheck::check('seven times five', '7', ['x']), 'joined by an operation word');
+        $this->assertNotSame([], ReadingCheck::check('three over four', '3', ['x']));
+        // Faithful re-expressions pass.
+        $this->assertSame([], ReadingCheck::check('2 x x + 2', '2x + 2', ['x']));
+        $this->assertSame([], ReadingCheck::check('2x plus 2', '2x + 2', ['x']));
+        $this->assertSame([], ReadingCheck::check('2(x + 1)', '2(x + 1)', ['x']));
+        $this->assertSame([], ReadingCheck::check('minus five', '-5', ['x']));
+        $this->assertSame([], ReadingCheck::check('three over four', '3/4', ['x']));
+        $this->assertSame([], ReadingCheck::check('3 = x i think', 'x = 3', ['x']), 'the sides of = may be swapped');
+        $this->assertSame([], ReadingCheck::check('I got 7, I think', '7', ['x']));
+    }
+
+    /** Round 7 §7.2: compound number words up to 999. */
+    public function testCompoundNumberWords(): void
+    {
+        $this->assertSame([25], \AlgebraEngine\Tutor\Numbers::words('twenty five'));
+        $this->assertSame([25], \AlgebraEngine\Tutor\Numbers::words('twenty-five'));
+        $this->assertSame([104], \AlgebraEngine\Tutor\Numbers::words('one hundred and four'));
+        $this->assertSame([999], \AlgebraEngine\Tutor\Numbers::words('nine hundred and ninety-nine'));
+        $this->assertSame([], \AlgebraEngine\Tutor\Numbers::words('one way to do it'), '"one" as a determiner is not 1');
+        $this->assertSame([], ReadingCheck::check('twenty five', '25', ['x']));
+        $this->assertSame([], ReadingCheck::check('one hundred and four', '104', ['x']));
+        $q06 = $this->problems->fromRecipe('TWO_STEP', ['a' => 2, 'b' => 3, 'c' => 53], 'CHECK'); // x = 25
+        $r = EntryReader::classify('twenty five', $q06);
+        $this->assertSame(['ANSWER', '25', EntryReader::NOTE_NUMBER_WORDS], [$r['kind'], $r['read_as'], $r['note']], 'code reads a number written in words');
+        $this->assertSame('CORRECT', AnswerCheck::outcome($q06, $r['read_as'])->verdict);
+    }
+
     // ----------------------------------------------------------- entries (§3.1)
 
     public function testOwnerCasesAreClassifiedBeforeAnyCall(): void
@@ -77,8 +115,10 @@ final class LearnerInstrumentsTest extends TestCase
     public function testOtherEntries(): void
     {
         $q07 = $this->problems->fromRecipe('GROUPED_LINEAR', ['a' => 3, 'b' => 4, 'c' => 27], 'CHECK');
-        $this->assertSame('STUCK', EntryReader::classify('idk', $q07)['kind']);
-        $this->assertSame('STUCK', EntryReader::classify('???', $q07)['kind']);
+        // Round 7 §6.3: code never classifies typed text as "stuck"; it is a message to the tutor.
+        $this->assertSame('MESSAGE', EntryReader::classify('idk', $q07)['kind']);
+        $this->assertSame('MESSAGE', EntryReader::classify('???', $q07)['kind']);
+        $this->assertSame('MESSAGE', EntryReader::classify('help', $q07)['kind']);
         $this->assertSame('MESSAGE', EntryReader::classify('why do we divide first?', $q07)['kind']);
         $this->assertSame('MESSAGE', EntryReader::classify('anything', null)['kind'], 'no open problem: a message');
         $r = EntryReader::classify('5?', $q07);
@@ -236,14 +276,19 @@ final class LearnerInstrumentsTest extends TestCase
     public function testGuardsOnLearnerVisibleText(): void
     {
         $open = $this->problems->fromRecipe('POSITIVE_DISTRIBUTION', ['a' => 7, 'b' => 5], 'PRACTICE');
-        $this->assertSame([], TextGuard::violations('What does the 7 multiply? Have a look at each term inside the parentheses.', [$open]), 'questions are allowed');
-        $this->assertNotSame([], TextGuard::violations('It comes out as 7x + 35.', [$open]), 'answer leak');
-        $this->assertNotSame([], TextGuard::violations('The answer key says otherwise.', [$open]), 'internal vocabulary');
-        $this->assertNotSame([], TextGuard::violations('Do this one on your own.', [$open]), 'support claim');
-        foreach (['You\'ve mastered this!', 'Great, you have learned this.', 'You know this now.', 'Goal met!', 'You met the goal for this skill.', 'That shows mastery.'] as $claim) {
-            $this->assertNotSame([], TextGuard::violations($claim, []), 'mastery claim: ' . $claim);
+        $guards = fn (string $text, array $protected = [], ?string $verdict = null) => array_column(TextGuard::findings($text, $protected, $verdict), 'guard');
+        $this->assertSame([], $guards('What does the 7 multiply? Have a look at each term inside the parentheses.', [$open]), 'questions are allowed');
+        $this->assertSame(['ANSWER_LEAK'], $guards('It comes out as 7x + 35.', [$open]));
+        $this->assertSame($open['problem_id'], TextGuard::findings('It comes out as 7x + 35.', [$open])[0]['problem_id'], 'a finding names the problem it relates to');
+        $this->assertSame(['INTERNAL_VOCABULARY'], $guards('The answer key says otherwise.', [$open]));
+        foreach (['Do this one on your own.', 'You did that without help.', 'Work independently now.', 'Try it by yourself.', 'No help this time.'] as $claim) {
+            $this->assertSame(['HELP_CLAIM'], $guards($claim, [$open]), 'help claim: ' . $claim);
         }
-        $this->assertSame([], TextGuard::violations('You multiplied both terms by 7, using the distributive property.', []));
+        foreach (['You\'ve mastered this!', 'Great, you have learned this.', 'You know this now.', 'Goal met!', 'You met the goal for this skill.', 'That shows mastery.'] as $claim) {
+            $this->assertSame(['MASTERY_OR_GOAL_CLAIM'], $guards($claim), 'mastery claim: ' . $claim);
+        }
+        $this->assertSame(['VERDICT_CONTRADICTION'], $guards('Correct! Nicely done.', [], 'INCORRECT'));
+        $this->assertSame([], $guards('You multiplied both terms by 7, using the distributive property.'));
     }
 
     public function testTheAiCannotOverruleTheVerdict(): void
@@ -256,21 +301,28 @@ final class LearnerInstrumentsTest extends TestCase
         $this->assertSame([], TextGuard::contradicts('You multiplied both terms by 7.', 'CORRECT'));
     }
 
+    /** Round 7 §5: a shared number is a signal; the check's answer or a phrase directed at it holds the attempt. */
     public function testTextBeforeACheckCard(): void
     {
         $card = $this->problems->fromRecipe('GROUPED_LINEAR', ['a' => 4, 'b' => -3, 'c' => 28], 'CHECK'); // 4(x − 3) = 28, x = 10
+        $guards = fn (array $r) => array_column($r['findings'], 'guard');
         $r = TextGuard::beforeCheckCard('You divided both sides by 4 first.', $card);
-        $this->assertNotSame([], $r['violations'], 'a number from the new problem');
+        $this->assertSame([['CHECK_CARD_SHARED_NUMBER'], false, ['4']], [$guards($r), $r['hold'], $r['shared']], 'a shared number is logged and holds nothing');
         $r = TextGuard::beforeCheckCard('You divided both sides first, then undid the subtraction.', $card);
-        $this->assertSame([], $r['violations']);
+        $this->assertSame([[], false], [$guards($r), $r['hold']]);
         $r = TextGuard::beforeCheckCard('Twenty-eight is a lot.', $card);
-        $this->assertNotSame([], $r['violations'], 'compound number words are detected before a check card');
+        $this->assertSame(['28'], $r['shared'], 'compound number words are detected before a check card');
         $r = TextGuard::beforeCheckCard('Twenty is a lot.', $card);
-        $this->assertSame([], $r['violations']);
+        $this->assertSame([], $r['shared']);
         $r = TextGuard::beforeCheckCard('Three times something gives the total.', $this->problems->fromRecipe('GROUPED_LINEAR', ['a' => 3, 'b' => 4, 'c' => 27], 'CHECK'));
-        $this->assertNotSame([], $r['violations'], 'a number word for a number in the new problem');
+        $this->assertSame(['3'], $r['shared'], 'a number word for a number in the new problem');
+        $r = TextGuard::beforeCheckCard('That works out to 10 in the end.', $card);
+        $this->assertSame([true, ['CHECK_CARD_ANSWER']], [$r['hold'], $guards($r)], 'the check\'s answer holds the attempt');
         $r = TextGuard::beforeCheckCard('Good. Next, try this one and remember to check both sides. When you finish, make sure you don\'t forget the sign.', $card);
-        $this->assertSame([], $r['violations']);
-        $this->assertSame(['next', 'try', 'remember', 'make sure', "don't forget", 'when you'], $r['forward'], 'forward-looking phrases go on the audit list');
+        $this->assertTrue($r['hold']);
+        $this->assertSame(['next', 'try', 'remember', 'make sure', "don't forget", 'when you'], $r['phrases']);
+        foreach (['Careful with the sign.', 'Start by dividing.', 'Use the same steps as before.', 'Here is a hint: divide.', 'Keep in mind the order.'] as $text) {
+            $this->assertTrue(TextGuard::beforeCheckCard($text, $card)['hold'], 'a hint, method, strategy or reminder: ' . $text);
+        }
     }
 }

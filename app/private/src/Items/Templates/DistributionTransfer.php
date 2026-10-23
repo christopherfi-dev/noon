@@ -95,11 +95,11 @@ final class DistributionTransfer extends AbstractTemplate
         [$a, $q] = [$p['a'], $p['q']];
         $patterns = $p['form'] === 'COEFF_INSIDE'
             ? [
-                ['FIRST_TERM_ONLY', 'matches distribution-to-first-term-only', 'A07', ($a * $p['p']) . "*x+$q"],
+                ['FIRST_TERM_ONLY', 'matches distribution-to-first-term-only (the factor multiplied only the first term inside the parentheses)', 'A07', ($a * $p['p']) . "*x+$q"],
                 ['SECOND_TERM_ONLY', 'matches distribution-to-second-term-only', 'A07', $p['p'] . '*x+' . ($a * $q)],
             ]
             : [
-                ['FIRST_TERM_ONLY', 'matches distribution-to-first-term-only', 'A07', "$a*x+y+$q"],
+                ['FIRST_TERM_ONLY', 'matches distribution-to-first-term-only (the factor multiplied only the first term inside the parentheses)', 'A07', "$a*x+y+$q"],
                 ['NOT_EVERY_TERM', 'matches the factor reaching some but not all terms', 'A07', "$a*x+$a*y+$q"],
             ];
         return PolynomialSignatures::match($outcome, $this->vars($p), $patterns,
@@ -109,9 +109,15 @@ final class DistributionTransfer extends AbstractTemplate
     public function signatureFeedback(array $p, string $code): ?string
     {
         return match ($code) {
-            'FIRST_TERM_ONLY' => 'Your answer multiplied only the first term by ' . $p['a'] . '.',
+            'FIRST_TERM_ONLY' => self::firstTermOnly($p['a']),
             'SECOND_TERM_ONLY', 'NOT_EVERY_TERM' => 'Your answer did not multiply every term in the parentheses by ' . $p['a'] . '.',
             default => null,
         };
+    }
+
+    /** Round 7 §8.3: the one learner-facing description of FIRST_TERM_ONLY, on Q07 and E06. */
+    public static function firstTermOnly(int $a): string
+    {
+        return 'Your answer multiplied only the first term inside the parentheses by ' . $a . '.';
     }
 }
