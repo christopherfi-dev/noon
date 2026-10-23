@@ -211,3 +211,13 @@ Separate interval. Offline only: no live run, no key, nothing deployed. Rulings:
 | 2026-10-23T00:37:29Z–00:38:35Z | Full gate on PHP 8.3.6 | PASS — every step exit 0 (F1 manifest lists the two accepted differences); PHPUnit 229; browser 12/12; both bundles built; smoke PASS; key-leak 0 hits. Saved in `test-results/gate-php83/` |
 | 2026-10-23T00:38:41Z–00:39:41Z | Full gate on native PHP 8.0.30 (every PHP step, including the bundle build) | PASS — every step exit 0; PHPUnit 229; browser 12/12; bundles built (Bluehost 681 files, VPS 669 files); smoke PASS; key-leak 0 hits. Saved in `test-results/gate-php80/`; the committed ZIPs are from this run. VPS bundle sha256 a1f02a0f47643e2c71e9549bd26a331a0ce79dd94815764d1c7bb1d6158efb6e |
 | 2026-10-23T00:40:02Z | **Round UI v3.1 end**. Work in `0b10a50`; addendum in `ROUND_UI_V3_REPORT.md`. VPS bundle sha256 a1f02a0f47643e2c71e9549bd26a331a0ce79dd94815764d1c7bb1d6158efb6e. Not deployed | Round UI v3.1 interval 00:35:55Z–2026-10-23T00:40:02Z |
+
+## Round 6 — the AI tutors, code verifies (`CONDUCTOR_ROUND_6.md`)
+
+Separate interval on branch `round6-ai-autonomy` (no `claude/` prefix was needed). Stage 1 is offline: mock provider, no key, nothing deployed. Stage 2 (live runs) waits for a temporary key from the owner.
+
+| UTC time | Action | Result |
+|---|---|---|
+| 2026-10-23T02:40:09Z | **Round 6 start**. Instructions received; placed in `CONDUCTOR_ROUND_6.md` | Recorded |
+| 2026-10-23T02:41:12Z | Annotated tag `beta-1.0` on `061239c`, with the deployment path and VPS bundle sha256 a1f02a0f47643e2c71e9549bd26a331a0ce79dd94815764d1c7bb1d6158efb6e in its message | Created locally. Pushing the tag was refused (HTTP 403 from the environment's git policy, three attempts between 02:41:15Z and 02:41:41Z); the owner must push it |
+| between 02:41:15Z and 02:41:19Z (exact time not recorded) | Branch `round6-ai-autonomy` created from `beta-1.0` and pushed | Pushed; no further commits go to `claude/elegant-volta-blu3uj` |
