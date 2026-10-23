@@ -107,7 +107,7 @@ try {
     const expected = ['TARGET_ASSESSMENT', 'DIAGNOSTIC_PROBE', 'PREREQUISITE_CHECK', 'GUIDED_REPAIR', 'GUIDED_REPAIR', 'INDEPENDENT_CHECK', 'RETURN_TO_TARGET', 'SESSION_REPORT'];
     const modes = steps.map((s) => s.mode);
     const pass = JSON.stringify(modes) === JSON.stringify(expected) && finalMode === 'SESSION_REPORT' && guidedHeading && namesMissed && dontKnow.includes("I don't know")
-      && reportText.includes('MOCK') && reportText.includes('goal met: 3 correct in a row without help') && !/master/i.test(reportText) && internalInSummary.length === 0 && maxOverflow <= 0 && errors.length === 0;
+      && reportText.includes('MOCK') && reportText.includes('goal met: 3 correct without help (one slip may pause the count)') && !/master/i.test(reportText) && internalInSummary.length === 0 && maxOverflow <= 0 && errors.length === 0;
     record(`B1 browser journey (${label} ${w}x${h})`, pass, { modes, namesMissed, maxOverflow, internalInSummary, consoleErrors: errors, smallerPrompt: smallerPrompt.slice(0, 120) });
     await ctx.close();
     execFileSync('php', ['-r', `$p=new PDO('sqlite:${dbPath}'); foreach(['sessions','events','items','checker_results','operations','idempotency','reports','containers','counters','model_calls'] as $t) $p->exec("DELETE FROM $t");`]);
@@ -241,7 +241,7 @@ try {
     await shot('02-independent-scalar-item');
     await shot('06-progress-dots-0');
     const d0 = await dots(page);
-    checks.u7Dots0 = d0 && d0.filled === 0 && d0.total === 3 && d0.hidden === 'true' && d0.text.includes('0 of 3 in a row without help') && d0.text.includes('Still needed: a solve, a step choice and a new kind of equation.');
+    checks.u7Dots0 = d0 && d0.filled === 0 && d0.total === 3 && d0.hidden === 'true' && d0.text.includes('0 of 3 correct without help (one slip may pause the count)') && d0.text.includes('Still needed: a solve, a step choice and a new kind of equation.');
     checks.u5Independent = JSON.stringify(await controlLabels(page)) === JSON.stringify(['Submit', "I'm stuck", 'Skip']) && (await menuLabels(page)).length === 0;
     await page.getByTestId('stuck').click();
     checks.u5IndependentMenu = JSON.stringify(await menuLabels(page)) === JSON.stringify(['Give me a hint', 'Explain the idea', "I haven't learned this yet"])
@@ -341,7 +341,7 @@ try {
     const learnerText = await page.getByTestId('learner-summary').textContent();
     const learnerHeadings = await page.locator('[data-testid="learner-summary"] h2').allTextContents();
     checks.u2Learner = JSON.stringify(learnerHeadings) === JSON.stringify(['What you did well', 'Where you had trouble', 'What we worked on', 'What to work on next time'])
-      && !/\b[A-Z]\d{2}\b/.test(learnerText) && learnerText.includes('goal met: 3 correct in a row without help');
+      && !/\b[A-Z]\d{2}\b/.test(learnerText) && learnerText.includes('goal met: 3 correct without help (one slip may pause the count)');
     // Round UI v3 (U9): "Download report" and "Print or save as PDF"; the JSON record sits inside the teacher details.
     checks.u9Buttons = (await page.getByTestId('download-report').textContent()) === 'Download report' && (await page.getByTestId('print-report').textContent()) === 'Print or save as PDF'
       && (await page.locator('[data-testid="teacher-details"] [data-testid="download-json"]').count()) === 1;
@@ -377,7 +377,7 @@ try {
     checks.probe = oracle().mode === 'DIAGNOSTIC_PROBE';
     await answer(page, correct());
     const d = await dots(page);
-    checks.reset = oracle().mode === 'TARGET_ASSESSMENT' && d.filled === 0 && d.text.includes('0 of 3 in a row without help');
+    checks.reset = oracle().mode === 'TARGET_ASSESSMENT' && d.filled === 0 && d.text.includes('0 of 3 correct without help (one slip may pause the count)');
     const pick = async (testid) => { const n = sent.length; await page.getByTestId('stuck').click(); await page.getByTestId(testid).click(); await idle(page); return sent.slice(n).join(); };
     checks.hint = (await pick('hint')) === 'REQUEST_HINT' && (await page.getByTestId('goal').textContent()).includes('You had help on this one');
     checks.explain = (await pick('explain')) === 'REQUEST_EXPLANATION';

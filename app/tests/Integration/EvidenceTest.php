@@ -51,8 +51,10 @@ final class EvidenceTest extends TestCase
         $h->answerCorrect();
         $h->mock->faults[] = ['type' => 'ITEM_PATCH', 'patch' => ['parameters' => $solved]];
         $h->answerCorrect();
-        $errors = array_merge(...array_map(fn ($e) => $e['data']['errors'], $h->events('MODEL_OUTPUT_REJECTED')));
-        $this->assertContains('parameters reuse an item instance already presented in this session; choose fresh parameters', $errors);
+        // Round 6: the host chooses fresh parameters itself (no repair call within the per-entry limit) and records the proposal.
+        $flags = array_values(array_filter($h->events('ITEM_FLAGGED'), fn ($e) => $e['data']['flag'] === 'HOST_REPLACED_PARAMETERS'));
+        $this->assertContains('parameters reuse an item instance already presented in this session; choose fresh parameters', $flags[0]['data']['reasons']);
+        $this->assertSame($solved, $flags[0]['data']['model_parameters']);
         $fps = array_map(fn ($e) => $e['data']['fingerprint'], $h->events('ITEM_PRESENTED'));
         $this->assertSame(count($fps), count(array_unique($fps)));
         $this->assertNotSame($solved, $h->active()['params']);

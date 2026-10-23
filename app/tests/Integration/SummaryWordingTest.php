@@ -62,7 +62,7 @@ final class SummaryWordingTest extends TestCase
             }
             $this->assertSame('SESSION_REPORT', $h->mode());
             $s = self::summary($h);
-            $this->assertStringContainsString('goal met: 3 correct in a row without help', $s['report']['immediate_criteria'][0]['statement']);
+            $this->assertStringContainsString('goal met: 3 correct without help (one slip may pause the count)', $s['report']['immediate_criteria'][0]['statement']);
             $this->assertSame('IMMEDIATE_CRITERION_MET', $s['per_skill'][0]['criterion_status'], 'stored codes are unchanged');
             $this->assertArrayHasKey('assisted', $s['per_skill'][0], 'field names are unchanged');
             $summaries['B1'] = $s;
@@ -172,7 +172,7 @@ final class SummaryWordingTest extends TestCase
         $b1 = $this->summaries()['B1']['summary'];
         $this->assertCount(2, $b1['learner']['did_well']);
         foreach ($b1['learner']['did_well'] as $g) {
-            $this->assertStringContainsString('goal met: 3 correct in a row without help', $g);
+            $this->assertStringContainsString('goal met: 3 correct without help (one slip may pause the count)', $g);
         }
         $this->assertContains('Apply the distributive property with positive factors: 1 answer was not right yet; you used help.', $b1['learner']['trouble']);
         $q07 = $b1['teacher']['skills'][0];
@@ -185,7 +185,7 @@ final class SummaryWordingTest extends TestCase
     {
         foreach ([
             'Exact rational comparison with the host-derived key; no tolerance; reasoning not assessed.' => 'Exact rational comparison with the answer the app computed; no tolerance; reasoning not assessed.',
-            'Repair criterion met at E06.' => 'Repair goal met (3 correct in a row without help) at E06.',
+            'Repair criterion met at E06.' => 'Repair goal met (3 correct without help; one slip may pause the count) at E06.',
             'Check at E06 was assisted or not in the requested form; bounded instructional trial.' => 'Check at E06 was answered with help or not in the requested form; bounded instructional trial.',
             'Assisted independent-check attempt was not correct; continue guided work (not a failed cycle).' => 'An independent-check attempt answered with help was not correct; continue guided work (not a failed cycle).',
             'The provider output failed host acceptance after 2 repair attempts.' => 'The provider output failed app acceptance after 2 repair attempts.',

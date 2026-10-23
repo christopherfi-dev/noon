@@ -21,7 +21,7 @@ final class SummaryView
      * retention claim, faded support, coverage) or raw codes.
      */
     private const WORDS = [
-        '/\bRepair goal met \(3 correct in a row without help\) at [A-Z]\d{2}\./' => 'the goal there was met (3 correct in a row without help).',
+        '/\bRepair goal met \(3 correct in a row without help\) at [A-Z]\d{2}\./' => 'the goal there was met (3 correct without help; one slip may pause the count).',
         '/\bParent ([A-Z]\d{2}) re-verified with fresh work\./' => '$1 was checked again with fresh questions.',
         '/\bPrerequisite check succeeded; repair at the parent\./' => 'the building block was answered correctly, so step-by-step work moved to the skill above it.',
         '/\bPrerequisite ([A-Z]\d{2}) succeeded independently; bounded instructional trial at ([A-Z]\d{2})\./' => 'the building block $1 was answered correctly without help, so a short round of step-by-step questions followed at $2.',
@@ -140,7 +140,7 @@ final class SummaryView
             $when = ' (' . self::date($r['date']) . ')';
             switch ($r['status']) {
                 case 'GOAL_MET':
-                    $out['did_well'][] = $this->title($id) . ' — goal met: 3 correct in a row without help' . $when . '.';
+                    $out['did_well'][] = $this->title($id) . ' — goal met: 3 correct without help (one slip may pause the count)' . $when . '.';
                     break;
                 case 'NEEDED_HELP':
                     $out['trouble'][] = $this->title($id) . ': not met yet' . $when . '.';
@@ -197,10 +197,11 @@ final class SummaryView
             $id = $s['skill_id'];
             $title = $this->title($id);
             $correct = count(array_filter($s['verdicts'], fn ($v) => $v['independent'] && $v['verdict'] === 'CORRECT'));
-            $wrong = count(array_filter($s['verdicts'], fn ($v) => $v['role'] !== 'GUIDED' && $v['verdict'] === 'INCORRECT'));
+            // Round 6: a slip is not a wrong answer, and the micro-question and retry are not separate answers.
+            $wrong = count(array_filter($s['verdicts'], fn ($v) => $v['role'] !== 'GUIDED' && $v['verdict'] === 'INCORRECT' && !($v['slip'] ?? false) && ($v['slip_step'] ?? null) === null));
             $guided = count(array_filter($s['verdicts'], fn ($v) => $v['role'] === 'GUIDED'));
             if (isset($met[$id])) {
-                $didWell[] = $title . ' — goal met: 3 correct in a row without help'
+                $didWell[] = $title . ' — goal met: 3 correct without help (one slip may pause the count)'
                     . ($met[$id] === 'COMPONENT_CRITERION_MET' ? ' (the tutor checks the numeric part of this skill only).' : ', including ' . BetaScope::kinds($id) . '.');
             } elseif ($correct > 0) {
                 $didWell[] = $title . ': ' . $correct . ' correct ' . ($correct === 1 ? 'answer' : 'answers') . ' without help.';
@@ -225,6 +226,12 @@ final class SummaryView
         foreach ($patterns as $what => $n) {
             $trouble[] = ($n === 1 ? 'Once' : ($n === 2 ? 'Twice' : 'Several times')) . ' you ' . $what . '.';
         }
+        // Round 6 (§5.5): each slip is named as a slip.
+        foreach ($events as $e) {
+            if ($e['type'] === 'SLIP_CONFIRMED') {
+                $trouble[] = 'You made a slip with ' . $e['data']['sub_step']['display'] . ' and then worked it out correctly, so your count was paused, not reset.';
+            }
+        }
         $route = $this->route($events);
         if ($route !== null) {
             $workedOn[] = $route;
@@ -232,7 +239,7 @@ final class SummaryView
         $next = [];
         foreach ($targets as $t) {
             if (!isset($met[$t])) {
-                $next[] = $this->title($t) . ': aim for 3 correct in a row without help' . (BetaScope::threeVariant($t) ? ', including ' . BetaScope::kinds($t) : '') . '.';
+                $next[] = $this->title($t) . ': aim for 3 correct without help (one slip may pause the count)' . (BetaScope::threeVariant($t) ? ', including ' . BetaScope::kinds($t) : '') . '.';
             }
         }
         // A building block is listed when it gave trouble and its goal is still unmet.
@@ -240,7 +247,7 @@ final class SummaryView
             $id = $s['skill_id'];
             $troubled = $s['assisted'] > 0 || in_array('INCORRECT', array_column($s['verdicts'], 'verdict'), true);
             if (!in_array($id, $targets, true) && !isset($met[$id]) && $troubled && count($next) < 3) {
-                $next[] = $this->title($id) . ' (a skill your topic builds on): aim for 3 correct in a row without help.';
+                $next[] = $this->title($id) . ' (a skill your topic builds on): aim for 3 correct without help (one slip may pause the count).';
             }
         }
         // Architect ruling on the round UI v3 report: a skill outside the tutor is listed only when a goal that
@@ -330,8 +337,8 @@ final class SummaryView
                 'independent' => $s['independent'],
                 'assisted' => $s['assisted'],
                 'goal' => match ($s['criterion_status']) {
-                    'IMMEDIATE_CRITERION_MET' => 'goal met: 3 correct in a row without help',
-                    'COMPONENT_CRITERION_MET' => 'goal met: 3 correct in a row without help (numeric part only)',
+                    'IMMEDIATE_CRITERION_MET' => 'goal met: 3 correct without help (one slip may pause the count)',
+                    'COMPONENT_CRITERION_MET' => 'goal met: 3 correct without help (one slip may pause the count), numeric part only',
                     default => 'not met yet',
                 },
                 'checked' => BetaScope::threeVariant($s['skill_id']) ? 'all three kinds of question' : 'the numeric part only',
@@ -345,7 +352,7 @@ final class SummaryView
 
         $goals = [];
         foreach ($met as $skill => $status) {
-            $goals[] = $skill . ' — goal met: 3 correct in a row without help'
+            $goals[] = $skill . ' — goal met: 3 correct without help (one slip may pause the count)'
                 . ($status === 'COMPONENT_CRITERION_MET'
                     ? ', on the numeric part of the skill only (other parts are not checked in the beta).'
                     : ', including ' . BetaScope::kinds($skill) . '.')
@@ -408,10 +415,10 @@ final class SummaryView
         foreach ($report['targets_attempted'] as $t) {
             $next[] = isset($met[$t])
                 ? 'A later independent review of ' . $t . ' would be needed to say whether it is remembered over time (the beta has no review checks yet).'
-                : 'Fresh work on ' . $t . ' without help' . (BetaScope::threeVariant($t) ? ', including ' . BetaScope::kinds($t) : '') . ', to meet the goal: 3 correct in a row without help.';
+                : 'Fresh work on ' . $t . ' without help' . (BetaScope::threeVariant($t) ? ', including ' . BetaScope::kinds($t) : '') . ', to meet the goal: 3 correct without help (one slip may pause the count).';
         }
 
-        $about = 'Goal: 3 correct in a row without help in one session. For ' . $this->title('Q07') . ' (Q07) and ' . $this->title('E06') . ' (E06) the three must include three kinds of question. '
+        $about = 'Goal: 3 correct without help (one slip may pause the count) in one session. For ' . $this->title('Q07') . ' (Q07) and ' . $this->title('E06') . ' (E06) the three must include three kinds of question. '
             . 'An answer given after a hint starts the count again. This is a check from this session only, not a long-term learning claim. '
             . ($provider === 'mock'
                 ? 'Simulated tutor (mock mode): the wording came from a simulated model, so this is not evidence of how a live model behaves or of learning.'
@@ -433,6 +440,8 @@ final class SummaryView
                 $section('Work with help', $guided, 'No step-by-step work in this session.'),
                 $section('Step-by-step work and returns', $repairs, 'No step-by-step work was needed.'),
                 $section('Route taken', $built['descent_path'], 'The session stayed on the topic.'),
+                $section('Slips', array_column($built['slips'] ?? [], 'statement'), 'No slips in this session.'),
+                $section('Answers read from the student\'s wording', array_column($built['readings'] ?? [], 'statement'), 'Every answer was read as typed.'),
                 $section('Still open or not checked', $open, 'Nothing listed.'),
                 $section('What would show more', $next, 'Nothing listed.'),
                 $section(self::EARLIER, $this->earlier($earlier, true), 'No results from earlier sessions.'),

@@ -312,6 +312,9 @@ final class MockProvider implements ProviderAdapter
         if ($mode === 'NOT_SHOWN') {
             return 'Work out the sizes first, then settle the sign.';
         }
+        if ($alloc['operation'] === 'MICRO_CHECK') {
+            return 'Most of that was right. Let\'s check one part of it.';
+        }
         $parts = [];
         $reply = $alloc['reply_to'] ?? null;
         $facts = $alloc['feedback_facts'] ?? [];
@@ -354,9 +357,6 @@ final class MockProvider implements ProviderAdapter
                 if (!empty($alloc['representation_hint'])) {
                     $parts[] = $alloc['representation_hint'];
                 }
-                break;
-            case 'MICRO_CHECK':
-                $parts[] = 'Most of that was right. Let\'s check one part of it.';
                 break;
             case 'SLIP_RETRY':
                 $parts[] = 'Okay, try it again.';

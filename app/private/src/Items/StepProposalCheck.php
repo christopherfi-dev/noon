@@ -15,7 +15,6 @@ use AlgebraEngine\Workflow\ReadingGuard;
  * step_expression and uses the step only when:
  * - the expression parses and is a number or a linear expression in the step's variables;
  * - every number in it comes from the problem or earlier steps;
- * - its value differs from the answer of the step it breaks down;
  * - the question asks something and does not state its own answer, or the
  *   answer of any remaining step.
  * Otherwise the planner's own smaller step is used.
@@ -25,7 +24,7 @@ final class StepProposalCheck
     /**
      * @param array{question:string,step_expression:string} $proposal
      * @param array<string,mixed> $replaced the planner's smaller step this proposal would replace
-     * @param array<string,mixed> $parent the step being broken down
+     * @param array<string,mixed> $parent the step being broken down (recorded; its answer is protected through $protected)
      * @param array<string,true> $allowedNumbers numbers in the problem and earlier steps
      * @param list<array> $protected remaining steps' answers (DisclosureGuard form)
      * @param callable(string):list<string> $textErrors the learner-text guards (internal terms, support claims)
@@ -64,9 +63,6 @@ final class StepProposalCheck
         $answer = $constant !== null
             ? ['kind' => 'exact_rational', 'expected' => $constant->toString(), 'requested_form' => 'single_number', 'units' => null, 'tolerance' => null, 'rubric' => []]
             : ['kind' => 'polynomial', 'expected' => $value->toString(), 'requested_form' => 'expanded', 'units' => null, 'tolerance' => null, 'rubric' => []];
-        if (self::sameAnswer($answer, $parent['answer'], $vars)) {
-            $reasons[] = 'the smaller question has the same answer as the step it breaks down';
-        }
         if (DisclosureGuard::violations($question, [['answer' => $answer, 'variables' => $vars, 'options' => null, 'active' => true]]) !== []) {
             $reasons[] = 'the question states its own answer';
         }
@@ -83,16 +79,4 @@ final class StepProposalCheck
         ]];
     }
 
-    private static function sameAnswer(array $a, array $b, array $vars): bool
-    {
-        if ($a['kind'] === 'classification' || $b['kind'] === 'classification') {
-            return false;
-        }
-        try {
-            return Polynomial::fromNode(ExpressionParser::parse((string) $a['expected'], $vars))
-                ->equals(Polynomial::fromNode(ExpressionParser::parse((string) $b['expected'], $vars)));
-        } catch (MathInputError) {
-            return false;
-        }
-    }
 }

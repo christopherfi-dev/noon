@@ -49,15 +49,22 @@ final class ReportBuilder
                 'skill_id' => $skill, 'title' => $this->curriculum->title($skill), 'items_attempted' => 0, 'independent' => 0, 'assisted' => 0,
                 'unscorable' => 0, 'verdicts' => [], 'error_signatures_observed' => [], 'descent_path' => [], 'criterion_status' => 'NOT_MET',
                 'whole_skill_requirements_satisfied' => false, 'runtime_coverage' => BetaScope::threeVariant($skill) ? 'AVAILABLE_SCORED (three variants)' : 'PARTIAL_COMPONENTS (numeric component only)',
-                'boundary_notes' => [],
+                'boundary_notes' => [], 'slips' => [], 'readings' => [],
             ];
         };
         $independentEvidence = [];
         $guided = [];
         $transfer = [];
+        $slipped = array_column(array_filter($computed['scored'], fn ($s) => $s['slip']), 'event_id');
+        $readings = [];
         foreach ($events as $e) {
             if ($e['type'] !== 'CHECKER_RESULT') {
                 continue;
+            }
+            if (isset($e['data']['read_from_wording'])) {
+                $w = $e['data']['read_from_wording'];
+                $readings[] = ['skill_id' => $e['data']['skill_id'], 'event_id' => $e['data']['result']['event_id'], 'verdict' => $e['data']['result']['verdict'],
+                    'statement' => '“' . $w['entry'] . '” was read from the student\'s wording as ' . $w['read_as'] . ' (' . $w['reading_note'] . ') and checked: ' . strtolower($e['data']['result']['verdict']) . '.'];
             }
             $r = $e['data']['result'];
             $item = $presented[$r['item_id'] . '#' . $r['item_version']] ?? null;
@@ -76,7 +83,8 @@ final class ReportBuilder
             $independent = $r['independent_eligible'] && !isset($support[$r['item_id']]) && !($item['model_text_shown'] ?? false);
             $independent ? $p['independent']++ : $p['assisted']++;
             $p['verdicts'][] = ['event_id' => $r['event_id'], 'role' => $item['role'], 'variant_id' => $item['variant_id'], 'verdict' => $r['verdict'],
-                'independent' => $independent, 'checking_scope' => self::plain($r['verification_scope'])];
+                'independent' => $independent, 'checking_scope' => self::plain($r['verification_scope']),
+                'slip' => in_array($r['event_id'], $slipped, true), 'slip_step' => $item['slip_stage'] ?? null];
             unset($p);
             if ($item['role'] === 'GUIDED') {
                 $guided[$skill][] = $r['event_id'];
@@ -100,9 +108,27 @@ final class ReportBuilder
         $unresolved = [];
         $criteria = [];
         $descents = [];
+        $slips = [];
         foreach ($events as $e) {
             $d = $e['data'];
             switch ($e['type']) {
+                // Round 6 (§5.5): each slip is reported as a slip, with what happened to it.
+                case 'SLIP_CANDIDATE':
+                    $slips[$d['response_event_id']] = ['skill_id' => $d['skill_id'], 'sub_step' => $d['sub_step']['display'], 'wrong_value' => $d['wrong_value'],
+                        'source' => $d['source'], 'status' => 'NOT_CHECKED', 'event_ids' => [$e['event_id'], $d['response_event_id']]];
+                    break;
+                case 'SLIP_CONFIRMED':
+                case 'SLIP_NOT_CONFIRMED':
+                case 'SLIP_VOIDED':
+                case 'SLIP_RETRY_ANSWERED':
+                    if (isset($slips[$d['response_event_id']])) {
+                        $slips[$d['response_event_id']]['status'] = match ($e['type']) {
+                            'SLIP_CONFIRMED' => 'CONFIRMED', 'SLIP_NOT_CONFIRMED' => 'NOT_CONFIRMED', 'SLIP_VOIDED' => 'WITHDRAWN',
+                            default => 'CONFIRMED_RETRY_' . $d['verdict'],
+                        };
+                        $slips[$d['response_event_id']]['event_ids'][] = $e['event_id'];
+                    }
+                    break;
                 case 'OBSERVATION':
                     $hypotheses[] = ['kind' => 'OBSERVATION', 'statement' => self::plain($d['statement']) . ($d['branch'] !== null ? ' (Observation only; not a confirmed cause.)' : ''),
                         'evidence_event_ids' => $d['evidence_event_ids'], 'hypothesis_status' => null];
@@ -170,6 +196,27 @@ final class ReportBuilder
                     break;
             }
         }
+        $slipList = [];
+        foreach ($slips as $s) {
+            $what = $s['sub_step'] . ' (the answer used ' . $s['wrong_value'] . ')';
+            $statement = match (true) {
+                str_starts_with($s['status'], 'CONFIRMED') => 'Slip at ' . $s['skill_id'] . ': one arithmetic error in ' . $what . '. The learner then answered ' . $s['sub_step'] . ' correctly'
+                    . ($s['status'] === 'CONFIRMED' ? '; the retry was not answered yet.' : ' and the retry was ' . strtolower(substr($s['status'], strlen('CONFIRMED_RETRY_'))) . '.')
+                    . ' The count was paused, not reset: neither answer counted.',
+                $s['status'] === 'NOT_CONFIRMED' => 'Possible slip at ' . $s['skill_id'] . ' in ' . $what . ' was not confirmed: the learner did not answer ' . $s['sub_step'] . ' correctly, so the first answer counted as wrong.',
+                $s['status'] === 'WITHDRAWN' => 'Possible slip at ' . $s['skill_id'] . ' in ' . $what . ' was withdrawn: the retry was not correct, so the first answer counted as wrong.',
+                default => 'Possible slip at ' . $s['skill_id'] . ' in ' . $what . ' was not checked before the session ended; that answer counted neither way.',
+            };
+            $statement .= $s['source'] === 'MODEL' ? ' (Proposed by the tutor model; the app\'s structure check agreed.)' : '';
+            $slipList[] = $s + ['statement' => $statement];
+            $hypotheses[] = ['kind' => 'OBSERVATION', 'statement' => $statement, 'evidence_event_ids' => $s['event_ids'], 'hypothesis_status' => null];
+            $touch($s['skill_id']);
+            $perSkill[$s['skill_id']]['slips'][] = $statement;
+        }
+        foreach ($readings as $r) {
+            $touch($r['skill_id']);
+            $perSkill[$r['skill_id']]['readings'][] = $r['statement'];
+        }
         foreach ($computed['criteria'] as $c) {
             if (isset($perSkill[$c['skill_id']]) && $c['immediate_status'] !== 'NOT_MET') {
                 $perSkill[$c['skill_id']]['criterion_status'] = $c['immediate_status'];
@@ -202,7 +249,7 @@ final class ReportBuilder
             }
             $next[] = $met
                 ? 'A later independent review of ' . $t . ' would be needed before any retention claim (review checks are not implemented in the beta).'
-                : 'Fresh ' . $t . ' work without help' . (BetaScope::threeVariant($t) ? ' covering a solve, a first-step choice and a new form' : '') . ' to meet the goal: 3 correct in a row without help.';
+                : 'Fresh ' . $t . ' work without help' . (BetaScope::threeVariant($t) ? ' covering a solve, a first-step choice and a new form' : '') . ' to meet the goal: 3 correct without help (one slip may pause the count).';
         }
 
         $report = [
@@ -231,7 +278,7 @@ final class ReportBuilder
             'hypotheses' => array_slice($hypotheses, 0, 100),
             'unresolved_or_untested' => array_slice(array_values(array_unique($unresolved)), 0, 100),
             'next_evidence_needed' => $next,
-            'policy_note' => 'Goal: 3 correct in a row without help in one session (for Q07 and E06 they must include a solve, a first-step choice and a new form). An answer given after a hint starts the count again. This is a check from this session only, not a long-term learning claim. '
+            'policy_note' => 'Goal: 3 correct without help (one slip may pause the count) in one session (for Q07 and E06 they must include a solve, a first-step choice and a new form). An answer given after a hint starts the count again. This is a check from this session only, not a long-term learning claim. '
                 . ($provider === 'mock' ? 'MOCK PROVIDER: wording came from a simulated model; this is not evidence of live-model behaviour or of learning effectiveness.' : 'Live provider: ' . $provider . '.'),
             'created_at' => Time::iso($now),
         ];
@@ -248,6 +295,8 @@ final class ReportBuilder
             'architecture' => ['version' => '1.3', 'sha256' => $snap['binding']['architecture_sha256'], 'binding_acknowledged' => $snap['binding']['acknowledged'],
                 'binding_note' => 'An acknowledged binding is not evidence of enforcement; the app enforces the contract.'],
             'policy_version' => '1.0',
+            'slips' => $slipList,
+            'readings' => $readings,
         ];
         // Round UI (U2): the summary page's learner and teacher levels, in plain words.
         $built['summary'] = (new SummaryView($this->curriculum))->build($built, $events, $provider, $row['engine']['progress']['earlier'] ?? []);
@@ -258,8 +307,8 @@ final class ReportBuilder
     private static function goalMet(string $status): string
     {
         return $status === 'IMMEDIATE_CRITERION_MET'
-            ? 'goal met: 3 correct in a row without help, covering a solve, a first-step choice and a new form. A check from this session only; no long-term learning claim.'
-            : 'goal met: 3 correct in a row without help, on the numeric part of the skill only (other parts are not checked in the beta). A check from this session only; no long-term learning claim.';
+            ? 'goal met: 3 correct without help (one slip may pause the count), covering a solve, a first-step choice and a new form. A check from this session only; no long-term learning claim.'
+            : 'goal met: 3 correct without help (one slip may pause the count), on the numeric part of the skill only (other parts are not checked in the beta). A check from this session only; no long-term learning claim.';
     }
 
     /** Plain words for text copied from stored records into the learner-visible summary (R5-B). */
@@ -271,9 +320,9 @@ final class ReportBuilder
             '/\bhost-matched\b/' => 'app-matched',
             '/\bHost\b/' => 'App',
             '/\bhost\b/' => 'app',
-            '/\bIMMEDIATE_CRITERION_MET\b/' => 'goal met: 3 correct in a row without help',
-            '/\bCOMPONENT_CRITERION_MET\b/' => 'goal met: 3 correct in a row without help (numeric part only)',
-            '/\b[Cc]riterion met\b/' => 'goal met (3 correct in a row without help)',
+            '/\bIMMEDIATE_CRITERION_MET\b/' => 'goal met: 3 correct without help (one slip may pause the count)',
+            '/\bCOMPONENT_CRITERION_MET\b/' => 'goal met: 3 correct without help (one slip may pause the count), numeric part only',
+            '/\b[Cc]riterion met\b/' => 'goal met (3 correct without help; one slip may pause the count)',
             '/\bImmediate criterion\b/' => 'Goal',
             '/\bimmediate criterion\b/' => 'goal',
             '/\bcriteria\b/' => 'goals',

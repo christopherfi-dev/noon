@@ -146,9 +146,16 @@ final class PublicProjection
         } else {
             $lines = [$skill !== $snap['original_target_skill_id'] ? 'Building block: ' . $this->curriculum->title($skill) . '.' : ''];
             $active = $eng['active'];
+            // Round 6 (§5): during a slip's micro-question and retry the count is paused, not reset.
+            if ($active !== null && isset($active['slip_stage'])) {
+                $lines[] = min($streak, CriteriaCalculator::REQUIRED) . ' of ' . CriteriaCalculator::REQUIRED . ' correct without help (one slip may pause the count)';
+                $lines[] = $active['slip_stage'] === 'MICRO_CHECK'
+                    ? 'A quick check of one step. Your count is paused, not reset.'
+                    : 'Try it again. This try does not count either way; your count is paused, not reset.';
             // Round UI v3 (U7): the goal line only in modes whose answers build a run of three.
-            if ($active !== null && in_array($mode, self::STREAK_MODES, true) && in_array($active['role'], CriteriaCalculator::COUNTED_ROLES, true)) {
-                $lines[] = min($streak, CriteriaCalculator::REQUIRED) . ' of ' . CriteriaCalculator::REQUIRED . ' in a row without help';
+            } elseif ($active !== null && in_array($mode, self::STREAK_MODES, true) && in_array($active['role'], CriteriaCalculator::COUNTED_ROLES, true)) {
+                // Round 6 (§5): the goal wording; a confirmed slip pauses the count instead of resetting it.
+                $lines[] = min($streak, CriteriaCalculator::REQUIRED) . ' of ' . CriteriaCalculator::REQUIRED . ' correct without help (one slip may pause the count)';
                 $needed = array_values(array_diff(BetaScope::VARIANTS, $covered));
                 if (BetaScope::threeVariant($skill) && $needed !== []) {
                     $lines[] = 'Still needed: ' . BetaScope::kinds($skill, $needed) . '.'; // U7

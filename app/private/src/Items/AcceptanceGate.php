@@ -74,7 +74,8 @@ final class AcceptanceGate
         if ($params === [] || $params === null) {
             for ($i = 0; $i < 400; $i++) {
                 $params = $template->generate($rng, $allocation['avoid_parameters'] ?? null);
-                if (StructuralFeatures::mismatches($keep, $templateId, $params) === [] && self::avoidedAnswer($template->answerSpec($params), $avoidAnswers) === null) {
+                if (StructuralFeatures::mismatches($keep, $templateId, $params) === [] && self::avoidedAnswer($template->answerSpec($params), $avoidAnswers) === null
+                    && !in_array(ItemFactory::fingerprint($templateId, $params), $usedFingerprints, true)) {
                     break;
                 }
             }
@@ -90,10 +91,6 @@ final class AcceptanceGate
             if ($changed !== []) {
                 $errors[] = 'parameters must keep the structure of the item the learner failed: ' . implode(', ', $changed);
             }
-            // Round 6 (§4): the reply before this item refers back to the previous one, so the new answer must not be one of its numbers.
-            if ($errors === [] && ($hit = self::avoidedAnswer($template->answerSpec($params), $avoidAnswers)) !== null) {
-                $errors[] = 'parameters give the answer ' . $hit . ', which is also a number in the previous problem or answer; choose other parameters';
-            }
         }
         if ($errors !== []) {
             return self::fail($errors);
@@ -104,6 +101,10 @@ final class AcceptanceGate
         }
 
         $spec = $template->answerSpec($params);
+        // Round 6 (§4): the reply before this item refers back to the previous one, so the new answer must not be one of its numbers.
+        if (!$hostGenerated && ($hit = self::avoidedAnswer($spec, $avoidAnswers)) !== null) {
+            return self::fail(['parameters give the answer ' . $hit . ', which is also a number in the previous problem or answer; choose other parameters']);
+        }
         $flags = [];
         $proposed = $draft['answer_spec']['expected'] ?? null;
         if ($proposed !== null && !self::sameKey($spec, $proposed, $template->mathematicalObjects($params)['variables'] ?? ['x'])) {

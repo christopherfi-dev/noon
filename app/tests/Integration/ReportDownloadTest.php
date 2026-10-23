@@ -39,7 +39,7 @@ final class ReportDownloadTest extends TestCase
         $h->event('END_SESSION');
         $learner = $h->request('GET', 'report')->body['summary']['learner'];
         $this->assertSame([[], [], []], [$learner['did_well'], $learner['trouble'], $learner['worked_on']]);
-        $this->assertSame(['Solve equations containing parentheses: aim for 3 correct in a row without help, including a solve, a step choice and a new kind of equation.'], $learner['next_time']);
+        $this->assertSame(['Solve equations containing parentheses: aim for 3 correct without help (one slip may pause the count), including a solve, a step choice and a new kind of equation.'], $learner['next_time']);
 
         // Every goal met, no gap: "what to work on next time" has its fixed line.
         $n = new Harness([], null, null, null, null, 'ui-v3-n05');
@@ -54,7 +54,7 @@ final class ReportDownloadTest extends TestCase
             $this->assertSame([], $learner['trouble']);
             $this->assertSame([], $learner['worked_on']);
             $this->assertCount(1, $learner['did_well']);
-            $this->assertStringContainsString('goal met: 3 correct in a row without help', $learner['did_well'][0]);
+            $this->assertStringContainsString('goal met: 3 correct without help (one slip may pause the count)', $learner['did_well'][0]);
         } finally {
             $n->cleanup();
         }

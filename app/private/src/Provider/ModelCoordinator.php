@@ -378,6 +378,16 @@ final class ModelCoordinator
         }
         if ($errors === [] && $env['message_type'] === 'QUESTION') {
             $accepted = $this->gate->accept($draft, $allocation, $fingerprints, $rng);
+            // Round 6: within the per-entry call limit there may be no repair call. When the only fault is the choice of
+            // parameters (reused, not varied, structure not kept, or an answer the reply could reveal), the host chooses
+            // fresh parameters itself, as it does when the model leaves them empty; the proposal is recorded.
+            if (!$accepted['ok'] && is_array($draft) && ($draft['parameters'] ?? []) !== [] && !isset($allocation['fixed_parameters']) && self::parameterChoiceOnly($accepted['errors'])) {
+                $replaced = $accepted['errors'];
+                $accepted = $this->gate->accept(['parameters' => []] + $draft, $allocation, $fingerprints, $rng);
+                if ($accepted['ok']) {
+                    $accepted['flags'][] = ['flag' => 'HOST_REPLACED_PARAMETERS', 'reasons' => $replaced, 'model_parameters' => $draft['parameters']];
+                }
+            }
             if (!$accepted['ok']) {
                 $errors = array_merge($errors, $accepted['errors']);
             } else {
@@ -455,6 +465,17 @@ final class ModelCoordinator
             $out[] = ['kind' => 'issue', 'proposal' => $env['issue'], 'status' => 'RECORDED_NOT_ACTED_ON', 'reason' => 'model-raised issue recorded for review'];
         }
         return $out;
+    }
+
+    /** Gate errors that concern only which parameters were chosen. */
+    private static function parameterChoiceOnly(array $errors): bool
+    {
+        foreach ($errors as $e) {
+            if (!preg_match('/^parameters (reuse an item instance|must vary the implicated component|must keep the structure|give the answer )/', $e)) {
+                return false;
+            }
+        }
+        return $errors !== [];
     }
 
     private static function failure(string $type, string $detail, array $repairs, ?array $transport = null): array

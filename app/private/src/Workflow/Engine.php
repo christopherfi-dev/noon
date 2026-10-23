@@ -965,7 +965,8 @@ final class Engine
         }
         $found = SlipCatalog::find($active['template_id'], $active['params'], $outcome, $signatures);
         $key = $turn->snap['target_episode_id'] . '|' . $active['skill_id'];
-        $pauses = CriteriaCalculator::compute(array_merge($this->store->events($turn->snap['session_id']), $turn->events))['pauses'][$key] ?? 0;
+        // The committed ledger only: this turn's own wrong answer would otherwise reset the run before the check.
+        $pauses = CriteriaCalculator::compute($this->store->events($turn->snap['session_id']))['pauses'][$key] ?? 0;
         if ($pauses >= 1) {
             if ($found !== null) {
                 $turn->event('OBSERVATION', [
@@ -1220,6 +1221,9 @@ final class Engine
     private function signatures(array $active, string $text, CheckOutcome $outcome): array
     {
         $out = [];
+        if ($active['template_id'] === AcceptanceGate::MICRO_CHECK_TEMPLATE) {
+            return $out; // one arithmetic fact: its result is the evidence
+        }
         if ($active['template_id'] === AcceptanceGate::GUIDED_TEMPLATE) {
             $g = $active['guided_step'] ?? null;
             if ($g !== null && $g['final'] && $outcome->verdict === 'INCORRECT') {
@@ -1840,8 +1844,8 @@ final class Engine
         $turn->eng['guided'] = null;
         $turn->reportNeeded = true;
         $turn->say('INFORMATION', $three
-            ? 'You answered three different kinds of questions on this skill correctly in a row, without help. That meets this session\'s check for the skill. It is a check from today\'s session, not a long-term claim.'
-            : 'You answered three questions on this skill correctly in a row, without help. That meets this session\'s check for the numeric part of the skill; other parts of the skill are not checked in this beta.');
+            ? 'You answered three different kinds of questions on this skill correctly, without help. That meets this session\'s goal for the skill: 3 correct without help (one slip may pause the count). It is a check from today\'s session, not a long-term claim.'
+            : 'You answered three questions on this skill correctly, without help. That meets this session\'s goal for the numeric part of the skill: 3 correct without help (one slip may pause the count); other parts of the skill are not checked in this beta.');
         $turn->say('INFORMATION', 'Your session summary is ready.');
         // Round UI v3 (U10): a session started at a building block from a progress code offers the route target next.
         $route = $turn->eng['progress']['route_target'] ?? null;
@@ -2291,7 +2295,9 @@ final class Engine
         $record = $result['record'];
         foreach ($result['flags'] as $f) {
             $turn->event('ITEM_FLAGGED', $f + ['item_id' => $record['item_id'], 'item_version' => $record['item_version'],
-                'note' => 'Model-proposed key disagreed with the host-derived key; the host key governs.']);
+                'note' => $f['flag'] === 'HOST_REPLACED_PARAMETERS'
+                    ? 'The model\'s parameters were not acceptable; the host chose fresh parameters for the same template.'
+                    : 'Model-proposed key disagreed with the host-derived key; the host key governs.']);
         }
         $turn->items[] = ['record' => $record, 'fingerprint' => $result['fingerprint']];
         $independentEligible = $record['independent_eligible_proposal'] && !in_array($result['fingerprint'], $this->store->fingerprints($sessionId), true);
@@ -2489,7 +2495,7 @@ final class Engine
             'response_type' => $this->factory->get($id)->responseType(),
             'parameters' => $this->factory->get($id)->parameterSpec(),
         ], $gen['template_ids']);
-        $alloc['avoid_parameters'] = $gen['avoid_parameters'];
+        $alloc['avoid_parameters'] = $gen['avoid_parameters'] ?? null;
         return $alloc;
     }
 

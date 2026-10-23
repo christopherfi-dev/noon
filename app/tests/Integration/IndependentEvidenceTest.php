@@ -21,7 +21,7 @@ final class IndependentEvidenceTest extends TestCase
     /** Criterion messages that say the work was done without help. */
     private static function criterionMessages(array $messages): array
     {
-        return array_values(array_filter(array_column($messages, 'text'), fn ($t) => str_contains($t, 'correctly in a row, without help')));
+        return array_values(array_filter(array_column($messages, 'text'), fn ($t) => str_contains($t, 'correctly, without help. That meets')));
     }
 
     /**

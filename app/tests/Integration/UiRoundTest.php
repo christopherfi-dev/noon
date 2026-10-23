@@ -90,24 +90,24 @@ final class UiRoundTest extends TestCase
         $this->assertGreaterThan(0, $seen, 'at least one step needed its problem line');
     }
 
-    /** U7: the goal line counts correct answers in a row without help and names the kinds still needed; it empties on a reset. */
+    /** U7: the goal line counts correct answers without help (round 6 wording) and names the kinds still needed; it empties on a reset. */
     public function testU7GoalLineAndReset(): void
     {
         $h = $this->h;
         $h->start('Q07');
-        $this->assertSame(['', '0 of 3 in a row without help', 'Still needed: a solve, a step choice and a new kind of equation.'], $this->labelLines());
+        $this->assertSame(['', '0 of 3 correct without help (one slip may pause the count)', 'Still needed: a solve, a step choice and a new kind of equation.'], $this->labelLines());
         $this->assertSame([0, 3], [$h->view['progress']['independent_successes'], $h->view['progress']['criterion_required']]);
         $h->answerCorrect();
-        $this->assertSame(['', '1 of 3 in a row without help', 'Still needed: a step choice and a new kind of equation.'], $this->labelLines());
+        $this->assertSame(['', '1 of 3 correct without help (one slip may pause the count)', 'Still needed: a step choice and a new kind of equation.'], $this->labelLines());
         $h->answerCorrect();
-        $this->assertSame(['', '2 of 3 in a row without help', 'Still needed: a new kind of equation.'], $this->labelLines());
+        $this->assertSame(['', '2 of 3 correct without help (one slip may pause the count)', 'Still needed: a new kind of equation.'], $this->labelLines());
         $this->assertSame(2, $h->view['progress']['independent_successes']);
         $h->submit($h->plainWrong());
         $this->assertSame('DIAGNOSTIC_PROBE', $h->mode());
         $this->assertSame(['', 'This question helps choose what to practise. It does not count toward the goal.'], $this->labelLines(), 'a probe has no goal line');
         $this->assertSame(0, $h->view['progress']['independent_successes'], 'the streak reset empties the dots');
         $h->answerCorrect();
-        $this->assertSame('0 of 3 in a row without help', $this->labelLines()[1]);
+        $this->assertSame('0 of 3 correct without help (one slip may pause the count)', $this->labelLines()[1]);
         // A hint on a counted item: the count starts again after the answer (round 5.1, P2).
         $h->event('REQUEST_HINT');
         $this->assertContains('You had help on this one, so the count starts again after your answer.', $this->labelLines());
@@ -134,14 +134,14 @@ final class UiRoundTest extends TestCase
         $this->assertSame('INDEPENDENT_CHECK', $h->mode());
         $this->assertSame([
             'Building block: Apply the distributive property with positive factors.',
-            '0 of 3 in a row without help',
+            '0 of 3 correct without help (one slip may pause the count)',
             'Still needed: an expansion, a choice question and a new kind of expression.',
         ], $this->labelLines());
 
         $n = new Harness([], null, null, null, null, 'ui-numeric');
         try {
             $n->start('N05');
-            $this->assertSame("\n0 of 3 in a row without help", $n->view['progress']['label']);
+            $this->assertSame("\n0 of 3 correct without help (one slip may pause the count)", $n->view['progress']['label']);
         } finally {
             $n->cleanup();
         }
