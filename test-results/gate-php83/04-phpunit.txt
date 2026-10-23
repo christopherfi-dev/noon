@@ -1,14 +1,15 @@
 PHPUnit 9.6.38 by Sebastian Bergmann and contributors.
 
+Curriculum Paths (AlgebraEngine\Tests\Unit\Curriculum\CurriculumPaths)
+ ✔ Flow 05 alternative dependencies
+
 Engine Units (AlgebraEngine\Tests\Unit\Engine\EngineUnits)
- ✔ Transition guard follows workflow policy
- ✔ Criteria require consecutive varied independent successes
  ✔ Disclosure guard heuristic
  ✔ Guard operand noun exemption
  ✔ Internal vocabulary
  ✔ Support claims in model text only
- ✔ Host lines use no internal vocabulary
- ✔ Envelope skeleton has placeholders only
+ ✔ Code lines use no internal vocabulary
+ ✔ Tutor prompt skeleton and shape
 
 Templates (AlgebraEngine\Tests\Unit\Items\Templates)
  ✔ Every template generates valid items whose host key checks correct
@@ -16,11 +17,6 @@ Templates (AlgebraEngine\Tests\Unit\Items\Templates)
  ✔ Grouped linear signatures are distinct and branch correctly
  ✔ Contrast keys are derived from the displayed equations
  ✔ Option order is randomised per item
- ✔ Every guided step is tagged with the skill it exercises
- ✔ Structural features are kept by the planner
- ✔ Gate rejects a proposal that changes a kept feature
- ✔ Opening facts never contain a step answer
- ✔ Guided plans are questions that never state their answer
 
 Checkers (AlgebraEngine\Tests\Unit\Math\Checkers)
  ✔ Exact rational
@@ -132,53 +128,53 @@ Problem Text (AlgebraEngine\Tests\Unit\Support\ProblemText)
  ✔ Main expression of each prompt shape
  ✔ Answer line
 
-Beta Guards (AlgebraEngine\Tests\Integration\BetaGuards)
- ✔ B 5 non prerequisite proposal rejected
- ✔ B 6 host key governs and item flagged
- ✔ B 7 hint makes item assisted
- ✔ B 8 disclosure guard rejects leak
- ✔ Internal vocabulary is repaired not shown
- ✔ Support claim in model text is repaired not shown
- ✔ B 8 repeated leak holds
- ✔ D 1 hint and i dont know give smaller questions
- ✔ Repair opening never holds on its own facts
- ✔ B 9 prompts carry no anchor or example content
+Learner Instruments (AlgebraEngine\Tests\Unit\Tutor\LearnerInstruments)
+ ✔ Readings that only re express the entry pass
+ ✔ Readings that add numbers or variables are rejected
+ ✔ Owner cases are classified before any call
+ ✔ Other entries
+ ✔ Distribution to x only is not a slip
+ ✔ Product slip confirmed with its micro step
+ ✔ Other slip signatures
+ ✔ Three check problems in a row without help
+ ✔ Three variant skills need each kind
+ ✔ One slip pauses the count a second resets it
+ ✔ Gradebook records every required field
+ ✔ Nothing but check attempts can mark a goal
+ ✔ Guards on learner visible text
+ ✔ The ai cannot overrule the verdict
+ ✔ Text before a check card
 
-Beta Journey (AlgebraEngine\Tests\Integration\BetaJourney)
- ✔ B 1 distribution journey
- ✔ B 2 probe correct no descent
- ✔ B 3 deep descent and return
- ✔ B 3 prerequisite success stops descent
- ✔ B 4 beta boundary
- ✔ B 10 stuck step goes directly to its prerequisite
- ✔ B 10 stuck step at a boundary is recorded not failed
- ✔ Random scripted journeys complete without holds
- ✔ B 12 re ask shows no model text
- ✔ B 13 repair keeps the failed sign pattern
- ✔ Every beta skill can start and score
+Problem Instruments (AlgebraEngine\Tests\Unit\Tutor\ProblemInstruments)
+ ✔ Code computes every kind
+ ✔ Spec rules fail closed
+ ✔ Recipes in reverse match every typed recipe and its bounds
+ ✔ Off pattern check problems are rejected
+ ✔ Wrong stated answer is rejected
+ ✔ Practice wording must show the spec and not its answer
+ ✔ Recipe choices and freshness
+ ✔ Pregenerated problems rarely show their answer
+ ✔ Retry only after a slip
+ ✔ Only beta skills
+
+Cheating (AlgebraEngine\Tests\Integration\Cheating)
+ ✔ The ai marks a goal
+ ✔ The ai overrules a verdict
+ ✔ The ai poses a problem with a wrong answer
+ ✔ The ai poses an off pattern check problem
+ ✔ A reading adds numbers
+ ✔ A slip that the structure contradicts
+ ✔ Text before a check card contains its numbers
+ ✔ Text leaks an answer
+ ✔ Text claims mastery or uses internal terms
+ ✔ A free text message during an open check problem
+ ✔ Without help is never recorded after a stuck entry
+ ✔ The ai poses a problem while a check is open
 
 Deploy Coverage (AlgebraEngine\Tests\Integration\DeployCoverage)
  ✔ Cover 01 capability matrix
  ✔ Deploy 01 private files not served
  ✔ Deploy 02 missing extension
-
-Evidence (AlgebraEngine\Tests\Integration\Evidence)
- ✔ Evid 01 hint independence
- ✔ Evid 02 freshness
- ✔ Evid 03 numeric only skill
- ✔ Evid 04 immediate versus retention
- ✔ Evid 05 correction cascade
- ✔ Evid 06 untested map
-
-Flow (AlgebraEngine\Tests\Integration\Flow)
- ✔ Entry 01 known topic
- ✔ Flow 01 distribution journey
- ✔ Flow 02 deeper repair
- ✔ Flow 03 switch target
- ✔ Flow 04 single correct probe
- ✔ Flow 05 alternative dependencies
- ✔ Flow 06 budget boundary
- ✔ Flow 07 stop while pending
 
 Host (AlgebraEngine\Tests\Integration\Host)
  ✔ Host 01 duplicate submit
@@ -189,7 +185,6 @@ Host (AlgebraEngine\Tests\Integration\Host)
  ✔ Slow provider holds before lease runs out
  ✔ Host 05 empty and truncated output
  ✔ Host 06 forged promotion rejected
- ✔ Host 07 missing curriculum
  ✔ Host 08 no answer leakage
  ✔ Host 09 prompt injection is data
  ✔ Host 10 cross session access denied
@@ -197,15 +192,11 @@ Host (AlgebraEngine\Tests\Integration\Host)
  ✔ Host 12 input preserved on timeout
  ✔ Host 13 binding modes
  ✔ Host 14 context replacement
- ✔ Host 15 counter binding
+ ✔ Host 15 verdict binding
  ✔ Host 16 forget and expiry
  ✔ Host 17 cost limits
-
-Independent Evidence (AlgebraEngine\Tests\Integration\IndependentEvidence)
- ✔ B 14 independent items show host line only
- ✔ B 14 discarded text is not stored
- ✔ B 14b hint means no without help message
- ✔ B 14b item shown with model text is not counted
+ ✔ End while pending
+ ✔ Migrations are safe to run twice
 
 Key Leak (AlgebraEngine\Tests\Integration\KeyLeak)
  ✔ No tracked file or zip entry contains a key
@@ -227,19 +218,15 @@ Math Scenario (AlgebraEngine\Tests\Integration\MathScenario)
  ✔ Math 08 unsafe syntax
  ✔ Math 09 ambiguity
 
-Messy Learner (AlgebraEngine\Tests\Integration\MessyLearner)
- ✔ B 11 unreadable inputs are never scored as wrong
- ✔ B 11 correct answers in loose forms are accepted
-
-Probe After Help (AlgebraEngine\Tests\Integration\ProbeAfterHelp)
- ✔ Second probe correct without help resumes
- ✔ Second probe wrong descends
- ✔ Second probe after help descends
- ✔ At most two probes when skipped
+Owner Cases (AlgebraEngine\Tests\Integration\OwnerCases)
+ ✔ Capital x on distribution is read as x and the signature reaches the ai
+ ✔ Answer in a sentence is read by the ai and marked correct by code
+ ✔ Four x x in a how many x context is read as four x
+ ✔ Slip is confirmed micro checked retried and the run paused
 
 Progress Code (AlgebraEngine\Tests\Integration\ProgressCode)
  ✔ Created at first answer and updated in the same transaction
- ✔ Closed mid repair resumes at the repair skill then offers next
+ ✔ Closed mid repair resumes at the next focus and the tutor returns
  ✔ Live session continues exactly and take over
  ✔ Take over waits for an answer in flight
  ✔ All goals met
@@ -253,44 +240,40 @@ Progress Code (AlgebraEngine\Tests\Integration\ProgressCode)
  ✔ Retention default when config lacks the key
  ✔ Code format
 
-Report Download (AlgebraEngine\Tests\Integration\ReportDownload)
+Report (AlgebraEngine\Tests\Integration\Report)
  ✔ Empty headings use their fixed lines
- ✔ Learner headings for the b 1 journey
- ✔ Outside skill listed only while a dependent goal is unmet
+ ✔ Learner headings for the step back journey
+ ✔ Outside skill is listed only while a dependent goal is unmet
+ ✔ Summary levels use plain words and no codes
+ ✔ No ai text in the report and the audit list
  ✔ Downloaded report is self contained
  ✔ Download escapes text
+ ✔ Evid 03 numeric only skill
+ ✔ Evid 04 immediate versus retention
+ ✔ Evid 06 untested skills carry no label
+ ✔ Plain words for stored text
 
 Scenario Map (AlgebraEngine\Tests\Integration\ScenarioMap)
  ✔ Every scenario is implemented or deferred with a reason
 
-Stuck Entry (AlgebraEngine\Tests\Integration\StuckEntry)
- ✔ Stuck and ask for answer in guided repair
- ✔ Stuck and ask for answer on independent item
- ✔ Ask for answer line names what follows
- ✔ Off task question and number words
- ✔ Capital x is read as x
- ✔ Trailing question mark is scored normally
- ✔ Normalisation
- ✔ Stuck entry flow in each independent mode
+Tutor Loop (AlgebraEngine\Tests\Integration\TutorLoop)
+ ✔ Journey steps back and returns with goals computed by code
+ ✔ Random learners most turns use exactly one call
+ ✔ Every call carries fresh prepared problems and is built anew
+ ✔ Reasoning is chosen per call and logged
+ ✔ One repair then accepted
+ ✔ Fallback after the repair fails too
+ ✔ Transport failure holds and resume retries the reply
+ ✔ Every beta skill can start and score
+ ✔ Change topic sets the open problem aside and the tutor continues
+ ✔ Entry 01 known topic
+ ✔ Flow 02 deeper step back keeps the topic
+ ✔ Flow 04 correct easier answer is no slip and no pass
+ ✔ Evid 01 help is recorded before the hint
+ ✔ Evid 02 reused check question is rejected
+ ✔ Moves stay inside the tutors skills
+ ✔ Missing curriculum record holds without inventing one
 
-Summary Wording (AlgebraEngine\Tests\Integration\SummaryWording)
- ✔ Summary prose uses plain words
- ✔ Summary levels use plain words and no codes
- ✔ Plain words for stored text
+Time: 00:08.424, Memory: 96.00 MB
 
-Ui Round (AlgebraEngine\Tests\Integration\UiRound)
- ✔ U 1 feedback before first guided problem names the missed problem
- ✔ U 1 guided steps keep their problem on screen
- ✔ U 7 goal line and reset
- ✔ U 7 building block and numeric only skill
- ✔ U 6 guided label carries no notice
- ✔ U 8 result words
- ✔ U 4 working removed
-
-Upgrade (AlgebraEngine\Tests\Integration\Upgrade)
- ✔ Live session continues after the upgrade
- ✔ Migration is safe to run twice
-
-Time: 00:36.774, Memory: 346.00 MB
-
-OK (229 tests, 42781 assertions)
+OK (222 tests, 27104 assertions)

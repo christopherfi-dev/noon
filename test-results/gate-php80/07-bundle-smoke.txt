@@ -1,42 +1,29 @@
-== Bluehost layout (dist/stage)
-PASS index.html served
-PASS bootstrap via bundled api.php finds ../../algebra-private  (HTTP 200)
-PASS start Q07 presents a host-accepted item  (HTTP 200)
-PASS hint commits support  (HTTP 200)
-PASS end session  (HTTP 200)
-PASS report is labelled mock  (HTTP 200)
-PASS mutation without CSRF refused  (HTTP 403)
-PASS private path not served: /algebra-private/config.example.php  (HTTP 404)
-PASS private path not served: /algebra/../algebra-private/bootstrap.php  (HTTP 404)
-PASS private path not served: /algebra/config.php  (HTTP 404)
-PASS private path not served: /algebra/src/App.php  (HTTP 404)
-PASS private path not served: /algebra-private/var/README.txt  (HTTP 404)
-== nginx VPS layout (dist/algebra-engine-vps-upload.zip, dist/stage-vps)
-PASS VPS zip and staged tree exist
-PASS zip has exactly two top-level folders  (algebra-engine, algebra-engine-private)
-PASS algebra-engine/ holds only index.html, api.php and assets/  (5 files)
+== nginx VPS layout (dist/algebra-engine-ai-vps-upload.zip, dist/stage-ai-vps)
+PASS zip and staged tree exist
+PASS zip has exactly two top-level folders  (algebra-engine-ai, algebra-engine-ai-private)
+PASS algebra-engine-ai/ holds only index.html, api.php and assets/  (5 files)
 PASS no dotfiles (no .htaccess) anywhere in the zip
-PASS no private file or private content under algebra-engine/
-PASS api.php default ALGEBRA_PRIVATE_DIR is /var/www/algebra-engine-private
-PASS config.example.php sets base_path '/educational-engines/algebra-engine/'
-PASS zip matches the staged tree that is served below  (669 entries)
+PASS no private file or private content under algebra-engine-ai/
+PASS api.php default ALGEBRA_PRIVATE_DIR is /var/www/algebra-engine-ai-private (never the beta's)
+PASS config.example.php sets base_path '/educational-engines/algebra-engine-ai/' and its own db_path
+PASS zip matches the staged tree that is served below  (674 entries)
 PASS index.html served
-PASS bootstrap via the VPS api.php finds algebra-engine-private outside the web root  (HTTP 200)
-PASS start Q07 presents a host-accepted item  (HTTP 200)
-PASS hint commits support  (HTTP 200)
+PASS bootstrap via the bundled api.php finds algebra-engine-ai-private outside the web root  (HTTP 200)
+PASS start Q07: the tutor speaks and a problem code accepted is open  (HTTP 200)
+PASS I'm stuck records help before the hint  (HTTP 200)
 PASS end session  (HTTP 200)
-PASS report is labelled mock  (HTTP 200)
+PASS report is labelled mock and written by code  (HTTP 200)
 PASS mutation without CSRF refused  (HTTP 403)
-PASS session cookie path is /educational-engines/algebra-engine/  (Set-Cookie: ae_sid=8a5401764006cbba90384c50a34a7535c6bc154ce96db45ff3583f65d455e39e; Path=/educational-engines/algebra-engine/; Max-Age=604800; HttpOnly; SameSite=Lax)
-PASS private path not served: /educational-engines/algebra-engine/config.php  (HTTP 404)
-PASS private path not served: /educational-engines/algebra-engine/bootstrap.php  (HTTP 404)
-PASS private path not served: /educational-engines/algebra-engine/src/App.php  (HTTP 404)
-PASS private path not served: /educational-engines/algebra-engine/../algebra-engine-private/bootstrap.php  (HTTP 404)
-PASS private path not served: /educational-engines/algebra-engine-private/config.example.php  (HTTP 404)
-PASS private path not served: /algebra-engine-private/var/README.txt  (HTTP 404)
-== Upgrade safety (both upload zips)
-PASS algebra-engine-bluehost-upload.zip: no config.php, nothing inside var/  (681 entries)
-PASS algebra-engine-bluehost-upload.zip: carries migration 004 (progress codes)
-PASS algebra-engine-vps-upload.zip: no config.php, nothing inside var/  (669 entries)
-PASS algebra-engine-vps-upload.zip: carries migration 004 (progress codes)
+PASS session cookie path is /educational-engines/algebra-engine-ai/ (separate from the beta)  (Set-Cookie: ae_sid=16f9f5706480b66a995c0213680284784e85a1605dff568793625cc24a2b924c; Path=/educational-engines/algebra-engine-ai/; Max-Age=604800; HttpOnly; SameSite=Lax)
+PASS private path not served: /educational-engines/algebra-engine-ai/config.php  (HTTP 404)
+PASS private path not served: /educational-engines/algebra-engine-ai/bootstrap.php  (HTTP 404)
+PASS private path not served: /educational-engines/algebra-engine-ai/src/App.php  (HTTP 404)
+PASS private path not served: /educational-engines/algebra-engine-ai/../algebra-engine-ai-private/bootstrap.php  (HTTP 404)
+PASS private path not served: /educational-engines/algebra-engine-ai-private/config.example.php  (HTTP 404)
+PASS private path not served: /algebra-engine-ai-private/var/README.txt  (HTTP 404)
+== Upgrade safety
+PASS algebra-engine-ai-vps-upload.zip: no config.php, nothing inside var/  (674 entries)
+PASS algebra-engine-ai-vps-upload.zip: carries migration 004_progress.sql
+PASS algebra-engine-ai-vps-upload.zip: carries migration 005_round6_call_detail.sql
+PASS algebra-engine-ai-vps-upload.zip: carries architecture v1.3 and no older architecture
 BUNDLE SMOKE PASSED

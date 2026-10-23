@@ -1,56 +1,70 @@
-# Algebra Engine — beta
+# Algebra Engine — AI tutor (round 6, Stage 1)
 
-A PHP host that enforces the Algebra Constraint Architecture **v1.2** for ten
-skills (Q07 target; Q06, Q05, Q04, E06, N18, N03, N04, N05, N06). The model
-only drafts item parameters and wording; the host chooses every operation,
-renders every question, derives every answer key, checks every response and
-owns all state. The beta runs on a **simulated (mock) model** until a provider
-key is configured.
+The AI runs the tutoring session as a conversation, governed by the Algebra
+Constraint Architecture **v1.3**; code is its set of instruments and keeps the
+guarantees that truth requires (`CONDUCTOR_ROUND_6_v3.md` §1–§2, `CLAUDE.md`):
 
-What is in scope, what is deferred, and how each skill is checked:
-`CAPABILITY_MATRIX.md`. Acceptance-scenario status: `ACCEPTANCE_SCENARIOS.md`.
-Deployment: `DEPLOYMENT.md`.
+- code computes every answer, checks every entry and records every verdict;
+- code alone computes goals (3 check questions correct in a row without help;
+  for Q07 and E06 a solve or expansion, a choice question and a new form; one
+  code-confirmed slip may pause the count);
+- check questions are worded by code from a pattern of their skill and stand
+  alone (the conversation pauses while one is open);
+- the gradebook is true, and code writes the report from it;
+- every learner-visible AI text is guarded (answer leaks, internal terms,
+  mastery and goal claims, claims about help); questions are allowed.
+
+Ten skills are available (Q07, E06, Q06, Q05, Q04, N18, N03, N04, N05, N06);
+all 205 curriculum skills stay browsable. Stage 1 runs on a **simulated (mock)
+tutor** only: no key was used, nothing about a live model, about learning or
+about deployment has been tested. What is in scope and how each skill is
+checked: `CAPABILITY_MATRIX.md`. Acceptance-scenario status:
+`ACCEPTANCE_SCENARIOS.md`. Tests retired with the beta's state machine:
+`tests/RETIRED_TESTS.md`. Deployment next to the beta: `DEPLOYMENT_VPS.md`.
 
 ## Layout
 
 ```
 app/
-  public/            web root (index.html, api.php, assets/, .htaccess)
+  public/            web root (index.html, api.php, assets/)
   private/           everything else; never web-accessible
     bootstrap.php    loads autoloader + private config.php
     config.example.php
     src/             AlgebraEngine\ classes (see below)
-    resources/       architecture v1.2, curriculum map, runtime contracts
-    migrations/      SQLite schema
+    resources/       architecture v1.3, curriculum map, runtime contracts
+    migrations/      SQLite schema (001–005)
     bin/             preflight.php, cleanup.php (cron)
     var/             SQLite database (git-ignored)
   tests/             PHPUnit Unit + Integration, Browser (Playwright)
-  tools/             build_bundle.php, gen_capability_matrix.php, run_all_tests.sh
+  tools/             build_bundle.php, bundle_smoke.php, tutor_sessions.php, gen_capability_matrix.php, run_all_tests.sh
 ```
 
-Main classes: `Workflow\Engine` (transactions, routing, D2 descent, repair,
-return), `Items\ItemFactory` + `Items\Templates\*` (host keys and error
-signatures), `Items\SocraticPlanner` (D1 question-only repair plans),
-`Items\AcceptanceGate` (item gate), `Provider\ModelCoordinator` (binding,
-envelope schema + semantic checks, bounded repair), `Provider\DisclosureGuard`
-(D1 answer-leak heuristic), `Provider\PromptAssembler` (trusted blocks, F2
-skeleton), `Evidence\CriteriaCalculator` (criteria recomputed from the
-ledger), `Report\ReportBuilder`, `Report\SummaryView` (the learner and teacher
-levels of the summary), `Report\ReportHtml` (the downloadable report),
-`Progress\ProgressCode` + `Progress\ProgressRecord` (progress codes; the server
-keeps only each code's sha256), `Http\Api`, `Workflow\PublicProjection`.
+Main classes:
 
-Updating a server that already runs an earlier version: "Updating an existing
-install" in `DEPLOYMENT_VPS.md` (nginx) or `DEPLOYMENT.md` (Bluehost). The
-upload ZIPs contain no `config.php` and nothing inside `var/`.
+- `Tutor\TutorEngine`: one learner turn per request (transactions, leases,
+  idempotency, revision checks), the context for the AI, applying its moves,
+  problems and messages, and the commit.
+- `Tutor\TutorCoordinator`: the binding call, one call per turn, the envelope
+  checks, problem verification and text guards; one repair, then code's
+  fallback.
+- `Tutor\TutorPrompt`: the five-message request, built anew each turn.
+- `Tutor\MockTutor`: the scripted mock tutor and its adversarial faults.
+- Instruments: `SpecMath`, `PatternMatcher` (the recipes in reverse),
+  `ProblemFactory`, `ProblemVerifier`, `Recipes`, `EntryReader`,
+  `ReadingCheck`, `AnswerCheck`, `SlipCheck`, `Gradebook`, `Goals`,
+  `TextGuard`.
+- `Tutor\TutorProjection`: the only view the browser gets.
+- `Provider\ReasoningPolicy`: reasoning chosen per call.
+- `Report\TutorReport`, `Report\SummaryView`, `Report\ReportHtml`: the report,
+  written by code.
+- Kept from the beta: `Items\Templates\*` (the 14 recipes), `Math\*`,
+  `Checking\*`, `Progress\*`, `Storage\*`, `Http\Api`.
 
 ## Run locally
 
 Requirements: PHP 8.0+ (the production server runs 8.0.30; the gate runs on
 8.0 and 8.3) with `pdo_sqlite`, `mbstring`, `ctype`, `json` (and `curl` +
 `openssl` for a live provider). Composer for development only (PHPUnit 9.6).
-Deployment: `DEPLOYMENT_VPS.md` (nginx VPS, `dist/algebra-engine-vps-upload.zip`)
-or `DEPLOYMENT.md` (Bluehost, `dist/algebra-engine-bluehost-upload.zip`).
 
 ```bash
 cd app
@@ -69,86 +83,47 @@ only.
 
 ```bash
 cd app
-php private/vendor/bin/phpunit                    # unit + integration
-node tests/Browser/run_browser.mjs                 # B1 at 360x740 and 1280x800, UI-01, UI-02, UI-03
-bash tools/run_all_tests.sh                       # everything, outputs to ../test-results/
+php private/vendor/bin/phpunit                       # unit + integration
+php tools/tutor_sessions.php --out=/tmp/sessions     # scripted mock sessions: calls per turn
+node tests/Browser/run_browser.mjs                   # conversation UI at 360, 390 and 1280 wide
+bash tools/run_all_tests.sh                          # everything, outputs to ../test-results/
 ```
 
-The browser tests use the globally installed Playwright and Chromium. The
+The integration harness re-checks after every request that every presented
+problem has an answer code computed, every recorded verdict is code's verdict
+for that exact problem and entry, and the goals are what code computes. The
 browser "oracle" (`tests/Browser/oracle.php`) reads the private test database
 to answer like a scripted learner; it is never deployed.
 
-## Live provider
+## Live provider (Stage 2)
 
-Set in `private/config.php`: `provider => 'openai_compatible'`,
-`provider_base_url` (e.g. the DeepSeek base URL from its current docs),
-`provider_model` (confirm the model name with the provider), and
-`provider_api_key`. The adapter makes one text-mode binding call, checks the
-exact v1.2 activation line, then uses JSON mode for envelopes. Answers are
-sent to that provider.
+Set in a private `config.php`: `provider => 'openai_compatible'`,
+`provider_base_url`, `provider_model` (confirm the model name with the
+provider), `provider_api_key`, and `provider_thinking`:
 
-Live smoke test (confirms network and adapter compatibility only), with the
-key in a config file kept outside the repository:
+- `'per_call'` (default in `config.example.php`): code enables thinking, at
+  `provider_reasoning_effort`, only for an entry the AI must read, a wrong
+  answer with no code signature, or a free-text message about the maths;
+- `'disabled'` or `'enabled'`: the same setting on every call.
 
-```bash
-ALGEBRA_CONFIG=/path/outside/repo/config.php php tools/live_smoke.php            # 4 steps, about 4 calls
-ALGEBRA_CONFIG=/path/outside/repo/config.php php tools/live_smoke.php --journey  # adds a Socratic repair path, about 15 calls
-```
+The setting is always sent explicitly; temperature only when thinking is
+disabled. The adapter makes one text-mode binding call (the v1.3 activation
+line), then JSON mode for envelopes; no function calling. Reasoning text
+(`reasoning_content`) is never read, stored, shown or sent back. Every call
+is logged with its purpose, its reasoning setting and the turn it belongs to.
 
-Scripted live sessions (Round 2 §4): B1 and B3 paths with a scripted
-learner. The script first lists the provider's models and stops (exit 3) when
-the configured model is not listed, unless `--accept-unlisted-model` is given
-with the owner's approval. With a mock config it is a dry run, labelled MOCK.
+Stage 2 runs (conductor round 6 §10) use the session runner with the key in a
+config file kept outside the repository:
 
 ```bash
-ALGEBRA_CONFIG=/path/outside/repo/config.php php tools/live_sessions.php --out=../test-results/live --b1=5 --b3=3
+ALGEBRA_CONFIG=/path/outside/repo/config.php php tools/tutor_sessions.php --out=../test-results/live/round6/RUN --b1=5 --descent=3 --b11=2 --n1=2
 ```
 
-It writes one transcript per session (learner text, tutor text, mode, verdict
-per turn, every host rejection with the rejected text) and `METRICS.md`
-(binding, repairs per operation, HOLDs, rejections, latency, tokens).
+It writes one transcript per session (learner input, what the student saw,
+code's verdicts, the calls per turn with their reasoning setting, the wait)
+and `METRICS.md` (calls per turn, learner wait against §3.7, every rejected AI
+output with its text and reasons, clarifying questions, slips confirmed and
+rejected, the forward-looking audit list, HOLDs, tokens per session).
 
-Thinking settings (round 3 ruling) are required for the live provider and are
-never left to the provider default. **Default: thinking disabled** (round 4
-choice, from the round 3 results: fewest repairs, no HOLDs, no empty responses,
-median learner wait 2.7 s). The setting stays configurable.
-
-- `provider_thinking`: `'disabled'` (default in `config.example.php`) or
-  `'enabled'`, sent as `"thinking": {"type": ...}` on every call.
-- `provider_reasoning_effort`: `'low'`, `'high'` or `'max'`, sent only when
-  thinking is enabled (empty otherwise).
-- `temperature` is sent only when thinking is disabled (it has no effect in
-  thinking mode).
-- `provider_max_tokens`: set per configuration; with thinking enabled the
-  hidden reasoning counts against it.
-
-Reasoning text (`reasoning_content`) is never read, stored, shown or sent back.
-`model_calls` keeps only each call's finish reason, token counts (including
-reasoning tokens) and duration. Preflight fails when the thinking settings are
-missing or inconsistent.
-
-`ALGEBRA_TRANSPORT_LOG=/path` adds a log of response metadata (HTTP status,
-finish reason, token counts, the first 400 characters of content). Request
-bodies and headers, including the key, are never logged.
-
-Result on 2026-10-21 (`../test-results/08-live-smoke.txt`): DeepSeek,
-`provider_base_url` `https://api.deepseek.com/v1` (the adapter appends
-`/chat/completions`), model `deepseek-flash`. The last run, on the final code,
-passed (the basic steps plus the journey). This is not evidence of teaching
-quality or learning.
-
-- The owner's other app names `deepseek-v4-flash`. The supplied key's
-  `/v1/models` list offered only `deepseek-flash` and `deepseek-v4-pro`, so
-  `deepseek-flash` was used. The owner should confirm the model.
-- Round 2 (2026-10-21): the owner chose `deepseek-v4-flash` with
-  `reasoning_effort: high`. The smoke test passed with that name (the provider
-  accepts it), but it is still not in the model list, so the scripted live
-  sessions were not run (`../test-results/live/`).
-- `deepseek-flash` is a reasoning model: hidden reasoning counts against
-  `max_tokens`. At 1500 tokens it returned empty content with
-  `finish_reason=length`; the default is now 4096. Across the runs, each
-  answered JSON call took 3.6–15.4 s (average about 7 s) and used 594–3,254
-  completion tokens, so 4096 leaves limited headroom.
-- JSON mode occasionally returned empty content with `finish_reason=stop`
-  (2 of 14 JSON calls in run 4; none in runs 5 and 6). The host rejects it
-  and spends one bounded repair attempt, as the spec requires.
+Earlier live results (rounds 3–5, `../test-results/live/`) were for the
+beta's state machine and say nothing about this tutor.

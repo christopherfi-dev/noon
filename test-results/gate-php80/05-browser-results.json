@@ -1,65 +1,138 @@
 {
-  "ran_at": "2026-10-23T00:39:37.826Z",
+  "ran_at": "2026-10-23T04:36:31.039Z",
   "results": [
     {
-      "name": "B1 browser journey (mobile 360x740)",
+      "name": "Conversation journey: step back, check card, pause, help, wrap-up, summary (mobile 390x844)",
       "pass": true,
       "detail": {
-        "modes": [
-          "TARGET_ASSESSMENT",
-          "DIAGNOSTIC_PROBE",
-          "PREREQUISITE_CHECK",
-          "GUIDED_REPAIR",
-          "GUIDED_REPAIR",
-          "INDEPENDENT_CHECK",
-          "RETURN_TO_TARGET",
-          "SESSION_REPORT"
-        ],
-        "namesMissed": true,
+        "checks": {
+          "opens": true,
+          "pinnedPractice": true,
+          "pinnedAboveInput": true,
+          "dots0": true,
+          "oneInput": true,
+          "notYet": true,
+          "steppedBack": true,
+          "inputCleared": true,
+          "resultCorrect": true,
+          "checkCard": true,
+          "pause": true,
+          "stuckMenu": true,
+          "withHelp": true,
+          "helpResets": true,
+          "wrapUp": true,
+          "newestAtBottom": true,
+          "noInternalInConversation": true,
+          "summary": true,
+          "teacher": true
+        },
         "maxOverflow": 0,
-        "internalInSummary": [],
-        "consoleErrors": [],
-        "smallerPrompt": "What is 7 × 5?"
-      }
-    },
-    {
-      "name": "B1 browser journey (desktop 1280x800)",
-      "pass": true,
-      "detail": {
-        "modes": [
-          "TARGET_ASSESSMENT",
-          "DIAGNOSTIC_PROBE",
-          "PREREQUISITE_CHECK",
-          "GUIDED_REPAIR",
-          "GUIDED_REPAIR",
-          "INDEPENDENT_CHECK",
-          "RETURN_TO_TARGET",
-          "SESSION_REPORT"
-        ],
-        "namesMissed": true,
-        "maxOverflow": 0,
-        "internalInSummary": [],
-        "consoleErrors": [],
-        "smallerPrompt": "What is 2 + 2 + 2?"
-      }
-    },
-    {
-      "name": "UI-01 mobile keyboard and status (360x740)",
-      "pass": true,
-      "detail": {
-        "reached": true,
-        "focusOnInput": "answer-input",
-        "keptAfterError": "1 1/2",
-        "statusRegion": "polite",
-        "logRegion": "polite",
-        "labelled": true,
-        "focusVisible": true,
-        "overflow": 0,
         "consoleErrors": []
       }
     },
     {
-      "name": "UI-03 skill map shows the 10 beta skills by default; full map on request",
+      "name": "Conversation journey: step back, check card, pause, help, wrap-up, summary (desktop 1280x800)",
+      "pass": true,
+      "detail": {
+        "checks": {
+          "opens": true,
+          "pinnedPractice": true,
+          "pinnedAboveInput": true,
+          "dots0": true,
+          "oneInput": true,
+          "notYet": true,
+          "steppedBack": true,
+          "inputCleared": true,
+          "resultCorrect": true,
+          "checkCard": true,
+          "pause": true,
+          "stuckMenu": true,
+          "withHelp": true,
+          "helpResets": true,
+          "wrapUp": true,
+          "newestAtBottom": true,
+          "noInternalInConversation": true,
+          "summary": true,
+          "teacher": true
+        },
+        "maxOverflow": 0,
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "Slip pause: micro-question, retry, count paused (mobile 390x844)",
+      "pass": true,
+      "detail": {
+        "checks": {
+          "posed": true,
+          "notYet": true,
+          "micro": true,
+          "paused": true,
+          "retry": true,
+          "countKept": true
+        },
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "Slip pause: micro-question, retry, count paused (desktop 1280x800)",
+      "pass": true,
+      "detail": {
+        "checks": {
+          "posed": true,
+          "notYet": true,
+          "micro": true,
+          "paused": true,
+          "retry": true,
+          "countKept": true
+        },
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "UI-01 mobile keyboard, status and no lost answers (360x740)",
+      "pass": true,
+      "detail": {
+        "reached": true,
+        "focusOnInput": "entry-input",
+        "ambiguous": {
+          "role": "app",
+          "kind": "notice",
+          "text": "A space between a whole number and a fraction can be read more than one way. Write it as one fraction, such as 3/2, or as a decimal."
+        },
+        "notMarked": true,
+        "keptAfterFailure": "2",
+        "banner": "The connection failed. Your typed text is kept; please try again.",
+        "resultShown": true,
+        "statusRegion": "polite",
+        "logRegion": "log,polite,0",
+        "labelled": true,
+        "focusVisible": true,
+        "overflow": 0,
+        "consoleErrors": [
+          "Failed to load resource: net::ERR_FAILED",
+          "Failed to load resource: net::ERR_FAILED"
+        ]
+      }
+    },
+    {
+      "name": "UI-02 safe rendering of tutor and learner text",
+      "pass": true,
+      "detail": {
+        "injected": {
+          "xss": null,
+          "imgs": 0,
+          "scripts": 0,
+          "anchorsJs": 0,
+          "bold": 0
+        },
+        "shownAsText": true,
+        "dialogs": [],
+        "consoleErrors": []
+      }
+    },
+    {
+      "name": "UI-03 skill map shows the 10 tutor skills by default; the full 205-skill map on request",
       "pass": true,
       "detail": {
         "defaultView": {
@@ -77,18 +150,14 @@
             "Q07"
           ],
           "pressed": "false",
-          "text": "Show full map",
-          "labels": [
-            "Partial: numeric part only",
-            "Available in this beta"
-          ]
+          "text": "Show full map"
         },
         "fullView": {
           "count": 205,
           "pressed": "true",
           "labels": [
-            "Available in this beta",
-            "Not available in this beta",
+            "Available in this tutor",
+            "Not available in this tutor",
             "Partial: numeric part only"
           ]
         },
@@ -98,184 +167,46 @@
       }
     },
     {
-      "name": "UI-02 safe rendering of model and learner text",
-      "pass": true,
-      "detail": {
-        "injected": {
-          "xss": null,
-          "imgs": 0,
-          "scripts": 0,
-          "anchorsJs": 0,
-          "bold": 0
-        },
-        "shownAsText": true,
-        "dialogs": [],
-        "consoleErrors": []
-      }
-    },
-    {
-      "name": "UI-04 round UI journey (mobile 390x844)",
-      "pass": true,
-      "detail": {
-        "checks": {
-          "u4Welcome": true,
-          "u7Dots0": true,
-          "u5Independent": true,
-          "u5IndependentMenu": true,
-          "u5EscapeCloses": true,
-          "u4NoWorkingBox": true,
-          "u7Dots1": true,
-          "u8Correct": true,
-          "u3IsChoice": true,
-          "u3Labels": true,
-          "u3Stem": true,
-          "u7Dots2": true,
-          "u8NotYet": true,
-          "u7ProbeNoDots": true,
-          "u7BuildingBlockNoDots": true,
-          "u1": true,
-          "u5Guided": true,
-          "u6": true,
-          "u5GuidedMenu": true,
-          "u5Keyboard": true,
-          "u5HintAction": true,
-          "reachedReport": true,
-          "u2Collapsed": true,
-          "u2Learner": true,
-          "u9Buttons": true,
-          "u2Opened": true,
-          "u2Words": true,
-          "u2Table": true
-        },
-        "overflow": 0,
-        "brokenWords": [],
-        "terms": [],
-        "codes": [],
-        "consoleErrors": []
-      }
-    },
-    {
-      "name": "UI-04 round UI journey (desktop 1280x800)",
-      "pass": true,
-      "detail": {
-        "checks": {
-          "u4Welcome": true,
-          "u7Dots0": true,
-          "u5Independent": true,
-          "u5IndependentMenu": true,
-          "u5EscapeCloses": true,
-          "u4NoWorkingBox": true,
-          "u7Dots1": true,
-          "u8Correct": true,
-          "u3IsChoice": true,
-          "u3Labels": true,
-          "u3Stem": true,
-          "u7Dots2": true,
-          "u8NotYet": true,
-          "u7ProbeNoDots": true,
-          "u7BuildingBlockNoDots": true,
-          "u1": true,
-          "u5Guided": true,
-          "u6": true,
-          "u5GuidedMenu": true,
-          "u5Keyboard": true,
-          "u5HintAction": true,
-          "reachedReport": true,
-          "u2Collapsed": true,
-          "u2Learner": true,
-          "u9Buttons": true,
-          "u2Opened": true,
-          "u2Words": true,
-          "u2Table": true
-        },
-        "overflow": 0,
-        "brokenWords": [],
-        "terms": [],
-        "codes": [],
-        "consoleErrors": []
-      }
-    },
-    {
-      "name": "UI-05 help choices, typed stuck entry and streak reset (mobile 390x844)",
-      "pass": true,
-      "detail": {
-        "checks": {
-          "oneDot": true,
-          "probe": true,
-          "reset": true,
-          "hint": true,
-          "explain": true,
-          "typedStuck": true,
-          "notLearned": true
-        },
-        "sent": [
-          "SUBMIT_RESPONSE",
-          "SUBMIT_RESPONSE",
-          "SUBMIT_RESPONSE",
-          "REQUEST_HINT",
-          "REQUEST_EXPLANATION",
-          "SUBMIT_RESPONSE",
-          "NOT_LEARNED"
-        ],
-        "consoleErrors": []
-      }
-    },
-    {
-      "name": "UI-05 help choices, typed stuck entry and streak reset (desktop 1280x800)",
-      "pass": true,
-      "detail": {
-        "checks": {
-          "oneDot": true,
-          "probe": true,
-          "reset": true,
-          "hint": true,
-          "explain": true,
-          "typedStuck": true,
-          "notLearned": true
-        },
-        "sent": [
-          "SUBMIT_RESPONSE",
-          "SUBMIT_RESPONSE",
-          "SUBMIT_RESPONSE",
-          "REQUEST_HINT",
-          "REQUEST_EXPLANATION",
-          "SUBMIT_RESPONSE",
-          "NOT_LEARNED"
-        ],
-        "consoleErrors": []
-      }
-    },
-    {
-      "name": "UI-06 result blocks meet WCAG AA contrast in light and dark mode",
+      "name": "UI-06 result blocks and the check card meet WCAG AA contrast in light and dark mode",
       "pass": true,
       "detail": {
         "out": {
           "light": {
             "correct": {
               "word": 8.181823963104396,
-              "body": 14.723119218307158,
+              "body": 5.940933934394144,
               "icon": 5.078795978854816,
               "bg": "rgb(231, 245, 236)"
             },
             "notyet": {
               "word": 15.048022877113434,
-              "body": 15.048022877113434,
+              "body": 6.072035988475926,
               "icon": 4.131437346244813,
               "bg": "rgb(243, 244, 246)"
+            },
+            "check": {
+              "label": 15.112141029853369,
+              "text": 15.112141029853369,
+              "border": 4.721648040360334
             }
           },
           "dark": {
             "correct": {
               "word": 10.093130558842713,
-              "body": 13.12471782233167,
+              "body": 7.2853952544500356,
               "icon": 7.287280914885737,
               "bg": "rgb(16, 41, 26)"
             },
             "notyet": {
               "word": 13.416522720913486,
-              "body": 13.416522720913486,
+              "body": 7.447373138632505,
               "icon": 5.154092376180803,
               "bg": "rgb(28, 35, 43)"
+            },
+            "check": {
+              "label": 11.140887606263966,
+              "text": 11.140887606263966,
+              "border": 10.449984272928338
             }
           }
         },

@@ -47,13 +47,15 @@ step "F1 manifest (after preflight)" 00-manifest-after.txt bash "$APP/tools/mani
 step "App preflight" 03-app-preflight.txt php "$APP/private/bin/preflight.php" --public="$APP/public"
 cd "$APP"
 step "PHPUnit unit + integration" 04-phpunit.txt php private/vendor/bin/phpunit --testdox --log-junit "$OUT/04-phpunit-junit.xml"
-step "Browser (B1 x2 widths, UI-01 to UI-07)" 05-browser.txt node tests/Browser/run_browser.mjs "$OUT/browser"
-step "Bundle build" 06-bundle-build.txt "$BUILD_PHP" tools/build_bundle.php
-step "Bundle smoke (deploy layout)" 07-bundle-smoke.txt php tools/bundle_smoke.php "$REPO/dist/stage"
+# Round 6 §9.5: calls per turn on scripted mock sessions (never a live config here).
+step "Mock tutor sessions (calls per turn)" 04b-mock-sessions.txt env -u ALGEBRA_CONFIG php tools/tutor_sessions.php --out="$OUT/mock-sessions"
+step "Browser (conversation UI, 360/390/1280)" 05-browser.txt node tests/Browser/run_browser.mjs "$OUT/browser"
+step "Bundle build (side-by-side VPS)" 06-bundle-build.txt "$BUILD_PHP" tools/build_bundle.php
+step "Bundle smoke (deploy layout)" 07-bundle-smoke.txt php tools/bundle_smoke.php "$REPO/dist"
 # After the bundle build, so the ZIP just built is scanned. Uses ALGEBRA_CONFIG for the configured key when set.
 step "Key-leak scan (tracked files + ZIP)" 09-key-leak-scan.txt php tools/key_leak_scan.php
 echo "" >> "$SUMMARY"
-echo "Note: the F1 manifest check after preflight is expected to list architecture/CHANGELOG.md (edited per addendum §3) and TEACHER_FACILITATOR_GUIDE_DRAFT.md (updated per the architect's ruling on the round UI v3 report), and HANDOFF_PREFLIGHT_REPORT.json is restored after the preflight rewrites it; see BUILD_LOG.md." >> "$SUMMARY"
+echo "Note: the F1 manifest check lists only ruled differences (architecture/CHANGELOG.md, TEACHER_FACILITATOR_GUIDE_DRAFT.md, CLAUDE.md and architecture/Algebra_Constraint_Architecture_v1.3.md; round 6 §0.6), and HANDOFF_PREFLIGHT_REPORT.json is restored after the preflight rewrites it; see BUILD_LOG.md." >> "$SUMMARY"
 echo "" >> "$SUMMARY"
-echo "The live provider smoke test needs a key and is not part of this runner. Its runs are recorded separately in \`08-live-smoke.txt\` (network and adapter compatibility only)." >> "$SUMMARY"
+echo "Every result here is from mock mode (simulated tutor). Live runs need a key and are not part of this runner; the round 6 live runs are Stage 2 (\`app/tools/tutor_sessions.php\` with a live config)." >> "$SUMMARY"
 exit $overall

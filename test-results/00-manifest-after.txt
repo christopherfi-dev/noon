@@ -1,4 +1,4 @@
-CLAUDE.md: OK
+CLAUDE.md: FAILED
 CLAUDE_CODE_START_PROMPT.md: OK
 HANDOFF_PREFLIGHT_REPORT.json: OK
 HANDOFF_VALIDATION_REPORT.json: OK
@@ -70,8 +70,9 @@ specifications/05_STORAGE_AND_DEPLOYMENT.md: OK
 specifications/06_REPORTS_AND_EVIDENCE.md: OK
 specifications/07_BUILD_AND_RELEASE.md: OK
 tools/validate_handoff.py: OK
-sha256sum: WARNING: 2 computed checksums did NOT match
+sha256sum: WARNING: 3 computed checksums did NOT match
 ---
-Differences: TEACHER_FACILITATOR_GUIDE_DRAFT.md
+Differences: CLAUDE.md
+TEACHER_FACILITATOR_GUIDE_DRAFT.md
 architecture/CHANGELOG.md
-Only expected differences (architecture/CHANGELOG.md: v1.2 entry added per addendum §3; TEACHER_FACILITATOR_GUIDE_DRAFT.md: updated per the architect's ruling on the round UI v3 report).
+Only ruled differences (architecture/CHANGELOG.md TEACHER_FACILITATOR_GUIDE_DRAFT.md CLAUDE.md architecture/Algebra_Constraint_Architecture_v1.3.md).

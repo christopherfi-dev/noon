@@ -1,7 +1,10 @@
 # Deploying the beta to Bluehost (cPanel)
 
-For the nginx VPS (AlmaLinux 9, PHP 8.0), use `DEPLOYMENT_VPS.md` and
-`dist/algebra-engine-vps-upload.zip` instead.
+**Round 6 note:** this guide is for the beta (tag `beta-1.0`) and its
+`dist/algebra-engine-bluehost-upload.zip`, which stays in `dist/` unchanged.
+The round 6 AI tutor builds only the side-by-side nginx VPS bundle; see
+`DEPLOYMENT_VPS.md`. Settings named below for the beta (for example
+`provider_thinking`) are described for the AI tutor in `README.md`.
 
 **Nothing has been deployed.** These are instructions for when the owner
 decides to deploy. The checks below are deployment checks for your account;

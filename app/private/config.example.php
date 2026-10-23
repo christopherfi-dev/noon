@@ -14,15 +14,17 @@ return [
     'provider_api_key' => '',             // secret; server-side only
     'provider_timeout' => 45,
     'provider_connect_timeout' => 10,
-    'provider_thinking' => 'disabled',    // round 4 choice; 'enabled' is still possible (sent on every call, never left to the provider default)
-    'provider_reasoning_effort' => '',    // 'low', 'high' or 'max' only when thinking is 'enabled'; empty when disabled
+    'provider_thinking' => 'per_call',    // round 6 §3.6: code decides per call (thinking for an entry the AI must read, a wrong answer
+                                          // with no known pattern, or a question about the maths); or 'disabled' / 'enabled' on every call.
+                                          // Always sent explicitly, never left to the provider default.
+    'provider_reasoning_effort' => 'low', // 'low', 'high' or 'max' with 'per_call' or 'enabled'; empty with 'disabled'
     // temperature 0.2 is sent while thinking is disabled (it has no effect in thinking mode)
     'provider_max_tokens' => 4096,        // output limit per call; with thinking enabled, reasoning counts against it
 
     // 'db_path' => '/home/ACCOUNT/algebra-private/var/algebra.sqlite',
     // 'base_path' => '/algebra/',        // cookie path; defaults to the api.php folder
 
-    'max_model_calls_per_session' => 150,
+    'max_model_calls_per_session' => 250,  // one call per turn, two when an entry must be read, one repair at most
     'global_provider_calls_per_day' => 2000,   // operator spend ceiling
     'starts_per_container_per_hour' => 30,
     'global_starts_per_hour' => 300,
