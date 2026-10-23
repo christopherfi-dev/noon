@@ -1,4 +1,4 @@
-/* Algebra Engine beta. Mobile first; no external fonts or assets. */
+/* Algebra Engine AI tutor (round 6). Mobile first; no external fonts or assets. */
 :root {
   --bg: #ffffff;
   --fg: #1b1f24;
@@ -141,60 +141,80 @@ fieldset.options legend { font-weight: 600; padding: 0; margin-bottom: 8px; }
 .option label::after { content: ""; position: absolute; inset: 0; }
 .option-letter { font-weight: 600; }
 
-.topic { margin: 0; color: var(--muted); font-weight: 600; }
-.workspace h1 { margin-bottom: 0.25em; }
-
-/* U3: an equation or expression never breaks across lines; the sentence around it may wrap. */
+/* An equation or expression never breaks across lines; the sentence around it may wrap. */
 .math { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .math-main { font-weight: 650; }
 
-/* U7: three dots for three correct in a row without help. */
-.progress { margin: 0 0 4px; }
-.progress .context { margin: 0 0 6px; color: var(--muted); }
+.ws-heading { margin-bottom: 0.1em; }
+.focus-line { margin: 0 0 4px; color: var(--muted); font-weight: 600; }
+
+/* Goal dots: code's count of check questions correct in a row without help. */
 .goal { display: flex; align-items: flex-start; gap: 12px; margin: 8px 0 4px; }
 .goal p { margin: 0; }
+.goal-skill { font-size: 0.9rem; color: var(--muted); }
 .goal-count { font-weight: 600; }
 .goal-note { color: var(--muted); font-size: 0.95rem; }
-.goal-none { display: block; }
 .dots { display: inline-flex; gap: 6px; padding-top: 0.3em; flex: none; }
 .dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--accent); background: transparent; transition: background-color 0.25s ease, transform 0.25s ease; }
 .dot-filled { background: var(--accent); transform: scale(1.08); }
 
-.messages { list-style: none; margin: 12px 0; padding: 0; display: grid; gap: 8px; }
-.msg { padding: 10px 14px; border-radius: 8px; border-left: 4px solid var(--line); background: var(--info); }
-.msg p { margin: 0.25em 0; white-space: pre-wrap; }
-.msg-information { background: var(--info); }
-.msg-error { background: var(--error-bg); color: var(--error-fg); border-left-color: var(--error-fg); }
+/* The conversation: scrolls, newest at the bottom. */
+/* Narrow screens: the page scrolls like a chat and the composer stays at the bottom of the screen.
+   Wide screens: the conversation scrolls in its own box above the composer. */
+.conversation { list-style: none; margin: 12px 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.line { padding: 8px 12px; border-radius: 10px; max-width: 92%; }
+.line p { margin: 0.2em 0; white-space: pre-wrap; }
+.speaker { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
+.line-tutor { align-self: flex-start; background: var(--card); border: 1px solid var(--line); }
+.line-student { align-self: flex-end; background: var(--chosen); border: 1px solid var(--accent); }
+.line-clarify { border-style: dashed; }
+.line-notice { align-self: stretch; max-width: 100%; background: var(--info); border-left: 4px solid var(--notyet-line); }
+.line-error { align-self: stretch; max-width: 100%; background: var(--error-bg); color: var(--error-fg); border-left: 4px solid var(--error-fg); }
+.line-writing { align-self: flex-start; color: var(--muted); font-style: italic; }
+.line-problem .problem-text, .check-card .problem-text { font-size: 1.1rem; }
+.option-lines { list-style: none; margin: 4px 0; padding: 0; display: grid; gap: 2px; }
 
-/* U8: one block per result. Words and an icon carry the meaning; the tint only supports them. */
-.feedback { color: var(--fg); }
-.feedback-head { display: flex; align-items: center; gap: 10px; margin: 0.15em 0 0.35em; }
-.feedback-word { font-weight: 700; }
-.feedback-icon { flex: none; width: 1.5em; height: 1.5em; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; line-height: 1; }
-.feedback-correct { background: var(--ok-bg); border-left-color: var(--ok-line); }
-.feedback-correct .feedback-word { color: var(--ok-fg); }
-.feedback-correct .feedback-icon { background: var(--ok-line); color: var(--ok-icon-fg); }
-.feedback-notyet, .feedback-partial { background: var(--notyet-bg); border-left-color: var(--notyet-line); }
-.feedback-notyet .feedback-word, .feedback-partial .feedback-word { color: var(--notyet-fg); }
-.feedback-notyet .feedback-icon { border: 2px solid var(--notyet-line); }
-.feedback-partial .feedback-icon { border: 2px solid var(--notyet-line); background: linear-gradient(90deg, var(--notyet-line) 50%, transparent 50%); }
-.feedback-partial .feedback-word { font-weight: 600; }
-.feedback-context { font-weight: 600; }
+/* A result from the app: one block; words and an icon carry the meaning, the tint only supports them. */
+.line-result { align-self: stretch; max-width: 100%; border-left: 4px solid var(--line); color: var(--fg); }
+.result-head { display: flex; align-items: center; gap: 10px; margin: 0.15em 0 0.35em; }
+.result-word { font-weight: 700; }
+.result-icon { flex: none; width: 1.5em; height: 1.5em; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; line-height: 1; }
+.result-correct { background: var(--ok-bg); border-left-color: var(--ok-line); }
+.result-correct .result-word { color: var(--ok-fg); }
+.result-correct .result-icon { background: var(--ok-line); color: var(--ok-icon-fg); }
+.result-notyet, .result-partial { background: var(--notyet-bg); border-left-color: var(--notyet-line); }
+.result-notyet .result-word, .result-partial .result-word { color: var(--notyet-fg); }
+.result-notyet .result-icon { border: 2px solid var(--notyet-line); }
+.result-partial .result-icon { border: 2px solid var(--notyet-line); background: linear-gradient(90deg, var(--notyet-line) 50%, transparent 50%); }
+.result-partial .result-word { font-weight: 600; }
+.result-context { font-weight: 600; }
+.result-note { color: var(--muted); }
 
-.question .prompt {
-  font-size: 1.15rem; font-weight: 400; white-space: pre-wrap; margin: 4px 0 8px;
-}
-.question .problem { margin: 0 0 8px; font-size: 1.05rem; }
-.question .field-label { font-weight: 500; color: var(--muted); font-size: 0.95rem; }
-.question fieldset.options legend { font-weight: 500; color: var(--muted); font-size: 0.95rem; }
-.problem-label { color: var(--muted); font-weight: 600; }
-.problem .math { font-weight: 650; }
-.assisted { display: inline-block; background: var(--assisted); padding: 2px 8px; border-radius: 6px; font-size: 0.9rem; margin: 0 0 6px; }
+/* Round 6 §5.1: a check question is a distinct card, in the conversation and pinned above the input. */
+.line-check { align-self: stretch; max-width: 100%; padding: 0; }
+.check-card { border: 2px solid var(--focus); border-radius: 10px; background: var(--assisted); padding: 10px 14px; }
+.card-label { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 4px; }
+.check-card .card-label { color: var(--fg); }
 
-/* U5: help choices open from "I'm stuck". */
+/* The composer: the open problem pinned above one input for an answer or a message. */
+.composer { position: sticky; bottom: 0; z-index: 2; background: var(--bg); padding: 8px 0 4px; border-top: 1px solid var(--line); box-shadow: 0 -6px 12px -10px rgba(0, 0, 0, 0.35); }
+.pinned { border: 1px solid var(--line); border-radius: 10px; background: var(--card); padding: 8px 12px; margin: 4px 0 6px; }
+.pinned .card-label { color: var(--muted); }
+.pinned.pinned-check { border: 2px solid var(--focus); background: var(--assisted); }
+.pinned.pinned-check .card-label { color: var(--fg); }
+.pinned .prompt { font-size: 1.1rem; margin: 2px 0; white-space: pre-wrap; }
+.with-help { font-size: 0.9rem; color: var(--muted); margin: 2px 0 0; }
+.composer .field-label { font-weight: 500; color: var(--muted); font-size: 0.95rem; margin-top: 6px; }
+.composer fieldset.options legend { font-weight: 500; color: var(--muted); font-size: 0.95rem; }
+.entry-row { display: flex; gap: 8px; }
+.entry-row input { flex: 1; min-width: 0; }
+.composer .controls { margin: 8px 0 4px; }
+.wrap-up { border-color: var(--accent); }
+
+/* Help choices open from "I'm stuck". */
 .stuck-toggle[aria-expanded="true"] { border-color: var(--accent); background: var(--chosen); }
-.stuck-menu { display: flex; flex-wrap: wrap; gap: 8px; margin: -4px 0 4px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
-.session-controls { margin-top: 20px; }
+.stuck-menu { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 4px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+.session-controls { margin-top: 16px; }
 
 /* Round UI v3 (U10): "Your code" in the header area; the code form and "Welcome back". */
 .code-bar { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: 0 0 10px; padding: 8px 12px; border: 1px dashed var(--line); border-radius: 8px; background: var(--card); }
@@ -273,6 +293,11 @@ a.primary-link { background: var(--accent); color: var(--accent-fg); border-colo
 
 @media (min-width: 640px) {
   h1 { font-size: 1.75rem; }
+  .conversation {
+    padding: 10px; max-height: max(260px, calc(100vh - 460px)); overflow-y: auto; overscroll-behavior: contain;
+    border: 1px solid var(--line); border-radius: 10px; background: var(--bg);
+  }
+  .composer { position: static; box-shadow: none; border-top: 0; }
   button.wide { width: auto; }
   .catalog-row { grid-template-columns: 1fr auto; align-items: center; }
   .learner-summary { grid-template-columns: 1fr 1fr; }
@@ -286,7 +311,9 @@ a.primary-link { background: var(--accent); color: var(--accent-fg); border-colo
 @media print {
   .site-header, .site-footer, .controls, .session-controls, .status, .skip-link, button, .button-link { display: none !important; }
   body { background: #fff; color: #000; font-size: 11pt; }
-  .card, .msg, .summary .provider-label, .summary-part { background: none; border-color: #999; }
+  .card, .line, .summary .provider-label, .summary-part { background: none; border-color: #999; }
+  .composer { display: none !important; }
+  .conversation { max-height: none; overflow: visible; }
   .table-wrap { overflow: visible; }
   .teacher-details > summary { list-style: none; }
 }

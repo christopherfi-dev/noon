@@ -60,7 +60,7 @@ final class SlipCheck
         return null;
     }
 
-    /** E06: same terms as the answer, exactly one coefficient wrong, and it is a product the student had to work out. */
+    /** E06: same terms as the answer, exactly one coefficient wrong, and it is a product the student had to work out (no factor of 1). */
     private static function productSlip(array $problem, string $normalized): ?array
     {
         $vars = $problem['variables'] ?: ['x'];
@@ -82,6 +82,9 @@ final class SlipCheck
             return null;
         }
         [$f1, $f2] = $products[$wrong[0]];
+        if (abs($f1) === 1 || abs($f2) === 1) {
+            return null; // a factor of 1 leaves nothing to work out: not a multiplication slip
+        }
         return self::slip('PRODUCT_FACT', 'The expansion was set out correctly; one multiplication (' . $f1 . ' × ' . $f2 . ') went wrong.', $f1 . ' * ' . $f2, $f1 * $f2);
     }
 

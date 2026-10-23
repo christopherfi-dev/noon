@@ -3,31 +3,31 @@ declare(strict_types=1);
 
 /*
  * Browser-test oracle (test harness only, never deployed): reads the private
- * SQLite database to learn the active item's key so a scripted learner can
- * answer. The public API never exposes this.
+ * SQLite database to learn code's answer to the open problem so a scripted
+ * learner can answer. The public API never exposes this.
  *   php oracle.php <db_path>
  */
 $db = new PDO('sqlite:' . $argv[1]);
-$row = $db->query('SELECT snapshot_json, engine_json FROM sessions ORDER BY created_at DESC, rowid DESC LIMIT 1')->fetch(PDO::FETCH_ASSOC);
+$row = $db->query('SELECT session_id, engine_json FROM sessions ORDER BY created_at DESC, rowid DESC LIMIT 1')->fetch(PDO::FETCH_ASSOC);
 if (!$row) {
     echo 'null';
     exit;
 }
-$snap = json_decode($row['snapshot_json'], true);
 $eng = json_decode($row['engine_json'], true);
-$a = $eng['active'];
-$out = ['mode' => $snap['mode'], 'skill' => $snap['current_skill_id'], 'stack' => array_column($snap['return_stack'], 'parent_skill_id'), 'active' => null];
-if ($a !== null) {
-    $e = $a['answer_spec']['expected'];
-    $out['active'] = [
-        'type' => $a['response_type'],
+$o = $eng['open'];
+$calls = (int) $db->query("SELECT COUNT(*) FROM model_calls WHERE session_id = " . $db->quote($row['session_id']))->fetchColumn();
+$out = ['topic' => $eng['topic'], 'focus' => $eng['focus'], 'status' => $eng['status'], 'wrap_up' => (bool) ($eng['wrap_up'] ?? false), 'calls' => $calls, 'open' => null];
+if ($o !== null) {
+    $e = $o['answer']['expected'];
+    $out['open'] = [
+        'purpose' => $o['purpose'],
+        'skill' => $o['skill_id'],
+        'type' => $o['response_type'],
+        'kind' => $o['answer']['kind'],
         'expected' => is_array($e) ? $e : (string) $e,
-        'template' => $a['template_id'],
-        'variant' => $a['variant_id'],
-        'role' => $a['role'],
-        'params' => $a['params'],
-        'signatures' => $a['objects']['signature_answers'] ?? null,
-        'letters' => $a['objects']['option_letters'] ?? null,
+        'template' => $o['template_id'] ?? null,
+        'params' => $o['params'] ?? null,
+        'prompt' => $o['prompt'],
     ];
 }
 echo json_encode($out);

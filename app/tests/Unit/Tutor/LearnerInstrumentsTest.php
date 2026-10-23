@@ -118,6 +118,10 @@ final class LearnerInstrumentsTest extends TestCase
         $this->assertNull($this->checker->check($p, '6x + 25')['slip']);
         $this->assertNull($this->checker->check($p, '6x + 35')['slip']);
         $this->assertNull($this->checker->check($p, '7x + 35')['slip'], 'a correct answer is no slip');
+        // A factor of 1 leaves nothing to multiply: 4x + 5 for 4(x + 1) is not a multiplication slip
+        // (and its micro-question "4 × 1" would show its own answer).
+        $one = $this->problems->fromRecipe('POSITIVE_DISTRIBUTION', ['a' => 4, 'b' => 1], 'CHECK');
+        $this->assertNull($this->checker->check($one, '4x + 5')['slip']);
     }
 
     public function testOtherSlipSignatures(): void

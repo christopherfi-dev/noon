@@ -103,10 +103,18 @@ final class TutorProjection
         ];
     }
 
-    /** The dots: code's goal status for the open check question's skill, else the focus skill. */
+    /**
+     * The dots: code's goal status for the skill a slip paused, else the open
+     * check question's (or retry's) skill, else the focus skill. A practice
+     * question on another skill (a micro-question after a slip) does not move
+     * the dots.
+     */
     private function goal(array $eng, array $events): ?array
     {
-        $skill = $eng['open']['skill_id'] ?? $eng['focus'];
+        $open = $eng['open'];
+        $skill = $eng['slip']['problem']['skill_id']
+            ?? (in_array($open['purpose'] ?? null, ['CHECK', 'RETRY'], true) ? $open['skill_id'] : null)
+            ?? $eng['focus'];
         if ($skill === null || !BetaScope::contains($skill)) {
             return null;
         }
