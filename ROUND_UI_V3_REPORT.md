@@ -43,3 +43,25 @@ Assertion totals vary from run to run: 42,709 on 8.3 and 42,720 on 8.0, then 42,
 5. **The "Welcome back" card** is built from the record alone, so its lines are coarser than the report's. For example, it says "At least once you…", because the record keeps pattern codes but not counts.
 6. **No `var/` folder in the ZIPs.** The app and the preflight create it when needed. On the VPS, the guide now creates it with nginx as owner. The Bluehost folder-level `.htaccess` also covers `var/`.
 7. **`TEACHER_FACILITATOR_GUIDE_DRAFT.md`** (a handoff file) still mentions the working field. I left it unchanged; it is still awaiting your decision from the first UI round.
+
+## Addendum: architect rulings (2026-10-23)
+
+- **(1) Code length:** kept at 12 characters. **(2), (3):** accepted; no change.
+- **(4) Teacher guide:** `TEACHER_FACILITATOR_GUIDE_DRAFT.md` now matches the beta.
+  - The working box is gone.
+  - It describes task links as not in the beta.
+  - It explains the progress code (continuing, take-over, earlier results, privacy, Forget and Start over) and the report (the four headings, the teacher details, the download and print).
+  - The F1 manifest check accepts this file as a ruled difference. `MANIFEST.sha256` is unchanged.
+- **Fix:** "What to work on next time" lists a skill outside the tutor only while a goal that depends on it is unmet this session. Such a goal is either the skill whose mistakes pointed to it or a skill above that one on the route.
+  - When every goal is met, the heading shows "You met every goal available in this tutor so far. Ask your teacher what comes next."
+  - The teacher details still list the open question.
+  - Building blocks are listed there only when they gave trouble.
+  - The "Welcome back" card cannot see these dependencies in the record, so it lists such a skill only while a recorded goal is unmet.
+  - Test: `ReportDownloadTest::testOutsideSkillListedOnlyWhileADependentGoalIsUnmet`. Case 1: the session ends during repair, and A07 is listed. Case 2: the full B1 journey, with no A07 line and the fixed line, also checked in the downloaded HTML.
+- **Gates:** both pass.
+  - PHP 8.0.30 (00:38:41–00:39:41Z): PHPUnit 229/229, browser 12/12, smoke and key-leak scan PASS.
+  - PHP 8.3.6 (00:37:29–00:38:35Z): the same results.
+- **Commit:** `0b10a50`.
+- **`dist/algebra-engine-vps-upload.zip`:** sha256 **`a1f02a0f47643e2c71e9549bd26a331a0ce79dd94815764d1c7bb1d6158efb6e`**.
+
+Offline only; not deployed.
