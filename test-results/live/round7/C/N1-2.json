@@ -1,0 +1,713 @@
+{
+    "name": "N1-2",
+    "provider": "LIVE openai_compatible / deepseek-v4-pro, provider_thinking disabled",
+    "turns": [
+        {
+            "input": "(start on E06)",
+            "status": 200,
+            "ms": 5168,
+            "calls": 2,
+            "purposes": [
+                "BINDING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (binding call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8X + 1",
+            "status": 200,
+            "ms": 9412,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "16 because I worked it out in my head",
+            "status": 200,
+            "ms": 11884,
+            "calls": 3,
+            "purposes": [
+                "READING",
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "is there a quicker way to do these?",
+            "status": 200,
+            "ms": 4492,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "16",
+            "status": 200,
+            "ms": 10090,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "24",
+            "status": 200,
+            "ms": 9771,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "16",
+            "status": 200,
+            "ms": 9160,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "24",
+            "status": 200,
+            "ms": 9348,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "16",
+            "status": 200,
+            "ms": 8930,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "24",
+            "status": 200,
+            "ms": 4830,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "60",
+            "status": 200,
+            "ms": 3569,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 4751,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 3975,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 8169,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 3031,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 8750,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 7150,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 8666,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 3806,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 8995,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 3770,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 7747,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 3557,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 4250,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8 x x + 8",
+            "status": 200,
+            "ms": 6485,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 5143,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 6097,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 7039,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 7097,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 13652,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 6813,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        }
+    ],
+    "guards": {
+        "ANSWER_LEAK": 1
+    },
+    "repairs": [
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: shows its own answer",
+            "errors": [
+                "item: the question shows its own answer: the answer 8 is also a number in the question; choose numbers so they differ"
+            ],
+            "text": "You multiplied 8 by the first term inside the parentheses, but the distributive property says to multiply 8 by every term inside. What is 8 times 1?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: shows its own answer",
+            "errors": [
+                "item: the question shows its own answer: the answer 8 is also a number in the question; choose numbers so they differ"
+            ],
+            "text": "Good, 8 × 2 is 16. Now let's go back to the distributive property. You multiplied 8 by the first term inside the parentheses, but the distributive property says to multiply 8 by every term inside. What is 8 times 1?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: shows its own answer",
+            "errors": [
+                "item: the question shows its own answer: the answer 8 is also a number in the question; choose numbers so they differ"
+            ],
+            "text": "Good, 8 × 2 is 16. Now let's go back to the distributive property. You multiplied 8 by the first term inside the parentheses, but the distributive property says to multiply 8 by every term inside. What is 8 times 1?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: shows its own answer",
+            "errors": [
+                "item: the question shows its own answer: the answer 8 is also a number in the question; choose numbers so they differ"
+            ],
+            "text": "Good, 8 × 3 is 24. Now let's go back to the distributive property. You multiplied 8 by the first term inside the parentheses, but the distributive property says to multiply 8 by every term inside. What is 8 times 1?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: shows its own answer",
+            "errors": [
+                "item: the question shows its own answer: the answer 8 is also a number in the question; choose numbers so they differ"
+            ],
+            "text": "Good, 8 × 2 is 16. Now let's go back to the distributive property. You multiplied 8 by the first term inside the parentheses, but the distributive property says to multiply 8 by every term inside. What is 8 times 1?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: shows its own answer",
+            "errors": [
+                "item: the question shows its own answer: the answer 8 is also a number in the question; choose numbers so they differ"
+            ],
+            "text": "Good, 8 × 3 is 24. Now let's go back to the distributive property. You multiplied 8 by the first term inside the parentheses, but the distributive property says to multiply 8 by every term inside. What is 8 times 1?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: shows its own answer",
+            "errors": [
+                "item: the question shows its own answer: the answer 8 is also a number in the question; choose numbers so they differ"
+            ],
+            "text": "Good, 8 × 2 is 16. Now let's go back to the distributive property. You multiplied 8 by the first term inside the parentheses, but the distributive property says to multiply 8 by every term inside. What is 8 times 1?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "message_type and item disagree",
+            "errors": [
+                "message_type must be QUESTION when item is present and FEEDBACK otherwise"
+            ],
+            "text": "The distributive property says that when a number is multiplied by a sum inside parentheses, you multiply it by each term inside. For example, 8(x + 1) means 8 times x plus 8 times 1. Why do you think we need to multiply both terms?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "message_type and item disagree",
+            "errors": [
+                "message_type must be QUESTION when item is present and FEEDBACK otherwise"
+            ],
+            "text": "The distributive property says that when a number is multiplied by a sum inside parentheses, you multiply it by each term inside. For example, 8(x + 1) means 8 times x plus 8 times 1. Why do you think we need to multiply both terms?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "message_type and item disagree",
+            "errors": [
+                "message_type must be QUESTION when item is present and FEEDBACK otherwise"
+            ],
+            "text": "Let's get back to the distributive property. You were wondering why we multiply both terms inside the parentheses. What does the distributive property say about 8(x + 1)?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "message_type and item disagree",
+            "errors": [
+                "message_type must be QUESTION when item is present and FEEDBACK otherwise"
+            ],
+            "text": "The distributive property says that when a number is multiplied by a sum inside parentheses, you multiply it by each term inside. For example, 8(x + 1) means 8 times x plus 8 times 1. Why do you think we need to multiply both terms?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "message_type and item disagree",
+            "errors": [
+                "message_type must be QUESTION when item is present and FEEDBACK otherwise"
+            ],
+            "text": "The distributive property says that when a number is multiplied by a sum inside parentheses, you multiply it by each term inside. For example, 8(x + 1) means 8 times x plus 8 times 1. Why do you think we need to multiply both terms?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "message_type and item disagree",
+            "errors": [
+                "message_type must be QUESTION when item is present and FEEDBACK otherwise"
+            ],
+            "text": "The distributive property says that when a number is multiplied by a sum inside parentheses, you multiply it by each term inside. For example, 8(x + 1) means 8 times x plus 8 times 1. Why do you think we need to multiply both terms?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "message_type and item disagree",
+            "errors": [
+                "message_type must be QUESTION when item is present and FEEDBACK otherwise"
+            ],
+            "text": "Think about what 8(x + 1) means. If you have 8 groups of (x + 1), how many x's do you have in total?"
+        }
+    ],
+    "holds": [],
+    "held_attempts": [],
+    "readings": {
+        "sent_for_reading": 2,
+        "accepted": 2,
+        "rejected": 0,
+        "readings_differ": 0,
+        "clarifying_questions_shown": 0,
+        "not_an_answer": 0
+    },
+    "empty_replies": 0,
+    "binding": {
+        "calls": 1,
+        "accepted": 1,
+        "outcomes": [
+            "ACCEPTED"
+        ]
+    },
+    "calls": 48,
+    "tokens": {
+        "prompt": 470470,
+        "cached": 363648,
+        "completion": 17354,
+        "reasoning": 0
+    },
+    "cost_usd": 0.251535096,
+    "finish_length": 0,
+    "attempts": 10,
+    "goals_met": []
+}

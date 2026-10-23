@@ -1,0 +1,617 @@
+{
+    "name": "N1-1",
+    "provider": "LIVE openai_compatible / deepseek-v4-pro, provider_thinking disabled",
+    "turns": [
+        {
+            "input": "(start on E06)",
+            "status": 200,
+            "ms": 4524,
+            "calls": 2,
+            "purposes": [
+                "BINDING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (binding call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6X + 5",
+            "status": 200,
+            "ms": 4648,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "30 because I worked it out in my head",
+            "status": 200,
+            "ms": 8778,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6 x x + 30",
+            "status": 200,
+            "ms": 13535,
+            "calls": 3,
+            "purposes": [
+                "READING",
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "is there a quicker way to do these?",
+            "status": 200,
+            "ms": 4586,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "30",
+            "status": 200,
+            "ms": 5580,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x+30",
+            "status": 200,
+            "ms": 4708,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 3691,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 4019,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 7404,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 2997,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 4403,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 3305,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 4209,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 3182,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 4374,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 3898,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 4299,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 3640,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 3666,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 4508,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 5165,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 4617,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 7240,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 2924,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 7417,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 4380,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 7322,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 3082,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "why do we multiply both terms inside?",
+            "status": 200,
+            "ms": 6919,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "what's your favourite football team?",
+            "status": 200,
+            "ms": 3692,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        }
+    ],
+    "guards": {
+        "ANSWER_LEAK": 2
+    },
+    "repairs": [
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: other",
+            "errors": [
+                "item: spec.expression could not be read as a numeric step (UNSUPPORTED_VARIABLE)"
+            ],
+            "text": "You wrote 6 x x + 30. That means 6 times x times x, which is 6x². But we want 6 times x plus 6 times 5. What is 6 times x?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "message_type and item disagree",
+            "errors": [
+                "message_type must be QUESTION when item is present and FEEDBACK otherwise"
+            ],
+            "text": "Good question. When you have 6(x + 5), the 6 is multiplying the whole group (x + 5). The distributive property says you multiply 6 by each term inside the parentheses. So you get 6 times x plus 6 times 5. What is 6 times x?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "message_type and item disagree",
+            "errors": [
+                "message_type must be QUESTION when item is present and FEEDBACK otherwise"
+            ],
+            "text": "Because the distributive property says that when you multiply a sum by a number, you multiply each term inside the parentheses by that number. For 6(x + 5), the 6 multiplies both x and 5. What is 6 times x?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "message_type and item disagree",
+            "errors": [
+                "message_type must be QUESTION when item is present and FEEDBACK otherwise"
+            ],
+            "text": "Because the distributive property says that when you multiply a sum by a number, you multiply each term inside the parentheses by that number. For 6(x + 5), the 6 multiplies both x and 5. What is 6 times x?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "message_type and item disagree",
+            "errors": [
+                "message_type must be QUESTION when item is present and FEEDBACK otherwise"
+            ],
+            "text": "Because the distributive property says that when you multiply a sum by a number, you multiply each term inside the parentheses by that number. For 6(x + 5), the 6 multiplies both x and 5. What is 6 times x?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "message_type and item disagree",
+            "errors": [
+                "message_type must be QUESTION when item is present and FEEDBACK otherwise"
+            ],
+            "text": "Because the distributive property says that when you multiply a sum by a number, you multiply each term inside the parentheses by that number. For 6(x + 5), the 6 multiplies both x and 5. What is 6 times x?"
+        }
+    ],
+    "holds": [],
+    "held_attempts": [],
+    "readings": {
+        "sent_for_reading": 2,
+        "accepted": 2,
+        "rejected": 0,
+        "readings_differ": 0,
+        "clarifying_questions_shown": 0,
+        "not_an_answer": 0
+    },
+    "empty_replies": 0,
+    "binding": {
+        "calls": 1,
+        "accepted": 1,
+        "outcomes": [
+            "ACCEPTED"
+        ]
+    },
+    "calls": 40,
+    "tokens": {
+        "prompt": 387534,
+        "cached": 281984,
+        "completion": 12128,
+        "reasoning": 0
+    },
+    "cost_usd": 0.22995120800000002,
+    "finish_length": 0,
+    "attempts": 5,
+    "goals_met": []
+}
