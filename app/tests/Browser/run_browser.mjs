@@ -140,14 +140,15 @@ try {
       && (await page.getByTestId('open-problem-label').textContent()) === 'Check question: on your own';
     await shot('03-check-card');
 
-    // Round 7 §6.1: while a check question is open, a message reaches the tutor; the check stays open and unassisted.
+    // Round 8 §3.1: while a check question is open, a request for help reaches the tutor; the help is recorded and the check becomes practice.
     const callsBefore = oracle().calls;
     await send(page, 'can you explain this to me first?');
     const afterMessage = await lines(page);
-    checks.messageDuringCheck = afterMessage[afterMessage.length - 1].role === 'tutor' && afterMessage[afterMessage.length - 1].kind === 'message'
-      && oracle().calls === callsBefore + 1 && (await page.getByTestId('open-problem').getAttribute('data-purpose')) === 'check'
-      && (await page.getByTestId('with-help').count()) === 0;
-    await shot('04-message-during-check');
+    checks.helpDuringCheck = afterMessage[afterMessage.length - 1].role === 'tutor' && afterMessage[afterMessage.length - 1].kind === 'message'
+      && oracle().calls === callsBefore + 1 && (await page.getByTestId('open-problem').getAttribute('data-purpose')) === 'practice'
+      && (await page.getByTestId('open-problem-label').textContent()) === 'Practice'
+      && (await page.getByTestId('with-help').count()) === 1;
+    await shot('04-help-during-check');
 
     // "I'm stuck": two choices (round 7 §6.4); a hint makes the answer one with help.
     await page.getByTestId('stuck').click();

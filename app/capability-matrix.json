@@ -1,7 +1,7 @@
 {
-    "generated_at": "2026-10-23T08:53:07Z",
+    "generated_at": "2026-10-23T13:06:43Z",
     "curriculum": "ACE-ALGEBRA1 1.1.0",
-    "architecture": "1.5",
+    "architecture": "1.6",
     "counts": {
         "UNAVAILABLE": 195,
         "PARTIAL_COMPONENTS": 8,
@@ -4280,22 +4280,22 @@
         {
             "item": "Live provider validation",
             "status": "NOT IMPLEMENTED",
-            "note": "Round 7 Stage 2 ran scripted sessions against DeepSeek (test-results/live/round7/); those are runs of scripted learners, not deployment validation and not evidence of learning. Unit and mock results are mock results."
+            "note": "Rounds 7 and 8 ran scripted sessions against DeepSeek (test-results/live/round7/, test-results/live/round8/); those are runs of scripted learners, not deployment validation and not evidence of learning. Unit and mock results are mock results."
         },
         {
-            "item": "Review tool for held attempts",
+            "item": "Review and correction tool for held attempts",
             "status": "NOT IMPLEMENTED",
-            "note": "Not built (round 7 §5): held attempts and verdict conflicts are listed in the report and reviewed by the owner from transcripts."
+            "note": "Not built (round 7 §5; round 8 §2.2): held attempts and verdict conflicts are listed in the report and reviewed by the owner from transcripts. Corrections that append to the record and recompute progress (HOST_REQUIREMENTS_v1.6.md, Section 5 item 4 and Section 10) are not implemented."
         }
     ],
     "heuristics": [
         {
             "item": "Answers (round 6 §2.1)",
-            "note": "Code computes every answer: from a recipe, from the AI's spec (linear_equation, expand, signed_arithmetic, numeric_step) or from the slipped check problem for a retry. A proposal whose stated answer differs from code's, that has no unique solution, whose numbers are out of range (|n| ≤ spec_number_limit, answers ≤ spec_answer_limit, denominators ≤ spec_denominator_limit) or whose wording contains its own answer is rejected. The AI never states a verdict; text that contradicts code's verdict is logged (round 7 §4), never changes the verdict, and is shown unchanged after code's own result line."
+            "note": "Code computes every answer: from a recipe, from the AI's spec (linear_equation, expand, signed_arithmetic, numeric_step) or from the slipped check problem for a retry. A proposal whose stated answer differs from code's, that has no unique solution, or whose numbers are out of range (|n| ≤ spec_number_limit, answers ≤ spec_answer_limit, denominators ≤ spec_denominator_limit) is rejected; a check problem whose single-number answer, or its opposite, is a number in it is rejected too (round 8 §3.6: practice problems may use any numbers). The AI never states a verdict; text that contradicts code's verdict is logged (round 7 §4), never changes the verdict, and is shown unchanged after code's own result line."
         },
         {
-            "item": "Check problems (round 6 §2.3, §4.2, §5; round 7 §5, §6)",
-            "note": "A check problem must match a recipe of its skill (the recipes used in reverse: exact structure, then the recipe's own validate()), use a number set not used in this session, and is worded by code. Choice check problems come only from the contrast recipes. The card reads \"Check question: on your own\". HEURISTIC phrase audit: when the text before the card contains the check's answer or a phrase directed at it (next, try, remember, make sure, don't forget, when you, hint, tip, careful, watch out, start by, same steps, like before and similar), the attempt is held: it keeps its verdict and counts neither for nor against the goal. A number the text shares with the check is logged as a signal only. Messages during an open check reach the AI; the check stays open and unassisted, and help comes only from \"I'm stuck\". Text shown during an open check that contains its answer also holds the attempt."
+            "item": "Check problems (round 6 §2.3, §4.2, §5; round 7 §5, §6; round 8 §3)",
+            "note": "A check problem must match a recipe of its skill (the recipes used in reverse: exact structure, then the recipe's own validate()), use a number set not used in this session, not contain its own single-number answer or its opposite, and is worded by code. One that still contains its answer after one repair is replaced by a prepared check problem for the same skill, and the substitution is logged; every prepared problem satisfies the rule. Choice check problems come only from the contrast recipes. The card reads \"Check question: on your own\". HEURISTIC phrase audit before the card: a hint, method, strategy or reminder phrase (remember, make sure, don't forget, when you, hint, tip, careful, watch out, start by, same steps, like before, apply and similar) holds the attempt: it keeps its verdict and counts neither for nor against the goal; so does the check's answer when it comes from neither the previous problem (its numbers and answer) nor the student's entry. Neutral invitations (next, try, one more, another one, your turn, have a go), numbers the text shares with the check, and an answer that comes from earlier work are logged as signals only. Help during an open check (round 8 §3.1–§3.2): a reply whose move is HELP, HINT, EXPLAIN or ANSWER_QUESTION records help before it is shown, and the check becomes practice (an answer to it does not count and the run starts again); a reply with no help move whose text contains the check's expression, a number from it or its answer holds the check (HEURISTIC backstop: digits and number words); text with none of these records nothing."
         },
         {
             "item": "Reading an entry (round 6 §4.1; round 7 §7)",
@@ -4307,11 +4307,11 @@
         },
         {
             "item": "Text guards (round 6 §2.6; round 7 §4)",
-            "note": "HEURISTIC DETECTORS; they log and do not block. Every learner-visible AI text is checked for the answer to an open or newly posed problem (as a number, number word, equivalent polynomial span or the key option's text; \"one\" as a determiner is not read as 1), internal vocabulary (expected answer, answer key, host, verdict, criterion and the like), a mastery or goal claim, a claim that work was done with or without help, and a contradiction of code's verdict. Each finding is recorded with the exact text, the guard and the problem and response it relates to; the student sees the text unchanged. Paraphrased answers are not detected. Only envelope and problem-acceptance failures are repaired (once); if the repair fails too, the turn is held with a retry."
+            "note": "HEURISTIC DETECTORS; they log and do not block. Every learner-visible AI text is checked for the answer to an open or newly posed problem (as a number, number word, equivalent polynomial span or the key option's text; \"one\" as a determiner is not read as 1), internal vocabulary (expected answer, answer key, host, verdict, criterion and the like), a mastery or goal claim, a claim that work was done with or without help (not flagged in the last sentence before a check card, round 8 §3.4), and a contradiction of code's verdict. Two counters log only (round 8 §3.7): RESOLVE_AFTER_CORRECT (correct-answer feedback with an equation in the text on the way from the problem to its answer, or for linear equations a digit value of one of its sub-expressions at the solution, other than the problem, the student's answer and the student's numbers) and VALUE_QUESTION_IN_TEXT (a question sentence with a value cue and some mathematics while no problem is posed). Each finding is recorded with the exact text, the guard and the problem and response it relates to; the student sees the text unchanged. Paraphrased answers are not detected. Only envelope and problem-acceptance failures are repaired (once); if the repair fails too, the turn is held with a retry."
         },
         {
             "item": "\"I'm stuck\"",
-            "note": "Two choices: a hint, or \"I haven't learned this yet\" (round 7 §6.4). Help is recorded before any AI call, and an answer after it resets the run. Typed text is never classified as stuck: \"idk\" or \"???\" is a message to the tutor (round 7 §6.3)."
+            "note": "Two choices: a hint, or \"I haven't learned this yet\" (round 7 §6.4). Help is recorded before any AI call, and an answer after it resets the run. Typed text is never classified as stuck: \"idk\" or \"???\" is a message to the tutor (round 7 §6.3); help is then recorded only if the tutor's reply carries a help move (round 8 §3.1)."
         },
         {
             "item": "Error signatures",
@@ -4332,8 +4332,8 @@
     ],
     "owner_rule_overrides": [
         {
-            "item": "Answer after help resets the run (round 5.1, P2)",
-            "note": "A check answer given after \"I'm stuck\" (a hint) resets the count of correct answers in a row to 0, exactly as a wrong answer does. Round 6 records of an explanation or a typed stuck phrase count the same way."
+            "item": "Answer after help resets the run (round 5.1, P2; round 8 §3.1)",
+            "note": "A check answer given after \"I'm stuck\" (a hint), or after a tutor reply with a help move during the check, resets the count of correct answers in a row to 0, exactly as a wrong answer does. Round 6 records of an explanation or a typed stuck phrase count the same way."
         },
         {
             "item": "One slip may pause the count (round 6 §5.5)",

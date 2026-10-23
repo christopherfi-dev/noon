@@ -125,6 +125,15 @@ final class MockTutor implements ProviderAdapter
                 return $allowed ? $this->pose($env, $ctx, $focus, 'practice', 'No problem. Let\'s try a different one.', 'MOVE_ON') : $this->say($env, 'No problem.', $focus);
             case 'MESSAGE':
                 $text = mb_strtolower((string) ($turn['entry'] ?? ''));
+                if (($ctx['OPEN_PROBLEM']['purpose'] ?? null) === 'check') {
+                    // Architecture v1.6 §2 (Recorded Help): a request for help on an open check gets the smallest step, marked as help.
+                    if (preg_match('/\b(help|hint|stuck|explain|idk|no idea)\b|don\'?t know|not sure how/', $text)) {
+                        $env['student_message'] = 'Let\'s take the smallest step together: what is being done to x first, and how could you undo it?';
+                        $env['proposed_transition'] = $this->move('HELP', $focus);
+                        return $env;
+                    }
+                    return $this->say($env, preg_match('/\banswer\b/', $text) ? 'I won\'t give you the answer to this one, but I can help you take a first step.' : 'Let\'s keep going with this question.', $focus);
+                }
                 $env['student_message'] = preg_match('/\b(why|how|what)\b/', $text)
                     ? 'Good question. Each step should keep both sides equal, so whatever you do to one side you do to the other. That is why we undo operations in reverse order.'
                     : 'Let\'s keep going with the algebra.';
@@ -301,7 +310,7 @@ final class MockTutor implements ProviderAdapter
     {
         $s = $ctx['TRUSTED_SESSION'];
         return [
-            'architecture_version' => '1.5',
+            'architecture_version' => '1.6',
             'session_id' => $s['session_id'],
             'state_revision' => $s['state_revision'],
             'reply_to_event_id' => $s['event_id'],

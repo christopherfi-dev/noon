@@ -18,7 +18,9 @@ use AlgebraEngine\Support\JsonSyntax;
  * problem through ProblemVerifier. Only those failures get a repair: exactly
  * one repair call, and if that fails too the caller holds the turn. The text
  * guards run on the accepted envelope and are returned as findings to log;
- * they never cause a repair. The provider's reasoning text is never read.
+ * they never cause a repair. A check problem that still shows its own answer
+ * after the repair is replaced by a prepared check problem (round 8 §3.6).
+ * The provider's reasoning text is never read.
  */
 final class TutorCoordinator
 {
@@ -82,7 +84,7 @@ final class TutorCoordinator
             $messages[] = ['role' => 'assistant', 'content' => mb_substr($text, 0, 2000)];
             $messages[] = ['role' => 'user', 'content' => 'CONTROL: That reply is not the exact activation line. Respond with only the exact line from Section 16, or the exact halt line.'];
         }
-        return ['ok' => false, 'failure' => ['type' => 'BINDING_NOT_ESTABLISHED', 'detail' => 'The provider did not return the exact architecture 1.5 activation line after one repair.']];
+        return ['ok' => false, 'failure' => ['type' => 'BINDING_NOT_ESTABLISHED', 'detail' => 'The provider did not return the exact architecture 1.6 activation line after one repair.']];
     }
 
     /**
@@ -125,11 +127,12 @@ final class TutorCoordinator
             [$env, $raw, $errors] = $this->parse($resp);
             $result = null;
             if ($errors === []) {
-                $result = $this->check($env, $raw, $expect);
+                // Round 8 §3.6: only the repaired envelope may have its check problem replaced by a prepared one.
+                $result = $this->check($env, $raw, $expect + ['substitute' => $attempt === self::MAX_REPAIRS]);
                 $errors = $result['errors'];
             }
             if ($errors === []) {
-                $log($callPurpose, $attempt === 0 ? 'ACCEPTED' : 'ACCEPTED_AFTER_REPAIR', $resp, $reasoning);
+                $log($callPurpose, $result['substitution'] !== null ? 'ACCEPTED_WITH_SUBSTITUTION' : ($attempt === 0 ? 'ACCEPTED' : 'ACCEPTED_AFTER_REPAIR'), $resp, $reasoning);
                 return ['ok' => true, 'repairs' => $repairs] + $result;
             }
             $log($callPurpose, 'REJECTED', $resp, $reasoning);
@@ -175,7 +178,7 @@ final class TutorCoordinator
     private function check(array $env, object $raw, array $x): array
     {
         $out = ['errors' => [], 'message' => '', 'problem' => null, 'move' => null, 'proposals' => [], 'findings' => [], 'card' => null,
-            'issue' => null, 'ai_prompt' => '', 'dropped_prompt_chars' => 0, 'reading' => null];
+            'issue' => null, 'ai_prompt' => '', 'dropped_prompt_chars' => 0, 'reading' => null, 'substitution' => null];
         $errors = $this->schemas->errors($raw, 'tutor-envelope.schema.json');
         if ($errors !== []) {
             $out['errors'] = $errors;
@@ -208,10 +211,14 @@ final class TutorCoordinator
             if (!($x['allow_item'] ?? true)) {
                 $errors[] = 'no problem may be posed this turn: a check question is still open (ALLOWED.may_pose_problem is false)';
             } else {
-                $v = $this->verifier->verify($item, [
+                $ctx = [
                     'recipes' => $x['recipes'] ?? [], 'used_fingerprints' => $x['used_fingerprints'] ?? [],
                     'retry_target' => $x['retry_target'] ?? null, 'limits' => $x['limits'] ?? [], 'used_number_sets' => $x['used_number_sets'] ?? [],
-                ]);
+                ];
+                $v = $this->verifier->verify($item, $ctx);
+                if (!$v['ok'] && ($v['code'] ?? null) === ProblemVerifier::ANSWER_IN_QUESTION && ($x['substitute'] ?? false)) {
+                    $v = $this->substitute($v, $item, $ctx, $x, $out);
+                }
                 if (!$v['ok']) {
                     foreach ($v['errors'] as $e) {
                         $errors[] = 'item: ' . $e;
@@ -244,9 +251,10 @@ final class TutorCoordinator
         if ($problem !== null) {
             $protected[] = $problem;
         }
-        $out['findings'] = TextGuard::findings($message, $protected, $x['verdict'] ?? null);
-        if ($problem !== null && $problem['purpose'] === 'CHECK') {
-            $out['card'] = TextGuard::beforeCheckCard($message, $problem);
+        $card = $problem !== null && $problem['purpose'] === 'CHECK';
+        $out['findings'] = TextGuard::findings($message, $protected, $x['verdict'] ?? null, $card);
+        if ($card) {
+            $out['card'] = TextGuard::beforeCheckCard($message, $problem, $x['previous'] ?? []);
             $out['findings'] = array_merge($out['findings'], $out['card']['findings']);
         }
         $out['message'] = $message;
@@ -255,6 +263,28 @@ final class TutorCoordinator
         $out['issue'] = $env['issue'];
         $out['proposals'] = $this->reviewProposals($env, $x['known_event_ids'] ?? []);
         return $out;
+    }
+
+    /**
+     * Round 8 §3.6: the repaired envelope's check problem still shows its own
+     * answer, so a prepared check problem for the same skill takes its place
+     * instead of holding the turn. The substitution is returned for the log.
+     */
+    private function substitute(array $v, array $item, array $ctx, array $x, array &$out): array
+    {
+        $rejected = $v['rejected'];
+        $sub = $this->verifier->preparedCheck($rejected, $ctx['recipes'], $ctx);
+        if ($sub === null && isset($x['prepare'])) {
+            $sub = $this->verifier->preparedCheck($rejected, ($x['prepare'])($rejected['skill_id']), $ctx);
+        }
+        if ($sub === null) {
+            return $v;
+        }
+        $out['substitution'] = [
+            'reason' => $v['errors'][0], 'skill_id' => $rejected['skill_id'], 'rejected_spec' => $item['spec'] ?? null, 'rejected_recipe_ref' => $item['recipe_ref'] ?? null,
+            'rejected_stated_answer' => $item['stated_answer'] ?? null, 'rejected_text' => $rejected['prompt'], 'prepared_ref' => $sub['ref'],
+        ];
+        return ['ok' => true, 'errors' => [], 'problem' => $sub['problem'], 'dropped_prompt_chars' => mb_strlen(trim((string) ($item['prompt'] ?? '')))];
     }
 
     /** Proposals are recorded as the AI's, never acted on; claims about goals or mastery are rejected. */

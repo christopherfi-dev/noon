@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-/** Round 7: the reviewed v1.5 architecture (architecture/Algebra_Constraint_Architecture_v1.5.md). */
-const ARCHITECTURE_SHA256 = 'd021eb2a1dba333a2caabc3efe73ae3cd2405d04e6a017716528ca5ac8b27e12';
+/** Round 8: the reviewed v1.6 architecture (architecture/Algebra_Constraint_Architecture_v1.6.md). */
+const ARCHITECTURE_SHA256 = 'c5591d3dfa6aa87bf79b026936abce724e71ec9dd3e7316c7c7991553d390b7b';
 
 /*
  * Installation preflight for the actual hosting plan (spec 05).
@@ -93,7 +93,7 @@ if ($provider === 'openai_compatible') {
 
 // Private resources
 $expected = [
-    'resources/architecture/Algebra_Constraint_Architecture_v1.5.md',
+    'resources/architecture/Algebra_Constraint_Architecture_v1.6.md',
     'resources/curriculum/algebra-map.json',
     'resources/contracts/tutor-envelope.schema.json',
     'resources/contracts/tutor-event.schema.json',
@@ -111,12 +111,12 @@ $expected = [
 foreach ($expected as $rel) {
     is_file($privateDir . '/' . $rel) ? $add('PASS', 'FILE', $rel) : $add('FAIL', 'FILE', $rel . ' is missing from the private folder.');
 }
-$arch = $privateDir . '/resources/architecture/Algebra_Constraint_Architecture_v1.5.md';
+$arch = $privateDir . '/resources/architecture/Algebra_Constraint_Architecture_v1.6.md';
 if (is_file($arch)) {
     $sha = hash_file('sha256', $arch);
     $sha === ARCHITECTURE_SHA256
-        ? $add('PASS', 'ARCHITECTURE_HASH', 'v1.5 ' . $sha)
-        : $add('FAIL', 'ARCHITECTURE_HASH', 'Architecture file differs from the reviewed v1.5 (' . $sha . ').');
+        ? $add('PASS', 'ARCHITECTURE_HASH', 'v1.6 ' . $sha)
+        : $add('FAIL', 'ARCHITECTURE_HASH', 'Architecture file differs from the reviewed v1.6 (' . $sha . ').');
 }
 
 // Storage

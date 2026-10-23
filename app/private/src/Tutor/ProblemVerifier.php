@@ -10,13 +10,14 @@ use AlgebraEngine\Math\Polynomial;
 use AlgebraEngine\Math\ScalarParser;
 
 /**
- * Problem verification (round 6 §4.2; architecture v1.5 §8). The AI proposes
+ * Problem verification (round 6 §4.2; architecture v1.6 §8). The AI proposes
  * at most one next problem per turn, as its own spec, a pre-generated recipe
  * problem, or the retry of a slipped check problem. Code computes the answer
  * and rejects the problem when the AI's stated answer differs, there is no
- * unique solution, numbers are out of range, or the problem shows its own
- * answer. Check problems must also match their skill's pattern (a recipe used
- * in reverse) and be fresh. Choice check problems come only from the contrast
+ * unique solution, or numbers are out of range. Check problems must also
+ * match their skill's pattern (a recipe used in reverse), be fresh, and not
+ * contain their own single-number answer or its opposite (round 8 §3.6:
+ * practice problems may use any numbers). Choice check problems come only from the contrast
  * recipes. The displayed wording of every problem, practice or check, is
  * rendered by code from its verified spec (round 7 §8.1), so wording and spec
  * correspond by construction; the AI's prompt is recorded, never displayed.
@@ -27,6 +28,9 @@ use AlgebraEngine\Math\ScalarParser;
  */
 final class ProblemVerifier
 {
+    /** Round 8 §3.6: the failure a prepared check problem may replace after one repair. */
+    public const ANSWER_IN_QUESTION = 'ANSWER_IN_QUESTION';
+
     public function __construct(private ProblemFactory $problems, private PatternMatcher $patterns)
     {
     }
@@ -62,10 +66,39 @@ final class ProblemVerifier
         if ($purpose === 'CHECK' && in_array(ProblemFactory::numberSet($problem), $ctx['used_number_sets'][$skill] ?? [], true)) {
             return self::fail(['a check question must stand alone: it uses the same numbers (' . ProblemFactory::numberSet($problem) . ') as a question already shown for ' . $skill . '; choose different numbers']);
         }
-        if ($purpose !== 'RETRY' && ProblemFactory::answerShownInProblem($problem)) {
-            return self::fail(['the question shows its own answer: the answer ' . $problem['answer']['expected'] . ' is also a number in the question; choose numbers so they differ']);
+        if ($purpose === 'CHECK' && ProblemFactory::answerShownInProblem($problem)) {
+            // Round 8 §3.6: check problems only; practice problems are accepted whatever their numbers.
+            return self::fail(['the question shows its own answer: the answer ' . $problem['answer']['expected'] . ' is also a number in the question; choose numbers so they differ'])
+                + ['code' => self::ANSWER_IN_QUESTION, 'rejected' => $problem];
         }
         return ['ok' => true, 'errors' => [], 'problem' => $problem, 'dropped_prompt_chars' => $dropped];
+    }
+
+    /**
+     * Round 8 §3.6: a prepared check problem for the same skill, to stand in
+     * for a check problem that still shows its own answer after one repair.
+     * It must be fresh, satisfy the rule, and for Q07 and E06 be of the same
+     * kind of question when one is prepared. Null when none is available.
+     *
+     * @param array<string,array> $recipes prepared problems keyed by reference
+     * @return array{ref:string,problem:array}|null
+     */
+    public function preparedCheck(array $rejected, array $recipes, array $ctx): ?array
+    {
+        $candidates = [];
+        foreach ($recipes as $ref => $p) {
+            if ($p['skill_id'] !== $rejected['skill_id'] || $p['response_type'] === 'classification') {
+                continue;
+            }
+            $p['purpose'] = 'CHECK';
+            if (ProblemFactory::answerShownInProblem($p) || in_array($p['fingerprint'], $ctx['used_fingerprints'] ?? [], true)
+                || in_array(ProblemFactory::numberSet($p), $ctx['used_number_sets'][$p['skill_id']] ?? [], true)) {
+                continue;
+            }
+            $candidates[] = ['ref' => (string) $ref, 'problem' => $p, 'same_kind' => $p['variant_id'] === $rejected['variant_id']];
+        }
+        usort($candidates, fn ($a, $b) => (int) $b['same_kind'] <=> (int) $a['same_kind']);
+        return $candidates === [] ? null : ['ref' => $candidates[0]['ref'], 'problem' => $candidates[0]['problem']];
     }
 
     /** @return array{0:array,1:int} */

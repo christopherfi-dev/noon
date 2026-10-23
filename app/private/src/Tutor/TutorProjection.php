@@ -82,11 +82,13 @@ final class TutorProjection
         if ($open['options'] !== null) {
             $prompt = preg_split('/\n(?=[A-D]\) )/u', $prompt)[0];
         }
+        // Round 8 §3.1: once help is recorded on a check question, the check becomes practice.
+        $purpose = $open['purpose'] === 'CHECK' && ($open['help'] ?? []) !== [] ? 'PRACTICE' : $open['purpose'];
         return [
             'problem_id' => $open['problem_id'],
             'problem_version' => $open['version'],
-            'purpose' => strtolower($open['purpose']),
-            'label' => match ($open['purpose']) {
+            'purpose' => strtolower($purpose),
+            'label' => match ($purpose) {
                 'CHECK' => self::CHECK_LABEL,
                 'RETRY' => self::RETRY_LABEL,
                 default => self::PRACTICE_LABEL,

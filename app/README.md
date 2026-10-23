@@ -1,30 +1,37 @@
-# Algebra Engine — AI tutor (round 7: architecture v1.5)
+# Algebra Engine — AI tutor (round 8: architecture v1.6)
 
 The AI runs the tutoring session as a conversation, governed by the Algebra
-Constraint Architecture **v1.5**; code is its set of instruments and keeps the
-guarantees that truth requires (`CONDUCTOR_ROUND_7.md`, `CONDUCTOR_ROUND_6_v3.md`,
-`CLAUDE.md`):
+Constraint Architecture **v1.6**; code is its set of instruments and keeps the
+guarantees that truth requires (`CONDUCTOR_ROUND_8.md`, `CONDUCTOR_ROUND_7.md`,
+`CONDUCTOR_ROUND_6_v3.md`, `CLAUDE.md`). The requirements on code moved out of
+the architecture are in `../architecture/HOST_REQUIREMENTS_v1.6.md`; they are
+never sent to the model.
 
 - code computes every answer, checks every entry and records every verdict;
 - code alone computes goals (3 check questions correct in a row without help;
   for Q07 and E06 a solve or expansion, a choice question and a new form; one
   code-confirmed slip may pause the count);
 - every problem, practice or check, is worded by code from its verified spec;
-  check questions match a pattern of their skill and stand alone; messages
-  during an open check reach the AI, and help with it comes only from
-  "I'm stuck";
+  check questions match a pattern of their skill, stand alone and never
+  contain their own single-number answer (one that does after a repair is
+  replaced by a prepared check problem); messages during an open check reach
+  the AI, and help with it, from "I'm stuck" or from a tutor reply marked as
+  help, is recorded before the reply is shown and makes the check practice;
 - the gradebook is true, and code writes the report from it; an attempt with
-  possible help before its check card, or a verdict the AI disputes, is held
-  (counted neither for nor against the goal);
+  possible help before its check card or during it (the backstop), or a
+  verdict the AI disputes, is held (counted neither for nor against the goal);
 - text guards on every learner-visible AI text (answer leaks, internal terms,
-  mastery and goal claims, claims about help, verdict contradiction) log their
-  findings and never change the text; envelopes and problems that fail
-  acceptance are repaired once, then the turn is held with a retry.
+  mastery and goal claims, claims about help, verdict contradiction) and two
+  counters (steps re-solved after a correct answer; value questions with no
+  problem posed) log their findings and never change the text; envelopes and
+  problems that fail acceptance are repaired once, then the turn is held with
+  a retry.
 
 Ten skills are available (Q07, E06, Q06, Q05, Q04, N18, N03, N04, N05, N06);
 all 205 curriculum skills stay browsable. The tests run on a **simulated
-(mock) tutor**; the round 7 live runs (`test-results/live/round7/`) are
-scripted learners against DeepSeek, not deployment or learning evidence. What is in scope and how each skill is
+(mock) tutor**; the round 7 and round 8 live runs (`test-results/live/round7/`,
+`test-results/live/round8/`) are scripted learners against DeepSeek, not
+deployment or learning evidence. What is in scope and how each skill is
 checked: `CAPABILITY_MATRIX.md`. Acceptance-scenario status:
 `ACCEPTANCE_SCENARIOS.md`. Tests retired with the beta's state machine:
 `tests/RETIRED_TESTS.md`. Deployment next to the beta: `DEPLOYMENT_VPS.md`.
@@ -38,7 +45,7 @@ app/
     bootstrap.php    loads autoloader + private config.php
     config.example.php
     src/             AlgebraEngine\ classes (see below)
-    resources/       architecture v1.5, curriculum map, runtime contracts
+    resources/       architecture v1.6, curriculum map, runtime contracts
     migrations/      SQLite schema (001–006)
     bin/             preflight.php, cleanup.php (cron)
     var/             SQLite database (git-ignored)
@@ -115,23 +122,27 @@ provider), `provider_api_key`, and `provider_thinking`:
 - `'disabled'` or `'enabled'`: the same setting on every call.
 
 The setting is always sent explicitly; temperature only when thinking is
-disabled. The adapter makes one text-mode binding call (the v1.5 activation
+disabled. The adapter makes one text-mode binding call (the v1.6 activation
 line), then JSON mode for envelopes; no function calling. Reasoning text
 (`reasoning_content`) is never read, stored, shown or sent back. Every call
 is logged with its purpose, its reasoning setting and the turn it belongs to.
 
-Live runs (conductor round 7 §10) use the session runner with the key in a
+Live runs (conductor round 8 §5) use the session runner with the key in a
 config file kept outside the repository:
 
 ```bash
-ALGEBRA_CONFIG=/path/outside/repo/config.php php tools/tutor_sessions.php --out=../test-results/live/round7/ARM --b1=2 --descent=0 --b11=1 --n1=2 --help-seeker=1 --breaker=1
+ALGEBRA_CONFIG=/path/outside/repo/config.php php tools/tutor_sessions.php --out=../test-results/live/round8/A --b1=2 --descent=0 --b11=1 --n1=2 --help-seeker=1 --breaker=1
 ```
 
 It writes one transcript per session (learner input, what the student saw,
-code's verdicts, the calls per turn with their reasoning setting, the wait)
-and `METRICS.md` (calls per turn, learner wait against §3.7, every rejected AI
-output with its text and reasons, clarifying questions, slips confirmed and
-rejected, the forward-looking audit list, HOLDs, tokens per session).
+code's verdicts, the calls per turn with their reasoning setting, the wait,
+check answers with how each was counted, help and backstop holds, guard
+findings, counters, substitutions, repairs, holds, readings) and
+`METRICS.md` (round 8 §5: goals met; check answers counted unassisted, with
+help recorded and held, each with its cause; help moves and backstop holds;
+guard findings by type and phrase by phrase; both counters; repairs, holds
+and substitutions; readings and ungraded answers to value questions; calls
+per turn, latency, empty replies and binding). No cost is estimated.
 
 Earlier live results (rounds 3–5, `../test-results/live/`) were for the
 beta's state machine and say nothing about this tutor.

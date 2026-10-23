@@ -317,12 +317,42 @@ final class LearnerInstrumentsTest extends TestCase
         $r = TextGuard::beforeCheckCard('Three times something gives the total.', $this->problems->fromRecipe('GROUPED_LINEAR', ['a' => 3, 'b' => 4, 'c' => 27], 'CHECK'));
         $this->assertSame(['3'], $r['shared'], 'a number word for a number in the new problem');
         $r = TextGuard::beforeCheckCard('That works out to 10 in the end.', $card);
-        $this->assertSame([true, ['CHECK_CARD_ANSWER']], [$r['hold'], $guards($r)], 'the check\'s answer holds the attempt');
+        $this->assertSame([true, ['CHECK_CARD_ANSWER']], [$r['hold'], $guards($r)], 'the check\'s answer, from nowhere, holds the attempt');
+        // Round 8 §3.5: the same number from the previous problem or the student's entry is a signal only.
+        $previous = $this->problems->fromRecipe('GROUPED_LINEAR', ['a' => 2, 'b' => 3, 'c' => 26], 'PRACTICE'); // 2(x + 3) = 26, x = 10
+        $r = TextGuard::beforeCheckCard('That works out to 10 in the end.', $card, ['problems' => [$previous], 'entries' => ['10']]);
+        $this->assertSame([false, ['CHECK_CARD_ANSWER_SIGNAL'], 'the previous problem\'s answer'], [$r['hold'], $guards($r), $r['answer_source']]);
+        $r = TextGuard::beforeCheckCard('You wrote 10 there.', $card, ['problems' => [], 'entries' => ['x = 10']]);
+        $this->assertSame([false, 'the student\'s entry'], [$r['hold'], $r['answer_source']]);
         $r = TextGuard::beforeCheckCard('Good. Next, try this one and remember to check both sides. When you finish, make sure you don\'t forget the sign.', $card);
         $this->assertTrue($r['hold']);
-        $this->assertSame(['next', 'try', 'remember', 'make sure', "don't forget", 'when you'], $r['phrases']);
+        $this->assertSame(['remember', 'make sure', "don't forget", 'when you'], $r['phrases'], 'round 8 §3.3: hints, methods, strategies and reminders hold, phrase by phrase');
+        $this->assertSame(['next', 'try'], $r['invitations'], 'neutral invitations are logged');
+        $r = TextGuard::beforeCheckCard('Here is one more to try.', $card);
+        $this->assertSame([false, ['CHECK_CARD_INVITATION'], ['try', 'one more']], [$r['hold'], $guards($r), $r['invitations']], 'a neutral invitation holds nothing');
         foreach (['Careful with the sign.', 'Start by dividing.', 'Use the same steps as before.', 'Here is a hint: divide.', 'Keep in mind the order.'] as $text) {
             $this->assertTrue(TextGuard::beforeCheckCard($text, $card)['hold'], 'a hint, method, strategy or reminder: ' . $text);
         }
+    }
+
+    /** Round 8 §3.4: support words in the handover sentence before a check card are not flagged; elsewhere they are. */
+    public function testHelpClaimsAndTheHandoverSentence(): void
+    {
+        $claims = fn (string $text, bool $card) => array_column(array_filter(TextGuard::findings($text, [], null, $card), fn ($f) => $f['guard'] === 'HELP_CLAIM'), 'phrases');
+        $this->assertSame([], $claims('Correct. Here is one more to try on your own.', true));
+        $this->assertSame([['on your own']], $claims('Correct. Here is one more to try on your own.', false), 'not followed by a card: flagged');
+        $this->assertSame([['independently']], $claims('You solved that independently. Here is one to try by yourself.', true), 'earlier sentences are flagged');
+        $this->assertSame(['by yourself'], TextGuard::handoverSupportWords('You solved that independently. Here is one to try by yourself.'));
+    }
+
+    /** Round 8 §3.2: the backstop reads the check's expression, its numbers and its answer in text shown during it. */
+    public function testTextDuringAnOpenCheck(): void
+    {
+        $check = $this->problems->fromRecipe('GROUPED_LINEAR', ['a' => 4, 'b' => -3, 'c' => 28], 'CHECK');
+        $this->assertSame(['expression' => false, 'numbers' => [], 'answer' => false], TextGuard::duringCheck('I can\'t give hints on this one. Use "I\'m stuck" if you need one.', $check));
+        $b = TextGuard::duringCheck('Look at 4(x − 3) = 28: what is being done to x?', $check);
+        $this->assertSame([true, ['4', '3', '28']], [$b['expression'], $b['numbers']]);
+        $this->assertSame(['28'], TextGuard::duringCheck('What could you do to both sides of the 28?', $check)['numbers']);
+        $this->assertTrue(TextGuard::duringCheck('It comes to 10.', $check)['answer']);
     }
 }

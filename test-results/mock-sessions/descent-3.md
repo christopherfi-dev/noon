@@ -2,19 +2,19 @@
 
 | # | Learner input | Calls (purpose: reasoning setting) | Outcomes | Wait ms |
 |---|---|---|---|---|
-| 0 | (start on Q07) | 2 — BINDING: disabled (binding call); REPLY: disabled (per call: none of the three cases) | ACCEPTED, ACCEPTED | 10 |
-| 1 | 49/8 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
-| 2 | 2x+14 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
-| 3 | 4x+16 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
-| 4 | I'm stuck: HINT | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
-| 5 | A,C | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
-| 6 | 2x+8 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
-| 7 | B,C | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 10 |
-| 8 | 21x+56 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 15 |
-| 9 | 12 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 16 |
-| 10 | 5 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 21 |
-| 11 | A | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 25 |
-| 12 | 11 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 13 |
+| 0 | (start on Q07) | 2 — BINDING: disabled (binding call); REPLY: disabled (per call: none of the three cases) | ACCEPTED, ACCEPTED | 6 |
+| 1 | 49/8 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
+| 2 | 2x+14 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
+| 3 | 4x+16 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 4 | I'm stuck: HINT | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 5 | A,C | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 6 | 2x+8 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 7 | B,C | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
+| 8 | 21x+56 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
+| 9 | 12 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 10 | 5 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 11 | A | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 11 |
+| 12 | 11 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
 
 ## Conversation as the student saw it (the last 80 lines the session keeps)
 
@@ -71,18 +71,18 @@
 | Field | Text | Answered problem (attempt) | Open problem |
 |---|---|---|---|
 | student_message | Let's work on solve equations containing parentheses. Start with this practice question, and tell me if anything is unclear. | — | — |
-| student_message | Your answer multiplied only the first term inside the parentheses by 8. Let's practise that part on its own first. What happens to each term inside the parentheses? | prb_151ae4a61ab3f850271d0726 (evt_48bf0d4851852fcf74eb55c4) | — |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_3b4ddda3741e57e786766cdb (evt_2d7e383ac13300bed730c1bd) | — |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_354382f7c7aff5393deea9f9 (evt_71970fdcd3f1aa6060735a9d) | — |
-| student_message | Here is a hint: look at what is being done to x, and in what order. What could you undo first while keeping both sides equal? | prb_354382f7c7aff5393deea9f9 (evt_71970fdcd3f1aa6060735a9d) | prb_cb66542771556343c4429a09 check |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_cb66542771556343c4429a09 (evt_fc9959db0dc517c478b5e554) | — |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_bb0ed54f1ad36b0cec7a89b2 (evt_b95819a05242c5c57b8b5ec5) | — |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_f4315e4a5a27cd046d681797 (evt_185abfe1fd84572ac9741442) | — |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. Let's go back to the topic you started with. | prb_a5f15c53020acb0a686127b2 (evt_5220b706936de453664ab068) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_e39dbd73257cea3929d84dde (evt_93e42d8960c5745829064c3f) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_4f9711c947eb9100d9e9fb85 (evt_5f6d7cad8b59209bc821ac81) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_6dd09fce4178443d4fc33a95 (evt_da3eb932fdd73ff4b0cc7311) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. That completes the work planned for this session. You can look at your summary now. | prb_8c793d09a619a01a4ca1e8f6 (evt_b106584eba0fa3bc6d8fcc48) | — |
+| student_message | Your answer multiplied only the first term inside the parentheses by 8. Let's practise that part on its own first. What happens to each term inside the parentheses? | prb_1a0e83567971ed82f142ea74 (evt_f8879c81c35fe4326b63dede) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_0ff79d680da0644f973dcdf3 (evt_447f1c046f6d957e3bd44ad1) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_62906a6090114ac535f0fdc0 (evt_a5561ff6478eb09554d43c25) | — |
+| student_message | Here is a hint: look at what is being done to x, and in what order. What could you undo first while keeping both sides equal? | prb_62906a6090114ac535f0fdc0 (evt_a5561ff6478eb09554d43c25) | prb_5d0768e763cdf4151bb09564 check |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_5d0768e763cdf4151bb09564 (evt_6ca4423a49d04b0a93c49752) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_4b553dbf63a48c02738ae059 (evt_73409214a58549c41fb79c9e) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_25a5154a862ccd6abfb754a6 (evt_7e5815808fc894c315c2c21d) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. Let's go back to the topic you started with. | prb_1bd6c4442eb6d197552b0437 (evt_03213448cabe14372edb39b8) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_2a6aba308dd6203e1eafc0db (evt_6e1e9f33bf674e1d726d4d06) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_81ff9dda1d70b4e5f3cc90bf (evt_c8fc65d2c4e4179b318091dd) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_df1b9d0a94fc1c57ef5ebf8d (evt_075964386f274de89d911895) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. That completes the work planned for this session. You can look at your summary now. | prb_0b750e53739ef64f00eb6c91 (evt_f84d5e498735a5c7d64b3bd7) | — |
 
 ## Verdicts recorded by code
 
@@ -100,7 +100,33 @@
 | Here is an equation: 8(x + 4) = 56. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply both terms in the parentheses by 8: 8x + 32 = 56 / B) Multiply only the x by 8: 8x + 4 = 56 / C) Divide only the left side by 8: x + 4 = 56 / D) Subtract 4 to undo the 4: 8x = 52 | CHECK | A | A | CORRECT |  |  |  |
 | Solve 5(x − 5) + 13 = 43 for x. | CHECK | 11 | 11 | CORRECT |  |  |  |
 
+## Check answers (round 8 §5)
+
+| Check problem | Entry | Verdict | Counted as |
+|---|---|---|---|
+| Expand 4(x + 4). Write your answer without parentheses. | 4x+16 | CORRECT | counted unassisted |
+| Which of these expressions are equal to 4(x + 7) for every value of x? Select every one that is. / A) 4x + 28 / B) 4x + 7 / C) 4 · x + 4 · 7 / D) x + 11 | A,C | CORRECT | with help: I'm stuck: HINT |
+| Expand 2(x + 4). Write your answer without parentheses. | 2x+8 | CORRECT | counted unassisted |
+| Which of these expressions are equal to 5(x + 1) for every value of x? Select every one that is. / A) x + 5 / B) 5 · x + 5 · 1 / C) 5x + 5 / D) x + 6 | B,C | CORRECT | counted unassisted |
+| Expand 7(3x + 8). Write your answer without parentheses. | 21x+56 | CORRECT | counted unassisted |
+| Solve 2(x − 9) = −8 for x. | 5 | CORRECT | counted unassisted |
+| Here is an equation: 8(x + 4) = 56. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply both terms in the parentheses by 8: 8x + 32 = 56 / B) Multiply only the x by 8: 8x + 4 = 56 / C) Divide only the left side by 8: x + 4 = 56 / D) Subtract 4 to undo the 4: 8x = 52 | A | CORRECT | counted unassisted |
+| Solve 5(x − 5) + 13 = 43 for x. | 11 | CORRECT | counted unassisted |
+
+## Help on open check problems and backstop holds
+
+- Help moves on open checks: HINT 1
+- Help recorded on Which of these expressions are equal to 4(x + 7) for every value of x? Select every one that is. / A) 4x + 28 / B) 4x + 7 / C) 4 · x + 4 · 7 / D) x + 11 (check): I'm stuck: HINT
+
 ## Guard findings (logged; the text was shown unchanged)
+
+None.
+
+## Counters (logged only)
+
+None.
+
+## Prepared-problem substitutions
 
 None.
 
@@ -121,7 +147,7 @@ None.
 - STEP_BACK → E06 (from Q07): scripted mock policy
 - POSE_PROBLEM → E06 (from E06): scripted mock policy
 - POSE_PROBLEM → E06 (from E06): scripted mock policy
-- HINT → E06 (from E06): scripted mock policy
+- HINT (help on an open check) → E06 (from E06): scripted mock policy
 - POSE_PROBLEM → E06 (from E06): scripted mock policy
 - POSE_PROBLEM → E06 (from E06): scripted mock policy
 - POSE_PROBLEM → E06 (from E06): scripted mock policy

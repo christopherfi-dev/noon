@@ -21,12 +21,12 @@ final class TutorPrompt
     /**
      * Round 7 §3: the output contract, and nothing else. It defines the
      * envelope's fields and when each value is valid; every behaviour rule is
-     * the architecture's.
+     * the architecture's. Round 8 §3.1 adds the to_mode value HELP.
      */
     public const OUTPUT_CONTRACT = <<<'TXT'
 OUTPUT CONTRACT
 Reply with exactly one JSON object that follows OUTPUT_CONTRACT in the JSON block. No prose outside it, no Markdown fences.
-Identity: copy session_id and state_revision from TRUSTED_SESSION, and reply_to_event_id from TRUSTED_SESSION.event_id, exactly. architecture_version is "1.5".
+Identity: copy session_id and state_revision from TRUSTED_SESSION, and reply_to_event_id from TRUSTED_SESSION.event_id, exactly. architecture_version is "1.6".
 Fields:
 - message_type: QUESTION when item is not null; FEEDBACK when item is null; CONTROL when TURN.kind is READING. REPORT and HOLD are not used.
 - student_message: the learner-facing text. For a READING turn it is the empty string.
@@ -40,7 +40,7 @@ Fields:
   - source retry: purpose retry, valid only when SLIP.retry_available is true; skill_id is SLIP.skill_id; recipe_ref, spec and stated_answer are null.
   - prompt: a string, which may be empty. Code renders the displayed wording of every problem from its spec; this value is recorded and not displayed.
   - Any item is valid only when ALLOWED.may_pose_problem is true. A check item is valid only when ALLOWED.may_pose_check is true; a check spec matches that skill's pattern in CHECK_PATTERNS, and a choice check question is a prepared problem.
-- proposed_transition: null, or {to_mode, target_skill_id, reason, evidence_event_ids}. to_mode is one of the values in OUTPUT_CONTRACT.allowed_values. target_skill_id is one of the ten skills in CURRICULUM, or null. SLIP_CHECK is valid only when SLIP.confirmed is true, and an item posed with it has purpose practice. reason is a short string. evidence_event_ids lists attempt_id values from this request, or is empty.
+- proposed_transition: null, or {to_mode, target_skill_id, reason, evidence_event_ids}. to_mode is one of the values in OUTPUT_CONTRACT.allowed_values; HELP means you helped with the open check problem. target_skill_id is one of the ten skills in CURRICULUM, or null. SLIP_CHECK is valid only when SLIP.confirmed is true, and an item posed with it has purpose practice. reason is a short string. evidence_event_ids lists attempt_id values from this request, or is empty.
 - evidence_proposals: a list, possibly empty, of {kind, statement, evidence_event_ids, hypothesis_status}. kind is OBSERVATION, HYPOTHESIS or INSTRUCTIONAL_TRIAL. hypothesis_status is UNRESOLVED, PROVISIONAL, SUPPORTED_FOR_OBSERVED_PATTERN or CONTRADICTED for a HYPOTHESIS, and null otherwise.
 - resource_requests: a list, possibly empty, of {skill_id, purpose}.
 - teacher_report: null.

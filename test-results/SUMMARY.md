@@ -1,24 +1,24 @@
 # Test run summary
 
-PHP for every PHP step: `PHP 8.0.30 (cli) (built: Oct 23 2026 08:17:27) ( NTS )`
+PHP for every PHP step: `PHP 8.0.30 (cli) (built: Oct 23 2026 12:49:33) ( NTS )`
 
-PHP for the bundle build only: `PHP 8.0.30 (cli) (built: Oct 23 2026 08:17:27) ( NTS )`
+PHP for the bundle build only: `PHP 8.0.30 (cli) (built: Oct 23 2026 12:49:33) ( NTS )`
 
 | Step | Started (UTC) | Finished (UTC) | Exit | Output |
 |---|---|---|---|---|
-| F1 manifest (before preflight) | 2026-10-23T08:59:30Z | 2026-10-23T08:59:30Z | 0 | `00-manifest-before.txt` |
-| Handoff preflight | 2026-10-23T08:59:30Z | 2026-10-23T08:59:30Z | 0 | `01-handoff-preflight.txt` |
-| Curriculum validator | 2026-10-23T08:59:30Z | 2026-10-23T08:59:30Z | 0 | `02-curriculum-validate.txt` |
-| Curriculum guard tests | 2026-10-23T08:59:30Z | 2026-10-23T08:59:31Z | 0 | `02-curriculum-guards.txt` |
-| F1 manifest (after preflight) | 2026-10-23T08:59:31Z | 2026-10-23T08:59:31Z | 0 | `00-manifest-after.txt` |
-| App preflight | 2026-10-23T08:59:31Z | 2026-10-23T08:59:31Z | 0 | `03-app-preflight.txt` |
-| PHPUnit unit + integration | 2026-10-23T08:59:31Z | 2026-10-23T08:59:45Z | 0 | `04-phpunit.txt` |
-| Mock tutor sessions (calls per turn) | 2026-10-23T08:59:45Z | 2026-10-23T08:59:47Z | 0 | `04b-mock-sessions.txt` |
-| Browser (conversation UI, 360/390/1280) | 2026-10-23T08:59:47Z | 2026-10-23T09:00:11Z | 0 | `05-browser.txt` |
-| Bundle build (side-by-side VPS) | 2026-10-23T09:00:11Z | 2026-10-23T09:00:13Z | 0 | `06-bundle-build.txt` |
-| Bundle smoke (deploy layout) | 2026-10-23T09:00:13Z | 2026-10-23T09:00:15Z | 0 | `07-bundle-smoke.txt` |
-| Key-leak scan (tracked files + ZIP) | 2026-10-23T09:00:15Z | 2026-10-23T09:00:15Z | 0 | `09-key-leak-scan.txt` |
+| F1 manifest (before preflight) | 2026-10-23T13:09:39Z | 2026-10-23T13:09:39Z | 0 | `00-manifest-before.txt` |
+| Handoff preflight | 2026-10-23T13:09:39Z | 2026-10-23T13:09:39Z | 0 | `01-handoff-preflight.txt` |
+| Curriculum validator | 2026-10-23T13:09:39Z | 2026-10-23T13:09:40Z | 0 | `02-curriculum-validate.txt` |
+| Curriculum guard tests | 2026-10-23T13:09:40Z | 2026-10-23T13:09:40Z | 0 | `02-curriculum-guards.txt` |
+| F1 manifest (after preflight) | 2026-10-23T13:09:40Z | 2026-10-23T13:09:40Z | 0 | `00-manifest-after.txt` |
+| App preflight | 2026-10-23T13:09:40Z | 2026-10-23T13:09:40Z | 0 | `03-app-preflight.txt` |
+| PHPUnit unit + integration | 2026-10-23T13:09:40Z | 2026-10-23T13:09:50Z | 0 | `04-phpunit.txt` |
+| Mock tutor sessions (calls per turn) | 2026-10-23T13:09:50Z | 2026-10-23T13:09:51Z | 0 | `04b-mock-sessions.txt` |
+| Browser (conversation UI, 360/390/1280) | 2026-10-23T13:09:51Z | 2026-10-23T13:10:09Z | 0 | `05-browser.txt` |
+| Bundle build (side-by-side VPS) | 2026-10-23T13:10:09Z | 2026-10-23T13:10:11Z | 0 | `06-bundle-build.txt` |
+| Bundle smoke (deploy layout) | 2026-10-23T13:10:11Z | 2026-10-23T13:10:12Z | 0 | `07-bundle-smoke.txt` |
+| Key-leak scan (tracked files + ZIP) | 2026-10-23T13:10:12Z | 2026-10-23T13:10:12Z | 0 | `09-key-leak-scan.txt` |
 
-Note: the F1 manifest check lists only ruled differences (architecture/CHANGELOG.md, TEACHER_FACILITATOR_GUIDE_DRAFT.md, CLAUDE.md and architecture/Algebra_Constraint_Architecture_v1.3.md and v1.5.md; round 6 §0.6, round 7 §2.5), and HANDOFF_PREFLIGHT_REPORT.json is restored after the preflight rewrites it; see BUILD_LOG.md.
+Note: the F1 manifest check lists only ruled differences (architecture/CHANGELOG.md, TEACHER_FACILITATOR_GUIDE_DRAFT.md, CLAUDE.md, architecture/Algebra_Constraint_Architecture_v1.3.md, v1.5.md and v1.6.md, and architecture/HOST_REQUIREMENTS_v1.6.md; round 6 §0.6, round 7 §2.5, round 8 §2), and HANDOFF_PREFLIGHT_REPORT.json is restored after the preflight rewrites it; see BUILD_LOG.md.
 
-Every result here is from mock mode (simulated tutor). Live runs need a key and are not part of this runner; the round 7 live runs are in `test-results/live/round7/` (`app/tools/tutor_sessions.php` with a live config).
+Every result here is from mock mode (simulated tutor). Live runs need a key and are not part of this runner; the round 7 and round 8 live runs are in `test-results/live/round7/` and `test-results/live/round8/` (`app/tools/tutor_sessions.php` with a live config).

@@ -5,7 +5,9 @@
         {
             "input": "(start on Q06)",
             "status": 200,
-            "ms": 12,
+            "ms": 7,
+            "value_answer": false,
+            "graded": false,
             "calls": 2,
             "purposes": [
                 "BINDING",
@@ -24,7 +26,9 @@
         {
             "input": "idk",
             "status": 200,
-            "ms": 10,
+            "ms": 6,
+            "value_answer": false,
+            "graded": false,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -40,7 +44,9 @@
         {
             "input": "(((",
             "status": 200,
-            "ms": 9,
+            "ms": 6,
+            "value_answer": false,
+            "graded": false,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -56,7 +62,9 @@
         {
             "input": "x = 6",
             "status": 200,
-            "ms": 12,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -72,7 +80,9 @@
         {
             "input": "can you explain why that works?",
             "status": 200,
-            "ms": 12,
+            "ms": 7,
+            "value_answer": false,
+            "graded": false,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -88,7 +98,9 @@
         {
             "input": "???",
             "status": 200,
-            "ms": 7,
+            "ms": 8,
+            "value_answer": false,
+            "graded": false,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -104,7 +116,9 @@
         {
             "input": "8.0",
             "status": 200,
-            "ms": 10,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -121,6 +135,8 @@
             "input": "-3?",
             "status": 200,
             "ms": 9,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -136,7 +152,27 @@
         {
             "input": "-10",
             "status": 200,
-            "ms": 8,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -150,10 +186,32 @@
             "counted": true
         }
     ],
+    "goals_met": [
+        "Q06"
+    ],
+    "check_answers": {
+        "unassisted": 3,
+        "unassisted_correct": 3,
+        "with_help": 1,
+        "held": 0
+    },
+    "check_causes": {
+        "with_help": {
+            "tutor move HELP": 1
+        },
+        "held": []
+    },
+    "help_moves_on_open_checks": {
+        "HELP": 1
+    },
+    "backstop_holds": 0,
     "guards": [],
+    "guard_phrases": [],
+    "counters": [],
     "repairs": [],
     "holds": [],
     "held_attempts": [],
+    "substitutions": 0,
     "readings": {
         "sent_for_reading": 0,
         "accepted": 0,
@@ -162,6 +220,8 @@
         "clarifying_questions_shown": 0,
         "not_an_answer": 0
     },
+    "ungraded_value_answers": 0,
+    "value_answers_graded": 0,
     "empty_replies": 0,
     "binding": {
         "calls": 1,
@@ -170,17 +230,7 @@
             "ACCEPTED"
         ]
     },
-    "calls": 10,
-    "tokens": {
-        "prompt": 0,
-        "cached": 0,
-        "completion": 0,
-        "reasoning": 0
-    },
-    "cost_usd": 0,
+    "calls": 11,
     "finish_length": 0,
-    "attempts": 4,
-    "goals_met": [
-        "Q06"
-    ]
+    "attempts": 5
 }

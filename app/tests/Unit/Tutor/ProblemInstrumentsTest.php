@@ -170,10 +170,17 @@ final class ProblemInstrumentsTest extends TestCase
         // A spec with no recipe gets the default wording for its kind.
         $r = $this->verifier->verify($this->spec('practice', 'N18', 'numeric_step', '7 * 5', '35', 'Wait, what is seven times 5?'), $this->ctx());
         $this->assertSame('Calculate 7 × 5.', $r['problem']['prompt']);
-        // A question whose answer is a number shown in it is rejected (round 5.1 post-beta item).
+        // Round 8 §3.6: a practice problem is accepted whatever its numbers, even when its answer is a number shown in it.
         $r = $this->verifier->verify($this->spec('practice', 'Q07', 'linear_equation', '3(x + 3) = 18', '3', 'Solve 3(x + 3) = 18.'), $this->ctx());
-        $this->assertFalse($r['ok']);
-        $this->assertStringContainsString('answer', $r['errors'][0]);
+        $this->assertTrue($r['ok'], implode('; ', $r['errors']));
+        // A check problem whose single-number answer, or its opposite, is a number in it is rejected, with a code a substitution can act on.
+        foreach ([['3(x + 3) = 18', '3'], ['5(x + 8) = 15', '-5']] as [$expr, $answer]) {
+            $r = $this->verifier->verify($this->spec('check', 'Q07', 'linear_equation', $expr, $answer, ''), $this->ctx());
+            $this->assertFalse($r['ok'], $expr);
+            $this->assertStringContainsString('shows its own answer', $r['errors'][0]);
+            $this->assertSame(ProblemVerifier::ANSWER_IN_QUESTION, $r['code']);
+            $this->assertSame('Q07', $r['rejected']['skill_id']);
+        }
     }
 
     public function testRecipeChoicesAndFreshness(): void
@@ -205,19 +212,19 @@ final class ProblemInstrumentsTest extends TestCase
         $this->assertNotContains($recipes[$ref]['fingerprint'], array_column($again, 'fingerprint'));
     }
 
-    public function testPregeneratedProblemsRarelyShowTheirAnswer(): void
+    /** Round 8 §3.6: every prepared problem may become a check problem, so every one satisfies the check rule. */
+    public function testPreparedProblemsSatisfyTheCheckRule(): void
     {
         $rec = new Recipes($this->problems);
-        $shown = 0;
         $total = 0;
-        foreach (range(1, 40) as $i) {
-            foreach ($rec->pregenerate(['Q04', 'Q05', 'Q06', 'Q07', 'N03', 'N04', 'N05', 'N06', 'N18', 'E06'], RandomSource::seeded('coincide' . $i), []) as $p) {
+        foreach (range(1, 200) as $i) {
+            $needed = $i % 2 === 0 ? ['Q07' => ['transfer', 'contrast'], 'E06' => ['transfer', 'contrast']] : [];
+            foreach ($rec->pregenerate(['Q04', 'Q05', 'Q06', 'Q07', 'N03', 'N04', 'N05', 'N06', 'N18', 'E06'], RandomSource::seeded('coincide' . $i), [], $needed) as $p) {
                 $total++;
-                $shown += ProblemFactory::answerShownInProblem($p) ? 1 : 0;
+                $this->assertFalse(ProblemFactory::answerShownInProblem(['purpose' => 'CHECK'] + $p), 'a prepared problem shows its own answer: ' . $p['prompt']);
             }
         }
-        $this->assertSame(800, $total);
-        $this->assertLessThan(8, $shown, 'the answer is a number shown in the problem only when no alternative was found');
+        $this->assertSame(4000, $total, 'two prepared problems per skill every time');
     }
 
     public function testRetryOnlyAfterASlip(): void

@@ -1,25 +1,41 @@
-# Acceptance scenarios — status in the AI tutor (round 6, updated for round 7)
+# Acceptance scenarios — status in the AI tutor (round 6, updated for rounds 7 and 8)
 
 Source: `contracts/acceptance-scenarios.json` (53 scenarios). Map file: `app/tests/acceptance-map.json` (checked by `tests/Integration/ScenarioMapTest.php`). Every result is from mock mode (the scripted mock tutor); none is a live-provider, deployment or learning result.
 
 The beta's own tests (B1–B16, P3, the round UI checks) asserted the retired state machine's sequencing or its fixed lines; they are listed with one-line reasons and their replacements in `tests/RETIRED_TESTS.md`.
 
+## Round 8 tests (CONDUCTOR_ROUND_8.md §4)
+
+| Item | What is checked | Test |
+|---|---|---|
+| Help request on an open check | The reply is shown; HELP_GIVEN (source TUTOR_MOVE) is recorded before it; the check becomes practice; the answer does not count | `CheatingTest::testAHelpRequestDuringAnOpenCheckIsHelpedAndRecorded`; browser journey |
+| HINT, EXPLAIN, ANSWER_QUESTION on an open check | Each counts as help in the same way; the same move with no check open records nothing | `CheatingTest::testHintExplainAndAnswerQuestionDuringAnOpenCheckCountAsHelp` |
+| Backstop | Text during an open check with its numbers or expression and no help move holds the check (HELP_DURING_CHECK); a refusal with no numbers records nothing and the answer counts | `CheatingTest::testTheBackstopDuringAnOpenCheck`, `::testAnAnswerLeakDuringAnOpenCheckHoldsTheAttempt`; `LearnerInstrumentsTest::testTextDuringAnOpenCheck` |
+| Handover before a check card | "Here is one more to try on your own." holds nothing (CHECK_CARD_INVITATION logged, phrase by phrase) and raises no help claim; support words elsewhere are flagged | `CheatingTest::testANeutralHandoverBeforeACheckCard`; `LearnerInstrumentsTest::testHelpClaimsAndTheHandoverSentence`, `::testTextBeforeACheckCard` |
+| Answer before a check card | Equal to the check's answer and from the previous answer: logged only (CHECK_CARD_ANSWER_SIGNAL); from nowhere: held | `CheatingTest::testTheCheckAnswerBeforeACardFromThePreviousAnswerIsASignal`, `::testTextBeforeACheckCardWithItsAnswerHoldsTheAttempt` |
+| Answer in the question | A practice problem is accepted; a check problem is repaired once, then replaced by a prepared check problem, logged, with no hold; prepared problems satisfy the rule | `CheatingTest::testAnAnswerInTheQuestionAcceptedForPracticeAndReplacedForACheck`; `ProblemInstrumentsTest::testPracticeWordingIsRenderedByCodeFromTheSpec`, `::testPreparedProblemsSatisfyTheCheckRule` |
+| Counters | RESOLVE_AFTER_CORRECT and VALUE_QUESTION_IN_TEXT fire on built cases and log only; plain feedback records nothing | `TutorLoopTest::testTheTwoCountersLogOnly` |
+| What the model receives | Only the architecture, the output contract, the activation exchange and the JSON block; no host-requirements, changelog, CLAUDE.md or conductor text | `TutorLoopTest::testNoHostRequirementsChangelogClaudeOrConductorTextReachesAModelRequest`; bundle smoke (no such file in the upload) |
+| v1.6 binding | The app loads v1.6 only; a session bound to 1.5 is rebound; HELP is a field value in the output contract | `HostTest::testHost13BindingModes`, `HostTest::testASessionBoundTo15IsReboundTo16`, `EngineUnitsTest::testTheOutputContractHoldsNoBehaviourRules` |
+
 ## Round 7 tests (CONDUCTOR_ROUND_7.md §9)
+
+Where round 8 changed the behaviour (messages during an open check, "next" and "try", the v1.5 binding), the round 8 rows above replace these.
 
 | Item | What is checked | Test |
 |---|---|---|
 | Shared number before a check | Logged as a signal (CHECK_CARD_SHARED_NUMBER); no hold, no repair; the attempt counts | `CheatingTest::testTextBeforeACheckCardSharesANumber` |
 | Strategy phrase or answer before a check | Logged, text shown unchanged, attempt held (counts neither for nor against the goal) | `CheatingTest::testTextBeforeACheckCardWithAStrategyPhraseHoldsTheAttempt`, `::testTextBeforeACheckCardWithItsAnswerHoldsTheAttempt` |
-| Message during an open check | Reaches the AI; the check stays open and unassisted | `CheatingTest::testAFreeTextMessageDuringAnOpenCheckProblem`; browser journey |
+| Message during an open check | Reaches the AI (round 8: a help move records help; numbers without one hold the check) | `CheatingTest::testAHelpRequestDuringAnOpenCheckIsHelpedAndRecorded`, `::testTheBackstopDuringAnOpenCheck` |
 | "I'm stuck" during a check | Recorded as assisted before the AI call (also when the call fails) | `CheatingTest::testIAmStuckDuringACheckIsRecordedBeforeTheAiCall` |
-| Typed "idk" during a check | A message, not help | `CheatingTest::testTypedIdkDuringACheckIsAMessageNotHelp` |
+| Typed "idk" during a check | A message; code never classifies it as help (only the tutor's help move records help) | `CheatingTest::testTypedIdkDuringACheckIsAMessageNotCodeClassifiedHelp` |
 | Readings | `16 because it's 4 x 4` → 16 accepted; `2 x x + 2` → 2x, `2x plus 2` → 2x, `2(x + 1)` → 2x + 1, `2 - 5` → 5 - 2, `minus five` → 5 rejected; `twenty five` is 25; `3 = x` is correct | `OwnerCasesTest::testReadingsAreAcceptedOnlyWhenTheyReExpressTheEntry`, `::testNumberWordsAndReversedEquations`; `LearnerInstrumentsTest` |
 | Hold after a failed repair | HOLD with a retry; HOLD_LINE is the only code-written line | `TutorLoopTest::testHoldAfterTheRepairFailsToo`, `HostTest::testHost05EmptyAndTruncatedOutput`, `EngineUnitsTest::testCodeLinesUseNoInternalVocabulary` |
 | Verdict conflict | An `issue` of type VERIFICATION_CONFLICT holds the attempt; the report says "result under review" | `CheatingTest::testAVerdictConflictHoldsTheAttempt` |
 | Text guards log | Each finding recorded with the exact text, guard, problem and response; text shown unchanged; never repaired | `CheatingTest` (`loggedAndShown`), `LiveAdapterTest::testEmptyContentIsRepairedAndInternalWordsAreLogged` |
 | Output contract | The second system message holds only the output contract | `EngineUnitsTest::testTheOutputContractHoldsNoBehaviourRules` |
 | Problem identity | ANSWERED_PROBLEM and OPEN_PROBLEM carry id, version and text; both logged with each AI message | `TutorLoopTest::testAnsweredAndOpenProblemIdentities` |
-| v1.5 binding | The app loads v1.5 only; a session bound to 1.3 is rebound | `HostTest::testHost13BindingModes`, `HostTest::testASessionBoundTo13IsReboundTo15` |
+| v1.5 binding (round 7; now v1.6, above) | The app loaded v1.5 only; a session bound to 1.3 was rebound | `HostTest::testHost13BindingModes` (now v1.6) |
 
 ## Round 6 Stage 1 tests (conductor §9)
 

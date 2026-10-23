@@ -5,7 +5,9 @@
         {
             "input": "(start on Q07)",
             "status": 200,
-            "ms": 29,
+            "ms": 21,
+            "value_answer": false,
+            "graded": false,
             "calls": 2,
             "purposes": [
                 "BINDING",
@@ -25,6 +27,8 @@
             "input": "2",
             "status": 200,
             "ms": 12,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -40,7 +44,9 @@
         {
             "input": "-3",
             "status": 200,
-            "ms": 11,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -56,7 +62,9 @@
         {
             "input": "A",
             "status": 200,
-            "ms": 10,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -72,7 +80,9 @@
         {
             "input": "6",
             "status": 200,
-            "ms": 10,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -89,6 +99,8 @@
             "input": "2",
             "status": 200,
             "ms": 10,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -104,7 +116,9 @@
         {
             "input": "9",
             "status": 200,
-            "ms": 12,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -120,7 +134,9 @@
         {
             "input": "4",
             "status": 200,
-            "ms": 11,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -136,7 +152,9 @@
         {
             "input": "-5",
             "status": 200,
-            "ms": 14,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -152,7 +170,9 @@
         {
             "input": "7",
             "status": 200,
-            "ms": 15,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -168,7 +188,9 @@
         {
             "input": "A,D",
             "status": 200,
-            "ms": 13,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -184,7 +206,9 @@
         {
             "input": "11",
             "status": 200,
-            "ms": 12,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -198,10 +222,29 @@
             "counted": true
         }
     ],
+    "goals_met": [
+        "Q07",
+        "Q06"
+    ],
+    "check_answers": {
+        "unassisted": 8,
+        "unassisted_correct": 7,
+        "with_help": 0,
+        "held": 0
+    },
+    "check_causes": {
+        "with_help": [],
+        "held": []
+    },
+    "help_moves_on_open_checks": [],
+    "backstop_holds": 0,
     "guards": [],
+    "guard_phrases": [],
+    "counters": [],
     "repairs": [],
     "holds": [],
     "held_attempts": [],
+    "substitutions": 0,
     "readings": {
         "sent_for_reading": 0,
         "accepted": 0,
@@ -210,6 +253,8 @@
         "clarifying_questions_shown": 0,
         "not_an_answer": 0
     },
+    "ungraded_value_answers": 0,
+    "value_answers_graded": 0,
     "empty_replies": 0,
     "binding": {
         "calls": 1,
@@ -219,17 +264,6 @@
         ]
     },
     "calls": 13,
-    "tokens": {
-        "prompt": 0,
-        "cached": 0,
-        "completion": 0,
-        "reasoning": 0
-    },
-    "cost_usd": 0,
     "finish_length": 0,
-    "attempts": 11,
-    "goals_met": [
-        "Q07",
-        "Q06"
-    ]
+    "attempts": 11
 }

@@ -5,7 +5,9 @@
         {
             "input": "(start on E06)",
             "status": 200,
-            "ms": 12,
+            "ms": 5,
+            "value_answer": false,
+            "graded": false,
             "calls": 2,
             "purposes": [
                 "BINDING",
@@ -22,9 +24,11 @@
             "counted": true
         },
         {
-            "input": "2X + 11",
+            "input": "3X + 7",
             "status": 200,
-            "ms": 10,
+            "ms": 5,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -38,9 +42,11 @@
             "counted": true
         },
         {
-            "input": "8 x x + 80",
+            "input": "4 x x + 16",
             "status": 200,
-            "ms": 14,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
             "calls": 2,
             "purposes": [
                 "READING",
@@ -57,9 +63,11 @@
             "counted": true
         },
         {
-            "input": "3x + 7",
+            "input": "3x + 14",
             "status": 200,
-            "ms": 10,
+            "ms": 12,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -73,9 +81,11 @@
             "counted": true
         },
         {
-            "input": "6 because I worked it out in my head",
+            "input": "24 because I worked it out in my head",
             "status": 200,
-            "ms": 13,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
             "calls": 2,
             "purposes": [
                 "READING",
@@ -94,7 +104,9 @@
         {
             "input": "is there a quicker way to do these?",
             "status": 200,
-            "ms": 9,
+            "ms": 6,
+            "value_answer": false,
+            "graded": false,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -108,9 +120,11 @@
             "counted": true
         },
         {
-            "input": "3x+6",
+            "input": "3x+24",
             "status": 200,
-            "ms": 10,
+            "ms": 6,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -124,9 +138,11 @@
             "counted": true
         },
         {
-            "input": "9x+27",
+            "input": "8x+88",
             "status": 200,
-            "ms": 10,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -140,9 +156,11 @@
             "counted": true
         },
         {
-            "input": "C,D",
+            "input": "D",
             "status": 200,
-            "ms": 9,
+            "ms": 7,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -156,9 +174,11 @@
             "counted": true
         },
         {
-            "input": "12x+36",
+            "input": "2x+2y+20",
             "status": 200,
-            "ms": 12,
+            "ms": 7,
+            "value_answer": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -172,10 +192,28 @@
             "counted": true
         }
     ],
+    "goals_met": [
+        "E06"
+    ],
+    "check_answers": {
+        "unassisted": 4,
+        "unassisted_correct": 3,
+        "with_help": 0,
+        "held": 0
+    },
+    "check_causes": {
+        "with_help": [],
+        "held": []
+    },
+    "help_moves_on_open_checks": [],
+    "backstop_holds": 0,
     "guards": [],
+    "guard_phrases": [],
+    "counters": [],
     "repairs": [],
     "holds": [],
     "held_attempts": [],
+    "substitutions": 0,
     "readings": {
         "sent_for_reading": 2,
         "accepted": 2,
@@ -184,6 +222,8 @@
         "clarifying_questions_shown": 0,
         "not_an_answer": 0
     },
+    "ungraded_value_answers": 0,
+    "value_answers_graded": 0,
     "empty_replies": 0,
     "binding": {
         "calls": 1,
@@ -193,16 +233,6 @@
         ]
     },
     "calls": 13,
-    "tokens": {
-        "prompt": 0,
-        "cached": 0,
-        "completion": 0,
-        "reasoning": 0
-    },
-    "cost_usd": 0,
     "finish_length": 0,
-    "attempts": 8,
-    "goals_met": [
-        "E06"
-    ]
+    "attempts": 8
 }

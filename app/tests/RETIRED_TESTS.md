@@ -96,3 +96,19 @@ Tests whose behaviour round 7 changed on purpose; each is replaced, none was del
 | LiveAdapterTest::testEmptyContentAndInternalWordsAreRepairedNotShown | §4: internal words are a logged finding; empty content is still repaired | LiveAdapterTest::testEmptyContentIsRepairedAndInternalWordsAreLogged |
 | MathScenarioTest::testMath09Ambiguity (code rewrite line) | §7.4: unreadable entries go to the AI for a reading | MathScenarioTest::testMath09Ambiguity (rewritten) |
 
+## Round 8 (CONDUCTOR_ROUND_8.md)
+
+Tests whose behaviour round 8 changed on purpose; each is replaced, none was deleted to get green.
+
+| Round 7 test | Why it changed | Replaced by |
+| --- | --- | --- |
+| CheatingTest::testAFreeTextMessageDuringAnOpenCheckProblem | §3.1: a help request on an open check is helped and recorded; the check becomes practice | CheatingTest::testAHelpRequestDuringAnOpenCheckIsHelpedAndRecorded, ::testHintExplainAndAnswerQuestionDuringAnOpenCheckCountAsHelp, ::testTheBackstopDuringAnOpenCheck |
+| CheatingTest::testTypedIdkDuringACheckIsAMessageNotHelp | §3.1: the tutor's help move records help; code still never classifies typed text | CheatingTest::testTypedIdkDuringACheckIsAMessageNotCodeClassifiedHelp |
+| CheatingTest::testTheAiPosesAProblemWhileACheckIsOpen (purpose stays check) | §3.1: a check with help is shown as practice | The same test, asserting the same open problem, shown as practice |
+| HostTest::testASessionBoundTo13IsReboundTo15 | §2.1: v1.6 governs; a session bound to 1.5 is rebound | HostTest::testASessionBoundTo15IsReboundTo16 |
+| ProblemInstrumentsTest::testPregeneratedProblemsRarelyShowTheirAnswer | §3.6: prepared problems must satisfy the check rule, always | ProblemInstrumentsTest::testPreparedProblemsSatisfyTheCheckRule |
+| ProblemInstrumentsTest::testPracticeWordingIsRenderedByCodeFromTheSpec (practice answer rejected) | §3.6: practice problems are accepted whatever their numbers | The same test: practice accepted, check rejected with ANSWER_IN_QUESTION |
+| LearnerInstrumentsTest::testTextBeforeACheckCard ("next", "try" hold) | §3.3: neutral invitations are logged, not held; §3.5: the previous answer is a signal | The same test, rewritten |
+| ReportTest::testNoAiTextInTheReportAndTheAuditList ("next", "try" in the audit list) | §3.3 | The same test: only "remember" holds; "next" and "try" are logged invitations |
+| Browser journey: message during the check stays unassisted | §3.1 | Browser journey: a help request during the check is recorded and the check becomes practice |
+

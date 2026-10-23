@@ -64,9 +64,11 @@ final class TutorReport
                     $audit[] = $d;
                     break;
                 case 'HELP_GIVEN':
+                    // Round 8 §3.1: help the student asked for ("I'm stuck"), and help the tutor's move gave during an open check.
                     $skill = $problems[$d['problem_id']]['skill_id'] ?? null;
                     if ($skill !== null) {
-                        $help[$skill] = ($help[$skill] ?? 0) + 1;
+                        $by = ($d['source'] ?? null) === 'TUTOR_MOVE' ? 'tutor' : 'asked';
+                        $help[$skill][$by] = ($help[$skill][$by] ?? 0) + 1;
                     }
                     break;
                 case 'ISSUE':
@@ -136,15 +138,20 @@ final class TutorReport
             'per_skill' => array_values($perSkill),
             'provider' => $provider,
             'provider_label' => $provider === 'mock' ? 'MOCK (simulated tutor; no live provider was used)' : 'LIVE PROVIDER',
-            'architecture' => ['version' => '1.5', 'sha256' => $snap['binding']['architecture_sha256'], 'binding_acknowledged' => $snap['binding']['acknowledged'],
+            'architecture' => ['version' => '1.6', 'sha256' => $snap['binding']['architecture_sha256'], 'binding_acknowledged' => $snap['binding']['acknowledged'],
                 'binding_note' => 'An acknowledged binding is not evidence of enforcement; the app enforces the guarantees.'],
             'audit' => array_map(fn ($a) => ['problem_id' => $a['problem_id'], 'phrases' => $a['phrases']], $audit),
             'summary' => ['learner' => $learner + ['earlier' => $this->words->earlier($row['engine']['progress']['earlier'] ?? [], false)], 'teacher' => $teacher],
-            'policy_version' => '1.5',
+            'policy_version' => '1.6',
         ];
     }
 
     // ------------------------------------------------------------ learner
+
+    private static function times(int $n): string
+    {
+        return $n === 1 ? 'once' : ($n === 2 ? 'twice' : $n . ' times');
+    }
 
     private function learner(array $perSkill, array $topics, array $goals, array $help, array $moves): array
     {
@@ -172,8 +179,11 @@ final class TutorReport
             if ($s['practice'] > 0) {
                 $workedOn[] = 'We practised “' . $title . '” together (' . $s['practice'] . ' ' . ($s['practice'] === 1 ? 'question' : 'questions') . ', ' . $s['practice_correct'] . ' correct).';
             }
-            if (isset($help[$id])) {
-                $workedOn[] = 'You asked for help ' . ($help[$id] === 1 ? 'once' : $help[$id] . ' times') . ' on “' . $title . '”.';
+            if (isset($help[$id]['asked'])) {
+                $workedOn[] = 'You asked for help ' . self::times($help[$id]['asked']) . ' on “' . $title . '”.';
+            }
+            if (isset($help[$id]['tutor'])) {
+                $workedOn[] = 'The tutor helped you ' . self::times($help[$id]['tutor']) . ' with a check question on “' . $title . '”, so ' . ($help[$id]['tutor'] === 1 ? 'it' : 'those') . ' became practice.';
             }
             foreach ($s['observed'] as $code) {
                 if (isset(SummaryView::PATTERNS[$code])) {
@@ -289,7 +299,10 @@ final class TutorReport
         $practice = [];
         foreach ($perSkill as $id => $s) {
             if ($s['practice'] > 0 || isset($help[$id])) {
-                $practice[] = $id . ': ' . $s['practice'] . ' practice ' . ($s['practice'] === 1 ? 'question' : 'questions') . ' with the tutor' . (isset($help[$id]) ? '; help asked for ' . $help[$id] . ' ' . ($help[$id] === 1 ? 'time' : 'times') : '') . '. Practice and answers after help do not count toward any goal.';
+                $practice[] = $id . ': ' . $s['practice'] . ' practice ' . ($s['practice'] === 1 ? 'question' : 'questions') . ' with the tutor'
+                    . (isset($help[$id]['asked']) ? '; help asked for ' . $help[$id]['asked'] . ' ' . ($help[$id]['asked'] === 1 ? 'time' : 'times') : '')
+                    . (isset($help[$id]['tutor']) ? '; the tutor helped with an open check question ' . $help[$id]['tutor'] . ' ' . ($help[$id]['tutor'] === 1 ? 'time' : 'times') . ', so that check became practice' : '')
+                    . '. Practice and answers after help do not count toward any goal.';
             }
         }
         $routeLines = array_map(fn ($m) => 'The tutor moved from ' . $m['from'] . ' to ' . $m['to'] . ($this->isBelow($m['to'], $m['from']) ? ', a skill it builds on' : '') . ' (the tutor\'s choice of route, not a diagnosis of cause).', $moves);
@@ -303,8 +316,10 @@ final class TutorReport
             if (($a['phrases'] ?? []) !== []) {
                 $what[] = 'phrases directed at it: ' . implode(', ', $a['phrases']);
             }
-            if ($a['answer_in_text'] ?? false) {
+            if (($a['answer_in_text'] ?? false) && ($a['answer_source'] ?? null) === null) {
                 $what[] = 'its answer';
+            } elseif ($a['answer_in_text'] ?? false) {
+                $what[] = 'a number equal to its answer that comes from ' . $a['answer_source'] . ' (a signal only)';
             }
             if (($a['shared_numbers'] ?? []) !== []) {
                 $what[] = 'numbers it shares (' . implode(', ', $a['shared_numbers']) . '; a signal only)';
@@ -393,7 +408,7 @@ final class TutorReport
             'report_id' => Ids::make('rep'),
             'session_id' => $snap['session_id'],
             'state_revision' => $snap['revision'],
-            'architecture_version' => '1.5',
+            'architecture_version' => '1.6',
             'curriculum_version' => CurriculumRepository::CURRICULUM_VERSION,
             'status' => $status,
             'targets_attempted' => $topics,

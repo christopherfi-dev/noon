@@ -1,16 +1,16 @@
-ran B1-1: 12 turns, 13 calls, tokens 0 prompt (0 cached) / 0 completion, est. $0.0000
-ran B1-2: 12 turns, 13 calls, tokens 0 prompt (0 cached) / 0 completion, est. $0.0000
-ran B1-3: 12 turns, 13 calls, tokens 0 prompt (0 cached) / 0 completion, est. $0.0000
-ran B1-4: 12 turns, 13 calls, tokens 0 prompt (0 cached) / 0 completion, est. $0.0000
-ran B1-5: 12 turns, 13 calls, tokens 0 prompt (0 cached) / 0 completion, est. $0.0000
-ran descent-1: 13 turns, 14 calls, tokens 0 prompt (0 cached) / 0 completion, est. $0.0000
-ran descent-2: 13 turns, 14 calls, tokens 0 prompt (0 cached) / 0 completion, est. $0.0000
-ran descent-3: 13 turns, 14 calls, tokens 0 prompt (0 cached) / 0 completion, est. $0.0000
-ran B11-1: 9 turns, 10 calls, tokens 0 prompt (0 cached) / 0 completion, est. $0.0000
-ran B11-2: 9 turns, 10 calls, tokens 0 prompt (0 cached) / 0 completion, est. $0.0000
-ran N1-1: 10 turns, 13 calls, tokens 0 prompt (0 cached) / 0 completion, est. $0.0000
-ran N1-2: 10 turns, 13 calls, tokens 0 prompt (0 cached) / 0 completion, est. $0.0000
-ran HELP-SEEKER-1: 23 turns, 24 calls, tokens 0 prompt (0 cached) / 0 completion, est. $0.0000
-ran BREAKER-1: 9 turns, 11 calls, tokens 0 prompt (0 cached) / 0 completion, est. $0.0000
+ran B1-1: 12 turns, 13 calls, goals met Q07, Q06
+ran B1-2: 12 turns, 13 calls, goals met Q07, Q06
+ran B1-3: 12 turns, 13 calls, goals met Q07, Q06
+ran B1-4: 12 turns, 13 calls, goals met Q07, Q06
+ran B1-5: 12 turns, 13 calls, goals met Q07, Q06
+ran descent-1: 13 turns, 14 calls, goals met E06, Q07
+ran descent-2: 13 turns, 14 calls, goals met E06, Q07
+ran descent-3: 13 turns, 14 calls, goals met E06, Q07
+ran B11-1: 10 turns, 11 calls, goals met Q06
+ran B11-2: 10 turns, 11 calls, goals met E06
+ran N1-1: 10 turns, 13 calls, goals met E06
+ran N1-2: 13 turns, 16 calls, goals met E06, N18
+ran HELP-SEEKER-1: 31 turns, 32 calls, goals met none
+ran BREAKER-1: 9 turns, 11 calls, goals met Q07
 Wrote 14 transcripts; METRICS.md covers 14 sessions in /home/user/noon/test-results/mock-sessions
-Calls per turn: {"1":150,"2":19}
+Calls per turn: {"1":163,"2":19}

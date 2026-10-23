@@ -140,7 +140,7 @@ final class TutorLoopTest extends TestCase
             $this->assertCount(5, $c['messages'], 'every request is built anew: architecture, output contract, binding exchange, one context block');
             $this->assertStringStartsWith('OUTPUT CONTRACT', $c['messages'][1]['content']);
         }
-        $this->assertStringContainsString('ACE_BOUND: architecture=1.5', $calls[0]['messages'][3]['content']);
+        $this->assertStringContainsString('ACE_BOUND: architecture=1.6', $calls[0]['messages'][3]['content']);
         // A prepared problem is never one already shown in the session.
         foreach ($h->app->store->db->all('SELECT fingerprint FROM items') as $row) {
             $this->assertContains($row['fingerprint'], $shown);
@@ -426,5 +426,119 @@ final class TutorLoopTest extends TestCase
         $this->assertSame('HOLD', $h->view['status']);
         $this->assertSame('MISSING_CURRICULUM', $h->row()['snapshot']['issue']['type']);
         $this->assertSame(0, $h->mock->calls, 'no call is made with an invented record');
+    }
+
+    /** Round 8 §3.7 and §4: both counters fire on text built to trigger them; they log only, and text without a step or a value question records nothing. */
+    public function testTheTwoCountersLogOnly(): void
+    {
+        $feedback = fn (string $text) => ['set' => ['message_type' => 'FEEDBACK', 'item' => null, 'student_message' => $text,
+            'proposed_transition' => ['to_mode' => 'CONTINUE', 'target_skill_id' => 'Q07', 'reason' => 'test', 'evidence_event_ids' => []]]];
+        $counters = fn (Harness $h, string $name) => array_values(array_filter($h->eventsOf('COUNTER'), fn ($e) => $e['data']['counter'] === $name));
+        $h = new Harness();
+        $h->start('Q07');
+        self::pose($h, 'practice', 'Q07', 'linear_equation', '3(x + 4) = 21', '3');
+        $text = "Correct: x = 3. Dividing both sides by 3 gives x + 4 = 7, and 7 \u{2212} 4 = 3.";
+        $h->mock->queue('ENVELOPE', $feedback($text));
+        $h->answerCorrectly();
+        $resolve = $counters($h, 'RESOLVE_AFTER_CORRECT');
+        $this->assertCount(1, $resolve);
+        $this->assertSame(['x + 4 = 7', "7 \u{2212} 4 = 3", 'value 7'], $resolve[0]['data']['hits'], 'the steps the tutor supplied; "x = 3" is the student\'s answer');
+        $this->assertSame($text, $resolve[0]['data']['text']);
+        $this->assertSame($text, end($h->view['conversation'])['text'], 'logged only: the text is shown unchanged');
+        $this->assertSame([[], []], [$h->eventsOf('MODEL_OUTPUT_REJECTED'), $h->eventsOf('CHECK_HELD')]);
+        // A question asking for a value with no problem posed.
+        $h->mock->queue('ENVELOPE', $feedback("Good. What is 21 \u{2212} 12?"));
+        $h->send('ok');
+        $value = $counters($h, 'VALUE_QUESTION_IN_TEXT');
+        $this->assertCount(1, $value);
+        $this->assertSame(["What is 21 \u{2212} 12?"], $value[0]['data']['hits']);
+        // Nothing to count: a rule in one sentence, and a question about the student's thinking.
+        $g = new Harness();
+        $g->start('Q07');
+        self::pose($g, 'practice', 'Q07', 'linear_equation', '3(x + 4) = 21', '3');
+        $g->mock->queue('ENVELOPE', $feedback('Correct, 3. Dividing both sides of an equation by the same nonzero number keeps it balanced.'));
+        $g->answerCorrectly();
+        $g->mock->queue('ENVELOPE', $feedback('Why does dividing first work here? What do you notice about the brackets?'));
+        $g->send('ok');
+        $this->assertSame([], $g->eventsOf('COUNTER'));
+    }
+
+    /**
+     * Round 8 §2: the model receives only the architecture, the output
+     * contract, the activation request and handshake, and the JSON context
+     * block. No text from the host requirements, the changelog, CLAUDE.md or a
+     * conductor file reaches a model request (text those files share with
+     * what the model may receive, such as the architecture itself, aside).
+     */
+    public function testNoHostRequirementsChangelogClaudeOrConductorTextReachesAModelRequest(): void
+    {
+        $h = new Harness();
+        $h->start('E06');
+        $h->send('x + 997');
+        $h->answerCorrectly();
+        $h->send('why do we multiply both terms inside?');
+        $h->mock->queue('BAD_SCHEMA');
+        $h->send('ok');
+        while (($h->open()['purpose'] ?? null) !== 'CHECK' && count($h->mock->log) < 40) {
+            $h->open() === null ? $h->send('next one please') : $h->answerCorrectly();
+        }
+        $h->send('can you give me a hint?');
+        $h->stuck('HINT');
+        $h->send('2 x x + 2');
+        $h->event('END_SESSION', [], null, null, false);
+        $this->assertGreaterThan(8, count($h->mock->log));
+
+        $architecture = (string) file_get_contents(ALGEBRA_APP_ROOT . '/private/resources/architecture/Algebra_Constraint_Architecture_v1.6.md');
+        $received = [];
+        foreach ($h->mock->log as $call) {
+            $roles = array_column($call['messages'], 'role');
+            $this->assertSame($architecture, $call['messages'][0]['content'], 'the architecture, byte for byte');
+            $this->assertSame(\AlgebraEngine\Tutor\TutorPrompt::ACTIVATION_REQUEST, $call['messages'][$call['json'] ? 2 : 1]['content']);
+            if ($call['json']) {
+                $this->assertSame(['system', 'system', 'user', 'assistant', 'user'], array_slice($roles, 0, 5));
+                $this->assertSame(\AlgebraEngine\Tutor\TutorPrompt::OUTPUT_CONTRACT, $call['messages'][1]['content']);
+            }
+            foreach (array_slice($call['messages'], 1) as $m) {
+                $received[] = str_starts_with($m['content'], 'JSON ') ? implode("\n", self::strings(Json::decode(substr($m['content'], 5), 64))) : $m['content'];
+            }
+        }
+        $flat = fn (string $t) => trim((string) preg_replace('/\s+/u', ' ', $t));
+        $haystack = $flat(implode("\n", array_unique($received)));
+        $allowed = $flat($architecture);
+        $sources = array_merge([ALGEBRA_REPO_ROOT . '/architecture/HOST_REQUIREMENTS_v1.6.md', ALGEBRA_REPO_ROOT . '/architecture/CHANGELOG.md', ALGEBRA_REPO_ROOT . '/CLAUDE.md'],
+            glob(ALGEBRA_REPO_ROOT . '/CONDUCTOR_*.md') ?: []);
+        $checked = [];
+        foreach ($sources as $file) {
+            $this->assertFileExists($file);
+            $plain = (string) preg_replace(['/`+/', '/\*\*?/', '/^#+\s*/m', '/^\s*(?:[-*>]|\d+\.)\s+/m', '/\|/'], ['', '', '', '', ' '], (string) file_get_contents($file));
+            foreach (preg_split('/(?<=[.!?;:])\s+|\n+/u', $plain) ?: [] as $fragment) {
+                $fragment = $flat($fragment);
+                if (mb_strlen($fragment) < 30 || str_contains($allowed, $fragment)) {
+                    continue;
+                }
+                $checked[basename($file)] = ($checked[basename($file)] ?? 0) + 1;
+                $this->assertFalse(str_contains($haystack, $fragment), basename($file) . ' text reached a model request: ' . $fragment);
+            }
+        }
+        $this->assertGreaterThan(5, $checked['HOST_REQUIREMENTS_v1.6.md'] ?? 0, 'the host requirements were checked');
+        $this->assertGreaterThan(5, $checked['CHANGELOG.md'] ?? 0);
+        $this->assertGreaterThan(5, $checked['CLAUDE.md'] ?? 0);
+        $this->assertGreaterThan(5, $checked['CONDUCTOR_ROUND_8.md'] ?? 0);
+    }
+
+    /** @return list<string> every string value in a decoded JSON block */
+    private static function strings(mixed $v): array
+    {
+        if (is_string($v)) {
+            return [$v];
+        }
+        $out = [];
+        foreach (is_array($v) ? $v : [] as $k => $x) {
+            if (is_string($k)) {
+                $out[] = $k;
+            }
+            $out = array_merge($out, self::strings($x));
+        }
+        return $out;
     }
 }

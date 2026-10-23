@@ -292,13 +292,13 @@ final class HostTest extends TestCase
         $this->assertFalse($log[1]['json'], 'one bounded activation repair, still text mode');
         $this->assertTrue($log[2]['json']);
         $this->assertSame(['system', 'system', 'user', 'assistant', 'user'], array_column($log[2]['messages'], 'role'));
-        $this->assertSame('ACE_BOUND: architecture=1.5 | first_principle=truth_over_approval | scope=algebra | role=tutor', $log[2]['messages'][3]['content']);
+        $this->assertSame('ACE_BOUND: architecture=1.6 | first_principle=truth_over_approval | scope=algebra | role=tutor', $log[2]['messages'][3]['content']);
         $binding = $h->eventsOf('BINDING_ACCEPTED')[0]['data'];
         $this->assertStringContainsString('not evidence of enforcement', $binding['note']);
-        $this->assertSame('d021eb2a1dba333a2caabc3efe73ae3cd2405d04e6a017716528ca5ac8b27e12', $binding['architecture_sha256'], 'round 7 §2.1: the owner\'s v1.5, byte-identical');
-        $this->assertSame(hash_file('sha256', ALGEBRA_REPO_ROOT . '/architecture/Algebra_Constraint_Architecture_v1.5.md'), $binding['architecture_sha256']);
-        $this->assertSame(hash_file('sha256', ALGEBRA_APP_ROOT . '/private/resources/architecture/Algebra_Constraint_Architecture_v1.5.md'), $binding['architecture_sha256']);
-        $this->assertSame(['Algebra_Constraint_Architecture_v1.5.md'], array_values(array_map('basename', glob(ALGEBRA_APP_ROOT . '/private/resources/architecture/*.md'))), 'the app loads v1.5 only');
+        $this->assertSame('c5591d3dfa6aa87bf79b026936abce724e71ec9dd3e7316c7c7991553d390b7b', $binding['architecture_sha256'], 'round 8 §2.1: the owner\'s v1.6, byte-identical');
+        $this->assertSame(hash_file('sha256', ALGEBRA_REPO_ROOT . '/architecture/Algebra_Constraint_Architecture_v1.6.md'), $binding['architecture_sha256']);
+        $this->assertSame(hash_file('sha256', ALGEBRA_APP_ROOT . '/private/resources/architecture/Algebra_Constraint_Architecture_v1.6.md'), $binding['architecture_sha256']);
+        $this->assertSame(['Algebra_Constraint_Architecture_v1.6.md'], array_values(array_map('basename', glob(ALGEBRA_APP_ROOT . '/private/resources/architecture/*.md'))), 'the app loads v1.6 only');
         $h->answerCorrectly();
         $this->assertCount(1, $h->eventsOf('BINDING_ACCEPTED'), 'no second handshake');
         // A provider that will not bind holds before any tutoring.
@@ -433,25 +433,26 @@ final class HostTest extends TestCase
     }
 
     /** Two requests opening a fresh database together: every migration is applied once. */
-    /** Round 7 §2.3: a session stored under architecture 1.3 is rebound to 1.5 on its next turn. */
-    public function testASessionBoundTo13IsReboundTo15(): void
+    /** Round 8 §2.1: a session stored under architecture 1.5 is rebound to 1.6 on its next turn. */
+    public function testASessionBoundTo15IsReboundTo16(): void
     {
         $h = new Harness();
         $h->start('Q07');
         $sid = $h->sessionId();
         $row = $h->app->store->session($sid);
-        $old = hash_file('sha256', ALGEBRA_REPO_ROOT . '/architecture/Algebra_Constraint_Architecture_v1.3.md');
+        $old = hash_file('sha256', ALGEBRA_REPO_ROOT . '/architecture/Algebra_Constraint_Architecture_v1.5.md');
         $snap = $row['snapshot'];
-        $snap['architecture_version'] = '1.3';
+        $snap['architecture_version'] = '1.5';
         $snap['binding']['architecture_sha256'] = $old;
         $h->app->store->db->exec('UPDATE sessions SET snapshot_json = ? WHERE session_id = ?', [json_encode($snap), $sid]);
         $calls = $h->mock->calls;
         $this->assertSame(200, $h->send($h->wrong())->status);
-        $this->assertSame(2, $h->mock->calls - $calls, 'a binding call to v1.5, then the reply');
+        $this->assertSame(2, $h->mock->calls - $calls, 'a binding call to v1.6, then the reply');
         $bindings = $h->eventsOf('BINDING_ACCEPTED');
         $this->assertCount(2, $bindings);
-        $this->assertSame([$old, 'd021eb2a1dba333a2caabc3efe73ae3cd2405d04e6a017716528ca5ac8b27e12'], [$bindings[1]['data']['rebound_from_architecture_sha256'], $bindings[1]['data']['architecture_sha256']]);
-        $this->assertSame('1.5', $h->row()['snapshot']['architecture_version']);
+        $this->assertSame([$old, 'c5591d3dfa6aa87bf79b026936abce724e71ec9dd3e7316c7c7991553d390b7b'], [$bindings[1]['data']['rebound_from_architecture_sha256'], $bindings[1]['data']['architecture_sha256']]);
+        $this->assertSame('1.6', $h->row()['snapshot']['architecture_version']);
+        $this->assertStringContainsString('ACE_BOUND: architecture=1.6 |', $h->mock->log[count($h->mock->log) - 1]['messages'][3]['content']);
     }
 
     public function testMigrationsAreSafeToRunTwice(): void

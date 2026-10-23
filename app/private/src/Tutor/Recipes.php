@@ -15,7 +15,7 @@ use AlgebraEngine\Support\RandomSource;
 final class Recipes
 {
     public const PER_SKILL = 2;
-    private const TRIES = 30;
+    private const TRIES = 60;
 
     public function __construct(private ProblemFactory $problems)
     {
@@ -63,10 +63,14 @@ final class Recipes
         return array_slice(array_values(array_intersect($order, $have)), 0, self::PER_SKILL);
     }
 
+    /**
+     * Round 8 §3.6: every prepared problem may be chosen as a check problem,
+     * so each one satisfies the check rule (its single-number answer is not a
+     * number in the question). None is returned rather than one that fails it.
+     */
     private function fresh(string $skill, string $variant, RandomSource $rng, array $seen, array $usedSets): ?array
     {
         $template = $this->problems->items()->templateFor($skill, $variant);
-        $fallback = null;
         for ($i = 0; $i < self::TRIES; $i++) {
             $params = $template->generate($rng);
             $problem = $this->problems->fromRecipe($template->id(), $params, 'PRACTICE');
@@ -76,8 +80,7 @@ final class Recipes
             if (!ProblemFactory::answerShownInProblem($problem)) {
                 return $problem;
             }
-            $fallback ??= $problem;
         }
-        return $fallback;
+        return null;
     }
 }

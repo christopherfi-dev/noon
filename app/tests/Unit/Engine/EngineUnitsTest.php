@@ -230,7 +230,8 @@ final class EngineUnitsTest extends TestCase
     {
         $contract = TutorPrompt::OUTPUT_CONTRACT;
         $this->assertStringStartsWith("OUTPUT CONTRACT\n", $contract);
-        $this->assertStringContainsString('architecture_version is "1.5"', $contract);
+        $this->assertStringContainsString('architecture_version is "1.6"', $contract);
+        $this->assertStringContainsString('HELP means you helped with the open check problem', $contract, 'round 8 §3.1: HELP is defined as a field value');
         foreach (['message_type', 'item', 'source recipe', 'source spec', 'source retry', 'stated_answer', 'purpose', 'proposed_transition', 'SLIP_CHECK is valid only when SLIP.confirmed is true',
             'is_answer', 'other_readings', 'clarifying_question', 'teacher_report: null'] as $field) {
             $this->assertStringContainsString($field, $contract, 'defines ' . $field);

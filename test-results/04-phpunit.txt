@@ -147,6 +147,8 @@ Learner Instruments (AlgebraEngine\Tests\Unit\Tutor\LearnerInstruments)
  ✔ Guards on learner visible text
  ✔ The ai cannot overrule the verdict
  ✔ Text before a check card
+ ✔ Help claims and the handover sentence
+ ✔ Text during an open check
 
 Problem Instruments (AlgebraEngine\Tests\Unit\Tutor\ProblemInstruments)
  ✔ Code computes every kind
@@ -156,7 +158,7 @@ Problem Instruments (AlgebraEngine\Tests\Unit\Tutor\ProblemInstruments)
  ✔ Wrong stated answer is rejected
  ✔ Practice wording is rendered by code from the spec
  ✔ Recipe choices and freshness
- ✔ Pregenerated problems rarely show their answer
+ ✔ Prepared problems satisfy the check rule
  ✔ Retry only after a slip
  ✔ Only beta skills
 
@@ -170,11 +172,16 @@ Cheating (AlgebraEngine\Tests\Integration\Cheating)
  ✔ Text before a check card shares a number
  ✔ Text before a check card with a strategy phrase holds the attempt
  ✔ Text before a check card with its answer holds the attempt
+ ✔ A neutral handover before a check card
+ ✔ The check answer before a card from the previous answer is a signal
+ ✔ An answer in the question accepted for practice and replaced for a check
  ✔ Text leaks an answer after i am stuck
  ✔ Text claims mastery or uses internal terms
- ✔ A free text message during an open check problem
+ ✔ A help request during an open check is helped and recorded
+ ✔ Hint explain and answer question during an open check count as help
+ ✔ The backstop during an open check
  ✔ I am stuck during a check is recorded before the ai call
- ✔ Typed idk during a check is a message not help
+ ✔ Typed idk during a check is a message not code classified help
  ✔ Explain the idea is no longer a choice
  ✔ An answer leak during an open check holds the attempt
  ✔ A verdict conflict holds the attempt
@@ -205,7 +212,7 @@ Host (AlgebraEngine\Tests\Integration\Host)
  ✔ Host 16 forget and expiry
  ✔ Host 17 cost limits
  ✔ End while pending
- ✔ A session bound to 13 is rebound to 15
+ ✔ A session bound to 15 is rebound to 16
  ✔ Migrations are safe to run twice
 
 Key Leak (AlgebraEngine\Tests\Integration\KeyLeak)
@@ -286,7 +293,9 @@ Tutor Loop (AlgebraEngine\Tests\Integration\TutorLoop)
  ✔ Evid 02 reused check question is rejected
  ✔ Moves stay inside the tutors skills
  ✔ Missing curriculum record holds without inventing one
+ ✔ The two counters log only
+ ✔ No host requirements changelog claude or conductor text reaches a model request
 
-Time: 00:13.666, Memory: 106.00 MB
+Time: 00:09.634, Memory: 106.00 MB
 
-OK (235 tests, 27933 assertions)
+OK (244 tests, 34024 assertions)
