@@ -62,7 +62,7 @@ final class DeployCoverageTest extends TestCase
             $this->assertSame(200, $ok['status']);
             $this->assertStringNotContainsString('SECRET', $ok['body']);
             foreach (['/../private/config.example.php', '/private/bootstrap.php', '/../private/var/algebra.sqlite', '/resources/curriculum/algebra-map.json',
-                '/config.php', '/src/App.php', '/vendor/autoload.php', '/../private/resources/architecture/Algebra_Constraint_Architecture_v1.2.md', '/composer.json'] as $path) {
+                '/config.php', '/src/App.php', '/vendor/autoload.php', '/../private/resources/architecture/Algebra_Constraint_Architecture_v1.3.md', '/composer.json'] as $path) {
                 $r = self::get($port, $path);
                 $this->assertSame(404, $r['status'], $path);
                 $this->assertStringNotContainsString('<?php', $r['body'], $path);

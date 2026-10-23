@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Round 6 (architecture 1.3) DECIDE: one teaching decision (slip, readiness or prerequisite) chosen from the options the host supplies. Runtime contract.",
+  "type": "object",
+  "properties": {
+    "architecture_version": {
+      "const": "1.3"
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "state_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "reply_to_event_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "operation": {
+      "const": "DECIDE"
+    },
+    "question": {
+      "type": "string",
+      "enum": [
+        "SLIP",
+        "READINESS",
+        "PREREQUISITE"
+      ]
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "SLIP",
+        "NOT_SLIP",
+        "ANOTHER_GUIDED_PROBLEM",
+        "INDEPENDENT_CHECK",
+        "CHECK_PREREQUISITE",
+        "REPAIR_HERE"
+      ]
+    },
+    "choice": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "maxLength": 400
+    }
+  },
+  "required": [
+    "architecture_version",
+    "session_id",
+    "state_revision",
+    "reply_to_event_id",
+    "operation",
+    "question",
+    "decision",
+    "choice",
+    "reason"
+  ],
+  "additionalProperties": false
+}

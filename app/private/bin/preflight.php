@@ -89,7 +89,7 @@ if ($provider === 'openai_compatible') {
 
 // Private resources
 $expected = [
-    'resources/architecture/Algebra_Constraint_Architecture_v1.2.md',
+    'resources/architecture/Algebra_Constraint_Architecture_v1.3.md',
     'resources/curriculum/algebra-map.json',
     'resources/contracts/model-envelope.schema.json',
     'resources/contracts/workflow-policy.json',
@@ -101,12 +101,12 @@ $expected = [
 foreach ($expected as $rel) {
     is_file($privateDir . '/' . $rel) ? $add('PASS', 'FILE', $rel) : $add('FAIL', 'FILE', $rel . ' is missing from the private folder.');
 }
-$arch = $privateDir . '/resources/architecture/Algebra_Constraint_Architecture_v1.2.md';
+$arch = $privateDir . '/resources/architecture/Algebra_Constraint_Architecture_v1.3.md';
 if (is_file($arch)) {
     $sha = hash_file('sha256', $arch);
-    $sha === 'ef03667dabf7152be63009ec6c1e327a83340b4fff65eef303e3eeb326291390' // v1.2 after Conductor Round 2 rulings 2 and 3
-        ? $add('PASS', 'ARCHITECTURE_HASH', 'v1.2 ' . $sha)
-        : $add('FAIL', 'ARCHITECTURE_HASH', 'Architecture file differs from the reviewed v1.2 (' . $sha . ').');
+    $sha === 'fc1e7b06b990c9585e954dd75ff78febbf6804b7e5132e0e263963a83b52c1c5' // v1.3 (Conductor Round 6)
+        ? $add('PASS', 'ARCHITECTURE_HASH', 'v1.3 ' . $sha)
+        : $add('FAIL', 'ARCHITECTURE_HASH', 'Architecture file differs from the reviewed v1.3 (' . $sha . ').');
 }
 
 // Storage

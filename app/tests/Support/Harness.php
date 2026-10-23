@@ -94,8 +94,13 @@ final class Harness
     public int $b14Checked = 0;
 
     /**
-     * B14 (round 5): no INDEPENDENT item is shown in the same turn as model-written
-     * text. Checked after every successful request of every integration test.
+     * B14, replaced in round 6 (§4): model text shown in the same turn as an
+     * INDEPENDENT item refers only to the previous answer. Checked after every
+     * successful request of every integration test, independently of the
+     * engine: every number in the model text must appear in the previous
+     * problem, the learner's answer to it or that problem's correct value; the
+     * model text comes before the host lead; and the item prompt is the
+     * host-rendered one.
      */
     private function checkB14(): void
     {
@@ -105,13 +110,51 @@ final class Harness
         $sid = $this->app->store->db->scalar('SELECT current_session_id FROM containers WHERE cookie_hash = ?', [hash('sha256', $this->cookies['ae_sid'])]);
         $row = $sid === null || $sid === false ? null : $this->app->store->session((string) $sid);
         $a = $row['engine']['active'] ?? null;
-        if ($a === null || $a['role'] === 'GUIDED' || $a['support_status'] !== 'INDEPENDENT' || $row['snapshot']['mode'] === 'SESSION_CLOSED') {
+        if ($a === null || $a['role'] === 'GUIDED' || $a['support_status'] !== 'INDEPENDENT' || $row['snapshot']['mode'] === 'SESSION_CLOSED' || isset($a['slip_stage'])) {
             return;
         }
         $this->b14Checked++;
-        foreach ($row['engine']['messages'] as $m) {
-            Assert::assertSame('HOST', $m['source'] ?? 'UNKNOWN', 'B14: independent item ' . $a['item_id'] . ' shown with non-host text: ' . $m['text']);
+        $model = array_values(array_filter($row['engine']['messages'], fn ($m) => ($m['source'] ?? 'UNKNOWN') === 'MODEL'));
+        if ($model === []) {
+            return;
         }
+        $events = $this->app->store->events((string) $sid);
+        $presented = null;
+        $previous = null;
+        $response = null;
+        foreach ($events as $e) {
+            if ($e['type'] === 'ITEM_PRESENTED' && $e['data']['item_id'] === $a['item_id']) {
+                $presented = $e;
+                break;
+            }
+            if ($e['type'] === 'CHECKER_RESULT') {
+                $previous = $e['data']['result'];
+            }
+            if ($e['type'] === 'RESPONSE_SUBMITTED') {
+                $response = $e['data'];
+            }
+        }
+        Assert::assertNotNull($presented, 'B14: no presentation event for ' . $a['item_id']);
+        if ($presented['revision'] !== $row['snapshot']['revision']) {
+            return; // the item was shown earlier; this turn's text replies to an entry on it (unreadable, a question), under the answer-leak guard
+        }
+        Assert::assertNotNull($previous, 'B14: model text shown with independent item ' . $a['item_id'] . ' although no answer came before it: ' . $model[0]['text']);
+        $item = $this->app->store->item((string) $sid, $previous['item_id'], $previous['item_version']);
+        $expected = $item['answer_spec']['expected'];
+        preg_match_all('/\d+(?:\.\d+)?/', implode(' ', [$item['prompt'], $response['text'] ?? '', is_array($expected) ? '' : (string) $expected]), $m);
+        $allowed = array_map(fn ($n) => (string) (0 + $n), $m[0]);
+        foreach ($model as $msg) {
+            preg_match_all('/\d+(?:\.\d+)?/', $msg['text'], $mm);
+            foreach ($mm[0] as $n) {
+                Assert::assertContains((string) (0 + $n), $allowed, 'B14: model text before independent item ' . $a['item_id'] . ' uses ' . $n . ', which is not in the previous problem or answer: ' . $msg['text']);
+            }
+        }
+        $kinds = array_map(fn ($m) => ($m['source'] ?? '') . ':' . $m['text'], $row['engine']['messages']);
+        $lead = array_search('HOST:' . \AlgebraEngine\Workflow\Engine::INDEPENDENT_LEAD, $kinds, true);
+        $firstModel = array_search('MODEL:' . $model[0]['text'], $kinds, true);
+        Assert::assertTrue($lead !== false && $firstModel < $lead, 'B14: the refer-back reply comes before the host lead');
+        Assert::assertFalse($presented['data']['model_text_shown'], 'B14: a refer-back reply does not make the item assisted');
+        Assert::assertTrue($presented['data']['refer_back_reply']);
     }
 
     public function bootstrap(): Response

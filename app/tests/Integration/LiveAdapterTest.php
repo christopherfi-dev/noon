@@ -142,9 +142,13 @@ final class LiveAdapterTest extends TestCase
         try {
             $h->bootstrap();
             $h->start('Q07');
-            // A hint is model-written learner text (an independent item's framing is host-only since round 5).
-            $server->script = ['EMPTY', 'INTERNAL_WORDS'];
+            // A hint is model-written learner text. Round 6 (§7): one repair per learner entry (two calls at most).
+            $server->script = ['EMPTY'];
             $r = $h->event('REQUEST_HINT');
+            $this->assertSame(200, $r->status);
+            $this->assertSame('READY', $h->view['status']);
+            $server->script = ['INTERNAL_WORDS'];
+            $r = $h->event('REQUEST_EXPLANATION');
             $this->assertSame(200, $r->status);
             $this->assertSame('READY', $h->view['status']);
             $errors = array_map(fn ($e) => $e['data']['errors'][0], $h->events('MODEL_OUTPUT_REJECTED'));
@@ -198,7 +202,7 @@ final class LiveAdapterTest extends TestCase
         try {
             $h->bootstrap();
             $h->start('Q07');
-            $server->script = ['LENGTH', 'EMPTY'];                 // two rejected outputs → two repair requests
+            $server->script = ['LENGTH'];                          // a rejected output → one repair request (round 6: two calls per entry)
             $h->submit($h->wrong('DIST_X_ONLY'));
             $this->assertSame('READY', $h->view['status']);
             $h->event('END_SESSION');

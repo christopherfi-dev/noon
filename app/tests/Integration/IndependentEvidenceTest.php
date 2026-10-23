@@ -8,9 +8,11 @@ use AlgebraEngine\Tests\Support\Harness;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Round 5, R5-A: no help on independent items. B14 is also checked by the
- * harness after every request of every integration test; these tests add
- * the discard record, journey coverage and the criterion message (B14b).
+ * Round 5, R5-A, revised in round 6 (§4): no help on independent items. The
+ * reply before one may only refer back to the previous answer. B14 is also
+ * checked by the harness after every request of every integration test;
+ * these tests add the rejection record, journey coverage and the criterion
+ * message (B14b).
  */
 final class IndependentEvidenceTest extends TestCase
 {
@@ -22,10 +24,16 @@ final class IndependentEvidenceTest extends TestCase
         return array_values(array_filter(array_column($messages, 'text'), fn ($t) => str_contains($t, 'correctly in a row, without help')));
     }
 
-    /** B14: across B1 and B3 journeys, every independent item is shown with the host line only; the model's cue is discarded. */
-    public function testB14IndependentItemsShowHostLineOnly(): void
+    /**
+     * B14, replaced in round 6 (§4): across B1 and B3 journeys, model text in the same turn as an
+     * INDEPENDENT item refers only to the previous answer (the harness re-checks its numbers after
+     * every request), comes before the host line, and does not make the item assisted. With no
+     * answer to refer back to, the model's text is discarded unread.
+     */
+    public function testB14ModelTextBeforeIndependentItemsRefersBackOnly(): void
     {
         $checked = 0;
+        $replies = 0;
         for ($i = 0; $i < 12; $i++) {
             $h = new Harness([], null, null, null, null, "b14-$i");
             try {
@@ -34,7 +42,7 @@ final class IndependentEvidenceTest extends TestCase
                 $seen = [];
                 $record = function () use ($h, &$seen): void {
                     $a = $h->row()['engine']['active'];
-                    if ($a !== null && $a['role'] !== 'GUIDED') {
+                    if ($a !== null && $a['role'] !== 'GUIDED' && !isset($a['slip_stage'])) {
                         $seen[] = array_column($h->view['messages'], 'text');
                     }
                 };
@@ -51,37 +59,43 @@ final class IndependentEvidenceTest extends TestCase
                 $this->assertNotEmpty($seen);
                 foreach ($seen as $texts) {
                     $this->assertContains(Engine::INDEPENDENT_LEAD, $texts);
-                    $this->assertNotContains(self::CUE, $texts);
+                    $this->assertNotContains(self::CUE, $texts, 'text with nothing to refer back to is never shown');
                 }
-                $presented = array_filter($h->events('ITEM_PRESENTED'), fn ($e) => $e['data']['role'] !== 'GUIDED');
+                $presented = array_filter($h->events('ITEM_PRESENTED'), fn ($e) => $e['data']['role'] !== 'GUIDED' && !isset($e['data']['slip_stage']));
                 foreach ($presented as $e) {
                     $this->assertFalse($e['data']['model_text_shown']);
+                    $replies += $e['data']['refer_back_reply'] ? 1 : 0;
                 }
-                $this->assertCount(count($presented), $h->events('MODEL_TEXT_DISCARDED'), 'the mock wrote a cue with every independent item; each was discarded');
+                $this->assertGreaterThan(0, count($h->events('MODEL_TEXT_DISCARDED')), 'the first item has no answer to refer back to');
                 $checked += $h->b14Checked;
             } finally {
                 $h->cleanup();
             }
         }
         $this->assertGreaterThan(100, $checked);
+        $this->assertGreaterThan(100, $replies, 'refer-back replies were shown and re-checked');
     }
 
-    /** B14: discarded model text is never stored as learner-visible: not in messages, history, events or the public view. */
-    public function testB14DiscardedTextIsNotStored(): void
+    /** B14 (round 6): a reply before an independent item that uses a number outside the previous problem and answer is rejected before display. */
+    public function testB14ReplyWithANewNumberIsRejected(): void
     {
         $h = new Harness();
         try {
             $h->start('N06');
-            $cue = 'Divide the sizes, then a negative divided by a positive is negative.';
-            $h->mock->faults[] = ['type' => 'STUDENT_MESSAGE', 'text' => $cue];
+            $this->assertCount(1, $h->events('MODEL_TEXT_DISCARDED'), 'at the start there is no answer to refer back to');
+            $this->assertSame([Engine::INDEPENDENT_LEAD], array_column($h->view['messages'], 'text'));
+            $this->assertStringNotContainsString(self::CUE, json_encode($h->row()['engine']));
+            $forward = 'Next time, try 997 divided by 13 first.';
+            $h->mock->faults[] = ['type' => 'STUDENT_MESSAGE', 'text' => $forward];
             $h->answerCorrect();
             $this->assertSame('TARGET_ASSESSMENT', $h->mode());
-            $this->assertSame(['Correct.', Engine::INDEPENDENT_LEAD], array_column($h->view['messages'], 'text'));
-            $row = $h->row();
-            $this->assertStringNotContainsString('Divide the sizes', json_encode($row['engine']) . json_encode($row['snapshot']) . json_encode($h->events()));
-            $discarded = $h->events('MODEL_TEXT_DISCARDED');
-            $this->assertSame(mb_strlen($cue), $discarded[count($discarded) - 1]['data']['characters']);
-            $this->assertSame([], $h->events('MODEL_OUTPUT_REJECTED'), 'discarded text is not checked, so it causes no repair');
+            $errors = implode(' ', $h->events('MODEL_OUTPUT_REJECTED')[0]['data']['errors']);
+            $this->assertStringContainsString('may only refer back to the previous answer: it uses 997', $errors);
+            $texts = array_column($h->view['messages'], 'text');
+            $this->assertNotContains($forward, $texts);
+            $this->assertSame('Correct.', $texts[0]);
+            $this->assertSame(Engine::INDEPENDENT_LEAD, end($texts));
+            $this->assertStringNotContainsString('997', json_encode($h->row()['engine']));
         } finally {
             $h->cleanup();
         }

@@ -55,7 +55,7 @@ final class App
         $this->curriculum = $curriculum ?? CurriculumRepository::fromFile($res . '/curriculum/algebra-map.json');
         $this->factory = new ItemFactory();
         $this->schemas = new SchemaValidator($res . '/contracts');
-        $this->architecture = (string) file_get_contents($res . '/architecture/Algebra_Constraint_Architecture_v1.2.md');
+        $this->architecture = (string) file_get_contents($res . '/architecture/Algebra_Constraint_Architecture_v1.3.md');
         $this->provider = $provider ?? ($config->isMock()
             ? new MockProvider($this->factory, $config->string('mock_fault_file'))
             : new OpenAiCompatibleProvider($config, $transport ?? new CurlTransport()));

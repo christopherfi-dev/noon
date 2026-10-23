@@ -11,6 +11,9 @@ use PHPUnit\Framework\TestCase;
  * B15 (round 5, R5-C): stuck and off-task entries. Every row of the table in
  * both columns (guided repair; an independent item), the trailing-"?" rule
  * and the normalisation. No table entry is ever scored as incorrect.
+ * Round 6 (§3, §4): the model writes the reply to these entries, told what
+ * follows; questions, off-task entries and numbers written as words are read
+ * by the model and checked by the host.
  */
 final class StuckEntryTest extends TestCase
 {
@@ -83,9 +86,10 @@ final class StuckEntryTest extends TestCase
                 $this->assertSame('GUIDED_REPAIR', $h->mode());
                 $this->assertSame('s1.1', $h->active()['guided_step']['id'], 'a smaller question: ' . $text);
                 if ($kind === 'ASK_FOR_ANSWER') {
-                    $this->assertSame(EntryInterpreter::LINE_ASK_SMALLER, $shown[0], $text);
+                    $this->assertStringStartsWith(EntryInterpreter::LINE_ASK_SMALLER, $shown[0], $text);
+                    $this->assertSame('MODEL', $h->row()['engine']['messages'][0]['source'], 'round 6: the model writes the reply');
                 } else {
-                    $this->assertNotContains(EntryInterpreter::LINE_ASK_SMALLER, $shown);
+                    $this->assertSame([], array_filter($shown, fn ($s) => str_starts_with($s, EntryInterpreter::LINE_ASK_SMALLER)));
                 }
             } finally {
                 $h->cleanup();
@@ -111,9 +115,10 @@ final class StuckEntryTest extends TestCase
                 $this->assertCount(1, $support, $text);
                 $this->assertSame(['HINT', 'STUCK_ENTRY'], [$support[0]['data']['kind'], $support[0]['data']['trigger']]);
                 $this->assertSame(['TARGET_ASSESSMENT', $item, 'ASSISTED'], [$h->mode(), $h->active()['item_id'], $h->view['active_item']['support_status']], $text);
-                $expected = $kind === 'ASK_FOR_ANSWER' ? [EntryInterpreter::LINE_ASK_HINT, self::HELP_LINE] : [self::HELP_LINE];
-                $this->assertSame($expected, array_slice($shown, 0, count($expected)), $text);
-                $this->assertGreaterThan(count($expected), count($shown), 'the hint follows');
+                // Round 6: the host line first (the item is assisted before the hint is shown), then the model's reply with the hint.
+                $this->assertSame(self::HELP_LINE, $shown[0], $text);
+                $this->assertCount(2, $shown, 'the hint follows');
+                $this->assertSame($kind === 'ASK_FOR_ANSWER', str_starts_with($shown[1], EntryInterpreter::LINE_ASK_HINT), $text);
                 // The assisted item does not count as independent work.
                 $h->answerCorrect();
                 $this->assertSame(0, $h->view['progress']['independent_successes'], $text);
@@ -131,7 +136,8 @@ final class StuckEntryTest extends TestCase
         $h = self::target('p1-hint');
         try {
             [, $shown] = self::send($h, $ask);
-            $this->assertSame([EntryInterpreter::LINE_ASK_HINT, self::HELP_LINE], array_slice($shown, 0, 2));
+            $this->assertSame(self::HELP_LINE, $shown[0]);
+            $this->assertStringStartsWith(EntryInterpreter::LINE_ASK_HINT, $shown[1]);
         } finally {
             $h->cleanup();
         }
@@ -140,7 +146,7 @@ final class StuckEntryTest extends TestCase
         try {
             [, $shown] = self::send($h, $ask);
             $this->assertSame(['GUIDED_REPAIR', 's1.1'], [$h->mode(), $h->active()['guided_step']['id']]);
-            $this->assertSame(EntryInterpreter::LINE_ASK_SMALLER, $shown[0]);
+            $this->assertStringStartsWith(EntryInterpreter::LINE_ASK_SMALLER, $shown[0]);
         } finally {
             $h->cleanup();
         }
@@ -154,7 +160,9 @@ final class StuckEntryTest extends TestCase
             $this->assertSame('s3', $h->active()['guided_step']['id']);
             [, $shown] = self::send($h, $ask);
             $this->assertSame('alt', $h->active()['params']['phrasing']);
-            $this->assertSame([EntryInterpreter::LINE_ASK_ANOTHER_WAY, 'Here is the same question, asked another way.'], $shown);
+            $this->assertCount(2, $shown);
+            $this->assertStringStartsWith(EntryInterpreter::LINE_ASK_ANOTHER_WAY, $shown[0]);
+            $this->assertSame('Here is the same question, asked another way.', $shown[1]);
         } finally {
             $h->cleanup();
         }
@@ -164,7 +172,7 @@ final class StuckEntryTest extends TestCase
             $h->submit($h->plainWrong());                           // s1 → s1.1
             [, $shown] = self::send($h, $ask);
             $this->assertSame(['PREREQUISITE_CHECK', 'N18'], [$h->mode(), $h->skill()]);
-            $this->assertSame(EntryInterpreter::LINE_ASK_PREREQUISITE, $shown[0]);
+            $this->assertSame([EntryInterpreter::LINE_ASK_PREREQUISITE, \AlgebraEngine\Workflow\Engine::INDEPENDENT_LEAD], $shown);
         } finally {
             $h->cleanup();
         }
@@ -176,66 +184,93 @@ final class StuckEntryTest extends TestCase
             $h->submit($h->plainWrong());                           // s3 → s3.1
             [, $shown] = self::send($h, $ask);
             $this->assertSame(['GUIDED_REPAIR', 's1'], [$h->mode(), $h->active()['guided_step']['id']]);
-            $this->assertSame(EntryInterpreter::LINE_ASK_DIFFERENT_PROBLEM, $shown[0]);
-            $this->assertSame('I won\'t give the answer, but let\'s try a different problem.', $shown[0]);
+            $this->assertStringStartsWith('I won\'t give the answer, but let\'s try a different problem.', $shown[0]);
             foreach ([EntryInterpreter::LINE_ASK_SMALLER, EntryInterpreter::LINE_ASK_ANOTHER_WAY, EntryInterpreter::LINE_ASK_PREREQUISITE, EntryInterpreter::LINE_ASK_HINT] as $line) {
-                $this->assertNotContains($line, $shown);
+                $this->assertSame([], array_filter($shown, fn ($s) => str_contains($s, $line)));
             }
         } finally {
             $h->cleanup();
         }
     }
 
-    /** Rows 3–4, both columns: a host line; the item stays open; unscorable, never incorrect. */
+    /**
+     * Rows 3–4, revised in round 6 (§3): the model reads questions, off-task entries and numbers written
+     * as words; the host checks each reading. Off-task entries get a reply and no verdict; a question
+     * about an independent item is answered and the item becomes practice with help first; a number
+     * word is read as that number and marked as read from the learner's wording. Never scored as
+     * incorrect unless the reading is a wrong value.
+     */
     public function testOffTaskQuestionAndNumberWords(): void
     {
-        $cases = [
-            ['is this on the test?', 'QUESTION_TO_TUTOR', EntryInterpreter::LINE_QUESTION],
-            ['Why do I need this??', 'QUESTION_TO_TUTOR', EntryInterpreter::LINE_QUESTION],
-            ['three', 'NUMBER_WORD', EntryInterpreter::LINE_NUMBER_WORD],
-            ['Negative three.', 'NUMBER_WORD', EntryInterpreter::LINE_NUMBER_WORD],
-            ['minus twenty', 'NUMBER_WORD', EntryInterpreter::LINE_NUMBER_WORD],
-            ['zero', 'NUMBER_WORD', EntryInterpreter::LINE_NUMBER_WORD],
-        ];
         foreach (['independent' => fn ($s) => self::target($s), 'guided' => fn ($s) => self::guided($s)] as $column => $make) {
-            foreach ($cases as $i => [$text, $kind, $line]) {
-                $h = $make("b15-$column-$i");
+            foreach (['is this on the test?', 'Why do I need this??'] as $i => $text) {
+                $h = $make("b15-$column-off-$i");
                 try {
                     $item = $h->active()['item_id'];
                     $status = $h->view['active_item']['support_status'];
                     [$events, $shown] = self::send($h, $text);
-                    $this->assertSame($kind, self::interpreted($events), $column . ': ' . $text);
-                    $this->assertSame(['UNSCORABLE'], self::verdicts($events), $column . ': ' . $text);
-                    $this->assertSame([$line], $shown, $column . ': ' . $text);
+                    $read = array_values(array_filter($events, fn ($e) => $e['type'] === 'ENTRY_READ'));
+                    $this->assertSame('off_task', $read[0]['data']['kind'], $column . ': ' . $text);
+                    $this->assertSame([], self::verdicts($events), 'no verdict: ' . $text);
+                    $this->assertSame(['Let\'s stay with this problem for now. Type your answer, or type help if you\'re stuck.'], $shown);
                     $this->assertSame([$item, $status], [$h->active()['item_id'], $h->view['active_item']['support_status']], 'same item, same support status');
-                    $this->assertContains('CLARIFY_RESPONSE', $h->view['allowed_actions']);
                 } finally {
                     $h->cleanup();
                 }
             }
+            $h = $make("b15-$column-question");
+            try {
+                $item = $h->active()['item_id'];
+                [$events, $shown] = self::send($h, 'What does it mean to expand?');
+                $this->assertSame([], self::verdicts($events));
+                $this->assertSame($item, $h->active()['item_id']);
+                if ($column === 'independent') {
+                    $this->assertSame([self::HELP_LINE, 'Good question. Look at what the question asks you to find, and start from what you already know about it.'], $shown);
+                    $this->assertSame('ASSISTED', $h->view['active_item']['support_status'], 'answering a question is help, recorded before it is shown');
+                    $this->assertSame('ANSWERED_QUESTION', $h->events('SUPPORT_GIVEN')[0]['data']['kind']);
+                } else {
+                    $this->assertCount(1, $shown);
+                }
+            } finally {
+                $h->cleanup();
+            }
         }
-        // Number words outside zero to twenty, or with other words, keep the current clarification.
+        // Numbers in words on Solve 3(x + 2) = 15: read, checked against the entry, scored and marked.
+        foreach (['three' => ['3', 'CORRECT'], 'Negative three.' => ['-3', 'INCORRECT'], 'the answer is three' => ['3', 'CORRECT'], 'x is three' => ['x = 3', 'CORRECT']] as $text => [$reading, $verdict]) {
+            $h = self::target('b15-word-' . $text);
+            try {
+                [$events] = self::send($h, $text);
+                $read = array_values(array_filter($events, fn ($e) => $e['type'] === 'ENTRY_READ'));
+                $this->assertSame($reading, $read[0]['data']['normalized_answer'], $text);
+                $this->assertSame([$verdict], self::verdicts($events), $text);
+                $result = array_values(array_filter($events, fn ($e) => $e['type'] === 'CHECKER_RESULT'))[0]['data'];
+                $this->assertStringContainsString('Read from the student\'s wording as "' . $reading . '"', implode(' ', $result['result']['limitations']));
+                $this->assertSame($text, $result['read_from_wording']['entry']);
+            } finally {
+                $h->cleanup();
+            }
+        }
+        // Readings that cannot be checked are not scored: unscorable, never incorrect.
         $h = self::target('b15-other');
         try {
-            foreach (['twenty one', 'thirty', 'negative', 'the answer is three'] as $text) {
+            foreach (['twenty one', 'thirty', 'negative'] as $text) {
                 [$events, $shown] = self::send($h, $text);
-                $this->assertNull(self::interpreted($events), $text);
                 $this->assertSame(['UNSCORABLE'], self::verdicts($events), $text);
-                $this->assertStringContainsString('cannot read', $shown[0], $text);
+                $this->assertNotEmpty($shown, $text);
             }
         } finally {
             $h->cleanup();
         }
     }
 
-    /** Row 5, both columns: X=3 or X = 3 on a one-variable item in x is read as x and scored. */
+    /** Row 5, both columns: X=3 or X = 3 on a one-variable item in x is read as x and scored (round 6: any capital of the item's only variable). */
     public function testCapitalXIsReadAsX(): void
     {
         foreach (['X=3', 'X = 3', 'X=3?'] as $i => $text) {
             $h = self::target("b15-x-$i");
             try {
                 [$events] = self::send($h, $text);
-                $this->assertSame('CAPITAL_X', self::interpreted($events), $text);
+                $this->assertSame('CAPITAL_LETTER', self::interpreted($events), $text);
                 $this->assertSame(['CORRECT'], self::verdicts($events), $text);
                 $this->assertSame(1, $h->view['progress']['independent_successes'], $text);
             } finally {
@@ -254,7 +289,7 @@ final class StuckEntryTest extends TestCase
             }
             $this->assertStringContainsString('What is x?', $h->active()['prompt']);
             [$events] = self::send($h, 'X = ' . $h->correct());
-            $this->assertSame('CAPITAL_X', self::interpreted($events));
+            $this->assertSame('CAPITAL_LETTER', self::interpreted($events));
             $this->assertSame(['CORRECT'], self::verdicts($events));
             // Not in x: an arithmetic item keeps the current clarification for a capital X.
             $h2 = new Harness([], null, null, null, null, 'b15-x-n06');

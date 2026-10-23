@@ -26,6 +26,10 @@ final class Turn
     public ?array $lastItem = null;
     public ?array $learnerPayload = null;
     public int $modelCalls = 0;
+    /** Round 6: interpret, decide and reply calls (and repairs) in this turn; at most Engine::ENTRY_CALL_LIMIT. */
+    public int $instructionalCalls = 0;
+    /** Round 6: what the last checked answer was read as (the entry itself, a host normalisation or an accepted model reading). */
+    public ?string $lastReadAs = null;
     public bool $reportNeeded = false;
     /** Host-verified statements of what the last answer did (signature feedback). */
     public array $facts = [];

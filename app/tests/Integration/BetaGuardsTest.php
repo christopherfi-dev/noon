@@ -161,7 +161,10 @@ final class BetaGuardsTest extends TestCase
         $this->assertNotContains($text, array_column($h->view['messages'], 'text'));
     }
 
-    /** B8 (bounded): when every repair still leaks, the operation is held; nothing leaks and nothing is scored as failure. */
+    /**
+     * B8 (bounded): when every repair still leaks, the operation is held; nothing leaks and nothing is scored as failure.
+     * Round 6 (§7): at most two provider calls per learner entry, so one repair, not two.
+     */
     public function testB8RepeatedLeakHolds(): void
     {
         $h = $this->h;
@@ -179,7 +182,7 @@ final class BetaGuardsTest extends TestCase
         }
         $h->answerCorrect();
         $this->assertSame('HOLD', $h->view['status']);
-        $this->assertCount(3, $h->events('MODEL_OUTPUT_REJECTED'));
+        $this->assertCount(2, $h->events('MODEL_OUTPUT_REJECTED'));
         $this->assertSame('INVALID_ITEM', $h->row()['snapshot']['issue']['type']);
         $this->assertContains('RESUME_SESSION', $h->view['allowed_actions']);
         foreach ($h->view['messages'] as $m) {
@@ -272,6 +275,14 @@ final class BetaGuardsTest extends TestCase
                 $this->assertStringNotContainsString($f, $text, 'prompt contains forbidden content: ' . $f);
             }
             if ($call['json']) {
+                // Round 6: an INTERPRET or DECIDE call carries exactly one request block, built anew, and no curriculum records.
+                $small = array_values(array_filter($call['messages'], fn ($m) => $m['role'] === 'user' && preg_match('/^JSON \{"(INTERPRET_REQUEST|DECISION_REQUEST)"/', $m['content']) === 1));
+                if ($small !== []) {
+                    $this->assertCount(1, $small, 'exactly one request block per call');
+                    $this->assertStringNotContainsString('TRUSTED_CURRICULUM', $small[0]['content']);
+                    self::assertPlaceholdersOnly(Json::decode(substr($small[0]['content'], 5), 64)['OUTPUT_CONTRACT']['skeleton']);
+                    continue;
+                }
                 // The trusted context is the first JSON user message; a repair call appends a REPAIR_REQUEST after it.
                 $contexts = array_values(array_filter($call['messages'], fn ($m) => $m['role'] === 'user' && str_starts_with($m['content'], 'JSON ') && str_contains($m['content'], '"TRUSTED_OUTPUT_ALLOCATION"')));
                 $this->assertCount(1, $contexts, 'exactly one trusted context per call');

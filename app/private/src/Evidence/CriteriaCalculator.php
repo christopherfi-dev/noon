@@ -8,7 +8,10 @@ use AlgebraEngine\Curriculum\BetaScope;
 /**
  * Recomputes immediate criteria from the accepted ledger every time; counters
  * are never decremented in place. An answer given after a hint or explanation
- * resets the run like a wrong answer (owner rule, round 5.1). A checker result counts only when it is
+ * resets the run like a wrong answer (owner rule, round 5.1). A slip candidate
+ * (round 6) pauses the run instead: the slipped answer counts neither way unless
+ * the slip was not confirmed or a wrong retry withdrew the pause; the engine
+ * allows one pause per run. A checker result counts only when it is
  * bound to the exact response event, item version and response hash, the
  * item was presented in an independent role without model-written text, no
  * support was given before the response, the item was not a reused instance,
@@ -21,7 +24,7 @@ final class CriteriaCalculator
 
     /**
      * @param list<array{event_id:string,type:string,data:array}> $events
-     * @return array{criteria:list<array<string,mixed>>,met:list<array<string,mixed>>,rejected_bindings:list<string>,scored:list<array<string,mixed>>,runs:array<string,list<string>>}
+     * @return array{criteria:list<array<string,mixed>>,met:list<array<string,mixed>>,rejected_bindings:list<string>,scored:list<array<string,mixed>>,runs:array<string,list<string>>,pauses:array<string,int>}
      */
     public static function compute(array $events): array
     {
@@ -29,13 +32,21 @@ final class CriteriaCalculator
         $supportedBefore = [];
         $responses = [];
         $invalid = [];
+        // Round 6 (§5): a slip candidate pauses the run unless it was not confirmed or a wrong retry withdrew the pause.
+        $slips = [];
+        $withdrawn = [];
         foreach ($events as $e) {
             if ($e['type'] === 'CORRECTION') {
                 foreach ($e['data']['invalidated_event_ids'] as $id) {
                     $invalid[$id] = true;
                 }
+            } elseif ($e['type'] === 'SLIP_CANDIDATE') {
+                $slips[$e['data']['response_event_id']] = true;
+            } elseif (in_array($e['type'], ['SLIP_NOT_CONFIRMED', 'SLIP_VOIDED'], true)) {
+                $withdrawn[$e['data']['response_event_id']] = true;
             }
         }
+        $pauses = [];   // key => pauses in the current run
         $runs = [];      // key "episode|skill" => list of ['event_id','variant']
         $state = [];     // key => criteria entry
         $met = [];
@@ -72,7 +83,12 @@ final class CriteriaCalculator
                     $invalidated = isset($invalid[$r['event_id']]) || isset($invalid[$e['event_id']]);
                     $eligible = $item['independent_eligible'] && $r['independent_eligible'] && !isset($supportedBefore[$ikey])
                         && !($item['model_text_shown'] ?? false) && !$invalidated;
-                    $scored[] = ['skill_id' => $item['skill_id'], 'episode_id' => $item['episode_id'], 'event_id' => $r['event_id'], 'verdict' => $r['verdict'], 'eligible' => $eligible, 'variant_id' => $item['variant_id']];
+                    $paused = isset($slips[$r['event_id']]) && !isset($withdrawn[$r['event_id']]) && !$invalidated;
+                    $scored[] = ['skill_id' => $item['skill_id'], 'episode_id' => $item['episode_id'], 'event_id' => $r['event_id'], 'verdict' => $r['verdict'], 'eligible' => $eligible, 'variant_id' => $item['variant_id'], 'slip' => $paused];
+                    if ($paused) {
+                        $pauses[$key] = ($pauses[$key] ?? 0) + 1; // the slipped answer counts neither way; the run is not reset
+                        break;
+                    }
                     // Round 5.1 (owner rule, overriding the package's "assisted neither advances nor resets"):
                     // an answer given after a hint or explanation breaks the run, exactly as a wrong answer does.
                     $afterHelp = isset($supportedBefore[$ikey]) && !$invalidated && in_array($r['verdict'], ['CORRECT', 'INCORRECT', 'PARTIAL'], true);
@@ -81,6 +97,7 @@ final class CriteriaCalculator
                     }
                     if ($r['verdict'] === 'INCORRECT' || $afterHelp) {
                         $runs[$key] = [];
+                        $pauses[$key] = 0;
                     } else {
                         $runs[$key][] = ['event_id' => $r['event_id'], 'variant' => $item['variant_id']];
                     }
@@ -103,7 +120,7 @@ final class CriteriaCalculator
         foreach ($runs as $key => $run) {
             $runVariants[$key] = array_column($run, 'variant');
         }
-        return ['criteria' => array_values($state), 'met' => $met, 'rejected_bindings' => $rejected, 'scored' => $scored, 'runs' => $runVariants];
+        return ['criteria' => array_values($state), 'met' => $met, 'rejected_bindings' => $rejected, 'scored' => $scored, 'runs' => $runVariants, 'pauses' => $pauses];
     }
 
     private static function entry(string $skill, string $episode): array

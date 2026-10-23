@@ -352,26 +352,26 @@ final class BetaJourneyTest extends TestCase
     }
 
     /**
-     * B12 (round 4, R4-A): a re-ask of a previously failed guided step shows the host line and the item only.
-     * No model call is made and no model-written text is shown, both after a smaller question and for the
-     * alternate phrasing.
+     * B12, changed in round 6 (§4, replacing R4-A): a re-ask after a solved smaller question, and the
+     * other wording after a failed step, carry the model's reply to the answer just checked. The host
+     * line stays and follows the reply, and the reply passed the answer-leak guard for every
+     * remaining step (it names the rule after a correct answer).
      */
-    public function testB12ReAskShowsNoModelText(): void
+    public function testB12ReAskCarriesACheckedModelReply(): void
     {
         $h = $this->h;
         $this->intoE06Repair();
         $reAsk = function (string $stepId) use ($h): void {
             $calls = $h->mock->calls;
-            $before = count($h->events());
             $r = $h->answerCorrect();                                  // the smaller question is solved → re-ask
             $this->assertSame($stepId, $h->active()['guided_step']['id']);
-            // Round UI (U8): guided steps now say "Correct." like independent items (was "Yes, that is right.").
-            $this->assertSame([['FEEDBACK', 'Correct.'], ['INFORMATION', 'Now try the earlier question again.']],
-                array_map(fn ($m) => [$m['kind'], $m['text']], $r->body['messages']), 'host line and item only');
-            $this->assertSame($calls, $h->mock->calls, 'no model call for the re-ask');
-            $new = array_slice($h->events(), $before);
-            $this->assertSame([], array_values(array_filter($new, fn ($e) => in_array($e['type'], ['MODEL_OUTPUT_ACCEPTED', 'MODEL_OUTPUT_REJECTED'], true))));
-            $this->assertCount(1, array_filter($new, fn ($e) => $e['type'] === 'HOST_ONLY_STEP'));
+            $this->assertSame('FEEDBACK', $r->body['messages'][0]['kind']);
+            $this->assertSame('Correct.', $r->body['messages'][0]['text']);
+            $texts = array_column($r->body['messages'], 'text');
+            $this->assertSame('Now try the earlier question again.', end($texts), 'the host line comes after the reply');
+            $this->assertStringContainsString('the number outside the parentheses multiplies each term inside', $texts[1], 'the reply names the rule');
+            $this->assertSame($calls + 1, $h->mock->calls, 'one call: the reply and the step');
+            $this->assertNotContains('HOST_ONLY_STEP', array_column($h->events(), 'type'));
         };
         $h->submit($h->plainWrong());                                  // s1 wrong → smaller s1.1
         $reAsk('s1');
@@ -380,14 +380,14 @@ final class BetaJourneyTest extends TestCase
         $h->submit($h->plainWrong());                                  // s3 wrong → smaller s3.1
         $reAsk('s3');
 
-        // Alternate phrasing after failing the re-asked step: also host-only.
-        $calls = $h->mock->calls;
+        // The other wording after failing the re-asked step: the model replies, then the host line.
         $r = $h->submit($h->plainWrong());
         $this->assertSame('alt', $h->active()['params']['phrasing']);
-        foreach ($r->body['messages'] as $m) {
-            $this->assertContains($m['text'], ['Not yet.', 'Here is the same question, asked another way.'], 'no model text: ' . $m['text']);
-        }
-        $this->assertSame($calls, $h->mock->calls);
+        $texts = array_column($r->body['messages'], 'text');
+        $this->assertSame(['Not yet.'], array_slice($texts, 0, 1));
+        $this->assertSame('Here is the same question, asked another way.', end($texts));
+        $rows = $h->row()['engine']['messages'];
+        $this->assertSame('MODEL', $rows[1]['source'], 'a checked model reply: ' . $rows[1]['text']);
     }
 
     /**

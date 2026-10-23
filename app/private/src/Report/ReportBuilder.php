@@ -209,7 +209,7 @@ final class ReportBuilder
             'report_id' => Ids::make('rep'),
             'session_id' => $snap['session_id'],
             'state_revision' => $snap['revision'],
-            'architecture_version' => '1.2',
+            'architecture_version' => '1.3',
             'curriculum_version' => CurriculumRepository::CURRICULUM_VERSION,
             'status' => $status,
             'targets_attempted' => $targets,
@@ -245,7 +245,7 @@ final class ReportBuilder
             'descent_path' => $descents,
             'provider' => $provider,
             'provider_label' => $provider === 'mock' ? 'MOCK (simulated model; no live provider was used)' : 'LIVE PROVIDER',
-            'architecture' => ['version' => '1.2', 'sha256' => $snap['binding']['architecture_sha256'], 'binding_acknowledged' => $snap['binding']['acknowledged'],
+            'architecture' => ['version' => '1.3', 'sha256' => $snap['binding']['architecture_sha256'], 'binding_acknowledged' => $snap['binding']['acknowledged'],
                 'binding_note' => 'An acknowledged binding is not evidence of enforcement; the app enforces the contract.'],
             'policy_version' => '1.0',
         ];

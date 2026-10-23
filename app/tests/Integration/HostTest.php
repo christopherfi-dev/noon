@@ -149,19 +149,25 @@ final class HostTest extends TestCase
         $this->assertSame('READY', $h->view['status']);
     }
 
-    /** HOST-05: empty or truncated provider output → bounded repair or hold; no learner failure; no raw output shown. */
+    /**
+     * HOST-05: empty or truncated provider output → bounded repair or hold; no learner failure; no raw output shown.
+     * Round 6 (§7): at most two provider calls per learner entry, so one repair per entry.
+     */
     public function testHost05EmptyAndTruncatedOutput(): void
     {
         $h = $this->h;
         $h->start('Q07');
-        $h->mock->faults = [['type' => 'EMPTY'], ['type' => 'TRUNCATED']];
+        $h->mock->faults = [['type' => 'TRUNCATED']];
         $h->submit($h->wrong('DIST_X_ONLY'));
         $this->assertSame('READY', $h->view['status']);
         $this->assertSame('DIAGNOSTIC_PROBE', $h->mode());
+        $h->mock->faults = [['type' => 'EMPTY']];
+        $h->answerCorrect();
+        $this->assertSame('READY', $h->view['status']);
         $errors = array_map(fn ($e) => $e['data']['errors'][0], $h->events('MODEL_OUTPUT_REJECTED'));
-        $this->assertSame(['empty content', 'output was truncated (finish_reason=length); return a shorter complete JSON object'], $errors);
+        $this->assertSame(['output was truncated (finish_reason=length); return a shorter complete JSON object', 'empty content'], $errors);
 
-        $h->mock->faults = [['type' => 'EMPTY'], ['type' => 'INVALID_JSON'], ['type' => 'TRUNCATED']];
+        $h->mock->faults = [['type' => 'INVALID_JSON'], ['type' => 'TRUNCATED']];
         $before = $this->checkerCount();
         $h->submit($h->correct());
         $this->assertSame('HOLD', $h->view['status']);
@@ -366,11 +372,11 @@ final class HostTest extends TestCase
         $this->assertFalse($log[1]['json'], 'one bounded activation repair, still text mode');
         $this->assertTrue($log[2]['json']);
         $this->assertSame(['system', 'system', 'user', 'assistant', 'user'], array_column($log[2]['messages'], 'role'));
-        $this->assertSame('ACE_BOUND: architecture=1.2 | first_principle=truth_over_approval | scope=algebra | state=AWAITING_SESSION_CONTEXT', $log[2]['messages'][3]['content']);
+        $this->assertSame('ACE_BOUND: architecture=1.3 | first_principle=truth_over_approval | scope=algebra | state=AWAITING_SESSION_CONTEXT', $log[2]['messages'][3]['content']);
         $binding = $h->events('BINDING_ACCEPTED')[0]['data'];
         $this->assertStringContainsString('not evidence of enforcement', $binding['note']);
-        $this->assertSame(hash_file('sha256', ALGEBRA_APP_ROOT . '/private/resources/architecture/Algebra_Constraint_Architecture_v1.2.md'), $binding['architecture_sha256']);
-        $this->assertSame(hash_file('sha256', ALGEBRA_REPO_ROOT . '/architecture/Algebra_Constraint_Architecture_v1.2.md'), $binding['architecture_sha256']);
+        $this->assertSame(hash_file('sha256', ALGEBRA_APP_ROOT . '/private/resources/architecture/Algebra_Constraint_Architecture_v1.3.md'), $binding['architecture_sha256']);
+        $this->assertSame(hash_file('sha256', ALGEBRA_REPO_ROOT . '/architecture/Algebra_Constraint_Architecture_v1.3.md'), $binding['architecture_sha256']);
         $h->answerCorrect();
         $this->assertCount(1, $h->events('BINDING_ACCEPTED'), 'no second handshake for ordinary context');
 

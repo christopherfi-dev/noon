@@ -14,6 +14,7 @@ use AlgebraEngine\Curriculum\MissingCurriculum;
 use AlgebraEngine\Evidence\CriteriaCalculator;
 use AlgebraEngine\Items\AcceptanceGate;
 use AlgebraEngine\Items\ItemFactory;
+use AlgebraEngine\Items\SlipCatalog;
 use AlgebraEngine\Items\SocraticPlanner;
 use AlgebraEngine\Items\StructuralFeatures;
 use AlgebraEngine\Progress\ProgressCode;
@@ -44,7 +45,15 @@ final class Engine
     public const PARENT_REVERIFY_REQUIRED = 1;
     public const MAX_FAILED_CYCLES = 3;
     public const MAX_DEPTH = 8;
-    public const MAX_GUIDED_PROBLEMS = 3;
+    /** Round 6 (§6.2): the model decides readiness between one and four guided problems per repair. */
+    public const MIN_GUIDED_PROBLEMS = 1;
+    public const MAX_GUIDED_PROBLEMS = 4;
+    /** The host's own rule when no model decision is accepted: the independent check after three guided problems. */
+    public const DEFAULT_GUIDED_PROBLEMS = 3;
+    /** Round 6 (§7): instructional provider calls per learner entry (interpret, decide, reply and any repair). */
+    public const ENTRY_CALL_LIMIT = 2;
+    /** Round 6 (§4): forward-looking phrases audited in replies shown before an independent item. */
+    public const FORWARD_PHRASES = ['next', 'try', 'remember', 'make sure', 'don\'t forget', 'when you'];
     /** Round 5.1 P4: no more than two probes per diagnosis (the owner's slip check of one or two extra problems). */
     public const MAX_PROBES_PER_DECISION = 2;
     public const HISTORY_LIMIT = 12;
@@ -120,7 +129,7 @@ final class Engine
             'entry_route' => $entryRoute,
             'provider' => $this->model->provider()->name(),
             'model' => $this->model->provider()->model(),
-            'architecture_version' => '1.2',
+            'architecture_version' => '1.3',
             'curriculum_version' => CurriculumRepository::CURRICULUM_VERSION,
         ], $turn->triggerEventId);
         if ($target !== null) {
@@ -524,7 +533,7 @@ final class Engine
         $snap = [
             'session_id' => $sessionId,
             'revision' => 0,
-            'architecture_version' => '1.2',
+            'architecture_version' => '1.3',
             'curriculum_id' => CurriculumRepository::CURRICULUM_ID,
             'curriculum_version' => CurriculumRepository::CURRICULUM_VERSION,
             'mode' => 'AWAITING_SESSION_CONTEXT',
@@ -710,21 +719,50 @@ final class Engine
         $turn->learnerPayload = ['text' => $text, 'working' => $working];
         $this->remember($turn, 'learner', $responseEvent, $text);
 
-        // R5-C: stuck and off-task entries. None of them is ever scored as incorrect.
+        // Round 6 (§3): the host reads the entry first; it asks the model only when it must.
         $entry = EntryInterpreter::interpret($text, $active, fn (string $t): bool => $this->check($active, $t)->verdict !== 'UNSCORABLE');
-        if ($entry['kind'] !== 'ANSWER') {
-            $turn->event('ENTRY_INTERPRETED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'response_event_id' => $responseEvent,
-                'kind' => $entry['kind'], 'normalised' => $entry['normalised'], 'read_as' => $entry['read_as'],
-                'note' => in_array($entry['kind'], ['TRAILING_QUESTION_MARK', 'CAPITAL_X'], true) ? 'Read and scored as written in read_as (round 5, R5-C).' : 'Not an answer; not scored (round 5, R5-C).']);
-        }
         if (in_array($entry['kind'], ['STUCK', 'ASK_FOR_ANSWER'], true)) {
+            $turn->event('ENTRY_INTERPRETED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'response_event_id' => $responseEvent,
+                'kind' => $entry['kind'], 'normalised' => $entry['normalised'], 'read_as' => null, 'source' => 'HOST', 'note' => 'Not an answer; not scored (round 5, R5-C).']);
             $this->onStuckEntry($turn, $entry['kind'], $responseEvent);
             return;
         }
-        $readAs = $entry['read_as'] ?? $text;
-        $outcome = $this->check($active, $readAs);
+        $readingNote = null;
+        $unreadable = null;
+        if ($entry['kind'] === 'NEEDS_READING') {
+            $read = $this->readEntry($turn, $active, $text, $entry, $responseEvent);
+            if ($read['action'] === 'DONE') {
+                return;
+            }
+            if ($read['action'] === 'UNREADABLE') {
+                $unreadable = $read;
+                $readAs = $text;
+            } else {
+                $readAs = $read['read_as'];
+                $readingNote = $read['note'];
+            }
+        } else {
+            if ($entry['kind'] !== 'ANSWER') {
+                $turn->event('ENTRY_INTERPRETED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'response_event_id' => $responseEvent,
+                    'kind' => $entry['kind'], 'normalised' => $entry['normalised'], 'read_as' => $entry['read_as'], 'source' => 'HOST',
+                    'note' => 'Host normalisation; read and scored as written in read_as (round 6, §3.1).']);
+            }
+            $readAs = $entry['read_as'];
+        }
+        $outcome = $unreadable !== null
+            ? new CheckOutcome('UNSCORABLE', 'The entry could not be read.', 'No reading of the entry was accepted; nothing was scored.', $unreadable['line'])
+            : $this->check($active, $readAs);
         $independent = $active['role'] !== 'GUIDED' && $active['support_status'] === 'INDEPENDENT' && $active['independent_eligible'];
         $supportEvents = $active['support_event_ids'] ?? [];
+        $limitations = $outcome->limitations;
+        if ($active['role'] === 'GUIDED') {
+            $limitations[] = 'Guided step: assisted work, not independent evidence.';
+        }
+        if ($readingNote !== null) {
+            $limitations[] = 'Read from the student\'s wording as "' . $readAs . '": ' . $readingNote;
+        } elseif ($unreadable === null && $readAs !== $text) {
+            $limitations[] = 'The response was read as "' . $readAs . '" (' . strtolower(str_replace('_', ' ', $entry['kind'])) . ').';
+        }
         $result = [
             'checker_result_id' => Ids::make('chk'),
             'checker_id' => match ($active['answer_spec']['kind']) { 'exact_rational' => 'exact-rational', 'polynomial' => 'polynomial-identity', default => 'classification-exact-set' },
@@ -740,8 +778,7 @@ final class Engine
             'independent_eligible' => $independent,
             'support_event_ids' => $supportEvents,
             'observation' => $outcome->observation,
-            'limitations' => array_values(array_merge($outcome->limitations, $active['role'] === 'GUIDED' ? ['Guided step: assisted work, not independent evidence.'] : [],
-                $readAs !== $text ? ['The response was read as "' . $readAs . '" (' . strtolower(str_replace('_', ' ', $entry['kind'])) . ').'] : [])),
+            'limitations' => array_values($limitations),
             'created_at' => Time::iso($turn->now),
         ];
         $errors = $this->schemas->errors($result, 'checker-result.schema.json');
@@ -749,21 +786,23 @@ final class Engine
             throw new \LogicException('Checker result failed schema: ' . implode('; ', $errors));
         }
         $turn->results[] = $result;
-        $turn->event('CHECKER_RESULT', ['result' => $result, 'skill_id' => $active['skill_id'], 'role' => $active['role'], 'variant_id' => $active['variant_id'], 'mode' => $turn->mode()]);
+        $turn->event('CHECKER_RESULT', ['result' => $result, 'skill_id' => $active['skill_id'], 'role' => $active['role'], 'variant_id' => $active['variant_id'], 'mode' => $turn->mode()]
+            + ($readingNote !== null ? ['read_from_wording' => ['entry' => $text, 'read_as' => $readAs, 'reading_note' => $readingNote]] : []));
         $turn->lastResult = $result;
         $turn->lastItem = $active;
+        $turn->lastReadAs = $readAs;
 
         if ($outcome->verdict === 'UNSCORABLE') {
             $turn->eng['active']['unscorable'] = true;
-            $turn->say('ERROR', match ($entry['kind']) {
-                'QUESTION_TO_TUTOR' => EntryInterpreter::LINE_QUESTION,
-                'NUMBER_WORD' => EntryInterpreter::LINE_NUMBER_WORD,
-                default => $outcome->clarification ?? 'That answer could not be read. Please check the format and try again.',
-            });
+            if ($unreadable !== null && $unreadable['reply'] !== null) {
+                $turn->say('ERROR', $unreadable['reply'], 'MODEL');
+            } else {
+                $turn->say('ERROR', $outcome->clarification ?? EntryInterpreter::LINE_UNREADABLE);
+            }
             return;
         }
 
-        $signatures = $this->signatures($active, $text, $outcome);
+        $signatures = $this->signatures($active, $readAs, $outcome);
         $facts = [];
         foreach ($signatures as $sig) {
             $turn->event('OBSERVATION', [
@@ -779,21 +818,391 @@ final class Engine
         $turn->event('ITEM_CLOSED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'reason' => $outcome->verdict]);
         $turn->eng['active'] = null;
         $turn->say('FEEDBACK', $this->verdictSentence($outcome));
+
+        // Round 6 (§5): the micro-question and the retry of a slip candidate.
+        $stage = $active['slip_stage'] ?? null;
+        if ($stage === 'MICRO_CHECK') {
+            $this->afterMicroCheck($turn, $outcome->verdict, $responseEvent);
+            return;
+        }
+        if ($stage === 'RETRY') {
+            $this->afterRetry($turn, $outcome->verdict, $signatures, $active, $responseEvent);
+            return;
+        }
         if ($outcome->verdict === 'INCORRECT' && $active['role'] !== 'GUIDED') {
             // R4-B: the repair practises the structure of the item the learner failed.
             $turn->eng['last_failed'][$active['skill_id']] = ['template_id' => $active['template_id'], 'params' => $active['params'], 'item_id' => $active['item_id']];
+            $slip = $this->slipCandidate($turn, $active, $outcome, $signatures, $responseEvent);
+            if ($slip !== null) {
+                $this->startMicroCheck($turn, $active, $slip, $signatures, $responseEvent);
+                return;
+            }
         }
 
         $verdict = $outcome->verdict;
-        match ($turn->mode()) {
-            'TARGET_ASSESSMENT' => $this->routeTarget($turn, $verdict, $independent, $signatures, $active),
-            'DIAGNOSTIC_PROBE' => $this->routeProbe($turn, $verdict, $signatures, $active, $responseEvent),
-            'PREREQUISITE_CHECK' => $this->routePrerequisite($turn, $verdict, $independent, $signatures, $active, $responseEvent),
-            'GUIDED_REPAIR' => $this->routeGuided($turn, $verdict, $facts, $outcome, $active),
-            'INDEPENDENT_CHECK' => $this->routeIndependent($turn, $verdict, $independent, $signatures, $active, $responseEvent),
-            'RETURN_TO_TARGET' => $this->routeReturn($turn, $verdict, $independent, $signatures, $active, $responseEvent),
-            default => throw new StateConflict('No response routing for mode ' . $turn->mode()),
+        $this->route($turn, $turn->mode(), $verdict, $independent, $signatures, $active, $responseEvent, $facts, $outcome);
+    }
+
+    /** Route a checked answer by the mode it was given in. */
+    private function route(Turn $turn, string $mode, string $verdict, bool $independent, array $signatures, array $item, string $responseEvent, array $facts = [], ?CheckOutcome $outcome = null): void
+    {
+        match ($mode) {
+            'TARGET_ASSESSMENT' => $this->routeTarget($turn, $verdict, $independent, $signatures, $item),
+            'DIAGNOSTIC_PROBE' => $this->routeProbe($turn, $verdict, $signatures, $item, $responseEvent),
+            'PREREQUISITE_CHECK' => $this->routePrerequisite($turn, $verdict, $independent, $signatures, $item, $responseEvent),
+            'GUIDED_REPAIR' => $this->routeGuided($turn, $verdict, $facts, $outcome, $item),
+            'INDEPENDENT_CHECK' => $this->routeIndependent($turn, $verdict, $independent, $signatures, $item, $responseEvent),
+            'RETURN_TO_TARGET' => $this->routeReturn($turn, $verdict, $independent, $signatures, $item, $responseEvent),
+            default => throw new StateConflict('No response routing for mode ' . $mode),
         };
+    }
+
+    /**
+     * Round 6 (§3.2–§3.6): the model reads an entry the host could not settle alone.
+     *
+     * @return array{action:string,read_as?:string,note?:string,reply?:?string,line?:string}
+     *   SCORE (check read_as), UNREADABLE (record an unscorable entry; reply or line asks for a rewrite), DONE (handled)
+     */
+    private function readEntry(Turn $turn, array $active, string $text, array $entry, string $responseEvent): array
+    {
+        $clarification = $active['clarification'] ?? null;
+        $source = $clarification === null ? $text : $clarification['entry'] . "\n" . $text;
+        $fallback = fn (?string $reply) => ['action' => 'UNREADABLE', 'reply' => $reply,
+            'line' => EntryInterpreter::fallbackLine($text, $entry, $this->check($active, $text)->clarification)];
+        if (!$this->canAsk($turn) || !$this->ensureBound($turn)) {
+            $turn->event('READING_UNAVAILABLE', ['response_event_id' => $responseEvent, 'reason' => $this->canAsk($turn) ? 'BINDING_NOT_ESTABLISHED' : 'ENTRY_CALL_LIMIT',
+                'note' => 'The entry needs a model reading and none can be asked for; it is not scored.']);
+            return $fallback(null);
+        }
+        $request = $this->identity($turn) + [
+            'item' => ['prompt' => $active['prompt'], 'response_type' => $active['response_type'], 'input_format' => $active['input_help'],
+                'variables' => EntryInterpreter::variables($active), 'options' => $active['objects']['options'] ?? null],
+            'learner_entry' => $text,
+            'host_reading' => $entry['code_reading'],
+            'why_the_host_asks' => $entry['triggers'],
+            'pending_clarification' => $clarification === null ? null : ['question' => $clarification['question'], 'model_reading' => $clarification['model_reading'], 'host_reading' => $clarification['host_reading'], 'earlier_entry' => $clarification['entry']],
+        ];
+        $res = $this->model->interpret($request, $this->identityExpect($turn) + [
+            'protected_answers' => $this->protectedForActive($turn), 'completed_answers' => $this->completedAnswers($turn, ['operation' => 'GUIDED_STEP']),
+        ], $this->budget($turn, true), $this->logger($turn));
+        if (!$res['ok']) {
+            $turn->event('MODEL_OUTPUT_REJECTED', ['attempt' => 0, 'errors' => $res['errors'] !== [] ? $res['errors'] : [$res['failure']['type'] . ': ' . $res['failure']['detail']], 'operation' => 'INTERPRET',
+                'note' => 'No reading was accepted; the entry is not scored. Not a learner failure.']);
+            return $fallback(null);
+        }
+        $r = $res['reading'];
+        $reply = trim($r['reply']) !== '' && $res['reply_errors'] === [] ? $r['reply'] : null;
+        $turn->event('ENTRY_READ', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'response_event_id' => $responseEvent, 'source' => 'MODEL',
+            'kind' => $r['kind'], 'normalized_answer' => $r['normalized_answer'], 'reading_note' => $r['reading_note'], 'host_reading' => $entry['code_reading'],
+            'triggers' => $entry['triggers'], 'reply_rejected' => $res['reply_errors'], 'clarifying_question_rejected' => $res['clarifying_errors']]);
+        switch ($r['kind']) {
+            case 'stuck':
+                $this->onStuckEntry($turn, 'STUCK', $responseEvent);
+                return ['action' => 'DONE'];
+            case 'question':
+            case 'off_task':
+                if ($r['kind'] === 'question' && $reply !== null && $active['role'] !== 'GUIDED') {
+                    // Answering a question about a scored item is help: the item counts as practice with help before the answer is shown.
+                    $support = $turn->event('SUPPORT_GIVEN', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'kind' => 'ANSWERED_QUESTION',
+                        'committed_before_display' => true, 'trigger' => 'LEARNER_QUESTION', 'entry_event_id' => $responseEvent]);
+                    $turn->eng['active']['support_status'] = 'ASSISTED';
+                    $turn->eng['active']['support_event_ids'][] = $support;
+                    $turn->say('INFORMATION', 'This question now counts as practice with help, not as independent work.');
+                }
+                $source = $reply !== null ? 'MODEL' : 'HOST';
+                $turn->say('INFORMATION', $reply ?? EntryInterpreter::fallbackLine($text, $entry, null), $source);
+                $this->remember($turn, 'tutor', $responseEvent, $reply ?? '');
+                return ['action' => 'DONE'];
+            case 'unreadable':
+                return $fallback($reply);
+        }
+        $reading = (string) $r['normalized_answer'];
+        $errors = ReadingGuard::errors($source, $reading, EntryInterpreter::variables($active), $active['response_type']);
+        if ($errors === [] && $this->check($active, $reading)->verdict === 'UNSCORABLE') {
+            $errors[] = 'the checker for this question cannot read "' . $reading . '"';
+        }
+        if ($errors !== []) {
+            $turn->event('READING_REJECTED', ['response_event_id' => $responseEvent, 'proposed' => $reading, 'reading_note' => $r['reading_note'], 'errors' => $errors,
+                'note' => 'The reading did not only re-express what the learner wrote; the entry is treated as unreadable (round 6, §3.4).']);
+            return $fallback(null);
+        }
+        // §3.6: on a scored item, a reading that disagrees with the host's own parse is settled by one clarifying question.
+        if ($active['role'] !== 'GUIDED' && $clarification === null && $entry['code_reading'] !== null && $this->readingsDiffer($active, $entry['code_reading'], $reading)) {
+            $question = $r['clarifying_question'] !== null && $res['clarifying_errors'] === [] ? $r['clarifying_question'] : null;
+            $turn->eng['active']['clarification'] = ['entry' => $text, 'model_reading' => $reading, 'host_reading' => $entry['code_reading'], 'question' => $question];
+            $turn->eng['active']['unscorable'] = true;
+            $turn->event('CLARIFICATION_ASKED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'response_event_id' => $responseEvent,
+                'host_reading' => $entry['code_reading'], 'model_reading' => $reading, 'question' => $question, 'source' => $question !== null ? 'MODEL' : 'HOST',
+                'note' => 'The host\'s parse and the model\'s reading disagree; nothing is scored until the learner answers (round 6, §3.6).']);
+            $source = $question !== null ? 'MODEL' : 'HOST';
+            $turn->say('INFORMATION', $question ?? 'I can read that in two ways. Please write your answer again with numbers and symbols only.', $source);
+            return ['action' => 'DONE'];
+        }
+        return ['action' => 'SCORE', 'read_as' => $reading, 'note' => trim($r['reading_note']) !== '' ? $r['reading_note'] : 'read from the learner\'s words'];
+    }
+
+    private function readingsDiffer(array $active, string $a, string $b): bool
+    {
+        $x = $this->check($active, $a);
+        $y = $this->check($active, $b);
+        return $x->verdict !== $y->verdict || $x->normalizedResponse !== $y->normalizedResponse;
+    }
+
+    // ------------------------------------------------------------------- slips
+
+    /**
+     * Round 6 (§5): is this wrong answer a slip candidate? Only where answers build a
+     * run, only on a counted item done without help, and only once per run.
+     *
+     * @return array{sub_step:array,wrong_value:int,source:string}|null
+     */
+    private function slipCandidate(Turn $turn, array $active, CheckOutcome $outcome, array $signatures, string $responseEvent): ?array
+    {
+        if (!in_array($turn->mode(), PublicProjection::STREAK_MODES, true) || !in_array($active['role'], CriteriaCalculator::COUNTED_ROLES, true)
+            || !$active['independent_eligible'] || $active['support_status'] !== 'INDEPENDENT' || !SlipCatalog::supports($active['template_id'], $active['params'])
+            || SlipCatalog::conceptual($signatures) !== null) {
+            return null; // a conceptual error pattern matched: its branch stands
+        }
+        $found = SlipCatalog::find($active['template_id'], $active['params'], $outcome, $signatures);
+        $key = $turn->snap['target_episode_id'] . '|' . $active['skill_id'];
+        $pauses = CriteriaCalculator::compute(array_merge($this->store->events($turn->snap['session_id']), $turn->events))['pauses'][$key] ?? 0;
+        if ($pauses >= 1) {
+            if ($found !== null) {
+                $turn->event('OBSERVATION', [
+                    'statement' => 'A second slip (' . $found['sub_step']['display'] . ') in the same run: the count starts again.', 'code' => 'SECOND_SLIP_IN_RUN', 'branch' => null,
+                    'skill_id' => $active['skill_id'], 'item_id' => $active['item_id'], 'evidence_event_ids' => [$responseEvent], 'provenance' => 'HOST_RULE', 'status' => 'OBSERVATION_NOT_CAUSE',
+                ]);
+            }
+            return null;
+        }
+        if ($found !== null) {
+            return $found + ['source' => 'HOST'];
+        }
+        // §5.2: the model may propose a slip the host's signatures did not find; the structural check decides.
+        $steps = SlipCatalog::subSteps($active['template_id'], $active['params']);
+        $request = [
+            'question' => 'SLIP',
+            'options' => ['SLIP', 'NOT_SLIP'],
+            'choices' => array_map(fn ($s) => ['id' => $s['id'], 'sub_step' => $s['display']], $steps),
+            'facts' => ['problem' => $active['prompt'], 'learner_answer' => $turn->learnerPayload['text'] ?? '', 'read_as' => $turn->lastReadAs,
+                'definition' => 'A slip is the skill applied correctly with one lower-level arithmetic error in one of the listed sub-steps.'],
+        ];
+        $d = $this->askDecision($turn, $request);
+        if ($d === null || $d['decision'] !== 'SLIP') {
+            return null;
+        }
+        $check = SlipCatalog::structural($active['template_id'], $active['params'], $outcome, $signatures, (string) $d['choice']);
+        if (!$check['ok']) {
+            $turn->event('SLIP_PROPOSAL_REJECTED', ['response_event_id' => $responseEvent, 'sub_step_id' => $d['choice'], 'reason' => $check['reason'],
+                'note' => 'The model proposed a slip; the template\'s structural check does not agree, so the answer is treated as wrong (round 6, §5.2).']);
+            return null;
+        }
+        $turn->event('SLIP_PROPOSAL_ACCEPTED', ['response_event_id' => $responseEvent, 'sub_step_id' => $d['choice'], 'reason' => $check['reason']]);
+        return ['sub_step' => $check['sub_step'], 'wrong_value' => $check['wrong_value'], 'source' => 'MODEL'];
+    }
+
+    /** §5.3: pause the run and ask one micro-question on the faulty sub-step. */
+    private function startMicroCheck(Turn $turn, array $active, array $slip, array $signatures, string $responseEvent): void
+    {
+        $step = $slip['sub_step'];
+        $turn->event('SLIP_CANDIDATE', ['response_event_id' => $responseEvent, 'item_id' => $active['item_id'], 'item_version' => $active['item_version'],
+            'skill_id' => $active['skill_id'], 'episode_id' => $turn->snap['target_episode_id'], 'sub_step' => $step, 'wrong_value' => $slip['wrong_value'], 'source' => $slip['source'],
+            'note' => 'Possible slip: the run is paused, not reset, until the micro-question is answered.']);
+        $turn->eng['slip'] = ['response_event_id' => $responseEvent, 'item' => $active, 'signatures' => $signatures, 'facts' => $turn->facts, 'sub_step' => $step, 'mode' => $turn->mode()];
+        $turn->generation = [
+            'operation' => 'MICRO_CHECK',
+            'message_type' => 'QUESTION',
+            'role' => 'DIAGNOSTIC',
+            'skill_id' => $active['skill_id'],
+            'variant_id' => 'micro_check',
+            'component_id' => 'slip_check',
+            'template_ids' => [AcceptanceGate::MICRO_CHECK_TEMPLATE],
+            'fixed_parameters' => ['sub_step_id' => $step['id'], 'display' => $step['display'], 'value' => $step['value']],
+            'reply_mode' => 'REPLY',
+            'slip_stage' => 'MICRO_CHECK',
+        ];
+    }
+
+    private function afterMicroCheck(Turn $turn, string $verdict, string $responseEvent): void
+    {
+        $slip = $turn->eng['slip'];
+        if ($verdict === 'CORRECT') {
+            $turn->event('SLIP_CONFIRMED', ['response_event_id' => $slip['response_event_id'], 'micro_check_event_id' => $responseEvent, 'sub_step' => $slip['sub_step'],
+                'note' => 'The learner answered the sub-step correctly: a slip. The slipped answer and its retry count neither way; the run is not reset.']);
+            $item = $slip['item'];
+            $turn->generation = [
+                'operation' => 'SLIP_RETRY', 'message_type' => 'QUESTION', 'role' => $item['role'], 'skill_id' => $item['skill_id'], 'variant_id' => $item['variant_id'],
+                'component_id' => $item['component_id'], 'template_ids' => [$item['template_id']], 'fixed_parameters' => $item['params'], 'retry_of' => $item['item_id'],
+                'reply_mode' => 'REPLY', 'slip_stage' => 'RETRY', 'reply_moment' => 'MICRO_CHECK_CORRECT',
+            ];
+            return;
+        }
+        $this->slipNotConfirmed($turn, $responseEvent, 'The answer to ' . $slip['sub_step']['display'] . ' was not correct; this is evidence about the lower skill.');
+    }
+
+    /** §5.3: not a confirmed slip; the ordinary wrong-answer path applies to the original answer. */
+    private function slipNotConfirmed(Turn $turn, ?string $responseEvent, string $reason): void
+    {
+        $slip = $turn->eng['slip'];
+        $turn->eng['slip'] = null;
+        $turn->event('SLIP_NOT_CONFIRMED', ['response_event_id' => $slip['response_event_id'], 'micro_check_event_id' => $responseEvent, 'reason' => $reason]);
+        if ($responseEvent !== null) {
+            $turn->event('OBSERVATION', [
+                'statement' => 'Did not answer the sub-step ' . $slip['sub_step']['display'] . ' correctly.', 'code' => 'SUB_STEP_INCORRECT', 'branch' => $slip['sub_step']['skill_id'],
+                'skill_id' => $slip['item']['skill_id'], 'item_id' => $slip['item']['item_id'], 'evidence_event_ids' => [$slip['response_event_id'], $responseEvent],
+                'provenance' => 'HOST_RULE', 'status' => 'OBSERVATION_NOT_CAUSE',
+            ]);
+        }
+        $turn->facts = $slip['facts'];
+        $this->route($turn, $slip['mode'], 'INCORRECT', true, $slip['signatures'], $slip['item'], $slip['response_event_id']);
+    }
+
+    private function afterRetry(Turn $turn, string $verdict, array $signatures, array $retry, string $responseEvent): void
+    {
+        $slip = $turn->eng['slip'];
+        $turn->eng['slip'] = null;
+        if ($verdict === 'INCORRECT') {
+            // A wrong retry shows the error was not a slip: the pause is withdrawn and the original answer counts as wrong.
+            $turn->event('SLIP_VOIDED', ['response_event_id' => $slip['response_event_id'], 'retry_event_id' => $responseEvent,
+                'reason' => 'The retry was not correct, so the first answer counts as wrong.']);
+            $this->route($turn, $slip['mode'], 'INCORRECT', true, $signatures, $slip['item'], $responseEvent);
+            return;
+        }
+        $turn->event('SLIP_RETRY_ANSWERED', ['response_event_id' => $slip['response_event_id'], 'retry_event_id' => $responseEvent, 'verdict' => $verdict,
+            'note' => 'The retry counts neither way; the paused run continues.']);
+        $this->route($turn, $slip['mode'], $verdict, false, $signatures, $slip['item'], $responseEvent);
+    }
+
+    /** A slip question left without an answer (help, skip, "not learned", stuck): not confirmed. */
+    private function leaveSlipStage(Turn $turn, string $how): bool
+    {
+        $stage = $turn->eng['active']['slip_stage'] ?? null;
+        if ($stage === null || ($turn->eng['slip'] ?? null) === null) {
+            return false;
+        }
+        $active = $turn->eng['active'];
+        $turn->event('ITEM_CLOSED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'reason' => $how]);
+        $turn->eng['active'] = null;
+        if ($stage === 'MICRO_CHECK') {
+            $this->slipNotConfirmed($turn, null, 'The micro-question was not answered (' . strtolower(str_replace('_', ' ', $how)) . ').');
+            return true;
+        }
+        $slip = $turn->eng['slip'];
+        $turn->eng['slip'] = null;
+        $turn->event('SLIP_VOIDED', ['response_event_id' => $slip['response_event_id'], 'retry_event_id' => null,
+            'reason' => 'The retry was not answered (' . strtolower(str_replace('_', ' ', $how)) . '), so the first answer counts as wrong.']);
+        $turn->facts = $slip['facts'];
+        $this->route($turn, $slip['mode'], 'INCORRECT', true, $slip['signatures'], $slip['item'], $slip['response_event_id']);
+        return true;
+    }
+
+    // ------------------------------------------------------- model calls (round 6)
+
+    /** An optional interpret or decide call may be made only while one call stays free for the reply. */
+    private function canAsk(Turn $turn): bool
+    {
+        return $turn->instructionalCalls + 2 <= self::ENTRY_CALL_LIMIT;
+    }
+
+    /** §6: one teaching decision, or null when it cannot be asked or was not accepted (the host's own rule then applies). */
+    private function askDecision(Turn $turn, array $request): ?array
+    {
+        if (!$this->canAsk($turn)) {
+            $turn->event('TEACHING_DECISION', ['question' => $request['question'], 'source' => 'HOST', 'decision' => null, 'reason' => 'No model call left within the per-entry limit; the host rule applies.']);
+            return null;
+        }
+        if (!$this->ensureBound($turn)) {
+            return null;
+        }
+        $d = $this->model->decide($this->identity($turn) + $request, $this->identityExpect($turn), $this->budget($turn, true), $this->logger($turn));
+        if (!$d['ok']) {
+            $turn->event('MODEL_DECISION_REJECTED', ['question' => $request['question'], 'errors' => $d['errors'] !== [] ? $d['errors'] : [($d['failure']['type'] ?? '') . ': ' . ($d['failure']['detail'] ?? '')],
+                'note' => 'The host rule applies instead.']);
+            return null;
+        }
+        $turn->event('TEACHING_DECISION', ['question' => $request['question'], 'source' => 'MODEL', 'decision' => $d['decision'], 'choice' => $d['choice'], 'reason' => $d['reason']]);
+        return $d;
+    }
+
+    /** @return array{session_id:string,state_revision:int,reply_to_event_id:string} */
+    private function identity(Turn $turn): array
+    {
+        return ['session_id' => $turn->snap['session_id'], 'state_revision' => $turn->snap['revision'], 'reply_to_event_id' => $turn->triggerEventId];
+    }
+
+    private function identityExpect(Turn $turn): array
+    {
+        return ['session_id' => $turn->snap['session_id'], 'revision' => $turn->snap['revision'], 'event_id' => $turn->triggerEventId];
+    }
+
+    /**
+     * Budget for one provider call. Instructional calls (interpret, decide, the reply and any
+     * repair) count toward the per-entry limit; the binding call does not. Never start a call
+     * that could outlive this operation's lease: a slow provider produces a retryable hold.
+     */
+    private function budget(Turn $turn, bool $instructional): \Closure
+    {
+        $sessionId = $turn->snap['session_id'];
+        $leaseEnds = $turn->now->getTimestamp() + $this->config->int('lease_seconds') - 5;
+        return function () use ($turn, $sessionId, $leaseEnds, $instructional): ?string {
+            if ($instructional && $turn->instructionalCalls >= self::ENTRY_CALL_LIMIT) {
+                return 'ENTRY_CALL_LIMIT';
+            }
+            if ($this->clock->now()->getTimestamp() + $this->config->int('provider_timeout') > $leaseEnds) {
+                return 'LEASE_TIME_INSUFFICIENT';
+            }
+            if ($this->store->modelCallCount($sessionId) >= $this->config->int('max_model_calls_per_session')) {
+                return 'SESSION_MODEL_CALL_BUDGET';
+            }
+            $day = 'provider-day-' . gmdate('Y-m-d', $this->clock->now()->getTimestamp());
+            if ($this->store->counter($day) >= $this->config->int('global_provider_calls_per_day')) {
+                return 'GLOBAL_PROVIDER_BUDGET';
+            }
+            $this->store->bump($day, $this->clock->now()->modify('+2 days'));
+            if ($instructional) {
+                $turn->instructionalCalls++;
+            }
+            return null;
+        };
+    }
+
+    private function logger(Turn $turn): \Closure
+    {
+        $sessionId = $turn->snap['session_id'];
+        $provider = $this->model->provider();
+        return function (string $kind, string $outcome, ?ProviderResponse $resp = null) use ($sessionId, $provider, $turn): void {
+            $turn->modelCalls++;
+            // Metadata only (round 3 ruling 3–4): finish reason, token counts, duration. Never reasoning text.
+            $this->store->logModelCall($sessionId, null, $kind, $provider->name(), $provider->model(), $outcome, $this->clock->now(), $resp === null ? [] : [
+                'finish_reason' => $resp->finishReason, 'duration_ms' => $resp->durationMs,
+                'prompt_tokens' => $resp->usage['prompt_tokens'] ?? null, 'completion_tokens' => $resp->usage['completion_tokens'] ?? null, 'reasoning_tokens' => $resp->usage['reasoning_tokens'] ?? null,
+                'transport_detail' => $resp->diagnostics,
+            ]);
+        };
+    }
+
+    /** Bind the architecture when the session is not bound to this provider, model and text. @return bool false after a hold */
+    private function ensureBound(Turn $turn, ?array $gen = null): bool
+    {
+        $provider = $this->model->provider();
+        $binding = $turn->snap['binding'];
+        if ($binding['acknowledged'] && $binding['provider'] === $provider->name() && $binding['model'] === $provider->model() && $binding['architecture_sha256'] === $this->model->architectureSha256()) {
+            return true;
+        }
+        $bound = $this->model->bind($this->budget($turn, false), $this->logger($turn));
+        if (!$bound['ok']) {
+            if ($gen !== null) {
+                $this->hold($turn, $gen, $bound['failure']);
+            }
+            return false;
+        }
+        $turn->snap['binding'] = $bound['binding'];
+        $turn->snap['architecture_version'] = '1.3';
+        $turn->event('BINDING_ACCEPTED', $bound['binding'] + [
+            'handshake' => $this->model->expectedHandshake(),
+            'note' => 'Exact activation line received in text mode. This acknowledges the contract; it is not evidence of enforcement.',
+        ]);
+        return true;
     }
 
     private function check(array $active, string $text): CheckOutcome
@@ -1053,6 +1462,12 @@ final class Engine
      */
     private function descend(Turn $turn, string $skill, ?string $branch, string $triggerEvent, bool $stuckStep = false): void
     {
+        $chosenBy = 'HOST_SIGNATURE';
+        if ($branch === null && !$stuckStep) {
+            // Round 6 (§6.3): no host signature matched, so the model may choose which in-scope prerequisite to check.
+            $branch = $this->choosePrerequisite($turn, $skill);
+            $chosenBy = $branch === null ? 'HOST_SIGNATURE' : 'MODEL';
+        }
         if ($branch === null || !$this->curriculum->isDeclaredPrerequisite($skill, $branch)) {
             if ($stuckStep) {
                 $note = $branch === $skill
@@ -1100,7 +1515,8 @@ final class Engine
             'target_episode_id' => $turn->snap['target_episode_id'],
         ];
         $turn->event('DESCENT', ['from_skill' => $skill, 'to_skill' => $branch, 'edge_type' => $edge['edge_type'], 'edge_condition' => $edge['edge_condition'],
-            'trigger_event_id' => $triggerEvent, 'depth' => count($turn->snap['return_stack']), 'trigger' => $stuckStep ? 'STUCK_AT_SMALLEST_GUIDED_STEP' : 'CONFIRMED_BREAKDOWN']);
+            'trigger_event_id' => $triggerEvent, 'depth' => count($turn->snap['return_stack']), 'trigger' => $stuckStep ? 'STUCK_AT_SMALLEST_GUIDED_STEP' : 'CONFIRMED_BREAKDOWN',
+            'chosen_by' => $stuckStep ? 'HOST_STEP' : $chosenBy]);
         $turn->eng['path'][] = $branch;
         if ($stuckStep) {
             $turn->eng['guided'] = null;
@@ -1111,6 +1527,24 @@ final class Engine
         }
         $turn->snap['current_skill_id'] = $branch;
         $this->presentItem($turn, 'PREREQUISITE', $branch, 'constructed');
+    }
+
+    /** §6.3: the model's choice among the declared, in-scope prerequisites the host supplies, or null (repair here). */
+    private function choosePrerequisite(Turn $turn, string $skill): ?string
+    {
+        $onPath = array_merge([$turn->snap['original_target_skill_id']], array_column($turn->snap['return_stack'], 'parent_skill_id'), [$skill]);
+        $candidates = array_values(array_filter($this->curriculum->declaredPrerequisites($skill), fn ($id) => BetaScope::contains($id) && !in_array($id, $onPath, true)));
+        if ($candidates === [] || count($turn->snap['return_stack']) >= self::MAX_DEPTH) {
+            return null;
+        }
+        $d = $this->askDecision($turn, [
+            'question' => 'PREREQUISITE',
+            'options' => ['CHECK_PREREQUISITE', 'REPAIR_HERE'],
+            'choices' => array_map(fn ($id) => ['id' => $id, 'title' => $this->curriculum->title($id)], $candidates),
+            'facts' => ['skill' => $skill . ' ' . $this->curriculum->title($skill), 'learner_answers' => array_values(array_filter(array_map(fn ($h) => $h['role'] === 'learner' ? $h['text'] : null, array_slice($turn->eng['history'], -4)))),
+                'note' => 'No known error pattern matched. Choose a building block to check, or repair at this skill.'],
+        ]);
+        return $d !== null && $d['decision'] === 'CHECK_PREREQUISITE' && in_array($d['choice'], $candidates, true) ? $d['choice'] : null;
     }
 
     private function returnUp(Turn $turn, string $reason, string $evidence): void
@@ -1245,7 +1679,7 @@ final class Engine
             }
             $g['path'] = [$parentId];
             unset($g);
-            $this->presentStep($turn, [], 'Now try the earlier question again.', 'main', true);
+            $this->presentStep($turn, [], 'Now try the earlier question again.');
             return;
         }
         foreach ($g['plan']['steps'] as $s) {
@@ -1264,8 +1698,9 @@ final class Engine
         unset($g);
         $skill = $turn->skill();
         $turn->event('GUIDED_PROBLEM_COMPLETED', ['skill_id' => $skill, 'plan_id' => $plan['plan_id'], 'faded' => $plan['faded'], 'without_breakdown' => $clean]);
-        if (($plan['faded'] && $clean) || $problems >= self::MAX_GUIDED_PROBLEMS) {
-            $this->startIndependentCheck($turn, $skill, $plan['faded'] && $clean ? 'Support faded: the whole problem was answered without breaking it down.' : 'Guided problem budget reached; check independently.');
+        $ready = $this->readiness($turn, $problems, $plan['faded'], $clean);
+        if ($ready !== null) {
+            $this->startIndependentCheck($turn, $skill, $ready);
             return;
         }
         [$keep, $keepLeft] = $this->keepForNextPlan($turn);
@@ -1292,17 +1727,15 @@ final class Engine
             $g['entered'][$id] = true;
             $g['path'] = [$id, $step['smaller'][0]['id']];
             unset($g);
-            $this->presentStep($turn, $facts);
+            // Round 6 (§6.1): the model may propose this smaller question for the learner's specific error.
+            $this->presentStep($turn, $facts, null, 'main', true);
             return 'SMALLER';
         }
         if ($step['alt_prompt'] !== null && !isset($g['alt'][$id])) {
             $g['alt'][$id] = true;
             unset($g);
-            // R4-A: also a re-ask of a failed step. Host-written facts may be shown; no model framing.
-            foreach (array_values(array_unique($facts)) as $fact) {
-                $turn->say('INFORMATION', $fact);
-            }
-            $this->presentStep($turn, [], 'Here is the same question, asked another way.', 'alt', true);
+            // Round 6 (§4) replaces R4-A: the model replies to the failed step; the facts go to it, and the guards apply.
+            $this->presentStep($turn, $facts, 'Here is the same question, asked another way.', 'alt');
             return 'ANOTHER_WAY';
         }
         // Round 2 ruling 8: still stuck at the smallest available question. Set the
@@ -1317,11 +1750,41 @@ final class Engine
         return $turn->mode() === 'PREREQUISITE_CHECK' ? 'PREREQUISITE' : 'OTHER';
     }
 
+    /**
+     * Round 6 (§6.2): after a guided problem, another one or the independent check. The model
+     * decides between the host's minimum of one and maximum of four problems; without an
+     * accepted decision the host's own rule applies.
+     *
+     * @return string|null the reason for the independent check, or null for another guided problem
+     */
+    private function readiness(Turn $turn, int $problems, bool $faded, bool $clean): ?string
+    {
+        if ($problems >= self::MAX_GUIDED_PROBLEMS) {
+            $turn->event('TEACHING_DECISION', ['question' => 'READINESS', 'source' => 'HOST', 'decision' => 'INDEPENDENT_CHECK', 'reason' => 'Maximum of ' . self::MAX_GUIDED_PROBLEMS . ' guided problems reached.']);
+            return 'Guided problem maximum reached; check independently.';
+        }
+        $d = $problems >= self::MIN_GUIDED_PROBLEMS ? $this->askDecision($turn, [
+            'question' => 'READINESS',
+            'options' => ['ANOTHER_GUIDED_PROBLEM', 'INDEPENDENT_CHECK'],
+            'choices' => [],
+            'facts' => ['skill' => $this->curriculum->title($turn->skill()), 'problems_completed' => $problems, 'minimum' => self::MIN_GUIDED_PROBLEMS, 'maximum' => self::MAX_GUIDED_PROBLEMS,
+                'last_problem_faded' => $faded, 'last_problem_clean' => $clean,
+                'meaning' => 'faded: the whole problem was asked first; clean: no step needed a smaller question, a hint or another wording'],
+        ]) : null;
+        if ($d !== null) {
+            return $d['decision'] === 'INDEPENDENT_CHECK' ? 'Ready for the independent check (model decision: ' . $d['reason'] . ').' : null;
+        }
+        if ($faded && $clean) {
+            return 'Support faded: the whole problem was answered without breaking it down.';
+        }
+        return $problems >= self::DEFAULT_GUIDED_PROBLEMS ? 'Guided problem budget reached; check independently.' : null;
+    }
+
     /** After a boundary at a stuck question: a fresh guided problem at the same skill, within the problem budget. */
     private function continueAfterStuck(Turn $turn, string $skill, string $reason): void
     {
         $g = $turn->eng['guided'];
-        if ($g['problems'] >= self::MAX_GUIDED_PROBLEMS) {
+        if ($g['problems'] >= self::DEFAULT_GUIDED_PROBLEMS) {
             $this->startIndependentCheck($turn, $skill, $reason . ' Guided problem budget reached; check independently.');
             return;
         }
@@ -1418,32 +1881,36 @@ final class Engine
      */
     private function onStuckEntry(Turn $turn, string $kind, string $responseEvent): void
     {
+        if ($this->leaveSlipStage($turn, 'STUCK_ENTRY')) {
+            return;
+        }
         $active = $turn->eng['active'];
         if ($turn->mode() === 'GUIDED_REPAIR') {
             $turn->event('ITEM_CLOSED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'reason' => 'STUCK_ENTRY',
                 'note' => 'The learner typed that they are stuck or asked for the answer; not an incorrect attempt.']);
             $turn->eng['active'] = null;
-            $at = count($turn->messages);
             $next = $this->stuck($turn, []);
-            if ($kind === 'ASK_FOR_ANSWER') {
-                // Round 5.1 P1: the line names what actually follows, placed before it.
-                $turn->sayAt($at, 'INFORMATION', match ($next) {
-                    'SMALLER' => EntryInterpreter::LINE_ASK_SMALLER,
-                    'ANOTHER_WAY' => EntryInterpreter::LINE_ASK_ANOTHER_WAY,
-                    'PREREQUISITE' => EntryInterpreter::LINE_ASK_PREREQUISITE,
-                    default => EntryInterpreter::LINE_ASK_DIFFERENT_PROBLEM,
-                });
-            }
+            // Round 6 (§4): the model writes the reply; it is told what follows (round 5.1 P1 named it in a host line).
+            $this->replyMoment($turn, $kind === 'ASK_FOR_ANSWER' ? ['moment' => 'ASKED_FOR_ANSWER', 'follows' => $next === 'OTHER' ? 'DIFFERENT_PROBLEM' : $next] : ['moment' => 'STUCK']);
             return;
         }
-        if ($kind === 'ASK_FOR_ANSWER') {
-            $turn->say('INFORMATION', EntryInterpreter::LINE_ASK_HINT);
-        }
         $this->onSupport($turn, 'REQUEST_HINT', $responseEvent);
+        $this->replyMoment($turn, $kind === 'ASK_FOR_ANSWER' ? ['moment' => 'ASKED_FOR_ANSWER', 'follows' => 'HINT'] : ['moment' => 'STUCK']);
+    }
+
+    /** Round 6: tell the reply generation of this turn what the learner just did, when it was not a checked answer. */
+    private function replyMoment(Turn $turn, array $moment): void
+    {
+        if ($turn->generation !== null) {
+            $turn->generation['reply_moment_detail'] = $moment;
+        }
     }
 
     private function onSupport(Turn $turn, string $action, ?string $entryEvent = null): void
     {
+        if ($entryEvent === null && $this->leaveSlipStage($turn, $action === 'REQUEST_HINT' ? 'HINT_REQUESTED' : 'EXPLANATION_REQUESTED')) {
+            return;
+        }
         $active = $turn->eng['active'];
         $kind = $action === 'REQUEST_HINT' ? 'HINT' : 'EXPLANATION';
         $supportEvent = $turn->event('SUPPORT_GIVEN', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'kind' => $kind,
@@ -1472,6 +1939,9 @@ final class Engine
 
     private function onSkip(Turn $turn): void
     {
+        if ($this->leaveSlipStage($turn, 'SKIPPED')) {
+            return;
+        }
         $active = $turn->eng['active'];
         $turn->event('ITEM_CLOSED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'reason' => 'SKIPPED'], $turn->triggerEventId);
         $turn->eng['active'] = null;
@@ -1489,6 +1959,9 @@ final class Engine
 
     private function onNotLearned(Turn $turn): void
     {
+        if ($this->leaveSlipStage($turn, 'NOT_LEARNED')) {
+            return;
+        }
         $active = $turn->eng['active'];
         $label = $turn->mode() === 'GUIDED_REPAIR' ? 'I_DONT_KNOW' : 'NOT_LEARNED';
         $turn->event('ITEM_CLOSED', ['item_id' => $active['item_id'], 'item_version' => $active['item_version'], 'reason' => $label,
@@ -1559,6 +2032,9 @@ final class Engine
             'component_id' => $template->componentId(),
             'template_ids' => [$template->id()],
             'avoid_parameters' => $avoid,
+            // Round 6 (§4) replaces R5-A: the reply before an independent item may only refer back; the item text stays host-written.
+            'reply_mode' => 'REFER_BACK',
+            'host_lead' => self::INDEPENDENT_LEAD,
         ];
         if ($role === 'TARGET' && $this->continuationDue($turn)) {
             $turn->eng['pending_generation'] = $generation;
@@ -1583,17 +2059,13 @@ final class Engine
     }
 
     /**
-     * @param bool $hostOnly R4-A: a re-ask of a previously failed guided step shows the host line and the item only;
-     *                       no model framing is requested or shown.
+     * @param bool $smaller round 6 (§6.1): a smaller question for the learner's specific error; the model may propose its own
      */
-    private function presentStep(Turn $turn, array $facts, ?string $lead = null, string $phrasing = 'main', bool $hostOnly = false): void
+    private function presentStep(Turn $turn, array $facts, ?string $lead = null, string $phrasing = 'main', bool $smaller = false): void
     {
         $g = $turn->eng['guided'];
         $step = $this->currentStep($g);
         $turn->snap['budgets']['instructional_turns']++;
-        if ($lead !== null) {
-            $turn->say('INFORMATION', $lead);
-        }
         $turn->generation = [
             'operation' => 'GUIDED_STEP',
             'message_type' => 'QUESTION',
@@ -1604,7 +2076,9 @@ final class Engine
             'template_ids' => [AcceptanceGate::GUIDED_TEMPLATE],
             'fixed_parameters' => ['plan_id' => $g['plan']['plan_id'], 'step_id' => $step['id'], 'phrasing' => $phrasing],
             'feedback_facts' => array_values(array_unique($facts)),
-            'host_only' => $hostOnly,
+            'reply_mode' => 'REPLY',
+            'host_lead' => $lead,
+            'step_proposal_wanted' => $smaller && ($step['source'] ?? 'PLANNER') !== 'MODEL',
         ];
     }
 
@@ -1637,72 +2111,39 @@ final class Engine
         if ($gen === null) {
             return;
         }
+        $gen['reply_mode'] ??= 'REPLY';
         $sessionId = $turn->snap['session_id'];
-        if ($gen['host_only'] ?? false) {
-            $result = $this->model->hostOnly($this->allocation($turn, $gen), $this->rng, $this->store->fingerprints($sessionId));
-            $turn->event('HOST_ONLY_STEP', ['operation' => $gen['operation'], 'step_id' => $gen['fixed_parameters']['step_id'],
-                'note' => 'Re-ask of a previously failed guided step: host line and item only; no model call (round 4, R4-A).']);
-            $this->presentGenerated($turn, $gen, $result, $sessionId);
+        if (!$this->ensureBound($turn, $gen)) {
             return;
         }
-        // Never start a provider call that could outlive this operation's lease:
-        // a slow provider then produces a retryable hold, not a discarded result.
-        $leaseEnds = $turn->now->getTimestamp() + $this->config->int('lease_seconds') - 5;
-        $budget = function () use ($sessionId, $leaseEnds): ?string {
-            if ($this->clock->now()->getTimestamp() + $this->config->int('provider_timeout') > $leaseEnds) {
-                return 'LEASE_TIME_INSUFFICIENT';
-            }
-            if ($this->store->modelCallCount($sessionId) >= $this->config->int('max_model_calls_per_session')) {
-                return 'SESSION_MODEL_CALL_BUDGET';
-            }
-            $day = 'provider-day-' . gmdate('Y-m-d', $this->clock->now()->getTimestamp());
-            if ($this->store->counter($day) >= $this->config->int('global_provider_calls_per_day')) {
-                return 'GLOBAL_PROVIDER_BUDGET';
-            }
-            $this->store->bump($day, $this->clock->now()->modify('+2 days'));
-            return null;
-        };
-        $provider = $this->model->provider();
-        $log = function (string $kind, string $outcome, ?ProviderResponse $resp = null) use ($sessionId, $provider, $turn): void {
-            $turn->modelCalls++;
-            // Metadata only (round 3 ruling 3–4): finish reason, token counts, duration. Never reasoning text.
-            $this->store->logModelCall($sessionId, null, $kind, $provider->name(), $provider->model(), $outcome, $this->clock->now(), $resp === null ? [] : [
-                'finish_reason' => $resp->finishReason, 'duration_ms' => $resp->durationMs,
-                'prompt_tokens' => $resp->usage['prompt_tokens'] ?? null, 'completion_tokens' => $resp->usage['completion_tokens'] ?? null, 'reasoning_tokens' => $resp->usage['reasoning_tokens'] ?? null,
-                'transport_detail' => $resp->diagnostics,
-            ]);
-        };
-
-        $binding = $turn->snap['binding'];
-        if (!$binding['acknowledged'] || $binding['provider'] !== $provider->name() || $binding['model'] !== $provider->model() || $binding['architecture_sha256'] !== $this->model->architectureSha256()) {
-            $bound = $this->model->bind($budget, $log);
-            if (!$bound['ok']) {
-                $this->hold($turn, $gen, $bound['failure']);
-                return;
-            }
-            $turn->snap['binding'] = $bound['binding'];
-            $turn->event('BINDING_ACCEPTED', $bound['binding'] + [
-                'handshake' => $this->model->expectedHandshake(),
-                'note' => 'Exact activation line received in text mode. This acknowledges the contract; it is not evidence of enforcement.',
-            ]);
+        $gen['reply_to'] = $this->replyTo($turn, $gen);
+        // Round 6 (§4): before an independent item the reply may only refer back; with nothing to refer back to, no reply is shown.
+        if (($gen['reply_mode'] ?? 'REPLY') === 'REFER_BACK' && $gen['reply_to'] === null) {
+            $gen['reply_mode'] = 'NOT_SHOWN';
         }
-
+        $turn->generation = $gen;
         $allocation = $this->allocation($turn, $gen);
         $context = $this->context($turn, $allocation);
+        $shown = $gen['reply_mode'] !== 'NOT_SHOWN';
         $expect = [
             'session_id' => $sessionId,
             'revision' => $turn->snap['revision'],
             'event_id' => $turn->triggerEventId,
             'mode' => $turn->mode(),
             'current_skill' => $turn->skill(),
-            'disclosure_guard' => in_array($gen['operation'], ['GUIDED_STEP', 'HINT', 'EXPLANATION'], true),
-            'learner_text_shown' => !self::hostLeadOnly($gen),
+            'disclosure_guard' => true,
+            'learner_text_shown' => $shown,
             'protected_answers' => $this->protectedAnswers($turn, $gen),
             'completed_answers' => $this->completedAnswers($turn, $gen),
+            'protect_new_item' => $gen['message_type'] === 'QUESTION' && $gen['role'] !== 'GUIDED',
+            'refer_back' => $gen['reply_mode'] === 'REFER_BACK' ? ['allowed_numbers' => $this->referBackNumbers($turn)] : null,
             'planned_transition' => $this->plannedTransition($turn),
             'known_event_ids' => array_merge($turn->snap['accepted_event_ids'], array_column($turn->events, 'event_id')),
         ];
-        $result = $this->model->generate($context, $expect, $budget, $log, $this->rng, $this->store->fingerprints($sessionId));
+        if ($gen['step_proposal_wanted'] ?? false) {
+            $expect['step_check'] = $this->stepCheck($turn);
+        }
+        $result = $this->model->generate($context, $expect, $this->budget($turn, true), $this->logger($turn), $this->rng, $this->store->fingerprints($sessionId));
         foreach ($result['repairs'] as $r) {
             $turn->event('MODEL_OUTPUT_REJECTED', ['attempt' => $r['attempt'], 'errors' => $r['errors'], 'operation' => $gen['operation'],
                 'note' => 'Rejected before display; bounded repair requested. Not a learner failure.']);
@@ -1719,28 +2160,133 @@ final class Engine
         $this->presentGenerated($turn, $gen, $result, $sessionId);
     }
 
-    /** Fold an accepted generation (model or host-only) into the turn: message, item record, active item. */
+    /**
+     * Round 6 (§4): what the reply answers. A checked answer this turn, or a stuck entry or
+     * request for the answer (set by the stuck path); null when there is nothing to reply to.
+     */
+    private function replyTo(Turn $turn, array $gen): ?array
+    {
+        if (isset($gen['reply_moment_detail'])) {
+            return $gen['reply_moment_detail'] + ['learner_entry' => $turn->learnerPayload['text'] ?? ''];
+        }
+        if (($gen['reply_moment'] ?? null) === 'MICRO_CHECK_CORRECT') {
+            return ['moment' => 'MICRO_CHECK_CORRECT', 'learner_entry' => $turn->learnerPayload['text'] ?? '', 'verdict' => 'CORRECT'];
+        }
+        if ($turn->lastResult === null || $turn->lastItem === null || !in_array($turn->lastResult['verdict'], ['CORRECT', 'INCORRECT', 'PARTIAL'], true)) {
+            return null;
+        }
+        return [
+            'moment' => 'CHECKED_ANSWER',
+            'verdict' => $turn->lastResult['verdict'],
+            'previous_problem' => ProblemText::main($turn->lastItem['prompt']),
+            'learner_entry' => $turn->learnerPayload['text'] ?? '',
+            'read_as' => $turn->lastReadAs,
+            'facts' => array_values(array_unique($turn->facts)),
+            'rule' => $this->ruleSentence($turn->lastItem),
+        ];
+    }
+
+    /** The rule a correct answer to this item uses, in plain words (the simulated model names it; a live model may word its own). */
+    private function ruleSentence(array $item): string
+    {
+        $template = $item['template_id'] === AcceptanceGate::GUIDED_TEMPLATE ? ($item['guided_template_id'] ?? '') : $item['template_id'];
+        return match ($template) {
+            'POSITIVE_DISTRIBUTION', 'DISTRIBUTION_TRANSFER', 'DISTRIBUTION_CONTRAST' => 'That is how it always works: the number outside the parentheses multiplies each term inside.',
+            'GROUPED_LINEAR', 'GROUPED_LINEAR_TRANSFER', 'GROUPED_FIRST_STEP_CONTRAST' => 'Doing the same thing to both sides keeps the equation balanced, so its solution stays the same.',
+            'TWO_STEP', 'ONE_STEP_ADD', 'ONE_STEP_MULTIPLY' => 'Undoing each operation on both sides keeps the equation balanced.',
+            'SIGNED_ADD', 'SIGNED_SUBTRACT' => 'The number with the larger size decides the sign of the result.',
+            'SIGNED_MULTIPLY', 'SIGNED_DIVIDE' => 'Work out the size first, then decide the sign.',
+            'WHOLE_MULTIPLY_DIVIDE' => 'Splitting a number into parts you know gives the same product.',
+            'MICRO_CHECK' => 'Checking one step at a time finds a slip.',
+            default => '',
+        };
+    }
+
+    /** Round 6 (§4): numbers a refer-back reply may use: those in the previous problem, the learner's answer, its reading, its correct value and the facts about it. @return array<string,true> */
+    private function referBackNumbers(Turn $turn): array
+    {
+        $item = $turn->lastItem;
+        if ($item === null) {
+            return [];
+        }
+        $expected = $item['answer_spec']['expected'];
+        $text = implode(' ', array_merge([$item['prompt'], $turn->learnerPayload['text'] ?? '', (string) $turn->lastReadAs, is_array($expected) ? '' : (string) $expected], $turn->facts));
+        $out = [];
+        foreach (ReadingGuard::numbers($text) as $n) {
+            $out[$n] = true;
+        }
+        return $out;
+    }
+
+    /** §6.1: what a proposed smaller step is checked against. */
+    private function stepCheck(Turn $turn): array
+    {
+        $g = $turn->eng['guided'];
+        $current = $this->currentStep($g);
+        $parent = $this->findStep($g['plan']['steps'], $g['path'][0]);
+        $text = $g['plan']['problem'] . ' ' . $parent['prompt'];
+        foreach ($this->planner->flatten($g['plan']['steps']) as $s) {
+            if (isset($g['done'][$s['id']])) {
+                $text .= ' ' . $s['prompt'] . ' ' . (is_array($s['answer']['expected']) ? '' : $s['answer']['expected']);
+            }
+        }
+        $allowed = [];
+        foreach (ReadingGuard::numbers($text) as $n) {
+            $allowed[$n] = true;
+        }
+        foreach ($g['plan']['params'] as $v) {
+            if (is_int($v)) {
+                $allowed[(string) abs($v)] = true;
+            }
+        }
+        $protected = [];
+        foreach ($this->planner->flatten($g['plan']['steps']) as $s) {
+            if (!isset($g['done'][$s['id']]) && $s['id'] !== $current['id']) {
+                $protected[] = ['answer' => $s['answer'], 'variables' => $s['variables'], 'options' => $s['options'], 'active' => true];
+            }
+        }
+        return ['replaced' => $current, 'parent' => $parent, 'allowed_numbers' => $allowed, 'protected' => $protected];
+    }
+
+    /** Fold an accepted generation into the turn: the reply, the host lead, the item record and the active item. */
     private function presentGenerated(Turn $turn, array $gen, array $result, string $sessionId): void
     {
         $turn->generation = null;
-        $hostLead = self::hostLeadOnly($gen);
-        if ($hostLead) {
-            // R5-A: an independent item is never shown with model-written text. The model's
-            // learner text from this call is discarded (not shown, not kept); the host line
-            // states only what is asked.
-            if (($result['discarded_message_chars'] ?? 0) > 0) {
-                $turn->event('MODEL_TEXT_DISCARDED', ['operation' => $gen['operation'], 'role' => $gen['role'], 'characters' => $result['discarded_message_chars'],
-                    'note' => 'Model text proposed with an independent item is never shown (round 5, R5-A).']);
-            }
-            $turn->say('INFORMATION', self::INDEPENDENT_LEAD);
-            $lead = self::INDEPENDENT_LEAD;
-        } else {
-            $turn->say('INFORMATION', $result['student_message'], 'MODEL');
-            $lead = $result['student_message'];
+        $mode = $gen['reply_mode'] ?? 'REPLY';
+        $reply = $mode === 'NOT_SHOWN' ? '' : trim($result['student_message']);
+        if ($mode === 'NOT_SHOWN' && ($result['discarded_message_chars'] ?? 0) > 0) {
+            $turn->event('MODEL_TEXT_DISCARDED', ['operation' => $gen['operation'], 'role' => $gen['role'], 'characters' => $result['discarded_message_chars'],
+                'note' => 'No reply was due before this independent item (nothing to refer back to), so the model text is not shown.']);
         }
+        if ($reply !== '') {
+            $turn->say('INFORMATION', $reply, 'MODEL');
+        }
+        if ($mode === 'REFER_BACK' && $reply !== '') {
+            // §4 audit list: the host cannot fully check "refer back only", so forward-looking phrases are listed for review.
+            $found = array_values(array_filter(self::FORWARD_PHRASES, fn ($p) => preg_match('/(?<![\p{L}])' . preg_quote($p, '/') . '(?![\p{L}])/iu', str_replace("\u{2019}", "'", $reply)) === 1));
+            if ($found !== []) {
+                $turn->event('REPLY_AUDIT', ['operation' => $gen['operation'], 'phrases' => $found, 'text' => $reply, 'provider' => $this->model->provider()->name(),
+                    'note' => 'A reply shown before an independent item contains a forward-looking phrase (round 6 audit list); it passed the refer-back number check.']);
+            }
+        }
+        $lead = $gen['host_lead'] ?? null;
+        if ($lead !== null) {
+            $turn->say('INFORMATION', $lead);
+        }
+        $shownText = trim($reply . ' ' . ($lead ?? ''));
         if ($gen['message_type'] === 'FEEDBACK') {
-            $this->remember($turn, 'tutor', $turn->triggerEventId, $lead);
+            $this->remember($turn, 'tutor', $turn->triggerEventId, $shownText);
             return;
+        }
+        $step = $result['step_proposal'] ?? null;
+        if ($step !== null) {
+            $turn->event($step['status'] === 'ACCEPTED' ? 'STEP_PROPOSAL_ACCEPTED' : ($step['status'] === 'IGNORED' ? 'STEP_PROPOSAL_IGNORED' : 'STEP_PROPOSAL_REJECTED'), [
+                'proposal' => $step['proposal'], 'reasons' => $step['reasons'], 'replaced_step_id' => $gen['fixed_parameters']['step_id'] ?? null,
+                'note' => $step['status'] === 'ACCEPTED' ? 'The model\'s smaller question passed the step checks and replaces the planned one (round 6, §6.1).' : 'The planned smaller question is used.',
+            ]);
+            if ($step['status'] === 'ACCEPTED') {
+                $this->replaceStep($turn, $step['step']);
+            }
         }
         $record = $result['record'];
         foreach ($result['flags'] as $f) {
@@ -1754,8 +2300,10 @@ final class Engine
             'variant_id' => $record['variant_id'], 'component_id' => $record['component_id'], 'template_id' => $record['template_id'],
             'episode_id' => $turn->snap['target_episode_id'], 'fingerprint' => $result['fingerprint'], 'independent_eligible' => $independentEligible,
             'host_generated_parameters' => $result['host_generated'], 'mode' => $turn->mode(), 'prompt' => $record['prompt'],
-            'model_text_shown' => !$hostLead && trim($result['student_message']) !== '',
-        ]);
+            // Round 6 (§4): a reply that passed the refer-back check is not text about this item, so it does not make the item assisted (B14b).
+            'model_text_shown' => $mode === 'REPLY' && $reply !== '',
+            'refer_back_reply' => $mode === 'REFER_BACK' && $reply !== '',
+        ] + (isset($gen['slip_stage']) ? ['slip_stage' => $gen['slip_stage']] : []) + (isset($gen['retry_of']) ? ['retry_of' => $gen['retry_of']] : []));
         $active = [
             'item_id' => $record['item_id'], 'item_version' => $record['item_version'], 'role' => $record['role'], 'skill_id' => $record['skill_id'],
             'variant_id' => $record['variant_id'], 'component_id' => $record['component_id'], 'template_id' => $record['template_id'],
@@ -1764,6 +2312,9 @@ final class Engine
             'params' => $record['parameters'], 'answer_spec' => $record['answer_spec'], 'objects' => $record['mathematical_objects'],
             'support_event_ids' => [], 'unscorable' => false,
         ];
+        if (isset($gen['slip_stage'])) {
+            $active['slip_stage'] = $gen['slip_stage'];
+        }
         if ($record['role'] === 'GUIDED') {
             $g = $turn->eng['guided'];
             $active['guided_step'] = $this->currentStep($g);
@@ -1773,18 +2324,41 @@ final class Engine
         $turn->eng['active'] = $active;
         $turn->snap['active_item_id'] = $record['item_id'];
         $turn->snap['active_item_version'] = $record['item_version'];
-        $this->remember($turn, 'tutor', $turn->triggerEventId, trim($lead . ' ' . $record['prompt']));
+        $this->remember($turn, 'tutor', $turn->triggerEventId, trim($shownText . ' ' . $record['prompt']));
     }
 
-    /** R5-A: every presentation of an independent item (target, probe, prerequisite check, independent check, return). */
-    private static function hostLeadOnly(array $gen): bool
+    /** §6.1: an accepted smaller step takes the planned step's place in the guided plan. */
+    private function replaceStep(Turn $turn, array $new): void
     {
-        return $gen['message_type'] === 'QUESTION' && $gen['role'] !== 'GUIDED';
+        foreach ($turn->eng['guided']['plan']['steps'] as $i => $s) {
+            foreach ($s['smaller'] as $j => $sub) {
+                if ($sub['id'] === $new['id']) {
+                    $turn->eng['guided']['plan']['steps'][$i]['smaller'][$j] = $new;
+                    return;
+                }
+            }
+        }
+        throw new \LogicException('Accepted step ' . $new['id'] . ' is not a smaller step of the plan');
+    }
+
+    /** Round 6 (§4): what the model's student_message is for in this operation. */
+    private static function replyInstruction(array $gen): string
+    {
+        return match ($gen['reply_mode'] ?? 'REPLY') {
+            'NOT_SHOWN' => 'Not shown: there is no answer to reply to before this independent problem, so the learner sees only a host line and the item. Return an empty string.',
+            'REFER_BACK' => 'Reply to the learner\'s previous answer, shown before a new problem they do alone. Refer back only: describe what they did and the rule they used. Do not explain a method they did not use, give no advice for the new problem, and use no number that is not in the previous problem or answer. The host shows the new problem itself.',
+            default => match ($gen['operation']) {
+                'MICRO_CHECK' => 'Reply to the learner\'s answer: most of it was right except one arithmetic part. Lead into the one short question the host shows about that part. Do not state its answer or the answer to the problem.',
+                'SLIP_RETRY' => 'The learner answered the small question correctly. Say so briefly and invite them to try the problem again. Do not state its answer.',
+                'HINT', 'EXPLANATION' => 'A hint for the active item, under the hint rules. Do not state its answer.',
+                default => 'Reply to what the learner just did (reply_to), then lead into the question the host shows.',
+            },
+        };
     }
 
     private function inputHelp(array $record): string
     {
-        if ($record['template_id'] === AcceptanceGate::GUIDED_TEMPLATE) {
+        if (in_array($record['template_id'], [AcceptanceGate::GUIDED_TEMPLATE, AcceptanceGate::MICRO_CHECK_TEMPLATE], true)) {
             return match ($record['response_type']) {
                 'scalar' => 'Enter a single number, for example 7, -3 or 5/2.',
                 'expression' => 'Enter an expression using x, for example 2x + 5.',
@@ -1861,6 +2435,9 @@ final class Engine
             'component_id' => $gen['component_id'],
             'host_planned_transition' => $this->plannedTransition($turn),
             'feedback_facts' => $gen['feedback_facts'] ?? [],
+            'reply_to' => $gen['reply_to'] ?? null,
+            'reply_mode' => $gen['reply_mode'] ?? 'REPLY',
+            'student_message' => self::replyInstruction($gen),
         ];
         if ($gen['message_type'] === 'FEEDBACK') {
             $alloc['item_id'] = $turn->eng['active']['item_id'];
@@ -1886,10 +2463,26 @@ final class Engine
             $alloc['guided_problem'] = $g['plan']['problem'];
             $alloc['host_question'] = $gen['fixed_parameters']['phrasing'] === 'alt' && $step['alt_prompt'] !== null ? $step['alt_prompt'] : $step['prompt'];
             $alloc['representation_hint'] = $this->representationHint($turn->skill());
+            if ($gen['step_proposal_wanted'] ?? false) {
+                $parent = $this->findStep($g['plan']['steps'], $g['path'][0]);
+                $alloc['step_proposal_wanted'] = true;
+                $alloc['step_proposal_context'] = ['step_being_broken_down' => $parent['prompt'], 'planned_smaller_question' => $step['prompt'],
+                    'learner_answer' => $turn->learnerPayload['text'] ?? null, 'problem' => $g['plan']['problem']];
+            }
             return $alloc;
         }
-        if (self::hostLeadOnly($gen)) {
-            $alloc['student_message'] = 'Not shown: this is independent work, so the learner sees only a host line and the item. Return an empty string.';
+        if (isset($gen['retry_of'])) {
+            $alloc['retry_of'] = $gen['retry_of'];
+            $alloc['fixed_parameters'] = $gen['fixed_parameters'];
+        }
+        if ($gen['operation'] === 'MICRO_CHECK') {
+            $alloc['fixed_parameters'] = $gen['fixed_parameters'];
+            $alloc['allowed_templates'] = [['template_id' => AcceptanceGate::MICRO_CHECK_TEMPLATE, 'response_type' => 'scalar', 'parameters' => 'copy fixed_parameters exactly']];
+            $alloc['host_question'] = 'What is ' . $gen['fixed_parameters']['display'] . '?';
+            return $alloc;
+        }
+        if (($gen['reply_mode'] ?? null) === 'REFER_BACK') {
+            $alloc['avoid_answers'] = array_map('strval', array_keys($this->referBackNumbers($turn)));
         }
         $alloc['allowed_templates'] = array_map(fn ($id) => [
             'template_id' => $id,
@@ -1908,6 +2501,10 @@ final class Engine
             $a = $turn->eng['active'];
             $out[] = ['answer' => $a['answer_spec'], 'variables' => $a['objects']['variables'] ?? ['x'], 'options' => $a['objects']['options'] ?? null, 'active' => true];
         }
+        if ($gen['operation'] === 'MICRO_CHECK' && ($turn->eng['slip'] ?? null) !== null) {
+            $a = $turn->eng['slip']['item'];
+            $out[] = ['answer' => $a['answer_spec'], 'variables' => $a['objects']['variables'] ?? ['x'], 'options' => $a['objects']['options'] ?? null, 'active' => true];
+        }
         if ($gen['operation'] === 'GUIDED_STEP' && $turn->eng['guided'] !== null) {
             $g = $turn->eng['guided'];
             $current = $this->currentStep($g)['id'];
@@ -1916,6 +2513,20 @@ final class Engine
                     $out[] = ['answer' => $s['answer'], 'variables' => $s['variables'], 'options' => $s['options'], 'active' => $s['id'] === $current];
                 }
             }
+        }
+        return $out;
+    }
+
+    /** Answers a reading's texts must not disclose: the active item and, on a guided step, every unanswered step. */
+    private function protectedForActive(Turn $turn): array
+    {
+        $a = $turn->eng['active'];
+        $out = [['answer' => $a['answer_spec'], 'variables' => $a['objects']['variables'] ?? ['x'], 'options' => $a['objects']['options'] ?? null, 'active' => true]];
+        if ($a['role'] === 'GUIDED') {
+            $out = array_merge($out, $this->protectedAnswers($turn, ['operation' => 'GUIDED_STEP']));
+        }
+        if (($a['slip_stage'] ?? null) === 'MICRO_CHECK') {
+            $out = array_merge($out, $this->protectedAnswers($turn, ['operation' => 'MICRO_CHECK']));
         }
         return $out;
     }

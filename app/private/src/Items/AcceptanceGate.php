@@ -20,6 +20,8 @@ use AlgebraEngine\Support\RandomSource;
 final class AcceptanceGate
 {
     public const GUIDED_TEMPLATE = 'GUIDED_STEP';
+    /** Round 6 (§5): the host-built micro-question on the faulty sub-step of a slip candidate. */
+    public const MICRO_CHECK_TEMPLATE = 'MICRO_CHECK';
 
     public function __construct(
         private ItemFactory $factory,
@@ -52,6 +54,14 @@ final class AcceptanceGate
         if ($templateId === self::GUIDED_TEMPLATE) {
             return $this->acceptGuided($draft, $allocation);
         }
+        if ($templateId === self::MICRO_CHECK_TEMPLATE) {
+            return $this->acceptMicroCheck($draft, $allocation);
+        }
+        // Round 6 (§5): a slip retry re-asks the same question with the same numbers; it never counts either way.
+        $retry = isset($allocation['retry_of']);
+        if ($retry && ($draft['parameters'] ?? null) != $allocation['fixed_parameters']) {
+            return self::fail(['item.parameters must equal the fixed_parameters in the allocation exactly']);
+        }
 
         $template = $this->factory->get($templateId);
         if (($draft['response_type'] ?? null) !== $template->responseType()) {
@@ -60,10 +70,11 @@ final class AcceptanceGate
         $params = $draft['parameters'] ?? [];
         $hostGenerated = false;
         $keep = $allocation['keep_features'] ?? [];
+        $avoidAnswers = $allocation['avoid_answers'] ?? [];
         if ($params === [] || $params === null) {
             for ($i = 0; $i < 400; $i++) {
                 $params = $template->generate($rng, $allocation['avoid_parameters'] ?? null);
-                if (StructuralFeatures::mismatches($keep, $templateId, $params) === []) {
+                if (StructuralFeatures::mismatches($keep, $templateId, $params) === [] && self::avoidedAnswer($template->answerSpec($params), $avoidAnswers) === null) {
                     break;
                 }
             }
@@ -79,11 +90,15 @@ final class AcceptanceGate
             if ($changed !== []) {
                 $errors[] = 'parameters must keep the structure of the item the learner failed: ' . implode(', ', $changed);
             }
+            // Round 6 (§4): the reply before this item refers back to the previous one, so the new answer must not be one of its numbers.
+            if ($errors === [] && ($hit = self::avoidedAnswer($template->answerSpec($params), $avoidAnswers)) !== null) {
+                $errors[] = 'parameters give the answer ' . $hit . ', which is also a number in the previous problem or answer; choose other parameters';
+            }
         }
         if ($errors !== []) {
             return self::fail($errors);
         }
-        $fingerprint = ItemFactory::fingerprint($templateId, $params);
+        $fingerprint = ItemFactory::fingerprint($templateId, $params + ($retry ? ['retry_of' => $allocation['retry_of']] : []));
         if (in_array($fingerprint, $usedFingerprints, true)) {
             return self::fail(['parameters reuse an item instance already presented in this session; choose fresh parameters']);
         }
@@ -117,8 +132,11 @@ final class AcceptanceGate
             ],
             'representation_requirements' => [],
             'support_already_supplied' => [],
-            'independent_eligible_proposal' => in_array($allocation['role'], ['TARGET', 'INDEPENDENT', 'PREREQUISITE', 'TRANSFER', 'DIAGNOSTIC'], true),
+            'independent_eligible_proposal' => !$retry && in_array($allocation['role'], ['TARGET', 'INDEPENDENT', 'PREREQUISITE', 'TRANSFER', 'DIAGNOSTIC'], true),
         ];
+        if ($retry) {
+            $record['support_already_supplied'] = ['slip_retry'];
+        }
         $schemaErrors = $this->schemas->errors($record, 'item.schema.json');
         if ($schemaErrors !== []) {
             throw new \LogicException('Host-built item failed item.schema.json: ' . implode('; ', $schemaErrors));
@@ -171,6 +189,62 @@ final class AcceptanceGate
             throw new \LogicException('Host-built guided item failed item.schema.json: ' . implode('; ', $schemaErrors));
         }
         return ['ok' => true, 'errors' => [], 'record' => $record, 'fingerprint' => ItemFactory::fingerprint(self::GUIDED_TEMPLATE, $allocation['fixed_parameters'] + ['item' => $allocation['item_id']]), 'flags' => [], 'host_generated' => false];
+    }
+
+    /** The micro-check is fully host-defined: "What is 7 × 5?", keyed by the sub-step's value. Not counted toward any goal. */
+    private function acceptMicroCheck(array $draft, array $allocation): array
+    {
+        $fixed = $allocation['fixed_parameters'];
+        if (($draft['parameters'] ?? null) != $fixed) {
+            return self::fail(['item.parameters must equal the fixed_parameters in the allocation exactly']);
+        }
+        if (($draft['response_type'] ?? null) !== 'scalar') {
+            return self::fail(['item.response_type must be scalar']);
+        }
+        $record = [
+            'item_id' => $allocation['item_id'],
+            'item_version' => $allocation['item_version'],
+            'curriculum_id' => CurriculumRepository::CURRICULUM_ID,
+            'curriculum_version' => CurriculumRepository::CURRICULUM_VERSION,
+            'skill_id' => $allocation['skill_id'],
+            'role' => $allocation['role'],
+            'component_id' => $allocation['component_id'],
+            'variant_id' => $allocation['variant_id'],
+            'prompt' => 'What is ' . $fixed['display'] . '?',
+            'response_type' => 'scalar',
+            'template_id' => self::MICRO_CHECK_TEMPLATE,
+            'parameters' => $fixed,
+            'mathematical_objects' => ['sub_step' => $fixed['display'], 'variables' => []],
+            'domain' => ['number_system' => 'RATIONAL', 'restrictions' => []],
+            'answer_spec' => ['kind' => 'exact_rational', 'expected' => (string) $fixed['value'], 'requested_form' => 'single_number', 'units' => null, 'tolerance' => null, 'rubric' => []],
+            'checking' => [
+                'requested_route' => 'DETERMINISTIC_TEMPLATE',
+                'required_capabilities' => ['exact_numeric_or_declared_tolerance'],
+                'scope' => 'Micro-question on one arithmetic sub-step of a slip candidate; checked against a host-derived value; never counted toward a goal.',
+            ],
+            'representation_requirements' => [],
+            'support_already_supplied' => ['slip_micro_check'],
+            'independent_eligible_proposal' => false,
+        ];
+        $schemaErrors = $this->schemas->errors($record, 'item.schema.json');
+        if ($schemaErrors !== []) {
+            throw new \LogicException('Host-built micro-check failed item.schema.json: ' . implode('; ', $schemaErrors));
+        }
+        return ['ok' => true, 'errors' => [], 'record' => $record, 'fingerprint' => ItemFactory::fingerprint(self::MICRO_CHECK_TEMPLATE, $fixed + ['item' => $allocation['item_id']]), 'flags' => [], 'host_generated' => false];
+    }
+
+    /** A whole-number key whose size is one of the numbers to avoid. @param list<string> $avoid */
+    public static function avoidedAnswer(array $spec, array $avoid): ?string
+    {
+        if ($avoid === [] || $spec['kind'] !== 'exact_rational') {
+            return null;
+        }
+        try {
+            $v = ScalarParser::parse((string) $spec['expected']);
+        } catch (MathInputError) {
+            return null;
+        }
+        return $v->isInteger() && in_array((string) abs($v->num()), $avoid, true) ? (string) $spec['expected'] : null;
     }
 
     private function varies(array $p, array $avoid): bool
