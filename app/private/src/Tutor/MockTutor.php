@@ -102,7 +102,7 @@ final class MockTutor implements ProviderAdapter
 
     private function reply(array $ctx): array
     {
-        $env = $this->base($ctx, 'FEEDBACK');
+        $env = $this->base($ctx);
         $turn = $ctx['TURN'];
         $result = $ctx['CODE_RESULT'] ?? null;
         $focus = $ctx['FOCUS']['skill_id'];
@@ -134,7 +134,6 @@ final class MockTutor implements ProviderAdapter
                         $env['proposed_transition'] = $this->move('HELP', $skill);
                         $ref = $this->recipe($ctx, $skill, 'practice');
                         if ($ref !== null) {
-                            $env['message_type'] = 'QUESTION';
                             $env['item'] = ['purpose' => 'practice', 'skill_id' => $skill, 'source' => 'recipe', 'recipe_ref' => $ref, 'spec' => null, 'prompt' => '', 'stated_answer' => null];
                         }
                         return $env;
@@ -171,14 +170,12 @@ final class MockTutor implements ProviderAdapter
             if ($original !== null && $ctx['ALLOWED']['may_pose_problem']) {
                 // Round 9 §4.3: back to the helped problem, now practice.
                 $env['student_message'] = $named . ' Now go back to the earlier question.';
-                $env['message_type'] = 'QUESTION';
                 $env['item'] = ['purpose' => 'practice', 'skill_id' => $original['skill_id'], 'source' => 'original', 'recipe_ref' => null, 'spec' => null, 'prompt' => '', 'stated_answer' => null];
                 $env['proposed_transition'] = $this->move('CONTINUE', $original['skill_id']);
                 return $env;
             }
             if ($slip['retry_available']) {
                 $env['student_message'] = $named . ' Now try the earlier check question again.';
-                $env['message_type'] = 'QUESTION';
                 $env['item'] = ['purpose' => 'retry', 'skill_id' => $slip['skill_id'], 'source' => 'retry', 'recipe_ref' => null, 'spec' => null, 'prompt' => '', 'stated_answer' => null];
                 $env['proposed_transition'] = $this->move('REVIEW', $slip['skill_id']);
                 return $env;
@@ -200,7 +197,6 @@ final class MockTutor implements ProviderAdapter
         if ($result['slip'] !== null && $slip['eligible_for_pause']) {
             $step = $result['slip']['sub_step'];
             $env['student_message'] = 'You set this up the right way. One small calculation went wrong.';
-            $env['message_type'] = 'QUESTION';
             $env['item'] = ['purpose' => 'practice', 'skill_id' => $skill, 'source' => 'spec', 'recipe_ref' => null,
                 'spec' => ['kind' => 'numeric_step', 'expression' => $step['expression']], 'prompt' => 'Wait, what is ' . $step['display'] . '?', 'stated_answer' => $step['answer']];
             $env['proposed_transition'] = $this->move('SLIP_CHECK', $skill);
@@ -217,7 +213,7 @@ final class MockTutor implements ProviderAdapter
 
     private function reading(array $ctx): array
     {
-        $env = $this->base($ctx, 'CONTROL');
+        $env = $this->base($ctx);
         $entry = (string) ($ctx['TURN']['entry'] ?? '');
         $text = mb_strtolower($entry);
         foreach (array_reverse(Numbers::phrases($text)) as $p) {
@@ -269,7 +265,6 @@ final class MockTutor implements ProviderAdapter
         if ($ref === null) {
             return $env;
         }
-        $env['message_type'] = 'QUESTION';
         $env['item'] = ['purpose' => $purpose, 'skill_id' => $skill, 'source' => 'recipe', 'recipe_ref' => $ref, 'spec' => null, 'prompt' => '', 'stated_answer' => null];
         return $env;
     }
@@ -324,11 +319,10 @@ final class MockTutor implements ProviderAdapter
         return ['to_mode' => $move, 'target_skill_id' => $skill, 'reason' => 'scripted mock policy', 'evidence_event_ids' => []];
     }
 
-    private function base(array $ctx, string $type): array
+    private function base(array $ctx): array
     {
         return [
-            'architecture_version' => '1.7',
-            'message_type' => $type,
+            'architecture_version' => '1.8',
             'student_message' => '',
             'item' => null,
             'proposed_transition' => null,
@@ -412,12 +406,10 @@ final class MockTutor implements ProviderAdapter
                 $env['evidence_proposals'][] = ['kind' => 'OBSERVATION', 'statement' => 'Goal met for ' . $focus . '.', 'evidence_event_ids' => [], 'hypothesis_status' => 'SUPPORTED_FOR_OBSERVED_PATTERN'];
                 break;
             case 'WRONG_ANSWER':
-                $env['message_type'] = 'QUESTION';
                 $env['item'] = ['purpose' => 'practice', 'skill_id' => 'Q07', 'source' => 'spec', 'recipe_ref' => null,
                     'spec' => ['kind' => 'linear_equation', 'expression' => '3(x + 4) = 27'], 'prompt' => 'Solve 3(x + 4) = 27.', 'stated_answer' => '7'];
                 break;
             case 'OFF_PATTERN_CHECK':
-                $env['message_type'] = 'QUESTION';
                 $env['student_message'] = 'Good. Here is a check question.';
                 $env['item'] = ['purpose' => 'check', 'skill_id' => 'Q07', 'source' => 'spec', 'recipe_ref' => null,
                     'spec' => ['kind' => 'linear_equation', 'expression' => '2x + 3 = 13'], 'prompt' => '', 'stated_answer' => '5'];
@@ -446,13 +438,11 @@ final class MockTutor implements ProviderAdapter
                 break;
             case 'FALSE_SLIP':
                 $env['student_message'] = 'Just a small slip.';
-                $env['message_type'] = 'QUESTION';
                 $env['item'] = ['purpose' => 'practice', 'skill_id' => $focus, 'source' => 'spec', 'recipe_ref' => null,
                     'spec' => ['kind' => 'numeric_step', 'expression' => '9 * 8'], 'prompt' => 'What is 9 × 8?', 'stated_answer' => '72'];
                 $env['proposed_transition'] = $this->move('SLIP_CHECK', $focus);
                 break;
             case 'POSE_ANYWAY':
-                $env['message_type'] = 'QUESTION';
                 $env['item'] = ['purpose' => 'practice', 'skill_id' => 'N18', 'source' => 'spec', 'recipe_ref' => null,
                     'spec' => ['kind' => 'numeric_step', 'expression' => '6 * 7'], 'prompt' => 'What is 6 × 7?', 'stated_answer' => '42'];
                 break;

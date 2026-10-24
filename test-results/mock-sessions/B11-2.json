@@ -5,7 +5,7 @@
         {
             "input": "(start on E06)",
             "status": 200,
-            "ms": 8,
+            "ms": 5,
             "value_answer": false,
             "graded": false,
             "calls": 2,
@@ -29,6 +29,12 @@
             "ms": 4,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 4(x + 5). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -44,9 +50,15 @@
         {
             "input": "(((",
             "status": 200,
-            "ms": 4,
+            "ms": 6,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 4(x + 5). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -60,11 +72,17 @@
             "counted": true
         },
         {
-            "input": "9x+27",
+            "input": "4x+20",
             "status": 200,
             "ms": 6,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 4(x + 5). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -80,9 +98,15 @@
         {
             "input": "can you explain why that works?",
             "status": 200,
-            "ms": 5,
+            "ms": 6,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 8(x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -98,9 +122,15 @@
         {
             "input": "???",
             "status": 200,
-            "ms": 6,
+            "ms": 5,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 7(x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -114,29 +144,17 @@
             "counted": true
         },
         {
-            "input": "2X+12",
-            "status": 200,
-            "ms": 7,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "9x+9",
+            "input": "7X+28",
             "status": 200,
             "ms": 6,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 7(x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -150,11 +168,17 @@
             "counted": true
         },
         {
-            "input": "2x+22",
+            "input": "8x+32",
             "status": 200,
-            "ms": 7,
+            "ms": 10,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 8(x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -168,11 +192,17 @@
             "counted": true
         },
         {
-            "input": "A,B",
+            "input": "7x+42",
             "status": 200,
             "ms": 7,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 7(x + 6). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -186,11 +216,41 @@
             "counted": true
         },
         {
-            "input": "8x+8y+72",
+            "input": "B,C",
             "status": 200,
-            "ms": 7,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Which of these expressions are equal to 5(x + 1) for every value of x? Select every one that is.\nA) x + 6\nB) 5x + 5\nC) 5 · x + 5 · 1\nD) x + 5",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "18x+36",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 3(6x + 12). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -207,6 +267,51 @@
     "goals_met": [
         "E06"
     ],
+    "start_skill": "E06",
+    "route": {
+        "detours": [],
+        "originals": [],
+        "returns": [
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "E06",
+                "problem_id": "prb_59a9713a30b43ccc84a29ee5",
+                "how": "original"
+            }
+        ],
+        "fresh_evidence": [
+            {
+                "skill_id": "E06",
+                "checks_counted": 3,
+                "correct": 3
+            }
+        ]
+    },
+    "route_log": [
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "E06",
+            "prompt": "Expand 8(x + 4). Write your answer without parentheses."
+        }
+    ],
+    "prerequisite": {
+        "wrong_before_first_success": 0,
+        "first_success": false,
+        "answers": 0
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 0,
+        "deepest": "E06",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": [],
     "check_answers": {
         "unassisted": 3,
         "unassisted_correct": 3,
@@ -224,8 +329,8 @@
     },
     "help_moves_with_practice_item": 1,
     "original_problem": [
-        "waits as the original: prb_395f562b0443f9f4bc25cec0",
-        "original brought back: prb_395f562b0443f9f4bc25cec0"
+        "waits as the original: prb_59a9713a30b43ccc84a29ee5",
+        "original brought back: prb_59a9713a30b43ccc84a29ee5"
     ],
     "guards": [],
     "guard_phrases": [],

@@ -1,0 +1,1045 @@
+{
+    "name": "ARITHMETIC-Q07",
+    "provider": "MOCK (simulated tutor; not a live result, not evidence of learning, latency not meaningful)",
+    "turns": [
+        {
+            "input": "(start on Q07)",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "BINDING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (binding call)",
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_FINAL_PLUS",
+            "open": {
+                "prompt": "Solve 6(x − 6) = 6 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "11",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve −2x + 3 = −17 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 5x + 1 = 31 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "11",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve 7x − 4 = 66 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve 8x + 14 = 30 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-10",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −2x + 9 = 29 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve 7x − 12 = −5 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-6",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve 9x + 8 = −55 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-5",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −8x − 3 = 37 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "9",
+            "status": 200,
+            "ms": 13,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve 6x + 6 = 54 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "11",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve −9x + 6 = −84 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 2x + 11 = 27 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "5",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve 8x + 13 = 45 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-2",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve −7x + 15 = 36 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-1",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 8x − 15 = −23 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve −4x − 13 = −21 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "0",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve −3x − 7 = −4 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 3x + 14 = 38 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-2",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve −2x + 12 = 18 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve 8x − 13 = 3 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "10",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −4x + 5 = −35 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-8",
+            "status": 200,
+            "ms": 11,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve −2x + 8 = 26 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "10",
+            "status": 200,
+            "ms": 11,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve −2x − 12 = −30 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-4",
+            "status": 200,
+            "ms": 11,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 7x + 9 = −19 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6",
+            "status": 200,
+            "ms": 22,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve −2x − 6 = −16 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2",
+            "status": 200,
+            "ms": 15,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve −5x − 15 = −20 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-4",
+            "status": 200,
+            "ms": 17,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 8x − 1 = −33 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6",
+            "status": 200,
+            "ms": 17,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve −2x − 2 = −12 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-2",
+            "status": 200,
+            "ms": 16,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_OFF_BY_ONE",
+            "open": {
+                "prompt": "Solve 6x − 6 = −24 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-10",
+            "status": 200,
+            "ms": 23,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 5x − 15 = −65 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        }
+    ],
+    "goals_met": [],
+    "start_skill": "Q07",
+    "route": {
+        "detours": [
+            {
+                "skill_id": "Q06",
+                "target_skill_id": "Q07",
+                "problems": 30,
+                "correct": 10,
+                "not_yet": 19,
+                "returned_to_target": false,
+                "returned_through": null,
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 0
+                }
+            }
+        ],
+        "originals": [],
+        "returns": [],
+        "fresh_evidence": []
+    },
+    "route_log": [
+        {
+            "kind": "DETOUR",
+            "skill_id": "Q06",
+            "prompt": "Solve −2x + 3 = −17 for x."
+        }
+    ],
+    "prerequisite": {
+        "wrong_before_first_success": 1,
+        "first_success": true,
+        "answers": 29
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 0,
+        "deepest": "Q06",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": {
+        "ARITH_FINAL_PLUS": 1,
+        "ARITH_OFF_BY_ONE": 19
+    },
+    "check_answers": {
+        "unassisted": 9,
+        "unassisted_correct": 0,
+        "with_help": 0,
+        "held": 0
+    },
+    "check_causes": {
+        "with_help": [],
+        "held": []
+    },
+    "help_moves_on_open_checks": [],
+    "help_moves_with_practice_item": 0,
+    "original_problem": [],
+    "guards": [],
+    "guard_phrases": [],
+    "counters": [],
+    "repairs": [],
+    "holds": [],
+    "held_attempts": [],
+    "readings": {
+        "sent_for_reading": 0,
+        "is_answer_true": 0,
+        "is_answer_false": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "readings_differ": 0,
+        "clarifying_questions_shown": 0
+    },
+    "equation_step": [],
+    "slip_eligibility": {
+        "eligible": 0,
+        "not eligible": 20
+    },
+    "slips": [
+        {
+            "prompt": "Solve 6(x − 6) = 6 for x.",
+            "purpose": "PRACTICE",
+            "entry": "8",
+            "eligible": false,
+            "codes": [
+                "ARITH_FINAL_PLUS"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve −2x + 3 = −17 for x.",
+            "purpose": "PRACTICE",
+            "entry": "11",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 7x − 4 = 66 for x.",
+            "purpose": "CHECK",
+            "entry": "11",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 8x + 14 = 30 for x.",
+            "purpose": "PRACTICE",
+            "entry": "3",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 7x − 12 = −5 for x.",
+            "purpose": "CHECK",
+            "entry": "2",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 9x + 8 = −55 for x.",
+            "purpose": "PRACTICE",
+            "entry": "-6",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 6x + 6 = 54 for x.",
+            "purpose": "CHECK",
+            "entry": "9",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve −9x + 6 = −84 for x.",
+            "purpose": "PRACTICE",
+            "entry": "11",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 8x + 13 = 45 for x.",
+            "purpose": "CHECK",
+            "entry": "5",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve −7x + 15 = 36 for x.",
+            "purpose": "PRACTICE",
+            "entry": "-2",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve −4x − 13 = −21 for x.",
+            "purpose": "CHECK",
+            "entry": "3",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve −3x − 7 = −4 for x.",
+            "purpose": "PRACTICE",
+            "entry": "0",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve −2x + 12 = 18 for x.",
+            "purpose": "CHECK",
+            "entry": "-2",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 8x − 13 = 3 for x.",
+            "purpose": "PRACTICE",
+            "entry": "3",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve −2x + 8 = 26 for x.",
+            "purpose": "CHECK",
+            "entry": "-8",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve −2x − 12 = −30 for x.",
+            "purpose": "PRACTICE",
+            "entry": "10",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve −2x − 6 = −16 for x.",
+            "purpose": "CHECK",
+            "entry": "6",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve −5x − 15 = −20 for x.",
+            "purpose": "PRACTICE",
+            "entry": "2",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve −2x − 2 = −12 for x.",
+            "purpose": "CHECK",
+            "entry": "6",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 6x − 6 = −24 for x.",
+            "purpose": "PRACTICE",
+            "entry": "-2",
+            "eligible": false,
+            "codes": [
+                "ARITH_OFF_BY_ONE"
+            ],
+            "detail": null
+        }
+    ],
+    "ungraded_value_answers": 0,
+    "value_answers_graded": 0,
+    "empty_replies": 0,
+    "binding": {
+        "calls": 1,
+        "accepted": 1,
+        "outcomes": [
+            "ACCEPTED"
+        ]
+    },
+    "calls": 32,
+    "finish_length": 0,
+    "attempts": 30
+}

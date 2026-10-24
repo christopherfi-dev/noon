@@ -14,7 +14,7 @@ PASS I'm stuck records help before the hint  (HTTP 200)
 PASS end session  (HTTP 200)
 PASS report is labelled mock and written by code  (HTTP 200)
 PASS mutation without CSRF refused  (HTTP 403)
-PASS session cookie path is /educational-engines/algebra-engine-ai/ (separate from the beta)  (Set-Cookie: ae_sid=704178f87f616ddb7ea779cb27b1ae0848e193336d8434fac03895e26a27fdda; Path=/educational-engines/algebra-engine-ai/; Max-Age=604800; HttpOnly; SameSite=Lax)
+PASS session cookie path is /educational-engines/algebra-engine-ai/ (separate from the beta)  (Set-Cookie: ae_sid=9899c8267ed4006712f88a1e3900d177f2df14bc0255f8c4145ae046c877352d; Path=/educational-engines/algebra-engine-ai/; Max-Age=604800; HttpOnly; SameSite=Lax)
 PASS private path not served: /educational-engines/algebra-engine-ai/config.php  (HTTP 404)
 PASS private path not served: /educational-engines/algebra-engine-ai/bootstrap.php  (HTTP 404)
 PASS private path not served: /educational-engines/algebra-engine-ai/src/App.php  (HTTP 404)
@@ -26,6 +26,6 @@ PASS algebra-engine-ai-vps-upload.zip: no config.php, nothing inside var/  (677 
 PASS algebra-engine-ai-vps-upload.zip: carries migration 004_progress.sql
 PASS algebra-engine-ai-vps-upload.zip: carries migration 005_round6_call_detail.sql
 PASS algebra-engine-ai-vps-upload.zip: carries migration 006_round7_cached_tokens.sql
-PASS algebra-engine-ai-vps-upload.zip: carries architecture v1.7 and no older architecture
+PASS algebra-engine-ai-vps-upload.zip: carries architecture v1.8 and no older architecture
 PASS algebra-engine-ai-vps-upload.zip: carries no host requirements, changelog, CLAUDE.md or conductor file (round 8 §2)
 BUNDLE SMOKE PASSED

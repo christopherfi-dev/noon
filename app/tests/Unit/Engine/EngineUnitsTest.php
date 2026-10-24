@@ -230,7 +230,7 @@ final class EngineUnitsTest extends TestCase
     {
         $contract = TutorPrompt::OUTPUT_CONTRACT;
         $this->assertStringStartsWith("OUTPUT CONTRACT\n", $contract);
-        $this->assertStringContainsString("\narchitecture_version is \"1.7\".\n", $contract, 'round 9 §4.1 item 1: its own line');
+        $this->assertStringContainsString("\narchitecture_version is \"1.8\".\n", $contract, 'round 9 §4.1 item 1: its own line');
         // Round 9 §4.1: the sentences the conductor specifies, word for word.
         $exact = [
             'During an open check problem, HELP or HINT means your reply helps with that check; use one of them for every reply that helps with it, even when the reply answers the student\'s question. ANSWER_QUESTION and EXPLAIN never mean help with an open check problem.',
@@ -247,7 +247,8 @@ final class EngineUnitsTest extends TestCase
         foreach (['Identity:', 'TRUSTED_SESSION', 'session_id', 'state_revision', 'reply_to_event_id', 'HELP means you helped', 'SLIP.confirmed', 'is_answer is true when'] as $gone) {
             $this->assertStringNotContainsString($gone, $contract, 'round 9 §4.1 removes ' . $gone);
         }
-        foreach (['message_type', 'item', 'source recipe', 'source spec', 'source retry', 'source original', 'stated_answer', 'purpose', 'proposed_transition',
+        $this->assertStringNotContainsString('message_type', $contract, 'round 10 §4.1 item 2: code sets message_type');
+        foreach (['item', 'source recipe', 'source spec', 'source retry', 'source original', 'stated_answer', 'purpose', 'proposed_transition',
             'is_answer', 'other_readings', 'clarifying_question', 'teacher_report: null'] as $field) {
             $this->assertStringContainsString($field, $contract, 'defines ' . $field);
         }

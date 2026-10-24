@@ -23,6 +23,9 @@ use AlgebraEngine\Support\Ids;
  */
 final class ProblemFactory
 {
+    /** The last sentence of every equation_step problem's wording (round 9 §4.5, owner's wording). */
+    public const STEP_TAIL = 'Write the equation you get.';
+
     public const PURPOSES = ['PRACTICE', 'CHECK', 'RETRY'];
     private const KIND_OF_TEMPLATE = [
         'ONE_STEP_ADD' => 'linear_equation', 'ONE_STEP_MULTIPLY' => 'linear_equation', 'TWO_STEP' => 'linear_equation',
@@ -135,7 +138,7 @@ final class ProblemFactory
             'subtract' => 'Subtract ' . $n . ' from both sides of ' . $equation . '.',
             'multiply' => 'Multiply both sides of ' . $equation . ' by ' . $n . '.',
             'divide' => 'Divide both sides of ' . $equation . ' by ' . $n . '.',
-        } . ' Write the equation you get.';
+        } . ' ' . self::STEP_TAIL;
     }
 
     /** §5.5: the slipped check problem shown again for a retry. It never counts. */

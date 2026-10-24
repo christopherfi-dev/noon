@@ -3,62 +3,62 @@
 | # | Learner input | Calls (purpose: reasoning setting) | Outcomes | Wait ms |
 |---|---|---|---|---|
 | 0 | (start on Q07) | 2 — BINDING: disabled (binding call); REPLY: disabled (per call: none of the three cases) | ACCEPTED, ACCEPTED | 6 |
-| 1 | Can we practise expanding brackets first, like 3(x + 4)? | 2 — READING: enabled:low (per call: an entry the AI must read); REPLY: disabled (per call: none of the three cases) | ACCEPTED, ACCEPTED | 6 |
-| 2 | 5 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
-| 3 | -5 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
-| 4 | 2 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
-| 5 | 5 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
-| 6 | 8 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 7 | 2 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 10 |
-| 8 | -3 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 10 |
-| 9 | 12 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 11 |
-| 10 | C,D | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 10 |
-| 11 | 7 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 15 |
+| 1 | Can we practise expanding brackets first, like 3(x + 4)? — on Solve 3(x − 8) = −21 for x. (Q07 practice) | 2 — READING: enabled:low (per call: an entry the AI must read); REPLY: disabled (per call: none of the three cases) | ACCEPTED, ACCEPTED | 8 |
+| 2 | 1 — on Solve 3(x − 8) = −21 for x. (Q07 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
+| 3 | -2 — on Solve 4(x + 9) = 24 for x. (Q07 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
+| 4 | -4 — on Solve −5x + 15 = 35 for x. (Q06 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 5 | 10 — on Solve −5x + 7 = −43 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
+| 6 | -5 — on Solve 4x − 7 = −27 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
+| 7 | 9 — on Solve −5x − 6 = −51 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
+| 8 | 11 — on Solve 6(x + 9) = 120 for x. (Q07 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 9 | 7 — on Solve 4(x + 8) = 60 for x. (Q07 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 10 | B,C — on Here is an equation: 3(x − 4) = −15. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply only the x by 3: 3x − 4 = −15 / B) Divide both sides by 3: x − 4 = −5 / C) Multiply both terms in the parentheses by 3: 3x − 12 = −15 / D) Add 4 to undo the −4: 3x = −11 (Q07 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 11 | -5 — on Solve 4(x − 3) − 10 = −42 for x. (Q07 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
 
 ## Conversation as the student saw it (the last 80 lines the session keeps)
 
 - **tutor (message):** Let's work on solve equations containing parentheses. Start with this practice question, and tell me if anything is unclear.
-- **tutor (problem):** Solve 8(x − 7) = −16 for x.
+- **tutor (problem):** Solve 3(x − 8) = −21 for x.
 - **student (message):** Can we practise expanding brackets first, like 3(x + 4)?
 - **tutor (message):** I am not sure how to read that. Could you write just your answer, with numbers and symbols?
-- **student (message):** 5
-- **app (result):** Correct. / On 8(x − 7) = −16 you answered 5.
+- **student (message):** 1
+- **app (result):** Correct. / On 3(x − 8) = −21 you answered 1.
 - **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal.
-- **app (check):** Solve 5(x − 4) = −50 for x.
-- **student (message):** -5
-- **app (result):** Not yet. / On 5(x − 4) = −50 you answered -5.
+- **app (check):** Solve 4(x + 9) = 24 for x.
+- **student (message):** -2
+- **app (result):** Not yet. / On 4(x + 9) = 24 you answered -2.
 - **tutor (message):** Let's look at that again. Let's practise that part on its own first. What happens to each term inside the parentheses?
-- **tutor (problem):** Solve 3x − 7 = −1 for x.
-- **student (message):** 2
-- **app (result):** Correct. / On 3x − 7 = −1 you answered 2.
+- **tutor (problem):** Solve −5x + 15 = 35 for x.
+- **student (message):** -4
+- **app (result):** Correct. / On −5x + 15 = 35 you answered -4.
 - **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
-- **app (check):** Solve −9x − 1 = −46 for x.
-- **student (message):** 5
-- **app (result):** Correct. / On −9x − 1 = −46 you answered 5.
+- **app (check):** Solve −5x + 7 = −43 for x.
+- **student (message):** 10
+- **app (result):** Correct. / On −5x + 7 = −43 you answered 10.
 - **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
-- **app (check):** Solve −3x − 6 = −30 for x.
-- **student (message):** 8
-- **app (result):** Correct. / On −3x − 6 = −30 you answered 8.
+- **app (check):** Solve 4x − 7 = −27 for x.
+- **student (message):** -5
+- **app (result):** Correct. / On 4x − 7 = −27 you answered -5.
 - **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
-- **app (check):** Solve 6x − 7 = 5 for x.
-- **student (message):** 2
-- **app (result):** Correct. / On 6x − 7 = 5 you answered 2.
+- **app (check):** Solve −5x − 6 = −51 for x.
+- **student (message):** 9
+- **app (result):** Correct. / On −5x − 6 = −51 you answered 9.
 - **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. Let's go back to the topic you started with.
-- **tutor (problem):** Solve 7(x − 2) = −35 for x.
-- **student (message):** -3
-- **app (result):** Correct. / On 7(x − 2) = −35 you answered -3.
+- **tutor (problem):** Solve 6(x + 9) = 120 for x.
+- **student (message):** 11
+- **app (result):** Correct. / On 6(x + 9) = 120 you answered 11.
 - **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal.
-- **app (check):** Solve 6(x − 8) = 24 for x.
-- **student (message):** 12
-- **app (result):** Correct. / On 6(x − 8) = 24 you answered 12.
-- **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal.
-- **app (check):** Here is an equation: 5(x − 6) = −35. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Divide only the left side by 5: x − 6 = −35 / B) Add 6 to undo the −6: 5x = −29 / C) Multiply both terms in the parentheses by 5: 5x − 30 = −35 / D) Divide both sides by 5: x − 6 = −7
-- **student (message):** C,D
-- **app (result):** Correct. / On 5(x − 6) = −35 you chose C and D.
-- **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal.
-- **app (check):** Solve 20 = 5(x − 3) for x.
+- **app (check):** Solve 4(x + 8) = 60 for x.
 - **student (message):** 7
-- **app (result):** Correct. / On 20 = 5(x − 3) you answered 7.
+- **app (result):** Correct. / On 4(x + 8) = 60 you answered 7.
+- **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal.
+- **app (check):** Here is an equation: 3(x − 4) = −15. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply only the x by 3: 3x − 4 = −15 / B) Divide both sides by 3: x − 4 = −5 / C) Multiply both terms in the parentheses by 3: 3x − 12 = −15 / D) Add 4 to undo the −4: 3x = −11
+- **student (message):** B,C
+- **app (result):** Correct. / On 3(x − 4) = −15 you chose B and C.
+- **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal.
+- **app (check):** Solve 4(x − 3) − 10 = −42 for x.
+- **student (message):** -5
+- **app (result):** Correct. / On 4(x − 3) − 10 = −42 you answered -5.
 - **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. That completes the work planned for this session. You can look at your summary now.
 
 ## Every tutor message, with the answered and open problem it was written for
@@ -66,48 +66,57 @@
 | Field | Text | Answered problem (attempt) | Open problem |
 |---|---|---|---|
 | student_message | Let's work on solve equations containing parentheses. Start with this practice question, and tell me if anything is unclear. | — | — |
-| student_message | I am not sure how to read that. Could you write just your answer, with numbers and symbols? | — | prb_61a4bb66412999017cecb03a practice |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_61a4bb66412999017cecb03a (evt_4f83f5578f35dbe4ae02ecf2) | — |
-| student_message | Let's look at that again. Let's practise that part on its own first. What happens to each term inside the parentheses? | prb_83c0a64926c224e820bca643 (evt_2a4e8265b7d0f49768399f27) | — |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_914a92273b164acbe9ae0f11 (evt_8ae2c2630aee0887d9dbc221) | — |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_cfd52a1a74ea3126c279c559 (evt_f00b8a34d5d83d89605916f7) | — |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_926a4fd9c6695d0119fc1d53 (evt_0f7111c49d96ec35d4ee4f9b) | — |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Let's go back to the topic you started with. | prb_0e4304405f74a9ab51526dac (evt_83295e6ff1508d86c00f73b2) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_1fdf4858cedc4d9131bdf4d7 (evt_577bb46ec0024d03b603164d) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_2a9fd03e0f87e4e621cfb0a1 (evt_24182c8754e99a58763d948d) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_2c2218fe2965e7f2222775d3 (evt_f2e9ab45a345dc991630ac97) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. That completes the work planned for this session. You can look at your summary now. | prb_bcb85382abd97ef05c89aeef (evt_5e8799cf174941dd6c02af4f) | — |
+| student_message | I am not sure how to read that. Could you write just your answer, with numbers and symbols? | — | prb_3a63653d35a38d59a957f8a1 practice |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_3a63653d35a38d59a957f8a1 (evt_dfa52b920df3d80c6642c8e1) | — |
+| student_message | Let's look at that again. Let's practise that part on its own first. What happens to each term inside the parentheses? | prb_8187c097ee7bb7b9e0c5a80f (evt_657ab5cae1dd684a22639d42) | — |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_87e9f00b6f23e4647be901cc (evt_76065af7e62f6c38b9bd4006) | — |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_98a5287c617f3354f21fe9b0 (evt_61917606599e2f5ec220beed) | — |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_8582c90dcfa1a562b418e7be (evt_b245ed01131bab672d69300b) | — |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Let's go back to the topic you started with. | prb_d5ab67970da1ea81f95aa94e (evt_5706997d0cbc15b2032e074b) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_be1845238c28b84e7ef2041b (evt_eae4109d5abf780314ff478e) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_e65e31506197f5ae8e6eeab2 (evt_9086755db4bf6d4ae790860b) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_0df6f5fe170d7868dd795d95 (evt_7492f56dffd0aef2304311ee) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. That completes the work planned for this session. You can look at your summary now. | prb_82ec9548bde32522736fa10b (evt_29e955606ec97a4f48c424ab) | — |
 
 ## Verdicts recorded by code
 
 | Problem | Purpose | Entry | Read as | Verdict | Help | Slip | Held |
 |---|---|---|---|---|---|---|---|
-| Solve 8(x − 7) = −16 for x. | PRACTICE | 5 | 5 | CORRECT |  |  |  |
-| Solve 5(x − 4) = −50 for x. | CHECK | -5 | -5 | INCORRECT |  |  |  |
-| Solve 3x − 7 = −1 for x. | PRACTICE | 2 | 2 | CORRECT |  |  |  |
-| Solve −9x − 1 = −46 for x. | CHECK | 5 | 5 | CORRECT |  |  |  |
-| Solve −3x − 6 = −30 for x. | CHECK | 8 | 8 | CORRECT |  |  |  |
-| Solve 6x − 7 = 5 for x. | CHECK | 2 | 2 | CORRECT |  |  |  |
-| Solve 7(x − 2) = −35 for x. | PRACTICE | -3 | -3 | CORRECT |  |  |  |
-| Solve 6(x − 8) = 24 for x. | CHECK | 12 | 12 | CORRECT |  |  |  |
-| Here is an equation: 5(x − 6) = −35. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Divide only the left side by 5: x − 6 = −35 / B) Add 6 to undo the −6: 5x = −29 / C) Multiply both terms in the parentheses by 5: 5x − 30 = −35 / D) Divide both sides by 5: x − 6 = −7 | CHECK | C,D | C,D | CORRECT |  |  |  |
-| Solve 20 = 5(x − 3) for x. | CHECK | 7 | 7 | CORRECT |  |  |  |
+| Solve 3(x − 8) = −21 for x. | PRACTICE | 1 | 1 | CORRECT |  |  |  |
+| Solve 4(x + 9) = 24 for x. | CHECK | -2 | -2 | INCORRECT |  |  |  |
+| Solve −5x + 15 = 35 for x. | PRACTICE | -4 | -4 | CORRECT |  |  |  |
+| Solve −5x + 7 = −43 for x. | CHECK | 10 | 10 | CORRECT |  |  |  |
+| Solve 4x − 7 = −27 for x. | CHECK | -5 | -5 | CORRECT |  |  |  |
+| Solve −5x − 6 = −51 for x. | CHECK | 9 | 9 | CORRECT |  |  |  |
+| Solve 6(x + 9) = 120 for x. | PRACTICE | 11 | 11 | CORRECT |  |  |  |
+| Solve 4(x + 8) = 60 for x. | CHECK | 7 | 7 | CORRECT |  |  |  |
+| Here is an equation: 3(x − 4) = −15. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply only the x by 3: 3x − 4 = −15 / B) Divide both sides by 3: x − 4 = −5 / C) Multiply both terms in the parentheses by 3: 3x − 12 = −15 / D) Add 4 to undo the −4: 3x = −11 | CHECK | B,C | B,C | CORRECT |  |  |  |
+| Solve 4(x − 3) − 10 = −42 for x. | CHECK | -5 | -5 | CORRECT |  |  |  |
 
 ## Check answers
 
 | Check problem | Entry | Verdict | Counted as |
 |---|---|---|---|
-| Solve 5(x − 4) = −50 for x. | -5 | INCORRECT | counted unassisted |
-| Solve −9x − 1 = −46 for x. | 5 | CORRECT | counted unassisted |
-| Solve −3x − 6 = −30 for x. | 8 | CORRECT | counted unassisted |
-| Solve 6x − 7 = 5 for x. | 2 | CORRECT | counted unassisted |
-| Solve 6(x − 8) = 24 for x. | 12 | CORRECT | counted unassisted |
-| Here is an equation: 5(x − 6) = −35. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Divide only the left side by 5: x − 6 = −35 / B) Add 6 to undo the −6: 5x = −29 / C) Multiply both terms in the parentheses by 5: 5x − 30 = −35 / D) Divide both sides by 5: x − 6 = −7 | C,D | CORRECT | counted unassisted |
-| Solve 20 = 5(x − 3) for x. | 7 | CORRECT | counted unassisted |
+| Solve 4(x + 9) = 24 for x. | -2 | INCORRECT | counted unassisted |
+| Solve −5x + 7 = −43 for x. | 10 | CORRECT | counted unassisted |
+| Solve 4x − 7 = −27 for x. | -5 | CORRECT | counted unassisted |
+| Solve −5x − 6 = −51 for x. | 9 | CORRECT | counted unassisted |
+| Solve 4(x + 8) = 60 for x. | 7 | CORRECT | counted unassisted |
+| Here is an equation: 3(x − 4) = −15. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply only the x by 3: 3x − 4 = −15 / B) Divide both sides by 3: x − 4 = −5 / C) Multiply both terms in the parentheses by 3: 3x − 12 = −15 / D) Add 4 to undo the −4: 3x = −11 | B,C | CORRECT | counted unassisted |
+| Solve 4(x − 3) − 10 = −42 for x. | -5 | CORRECT | counted unassisted |
 
 ## Help on open check problems
 
 - Help moves on open checks: none; with a practice item: 0
+
+## Route (round 10 §4.3; code's record)
+
+- DETOUR Q06: Solve −5x + 15 = 35 for x.
+- RETURN_TO_SKILL Q07: Solve 6(x + 9) = 120 for x.
+- Detour to Q06: 4 problem(s), 4 correct, 0 not yet; returned to Q07 through practice, then 4 correct and 0 not yet
+- Fresh evidence on Q07 after the first return: 3 check answer(s) counted, 3 correct
+- Prerequisite answers: 4; not yet before the first success: 0
+- Boundary (N18, N03): not reached; deepest skill posed: Q06; moves outside the tutor rejected: 0
 
 ## equation_step answers
 
@@ -117,7 +126,7 @@ None.
 
 | Problem | Purpose | Entry | Eligible for the pause | Signatures | Detail sent to the tutor |
 |---|---|---|---|---|---|
-| Solve 5(x − 4) = −50 for x. | CHECK | -5 | no | ARITH_FINAL_PLUS |  |
+| Solve 4(x + 9) = 24 for x. | CHECK | -2 | no | ARITH_FINAL_PLUS |  |
 
 ## Detector signals (logged only; the text was shown unchanged, nothing held)
 

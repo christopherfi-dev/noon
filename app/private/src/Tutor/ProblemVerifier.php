@@ -11,7 +11,7 @@ use AlgebraEngine\Math\Polynomial;
 use AlgebraEngine\Math\ScalarParser;
 
 /**
- * Problem verification (round 6 §4.2; architecture v1.7 §8). The AI proposes
+ * Problem verification (round 6 §4.2; architecture v1.8 §8). The AI proposes
  * at most one next problem per turn, as its own spec, a pre-generated recipe
  * problem, the retry of a slipped check problem, or the original problem it
  * helped with (round 9 §4.3). Code computes the answer and rejects the problem

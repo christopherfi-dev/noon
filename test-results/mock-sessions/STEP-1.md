@@ -2,42 +2,42 @@
 
 | # | Learner input | Calls (purpose: reasoning setting) | Outcomes | Wait ms |
 |---|---|---|---|---|
-| 0 | (start on Q06) | 2 — BINDING: disabled (binding call); REPLY: disabled (per call: none of the three cases) | ACCEPTED, ACCEPTED | 6 |
-| 1 | Can we go one step at a time? I get lost in two-step equations. | 1 — REPLY: enabled:low (per call: a free-text message about the math) | ACCEPTED | 4 |
-| 2 | 6 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
-| 3 | can you show me the first step on this one? | 1 — REPLY: enabled:low (per call: a free-text message about the math) | ACCEPTED | 7 |
-| 4 | -10 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 5 | can you show me the first step on this one? | 1 — REPLY: enabled:low (per call: a free-text message about the math) | ACCEPTED | 6 |
-| 6 | 5 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
-| 7 | can you show me the first step on this one? | 1 — REPLY: enabled:low (per call: a free-text message about the math) | ACCEPTED | 5 |
-| 8 | 9 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
+| 0 | (start on Q06) | 2 — BINDING: disabled (binding call); REPLY: disabled (per call: none of the three cases) | ACCEPTED, ACCEPTED | 7 |
+| 1 | Can we go one step at a time? I get lost in two-step equations. — on Solve −8x + 5 = 13 for x. (Q06 practice) | 1 — REPLY: enabled:low (per call: a free-text message about the math) | ACCEPTED | 4 |
+| 2 | -1 — on Solve −8x + 5 = 13 for x. (Q06 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 5 |
+| 3 | can you show me the first step on this one? — on Solve 9x − 4 = 59 for x. (Q06 check) | 1 — REPLY: enabled:low (per call: a free-text message about the math) | ACCEPTED | 5 |
+| 4 | 7 — on Solve 9x − 4 = 59 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
+| 5 | can you show me the first step on this one? — on Solve −3x − 10 = 14 for x. (Q06 check) | 1 — REPLY: enabled:low (per call: a free-text message about the math) | ACCEPTED | 5 |
+| 6 | -8 — on Solve −3x − 10 = 14 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 7 | can you show me the first step on this one? — on Solve −3x − 11 = −8 for x. (Q06 check) | 1 — REPLY: enabled:low (per call: a free-text message about the math) | ACCEPTED | 6 |
+| 8 | -1 — on Solve −3x − 11 = −8 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
 
 ## Conversation as the student saw it (the last 80 lines the session keeps)
 
 - **tutor (message):** Let's work on solve two-step equations. Start with this practice question, and tell me if anything is unclear.
-- **tutor (problem):** Solve −8x − 7 = −55 for x.
+- **tutor (problem):** Solve −8x + 5 = 13 for x.
 - **student (message):** Can we go one step at a time? I get lost in two-step equations.
 - **tutor (message):** Let's keep going with the algebra.
-- **student (message):** 6
-- **app (result):** Correct. / On −8x − 7 = −55 you answered 6.
+- **student (message):** -1
+- **app (result):** Correct. / On −8x + 5 = 13 you answered -1.
 - **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
-- **app (check):** Solve −7x − 15 = 55 for x.
+- **app (check):** Solve 9x − 4 = 59 for x.
 - **student (message):** can you show me the first step on this one?
 - **tutor (message):** Let's keep going with this question.
-- **student (message):** -10
-- **app (result):** Correct. / On −7x − 15 = 55 you answered -10.
+- **student (message):** 7
+- **app (result):** Correct. / On 9x − 4 = 59 you answered 7.
 - **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
-- **app (check):** Solve −8x + 2 = −38 for x.
+- **app (check):** Solve −3x − 10 = 14 for x.
 - **student (message):** can you show me the first step on this one?
 - **tutor (message):** Let's keep going with this question.
-- **student (message):** 5
-- **app (result):** Correct. / On −8x + 2 = −38 you answered 5.
+- **student (message):** -8
+- **app (result):** Correct. / On −3x − 10 = 14 you answered -8.
 - **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
-- **app (check):** Solve −4x + 8 = −28 for x.
+- **app (check):** Solve −3x − 11 = −8 for x.
 - **student (message):** can you show me the first step on this one?
 - **tutor (message):** Let's keep going with this question.
-- **student (message):** 9
-- **app (result):** Correct. / On −4x + 8 = −28 you answered 9.
+- **student (message):** -1
+- **app (result):** Correct. / On −3x − 11 = −8 you answered -1.
 - **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. That completes the work planned for this session. You can look at your summary now.
 
 ## Every tutor message, with the answered and open problem it was written for
@@ -45,35 +45,41 @@
 | Field | Text | Answered problem (attempt) | Open problem |
 |---|---|---|---|
 | student_message | Let's work on solve two-step equations. Start with this practice question, and tell me if anything is unclear. | — | — |
-| student_message | Let's keep going with the algebra. | — | prb_4eb616e0b97621bb54552711 practice |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_4eb616e0b97621bb54552711 (evt_c98738dae9d90c199b64c98a) | — |
-| student_message | Let's keep going with this question. | prb_4eb616e0b97621bb54552711 (evt_c98738dae9d90c199b64c98a) | prb_2c5e4bc32ae2458489848b46 check |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_2c5e4bc32ae2458489848b46 (evt_9ecf1a96d3d5c58c7dc6bb65) | — |
-| student_message | Let's keep going with this question. | prb_2c5e4bc32ae2458489848b46 (evt_9ecf1a96d3d5c58c7dc6bb65) | prb_7b9b8376c6b0d61293e8c20c check |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_7b9b8376c6b0d61293e8c20c (evt_9fe3d66ccf6e7c4c35f550f8) | — |
-| student_message | Let's keep going with this question. | prb_7b9b8376c6b0d61293e8c20c (evt_9fe3d66ccf6e7c4c35f550f8) | prb_297d1e406717b38b06c921b0 check |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. That completes the work planned for this session. You can look at your summary now. | prb_297d1e406717b38b06c921b0 (evt_24859446da3bec74250e2601) | — |
+| student_message | Let's keep going with the algebra. | — | prb_7b795870628f8ecc0a84f780 practice |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_7b795870628f8ecc0a84f780 (evt_bff4414a73ab5366d847e217) | — |
+| student_message | Let's keep going with this question. | prb_7b795870628f8ecc0a84f780 (evt_bff4414a73ab5366d847e217) | prb_3475d7c46dcc8b53a2e147c2 check |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_3475d7c46dcc8b53a2e147c2 (evt_a70c1f85b63b8f96a302e9a9) | — |
+| student_message | Let's keep going with this question. | prb_3475d7c46dcc8b53a2e147c2 (evt_a70c1f85b63b8f96a302e9a9) | prb_c5e8fbb2a91cc003c01f085f check |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_c5e8fbb2a91cc003c01f085f (evt_eaf1af1a1c0b4a391624cea1) | — |
+| student_message | Let's keep going with this question. | prb_c5e8fbb2a91cc003c01f085f (evt_eaf1af1a1c0b4a391624cea1) | prb_b55aecf4acd13ca1da3b6efe check |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. That completes the work planned for this session. You can look at your summary now. | prb_b55aecf4acd13ca1da3b6efe (evt_2a2b6db39a6bd03366a9be05) | — |
 
 ## Verdicts recorded by code
 
 | Problem | Purpose | Entry | Read as | Verdict | Help | Slip | Held |
 |---|---|---|---|---|---|---|---|
-| Solve −8x − 7 = −55 for x. | PRACTICE | 6 | 6 | CORRECT |  |  |  |
-| Solve −7x − 15 = 55 for x. | CHECK | -10 | -10 | CORRECT |  |  |  |
-| Solve −8x + 2 = −38 for x. | CHECK | 5 | 5 | CORRECT |  |  |  |
-| Solve −4x + 8 = −28 for x. | CHECK | 9 | 9 | CORRECT |  |  |  |
+| Solve −8x + 5 = 13 for x. | PRACTICE | -1 | -1 | CORRECT |  |  |  |
+| Solve 9x − 4 = 59 for x. | CHECK | 7 | 7 | CORRECT |  |  |  |
+| Solve −3x − 10 = 14 for x. | CHECK | -8 | -8 | CORRECT |  |  |  |
+| Solve −3x − 11 = −8 for x. | CHECK | -1 | -1 | CORRECT |  |  |  |
 
 ## Check answers
 
 | Check problem | Entry | Verdict | Counted as |
 |---|---|---|---|
-| Solve −7x − 15 = 55 for x. | -10 | CORRECT | counted unassisted |
-| Solve −8x + 2 = −38 for x. | 5 | CORRECT | counted unassisted |
-| Solve −4x + 8 = −28 for x. | 9 | CORRECT | counted unassisted |
+| Solve 9x − 4 = 59 for x. | 7 | CORRECT | counted unassisted |
+| Solve −3x − 10 = 14 for x. | -8 | CORRECT | counted unassisted |
+| Solve −3x − 11 = −8 for x. | -1 | CORRECT | counted unassisted |
 
 ## Help on open check problems
 
 - Help moves on open checks: none; with a practice item: 0
+
+## Route (round 10 §4.3; code's record)
+
+No route entries.
+- Prerequisite answers: 0; not yet before the first success: 0 (no success on a prerequisite)
+- Boundary (N18, N03): not reached; deepest skill posed: Q06; moves outside the tutor rejected: 0
 
 ## equation_step answers
 

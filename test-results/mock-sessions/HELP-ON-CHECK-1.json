@@ -5,7 +5,7 @@
         {
             "input": "(start on Q06)",
             "status": 200,
-            "ms": 5,
+            "ms": 10,
             "value_answer": false,
             "graded": false,
             "calls": 2,
@@ -24,173 +24,17 @@
             "counted": true
         },
         {
-            "input": "-10",
-            "status": 200,
-            "ms": 6,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "can you give me a hint for this one?",
-            "status": 200,
-            "ms": 5,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "2",
-            "status": 200,
-            "ms": 6,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "4",
-            "status": 200,
-            "ms": 6,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "can you give me a hint for this one?",
-            "status": 200,
-            "ms": 6,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "-5",
-            "status": 200,
-            "ms": 6,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "-1",
-            "status": 200,
-            "ms": 6,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "can you give me a hint for this one?",
-            "status": 200,
-            "ms": 6,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "1",
+            "input": "6",
             "status": 200,
             "ms": 7,
             "value_answer": false,
             "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "1",
-            "status": 200,
-            "ms": 7,
-            "value_answer": false,
-            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −5x − 12 = −42 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -206,9 +50,15 @@
         {
             "input": "can you give me a hint for this one?",
             "status": 200,
-            "ms": 7,
+            "ms": 6,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −6x + 7 = −11 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -222,29 +72,113 @@
             "counted": true
         },
         {
-            "input": "8",
+            "input": "10",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 9x + 6 = 96 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −6x + 7 = −11 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −5x + 10 = −5 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-9",
+            "status": 200,
+            "ms": 7,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −6x − 4 = 50 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3",
             "status": 200,
             "ms": 8,
             "value_answer": false,
             "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "9",
-            "status": 200,
-            "ms": 7,
-            "value_answer": false,
-            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −5x + 10 = −5 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -263,6 +197,12 @@
             "ms": 7,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 7x − 15 = 41 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -278,9 +218,15 @@
         {
             "input": "-4",
             "status": 200,
-            "ms": 8,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −7x + 3 = 31 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -296,9 +242,15 @@
         {
             "input": "8",
             "status": 200,
-            "ms": 8,
+            "ms": 12,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 7x − 15 = 41 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -314,9 +266,15 @@
         {
             "input": "can you give me a hint for this one?",
             "status": 200,
-            "ms": 7,
+            "ms": 8,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 7x − 13 = −6 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -330,11 +288,17 @@
             "counted": true
         },
         {
-            "input": "2",
+            "input": "9",
             "status": 200,
             "ms": 9,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −8x + 15 = −57 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -348,11 +312,233 @@
             "counted": true
         },
         {
-            "input": "2",
+            "input": "1",
             "status": 200,
             "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 7x − 13 = −6 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −7x + 8 = 15 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-1",
+            "status": 200,
+            "ms": 12,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −8x − 3 = 5 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-1",
+            "status": 200,
+            "ms": 15,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −7x + 8 = 15 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 12,
+            "value_answer": false,
+            "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −8x − 1 = 79 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "1",
+            "status": 200,
+            "ms": 14,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4x + 9 = 13 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-10",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −8x − 1 = 79 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −6x + 9 = −9 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "9",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −7x + 7 = −56 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3",
+            "status": 200,
+            "ms": 13,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −6x + 9 = −9 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -371,78 +557,12 @@
             "ms": 11,
             "value_answer": false,
             "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "-4",
-            "status": 200,
-            "ms": 9,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "-3",
-            "status": 200,
-            "ms": 8,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "can you give me a hint for this one?",
-            "status": 200,
-            "ms": 8,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "5",
-            "status": 200,
-            "ms": 8,
-            "value_answer": false,
-            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 7x + 2 = −33 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -458,9 +578,39 @@
         {
             "input": "8",
             "status": 200,
-            "ms": 8,
+            "ms": 11,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 9x + 13 = 85 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-5",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 7x + 2 = −33 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -476,9 +626,15 @@
         {
             "input": "can you give me a hint for this one?",
             "status": 200,
-            "ms": 9,
+            "ms": 10,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −5x + 5 = 40 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -492,11 +648,17 @@
             "counted": true
         },
         {
-            "input": "10",
+            "input": "2",
             "status": 200,
-            "ms": 8,
+            "ms": 10,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4x + 7 = 15 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -510,11 +672,17 @@
             "counted": true
         },
         {
-            "input": "-4",
+            "input": "-7",
             "status": 200,
-            "ms": 9,
+            "ms": 11,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −5x + 5 = 40 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -530,9 +698,15 @@
         {
             "input": "can you give me a hint for this one?",
             "status": 200,
-            "ms": 8,
+            "ms": 11,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 5x + 6 = 21 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -546,11 +720,17 @@
             "counted": true
         },
         {
-            "input": "-10",
+            "input": "-3",
             "status": 200,
-            "ms": 9,
+            "ms": 11,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 5x + 13 = −2 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -565,6 +745,150 @@
         }
     ],
     "goals_met": [],
+    "start_skill": "Q06",
+    "route": {
+        "detours": [],
+        "originals": [],
+        "returns": [
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_c4536bcec32bc0da86951806",
+                "how": "original"
+            },
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_fb3593a9ce435c6aec36781f",
+                "how": "original"
+            },
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_0efe202e55e9f9bf8d7985aa",
+                "how": "original"
+            },
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_09ccd1fe7ceb2c90ee60485f",
+                "how": "original"
+            },
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_1320f29947d91c94dd2dd63e",
+                "how": "original"
+            },
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_afbdb38f253537cba5a67910",
+                "how": "original"
+            },
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_7a461f667639998dcd46f545",
+                "how": "original"
+            },
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_45dc7c49faaf509fe4642985",
+                "how": "original"
+            },
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_e8cdb8a7d52506b35ce95c7c",
+                "how": "original"
+            },
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_3917ce7c869b7d848714d28c",
+                "how": "original"
+            }
+        ],
+        "fresh_evidence": [
+            {
+                "skill_id": "Q06",
+                "checks_counted": 0,
+                "correct": 0
+            }
+        ]
+    },
+    "route_log": [
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve −6x + 7 = −11 for x."
+        },
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve −5x + 10 = −5 for x."
+        },
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve 7x − 15 = 41 for x."
+        },
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve 7x − 13 = −6 for x."
+        },
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve −7x + 8 = 15 for x."
+        },
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve −8x − 1 = 79 for x."
+        },
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve −6x + 9 = −9 for x."
+        },
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve 7x + 2 = −33 for x."
+        },
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve −5x + 5 = 40 for x."
+        },
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve 5x + 6 = 21 for x."
+        }
+    ],
+    "prerequisite": {
+        "wrong_before_first_success": 0,
+        "first_success": false,
+        "answers": 0
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 0,
+        "deepest": "Q06",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": [],
     "check_answers": {
         "unassisted": 0,
         "unassisted_correct": 0,
@@ -582,26 +906,26 @@
     },
     "help_moves_with_practice_item": 10,
     "original_problem": [
-        "waits as the original: prb_5b087ac942f4e9293f087661",
-        "original brought back: prb_5b087ac942f4e9293f087661",
-        "waits as the original: prb_94004d1a457913cffd5c352a",
-        "original brought back: prb_94004d1a457913cffd5c352a",
-        "waits as the original: prb_a3d26386b018c4cd65d0dd04",
-        "original brought back: prb_a3d26386b018c4cd65d0dd04",
-        "waits as the original: prb_0f59d4e3834d88c1dc2c9c95",
-        "original brought back: prb_0f59d4e3834d88c1dc2c9c95",
-        "waits as the original: prb_fea9ad7a9c5a2fb1d3d8af76",
-        "original brought back: prb_fea9ad7a9c5a2fb1d3d8af76",
-        "waits as the original: prb_db04f2674c698c013904fd8e",
-        "original brought back: prb_db04f2674c698c013904fd8e",
-        "waits as the original: prb_0a21ab57f29e23ef52c34bc6",
-        "original brought back: prb_0a21ab57f29e23ef52c34bc6",
-        "waits as the original: prb_96a8211ad2fce804759aa0ec",
-        "original brought back: prb_96a8211ad2fce804759aa0ec",
-        "waits as the original: prb_1a8f17f65c8b39f186758eda",
-        "original brought back: prb_1a8f17f65c8b39f186758eda",
-        "waits as the original: prb_d204383a48c67ae1e5e4caaf",
-        "original brought back: prb_d204383a48c67ae1e5e4caaf"
+        "waits as the original: prb_c4536bcec32bc0da86951806",
+        "original brought back: prb_c4536bcec32bc0da86951806",
+        "waits as the original: prb_fb3593a9ce435c6aec36781f",
+        "original brought back: prb_fb3593a9ce435c6aec36781f",
+        "waits as the original: prb_0efe202e55e9f9bf8d7985aa",
+        "original brought back: prb_0efe202e55e9f9bf8d7985aa",
+        "waits as the original: prb_09ccd1fe7ceb2c90ee60485f",
+        "original brought back: prb_09ccd1fe7ceb2c90ee60485f",
+        "waits as the original: prb_1320f29947d91c94dd2dd63e",
+        "original brought back: prb_1320f29947d91c94dd2dd63e",
+        "waits as the original: prb_afbdb38f253537cba5a67910",
+        "original brought back: prb_afbdb38f253537cba5a67910",
+        "waits as the original: prb_7a461f667639998dcd46f545",
+        "original brought back: prb_7a461f667639998dcd46f545",
+        "waits as the original: prb_45dc7c49faaf509fe4642985",
+        "original brought back: prb_45dc7c49faaf509fe4642985",
+        "waits as the original: prb_e8cdb8a7d52506b35ce95c7c",
+        "original brought back: prb_e8cdb8a7d52506b35ce95c7c",
+        "waits as the original: prb_3917ce7c869b7d848714d28c",
+        "original brought back: prb_3917ce7c869b7d848714d28c"
     ],
     "guards": [],
     "guard_phrases": [],

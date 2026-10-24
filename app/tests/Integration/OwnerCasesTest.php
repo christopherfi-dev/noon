@@ -32,7 +32,7 @@ final class OwnerCasesTest extends TestCase
         $this->assertSame('Your answer multiplied only the first term inside the parentheses by 9.', $sig['description']);
         $this->assertNull($ctx['CODE_RESULT']['slip'], 'not a slip: the structure is wrong');
         $this->assertStringContainsString('Not yet.', $this->resultLine($h));
-        $this->assertStringContainsString('Read as 9x + 8.', $this->resultLine($h));
+        $this->assertStringContainsString('On 9(x + 8), read from your message: 9x + 8.', $this->resultLine($h), 'round 10 §4.7');
     }
 
     public function testAnswerInASentenceIsReadByTheAiAndMarkedCorrectByCode(): void
@@ -155,7 +155,7 @@ final class OwnerCasesTest extends TestCase
         $this->assertSame(1, $h->mock->calls - $calls, 'code reads a number written in words; no reading call');
         $a = $h->attempts()[0];
         $this->assertSame(['twenty five', '25', EntryReader::NOTE_NUMBER_WORDS, 'CORRECT'], [$a['entry'], $a['read_as'], $a['reading_note'], $a['verdict']]);
-        $this->assertStringContainsString('Read as 25.', $this->resultLine($h));
+        $this->assertStringContainsString('On 2x + 3 = 53, read from your message: 25.', $this->resultLine($h), 'round 10 §4.7');
         $this->assertSame('Solve 4x + 2 = 14 for x.', $h->view['open_problem']['prompt']);
         $h->send('3 = x');
         $this->assertSame(['3 = x', 'CORRECT'], [$h->attempts()[1]['read_as'], $h->attempts()[1]['verdict']], 'a reversed equation is accepted');

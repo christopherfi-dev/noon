@@ -8,13 +8,29 @@ ran descent-2: 13 turns, 14 calls, goals met E06, Q07
 ran descent-3: 13 turns, 14 calls, goals met E06, Q07
 ran B11-1: 11 turns, 12 calls, goals met Q06
 ran B11-2: 11 turns, 12 calls, goals met E06
-ran N1-1: 10 turns, 13 calls, goals met E06
+ran N1-1: 13 turns, 16 calls, goals met E06, N18
 ran N1-2: 10 turns, 13 calls, goals met E06
 ran HELP-SEEKER-1: 31 turns, 32 calls, goals met none
-ran BREAKER-1: 15 turns, 17 calls, goals met Q06, Q07
+ran BREAKER-1: 9 turns, 11 calls, goals met Q07
 ran WORKING-1: 7 turns, 12 calls, goals met Q06
 ran HELP-ON-CHECK-1: 31 turns, 32 calls, goals met none
 ran SLIPS-1: 12 turns, 14 calls, goals met Q07, Q06
 ran STEP-1: 9 turns, 10 calls, goals met Q06
-Wrote 18 transcripts; METRICS.md covers 18 sessions in /home/user/noon/test-results/mock-sessions
-Calls per turn: {"1":218,"2":28}
+ran HELP-THEN-MOVE-ON: 8 turns, 9 calls, goals met Q07
+ran STUCK-DEEP: 15 turns, 16 calls, goals met E06, Q07
+ran BOUNDARY: 31 turns, 32 calls, goals met none
+ran RESET-LOOPHOLE: 10 turns, 11 calls, goals met Q06
+ran ARITHMETIC-Q06: 31 turns, 32 calls, goals met none
+ran INVERSE-Q06: 31 turns, 32 calls, goals met none
+ran PREREQ-THEN-EASIER-Q06: 11 turns, 12 calls, goals met Q04, Q06
+ran FOUNDATION-OK-Q06: 31 turns, 32 calls, goals met Q04
+ran UNSURE-Q06: 9 turns, 10 calls, goals met Q06
+ran UNABLE-Q06: 31 turns, 32 calls, goals met none
+ran ARITHMETIC-Q07: 31 turns, 32 calls, goals met none
+ran INVERSE-Q07: 31 turns, 32 calls, goals met none
+ran PREREQ-THEN-EASIER-Q07: 5 turns, 6 calls, goals met Q07
+ran FOUNDATION-OK-Q07: 31 turns, 32 calls, goals met E06
+ran UNSURE-Q07: 9 turns, 10 calls, goals met Q07
+ran UNABLE-Q07: 31 turns, 32 calls, goals met none
+Wrote 34 transcripts; METRICS.md covers 34 sessions in /home/user/noon/test-results/mock-sessions
+Calls per turn: {"1":545,"2":44}

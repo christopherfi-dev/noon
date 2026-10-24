@@ -129,7 +129,7 @@ final class GroupedLinear extends AbstractTemplate
     {
         $labels = [
             'FIRST_TERM_ONLY' => ['matches distribution-to-first-term-only (the factor multiplied only the first term inside the parentheses)', 'E06'],
-            'SIGN_ERROR_B' => ['matches sign-error-on-b', 'Q06'],
+            'SIGN_ERROR_B' => ['matches moving the constant to the other side without changing its sign', 'Q06'],
             'DIVIDE_THEN_ADD_B' => ['matches dividing-c-by-a-then-adding-b', 'Q06'],
             'ARITH_FINAL_PLUS' => ['matches the solution plus or minus one', 'Q06'],
             'ARITH_FINAL_MINUS' => ['matches the solution plus or minus one', 'Q06'],

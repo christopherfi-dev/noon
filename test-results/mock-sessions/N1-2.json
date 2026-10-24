@@ -5,7 +5,7 @@
         {
             "input": "(start on E06)",
             "status": 200,
-            "ms": 7,
+            "ms": 8,
             "value_answer": false,
             "graded": false,
             "calls": 2,
@@ -24,11 +24,17 @@
             "counted": true
         },
         {
-            "input": "8X + 8",
+            "input": "4X + 12",
             "status": 200,
-            "ms": 5,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 4(x + 12). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -42,11 +48,17 @@
             "counted": true
         },
         {
-            "input": "6 x x + 6",
+            "input": "6 x x + 60",
             "status": 200,
-            "ms": 7,
+            "ms": 11,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 6(x + 10). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
             "calls": 2,
             "purposes": [
                 "READING",
@@ -63,11 +75,17 @@
             "counted": true
         },
         {
-            "input": "9x + 80",
+            "input": "7x + 39",
             "status": 200,
-            "ms": 6,
+            "ms": 10,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 7(x + 7). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -81,11 +99,17 @@
             "counted": true
         },
         {
-            "input": "90 because I worked it out in my head",
+            "input": "49 because I worked it out in my head",
             "status": 200,
-            "ms": 8,
+            "ms": 12,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 7 × 7.",
+                "skill_id": "N18",
+                "purpose": "PRACTICE"
+            },
             "calls": 2,
             "purposes": [
                 "READING",
@@ -104,27 +128,15 @@
         {
             "input": "is there a quicker way to do these?",
             "status": 200,
-            "ms": 7,
+            "ms": 9,
             "value_answer": false,
             "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "9x+90",
-            "status": 200,
-            "ms": 7,
-            "value_answer": false,
-            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 7(x + 7). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "RETRY"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -140,9 +152,15 @@
         {
             "input": "7x+49",
             "status": 200,
-            "ms": 8,
+            "ms": 10,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 7(x + 7). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "RETRY"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -156,11 +174,41 @@
             "counted": true
         },
         {
-            "input": "B,D",
+            "input": "8x+32",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 8(x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "B,C",
             "status": 200,
             "ms": 7,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Which of these expressions are equal to 2(x + 11) for every value of x? Select every one that is.\nA) x + 22\nB) 2x + 22\nC) 2 · x + 2 · 11\nD) 2x + 11",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -174,11 +222,17 @@
             "counted": true
         },
         {
-            "input": "8x+8y+8",
+            "input": "40x+32",
             "status": 200,
-            "ms": 9,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 8(5x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -195,6 +249,70 @@
     "goals_met": [
         "E06"
     ],
+    "start_skill": "E06",
+    "route": {
+        "detours": [
+            {
+                "skill_id": "N18",
+                "target_skill_id": "E06",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 4,
+                    "not_yet": 0
+                }
+            }
+        ],
+        "originals": [],
+        "returns": [
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "E06",
+                "problem_id": "prb_0fa0daf6fd92e8b3690ea9c7",
+                "how": "practice"
+            }
+        ],
+        "fresh_evidence": [
+            {
+                "skill_id": "E06",
+                "checks_counted": 3,
+                "correct": 3
+            }
+        ]
+    },
+    "route_log": [
+        {
+            "kind": "DETOUR",
+            "skill_id": "N18",
+            "prompt": "Calculate 7 × 7."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "E06",
+            "prompt": "Expand 7(x + 7). Write your answer without parentheses."
+        }
+    ],
+    "prerequisite": {
+        "wrong_before_first_success": 0,
+        "first_success": true,
+        "answers": 1
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 1,
+        "deepest": "N18",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": [],
     "check_answers": {
         "unassisted": 4,
         "unassisted_correct": 3,
@@ -230,9 +348,9 @@
     },
     "slips": [
         {
-            "prompt": "Expand 8(x + 8). Write your answer without parentheses.",
+            "prompt": "Expand 4(x + 12). Write your answer without parentheses.",
             "purpose": "PRACTICE",
-            "entry": "8X + 8",
+            "entry": "4X + 12",
             "eligible": false,
             "codes": [
                 "FIRST_TERM_ONLY"
@@ -240,14 +358,14 @@
             "detail": null
         },
         {
-            "prompt": "Expand 9(x + 10). Write your answer without parentheses.",
+            "prompt": "Expand 7(x + 7). Write your answer without parentheses.",
             "purpose": "CHECK",
-            "entry": "9x + 80",
+            "entry": "7x + 39",
             "eligible": true,
             "codes": [
                 "PRODUCT_FACT"
             ],
-            "detail": "The other terms match; the constant 80 is a near miss of 9 × 10 = 90."
+            "detail": "The other terms match; the constant 39 is a near miss of 7 × 7 = 49."
         }
     ],
     "ungraded_value_answers": 0,

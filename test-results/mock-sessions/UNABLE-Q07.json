@@ -1,0 +1,1144 @@
+{
+    "name": "UNABLE-Q07",
+    "provider": "MOCK (simulated tutor; not a live result, not evidence of learning, latency not meaningful)",
+    "turns": [
+        {
+            "input": "(start on Q07)",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "BINDING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (binding call)",
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-10/3",
+            "status": 200,
+            "ms": 7,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Solve 3(x + 7) = −3 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3x + 6",
+            "status": 200,
+            "ms": 7,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 3(x + 6). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3x + 9",
+            "status": 200,
+            "ms": 7,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 3(x + 9). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4x + 8",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 4(x + 8). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "9x + 11",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 9(x + 11). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2x + 4",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 2(x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4x + 10",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 4(x + 10). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "5x + 4",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 5(x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "7x + 2",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 7(x + 2). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "7x + 4",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 7(x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3x + 1",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 3(x + 1). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2x + 12",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 2(x + 12). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "5x + 7",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 5(x + 7). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8x + 3",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 8(x + 3). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2x + 5",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 2(x + 5). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2x + 9",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 2(x + 9). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x + 2",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 6(x + 2). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3x + 10",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 3(x + 10). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8x + 6",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 8(x + 6). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x + 6",
+            "status": 200,
+            "ms": 14,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 6(x + 6). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3x + 7",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 3(x + 7). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "5x + 1",
+            "status": 200,
+            "ms": 11,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 5(x + 1). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8x + 11",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 8(x + 11). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4x + 4",
+            "status": 200,
+            "ms": 11,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 4(x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "9x + 9",
+            "status": 200,
+            "ms": 11,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 9(x + 9). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x + 5",
+            "status": 200,
+            "ms": 14,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 6(x + 5). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "7x + 9",
+            "status": 200,
+            "ms": 14,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 7(x + 9). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "7x + 12",
+            "status": 200,
+            "ms": 15,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 7(x + 12). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "5x + 5",
+            "status": 200,
+            "ms": 16,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 5(x + 5). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8x + 12",
+            "status": 200,
+            "ms": 12,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 8(x + 12). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        }
+    ],
+    "goals_met": [],
+    "start_skill": "Q07",
+    "route": {
+        "detours": [
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 30,
+                "correct": 0,
+                "not_yet": 29,
+                "returned_to_target": false,
+                "returned_through": null,
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 0
+                }
+            }
+        ],
+        "originals": [],
+        "returns": [],
+        "fresh_evidence": []
+    },
+    "route_log": [
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 3(x + 6). Write your answer without parentheses."
+        }
+    ],
+    "prerequisite": {
+        "wrong_before_first_success": 29,
+        "first_success": false,
+        "answers": 29
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 0,
+        "deepest": "E06",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": {
+        "FIRST_TERM_ONLY": 30
+    },
+    "check_answers": {
+        "unassisted": 0,
+        "unassisted_correct": 0,
+        "with_help": 0,
+        "held": 0
+    },
+    "check_causes": {
+        "with_help": [],
+        "held": []
+    },
+    "help_moves_on_open_checks": [],
+    "help_moves_with_practice_item": 0,
+    "original_problem": [],
+    "guards": [],
+    "guard_phrases": [],
+    "counters": [],
+    "repairs": [],
+    "holds": [],
+    "held_attempts": [],
+    "readings": {
+        "sent_for_reading": 0,
+        "is_answer_true": 0,
+        "is_answer_false": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "readings_differ": 0,
+        "clarifying_questions_shown": 0
+    },
+    "equation_step": [],
+    "slip_eligibility": {
+        "eligible": 0,
+        "not eligible": 30
+    },
+    "slips": [
+        {
+            "prompt": "Solve 3(x + 7) = −3 for x.",
+            "purpose": "PRACTICE",
+            "entry": "-10/3",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 3(x + 6). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "3x + 6",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 3(x + 9). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "3x + 9",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 4(x + 8). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "4x + 8",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 9(x + 11). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "9x + 11",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 2(x + 4). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "2x + 4",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 4(x + 10). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "4x + 10",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 5(x + 4). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "5x + 4",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 7(x + 2). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "7x + 2",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 7(x + 4). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "7x + 4",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 3(x + 1). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "3x + 1",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 2(x + 12). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "2x + 12",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 5(x + 7). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "5x + 7",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 8(x + 3). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "8x + 3",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 2(x + 5). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "2x + 5",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 2(x + 9). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "2x + 9",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 6(x + 2). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "6x + 2",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 3(x + 10). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "3x + 10",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 8(x + 6). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "8x + 6",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 6(x + 6). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "6x + 6",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 3(x + 7). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "3x + 7",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 5(x + 1). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "5x + 1",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 8(x + 11). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "8x + 11",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 4(x + 4). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "4x + 4",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 9(x + 9). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "9x + 9",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 6(x + 5). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "6x + 5",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 7(x + 9). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "7x + 9",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 7(x + 12). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "7x + 12",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 5(x + 5). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "5x + 5",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 8(x + 12). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "8x + 12",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        }
+    ],
+    "ungraded_value_answers": 0,
+    "value_answers_graded": 0,
+    "empty_replies": 0,
+    "binding": {
+        "calls": 1,
+        "accepted": 1,
+        "outcomes": [
+            "ACCEPTED"
+        ]
+    },
+    "calls": 32,
+    "finish_length": 0,
+    "attempts": 30
+}

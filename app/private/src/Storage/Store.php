@@ -10,7 +10,7 @@ use AlgebraEngine\Support\Time;
 /** Table access for containers, sessions, the event ledger, items, verdicts, operations and idempotency. */
 final class Store
 {
-    public const ARCHITECTURE_VERSION = '1.7';
+    public const ARCHITECTURE_VERSION = '1.8';
     public const CURRICULUM_VERSION = '1.1.0';
 
     public function __construct(public Database $db)
@@ -94,10 +94,13 @@ final class Store
         );
     }
 
-    /** Round 9 §4.7: a correction changes the revision and the snapshot only; the session's activity times stay. */
-    public function saveSnapshot(string $sessionId, array $snapshot): void
+    /** Round 9 §4.7 and round 10 §4.5: a correction changes the revision, the snapshot and the engine state; the session's activity times stay. */
+    public function saveSnapshot(string $sessionId, array $snapshot, ?array $engine = null): void
     {
         $this->db->exec('UPDATE sessions SET revision = ?, snapshot_json = ? WHERE session_id = ?', [$snapshot['revision'], Json::encode($snapshot), $sessionId]);
+        if ($engine !== null) {
+            $this->db->exec('UPDATE sessions SET engine_json = ? WHERE session_id = ?', [Json::encode($engine), $sessionId]);
+        }
     }
 
     public function setPendingOperation(string $sessionId, ?string $operationId): void

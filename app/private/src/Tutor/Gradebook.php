@@ -54,7 +54,7 @@ final class Gradebook
                 $corrections[$e['data']['attempt_id']][] = $e['data'] + ['event_id' => $e['event_id'], 'at' => $e['created_at'] ?? null];
             }
         }
-        foreach ($events as $e) {
+        foreach ($events as $seq => $e) {
             $d = $e['data'];
             switch ($e['type']) {
                 case 'PROBLEM_PRESENTED':
@@ -89,6 +89,7 @@ final class Gradebook
                         'help' => $help[$d['problem_id']] ?? [],
                         'held' => $heldAttempts[$e['event_id']] ?? $heldProblems[$d['problem_id']] ?? null,
                         'at' => $e['created_at'] ?? null,
+                        'seq' => $seq,
                     ];
                     $out[] = self::corrected($attempt, $corrections[$e['event_id']] ?? []);
                     break;
@@ -124,6 +125,38 @@ final class Gradebook
             }
         }
         return $a;
+    }
+
+    /**
+     * Round 10 §4.4: help recorded on a check that is still unanswered, in
+     * ledger order, for Goals::compute(). Help on a problem whose attempt was
+     * corrected to "without help" is left out.
+     *
+     * @return list<array{seq:int,problem_id:string,skill_id:string,choice:string}>
+     */
+    public static function checkHelp(array $events): array
+    {
+        $noHelp = [];
+        foreach (self::attempts($events) as $a) {
+            if ($a['help'] === [] && array_filter($a['corrections'], fn ($c) => $c['field'] === 'help') !== []) {
+                $noHelp[$a['problem_id']] = true;
+            }
+        }
+        $problems = [];
+        $answered = [];
+        $out = [];
+        foreach ($events as $seq => $e) {
+            $d = $e['data'];
+            if ($e['type'] === 'PROBLEM_PRESENTED') {
+                $problems[$d['problem_id']] ??= $d;
+            } elseif ($e['type'] === 'ATTEMPT_RECORDED') {
+                $answered[$d['problem_id']] = true;
+            } elseif ($e['type'] === 'HELP_GIVEN' && isset($problems[$d['problem_id']]) && $problems[$d['problem_id']]['purpose'] === 'CHECK'
+                && !isset($answered[$d['problem_id']]) && !isset($noHelp[$d['problem_id']])) {
+                $out[] = ['seq' => $seq, 'problem_id' => $d['problem_id'], 'skill_id' => $problems[$d['problem_id']]['skill_id'], 'choice' => $d['choice']];
+            }
+        }
+        return $out;
     }
 
     /** @return list<array{problem_id:string,skill_id:string,purpose:string,reason:string}> problems closed without an answer */

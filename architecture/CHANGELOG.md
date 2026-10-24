@@ -197,3 +197,32 @@ Governing architecture for the AI tutor; replaces 1.6 at runtime. The handshake 
   turn. Nothing is replaced.
 - **Session ID fields.** The tutor no longer copies them; code attaches them.
 - **Justification clauses removed.** The reasons added in v1.6 are gone.
+
+## 1.8 — 2026-10-24
+
+Governing architecture for the AI tutor; replaces 1.7 at runtime. The handshake is
+`architecture=1.8`.
+
+- **Getting unstuck.** When a student is stuck, the tutor finds what they can do next:
+  it isolates an operation, simplifies the numbers or representation, investigates a
+  prerequisite, or changes the approach. It adapts or steps further back instead of
+  repeating a prompt that did not work, and keeps the original target connected to the
+  work.
+- **Smaller steps.**
+  - A smaller step reduces a demand: an operation, simpler numbers, or a more accessible
+    representation.
+  - A step on the same equation counts; the same problem posed again unchanged does not.
+- **The return to the target.**
+  - When the student's responses support it, the tutor connects the completed work to
+    the next unresolved step toward the target.
+  - It may return through the original problem or a fresh problem on the target skill.
+  - If the foundation succeeds but the target still fails, it looks for what else the
+    target needs.
+- **Goal announcements.** A goal is announced only in the turn code reports it newly
+  met. When the student asks about progress, the tutor answers from the goal status.
+- **Goal policy.** Help on a check restarts the run when the help is recorded, and that
+  check's later answer counts neither for nor against the goal.
+- **The output envelope.**
+  - The tutor no longer writes the message type.
+  - Items may return to the original problem.
+  - A repair updates any wording the fix affects.

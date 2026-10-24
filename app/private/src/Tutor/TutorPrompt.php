@@ -21,15 +21,15 @@ final class TutorPrompt
     /**
      * Round 7 §3: the output contract, and nothing else. It defines the
      * envelope's fields and when each value is valid; every behaviour rule is
-     * the architecture's. Round 8 §3.1 adds the to_mode value HELP; round 9
-     * §4.1 makes the exact edits listed in ROUND_9_REPORT.md.
+     * the architecture's. Round 8 §3.1 adds the to_mode value HELP; rounds 9
+     * and 10 §4.1 make the exact edits listed in their reports (round 10: the
+     * version line, and message_type is no longer the model's).
      */
     public const OUTPUT_CONTRACT = <<<'TXT'
 OUTPUT CONTRACT
 Reply with exactly one JSON object that follows OUTPUT_CONTRACT in the JSON block. No prose outside it, no Markdown fences.
-architecture_version is "1.7".
+architecture_version is "1.8".
 Fields:
-- message_type: QUESTION when item is not null; FEEDBACK when item is null; CONTROL when TURN.kind is READING. REPORT and HOLD are not used.
 - student_message: the learner-facing text. For a READING turn it is the empty string.
 - item: null, or one next problem with these fields:
   - purpose: practice or check; retry only with source retry.
@@ -103,7 +103,7 @@ TXT;
             'notice' => 'The application rejected the previous output. This is a private control message, not a student turn.',
             'errors' => array_values(array_slice($errors, 0, 12)),
             'remaining_repair_attempts' => 0,
-            'instruction' => 'Return one corrected JSON envelope for the same turn. Fix exactly these errors and change nothing else.',
+            'instruction' => 'Return one corrected JSON envelope for the same turn. Fix exactly these errors, update any wording they affect, and change nothing else.',
         ]])];
         return $messages;
     }

@@ -26,9 +26,15 @@
         {
             "input": "Can we practise expanding brackets first, like 3(x + 4)?",
             "status": 200,
-            "ms": 6,
+            "ms": 8,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 3(x − 8) = −21 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
             "calls": 2,
             "purposes": [
                 "READING",
@@ -45,11 +51,89 @@
             "counted": true
         },
         {
-            "input": "5",
+            "input": "1",
             "status": 200,
             "ms": 6,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 3(x − 8) = −21 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-2",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4(x + 9) = 24 for x.",
+                "skill_id": "Q07",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-4",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −5x + 15 = 35 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "10",
+            "status": 200,
+            "ms": 7,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −5x + 7 = −43 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -65,9 +149,15 @@
         {
             "input": "-5",
             "status": 200,
-            "ms": 6,
+            "ms": 7,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4x − 7 = −27 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -81,29 +171,17 @@
             "counted": true
         },
         {
-            "input": "2",
-            "status": 200,
-            "ms": 6,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "5",
+            "input": "9",
             "status": 200,
             "ms": 7,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −5x − 6 = −51 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -117,83 +195,17 @@
             "counted": true
         },
         {
-            "input": "8",
+            "input": "11",
             "status": 200,
             "ms": 8,
             "value_answer": false,
             "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "2",
-            "status": 200,
-            "ms": 10,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "-3",
-            "status": 200,
-            "ms": 10,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "12",
-            "status": 200,
-            "ms": 11,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "C,D",
-            "status": 200,
-            "ms": 10,
-            "value_answer": false,
-            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 6(x + 9) = 120 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -209,9 +221,63 @@
         {
             "input": "7",
             "status": 200,
-            "ms": 15,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4(x + 8) = 60 for x.",
+                "skill_id": "Q07",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "B,C",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Here is an equation: 3(x − 4) = −15. Which of these first steps give an equation with exactly the same solution? Select every one that does.\nA) Multiply only the x by 3: 3x − 4 = −15\nB) Divide both sides by 3: x − 4 = −5\nC) Multiply both terms in the parentheses by 3: 3x − 12 = −15\nD) Add 4 to undo the −4: 3x = −11",
+                "skill_id": "Q07",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-5",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4(x − 3) − 10 = −42 for x.",
+                "skill_id": "Q07",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -229,6 +295,70 @@
         "Q07",
         "Q06"
     ],
+    "start_skill": "Q07",
+    "route": {
+        "detours": [
+            {
+                "skill_id": "Q06",
+                "target_skill_id": "Q07",
+                "problems": 4,
+                "correct": 4,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 4,
+                    "not_yet": 0
+                }
+            }
+        ],
+        "originals": [],
+        "returns": [
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_be1845238c28b84e7ef2041b",
+                "how": "practice"
+            }
+        ],
+        "fresh_evidence": [
+            {
+                "skill_id": "Q07",
+                "checks_counted": 3,
+                "correct": 3
+            }
+        ]
+    },
+    "route_log": [
+        {
+            "kind": "DETOUR",
+            "skill_id": "Q06",
+            "prompt": "Solve −5x + 15 = 35 for x."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 6(x + 9) = 120 for x."
+        }
+    ],
+    "prerequisite": {
+        "wrong_before_first_success": 0,
+        "first_success": true,
+        "answers": 4
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 0,
+        "deepest": "Q06",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": [],
     "check_answers": {
         "unassisted": 7,
         "unassisted_correct": 6,
@@ -264,9 +394,9 @@
     },
     "slips": [
         {
-            "prompt": "Solve 5(x − 4) = −50 for x.",
+            "prompt": "Solve 4(x + 9) = 24 for x.",
             "purpose": "CHECK",
-            "entry": "-5",
+            "entry": "-2",
             "eligible": false,
             "codes": [
                 "ARITH_FINAL_PLUS"

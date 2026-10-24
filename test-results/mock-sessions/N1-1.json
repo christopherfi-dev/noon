@@ -24,11 +24,17 @@
             "counted": true
         },
         {
-            "input": "2X + 10",
+            "input": "9X + 4",
             "status": 200,
-            "ms": 6,
+            "ms": 7,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 9(x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -42,11 +48,17 @@
             "counted": true
         },
         {
-            "input": "2 x x + 2",
+            "input": "2 x x + 20",
             "status": 200,
-            "ms": 8,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 2(x + 10). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
             "calls": 2,
             "purposes": [
                 "READING",
@@ -63,11 +75,17 @@
             "counted": true
         },
         {
-            "input": "4x + 30",
+            "input": "2x + 3",
             "status": 200,
-            "ms": 7,
+            "ms": 6,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 2(x + 1). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -81,11 +99,17 @@
             "counted": true
         },
         {
-            "input": "40 because I worked it out in my head",
+            "input": "18 because I worked it out in my head",
             "status": 200,
-            "ms": 8,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 6 × 3.",
+                "skill_id": "N18",
+                "purpose": "PRACTICE"
+            },
             "calls": 2,
             "purposes": [
                 "READING",
@@ -104,9 +128,15 @@
         {
             "input": "is there a quicker way to do these?",
             "status": 200,
-            "ms": 6,
+            "ms": 9,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 32 ÷ 8.",
+                "skill_id": "N18",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -120,11 +150,17 @@
             "counted": true
         },
         {
-            "input": "4x+40",
+            "input": "4",
             "status": 200,
-            "ms": 12,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 32 ÷ 8.",
+                "skill_id": "N18",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -138,11 +174,41 @@
             "counted": true
         },
         {
-            "input": "3x+18",
+            "input": "7",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 84 ÷ 12.",
+                "skill_id": "N18",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "5",
             "status": 200,
             "ms": 7,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 35 ÷ 7.",
+                "skill_id": "N18",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -156,11 +222,17 @@
             "counted": true
         },
         {
-            "input": "B,C",
+            "input": "5x+20",
             "status": 200,
-            "ms": 7,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 5(x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -174,11 +246,65 @@
             "counted": true
         },
         {
-            "input": "54x+27",
+            "input": "3x+6",
             "status": 200,
-            "ms": 7,
+            "ms": 10,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 3(x + 2). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "B",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Which of these expressions are equal to 9(x + 5) for every value of x? Select every one that is.\nA) x + 45\nB) 9 · x + 9 · 5\nC) x + 14\nD) 9x + 5",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "16x+24",
+            "status": 200,
+            "ms": 11,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 8(2x + 3). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -193,11 +319,76 @@
         }
     ],
     "goals_met": [
-        "E06"
+        "E06",
+        "N18"
     ],
+    "start_skill": "E06",
+    "route": {
+        "detours": [
+            {
+                "skill_id": "N18",
+                "target_skill_id": "E06",
+                "problems": 4,
+                "correct": 4,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 4,
+                    "not_yet": 0
+                }
+            }
+        ],
+        "originals": [],
+        "returns": [
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "E06",
+                "problem_id": "prb_3f23acabf0126487b38e6394",
+                "how": "practice"
+            }
+        ],
+        "fresh_evidence": [
+            {
+                "skill_id": "E06",
+                "checks_counted": 3,
+                "correct": 3
+            }
+        ]
+    },
+    "route_log": [
+        {
+            "kind": "DETOUR",
+            "skill_id": "N18",
+            "prompt": "Calculate 6 × 3."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "E06",
+            "prompt": "Expand 5(x + 4). Write your answer without parentheses."
+        }
+    ],
+    "prerequisite": {
+        "wrong_before_first_success": 0,
+        "first_success": true,
+        "answers": 4
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 4,
+        "deepest": "N18",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": [],
     "check_answers": {
-        "unassisted": 4,
-        "unassisted_correct": 3,
+        "unassisted": 7,
+        "unassisted_correct": 6,
         "with_help": 0,
         "held": 0
     },
@@ -225,14 +416,14 @@
     },
     "equation_step": [],
     "slip_eligibility": {
-        "eligible": 1,
-        "not eligible": 1
+        "eligible": 0,
+        "not eligible": 2
     },
     "slips": [
         {
-            "prompt": "Expand 2(x + 10). Write your answer without parentheses.",
+            "prompt": "Expand 9(x + 4). Write your answer without parentheses.",
             "purpose": "PRACTICE",
-            "entry": "2X + 10",
+            "entry": "9X + 4",
             "eligible": false,
             "codes": [
                 "FIRST_TERM_ONLY"
@@ -240,14 +431,14 @@
             "detail": null
         },
         {
-            "prompt": "Expand 4(x + 10). Write your answer without parentheses.",
+            "prompt": "Expand 2(x + 1). Write your answer without parentheses.",
             "purpose": "CHECK",
-            "entry": "4x + 30",
-            "eligible": true,
+            "entry": "2x + 3",
+            "eligible": false,
             "codes": [
                 "PRODUCT_FACT"
             ],
-            "detail": "The other terms match; the constant 30 is a near miss of 4 × 10 = 40."
+            "detail": null
         }
     ],
     "ungraded_value_answers": 0,
@@ -260,7 +451,7 @@
             "ACCEPTED"
         ]
     },
-    "calls": 13,
+    "calls": 16,
     "finish_length": 0,
-    "attempts": 8
+    "attempts": 11
 }

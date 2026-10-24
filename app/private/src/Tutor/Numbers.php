@@ -171,9 +171,16 @@ final class Numbers
         return in_array($number, self::all($text), true);
     }
 
-    /** As in the disclosure guard: a value cue before "one" makes it the number. */
+    /**
+     * As in the disclosure guard: a value cue before "one" makes it the number.
+     * Round 10 §4.8: "one" followed by "to", "more" or "of" ("here is one to
+     * try", "one more", "one of these") is never the number.
+     */
     private static function oneAsDeterminer(string $text, int $start, int $end): bool
     {
+        if (preg_match('/^\s+(?:to|more|of)\b/', substr($text, $end))) {
+            return true;
+        }
         $before = substr($text, 0, $start);
         if (preg_match('/(\b(is|was|be|equals|equal to|comes to|get|gets|got|give|gives|make|makes|answer|value|times|plus|minus|and)|=)\s*$/', $before)) {
             return false;

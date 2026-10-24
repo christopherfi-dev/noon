@@ -5,7 +5,7 @@
         {
             "input": "(start on Q07)",
             "status": 200,
-            "ms": 7,
+            "ms": 8,
             "value_answer": false,
             "graded": false,
             "calls": 2,
@@ -26,9 +26,15 @@
         {
             "input": "55/9",
             "status": 200,
-            "ms": 6,
+            "ms": 7,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 9(x + 8) = 63 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -44,9 +50,15 @@
         {
             "input": "2x+12",
             "status": 200,
-            "ms": 7,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 2(x + 6). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -62,9 +74,15 @@
         {
             "input": "7x+84",
             "status": 200,
-            "ms": 6,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 7(x + 12). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -80,9 +98,15 @@
         {
             "input": "I'm stuck: HINT",
             "status": 200,
-            "ms": 7,
+            "ms": 10,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Which of these expressions are equal to 2(x + 12) for every value of x? Select every one that is.\nA) 2x + 12\nB) 2x + 24\nC) x + 24\nD) x + 14",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -98,9 +122,15 @@
         {
             "input": "B",
             "status": 200,
-            "ms": 7,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Which of these expressions are equal to 2(x + 12) for every value of x? Select every one that is.\nA) 2x + 12\nB) 2x + 24\nC) x + 24\nD) x + 14",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -116,9 +146,15 @@
         {
             "input": "3x+15",
             "status": 200,
-            "ms": 7,
+            "ms": 10,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 3(x + 5). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -134,9 +170,15 @@
         {
             "input": "A,C",
             "status": 200,
-            "ms": 8,
+            "ms": 10,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Which of these expressions are equal to 7(x + 2) for every value of x? Select every one that is.\nA) 7 · x + 7 · 2\nB) x + 14\nC) 7x + 14\nD) x + 9",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -152,9 +194,15 @@
         {
             "input": "8x+8y+88",
             "status": 200,
-            "ms": 7,
+            "ms": 10,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 8(x + y + 11). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -170,9 +218,15 @@
         {
             "input": "-1",
             "status": 200,
-            "ms": 8,
+            "ms": 13,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4(x + 8) = 28 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -188,9 +242,15 @@
         {
             "input": "1",
             "status": 200,
-            "ms": 8,
+            "ms": 14,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 9(x − 4) = −27 for x.",
+                "skill_id": "Q07",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -206,9 +266,15 @@
         {
             "input": "D",
             "status": 200,
-            "ms": 8,
+            "ms": 13,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Here is an equation: 2(x − 9) = 4. Which of these first steps give an equation with exactly the same solution? Select every one that does.\nA) Multiply only the x by 2: 2x − 9 = 4\nB) Divide only the left side by 2: x − 9 = 4\nC) Add 9 to undo the −9: 2x = 13\nD) Multiply both terms in the parentheses by 2: 2x − 18 = 4",
+                "skill_id": "Q07",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -224,9 +290,15 @@
         {
             "input": "9",
             "status": 200,
-            "ms": 8,
+            "ms": 13,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 40 = 5(x − 1) for x.",
+                "skill_id": "Q07",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -244,6 +316,70 @@
         "E06",
         "Q07"
     ],
+    "start_skill": "Q07",
+    "route": {
+        "detours": [
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 6,
+                "correct": 6,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 4,
+                    "not_yet": 0
+                }
+            }
+        ],
+        "originals": [],
+        "returns": [
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_ef9b7e301981ffad273c3cf5",
+                "how": "practice"
+            }
+        ],
+        "fresh_evidence": [
+            {
+                "skill_id": "Q07",
+                "checks_counted": 3,
+                "correct": 3
+            }
+        ]
+    },
+    "route_log": [
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 2(x + 6). Write your answer without parentheses."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 4(x + 8) = 28 for x."
+        }
+    ],
+    "prerequisite": {
+        "wrong_before_first_success": 0,
+        "first_success": true,
+        "answers": 6
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 0,
+        "deepest": "E06",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": [],
     "check_answers": {
         "unassisted": 7,
         "unassisted_correct": 7,

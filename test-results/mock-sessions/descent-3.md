@@ -2,68 +2,68 @@
 
 | # | Learner input | Calls (purpose: reasoning setting) | Outcomes | Wait ms |
 |---|---|---|---|---|
-| 0 | (start on Q07) | 2 — BINDING: disabled (binding call); REPLY: disabled (per call: none of the three cases) | ACCEPTED, ACCEPTED | 5 |
-| 1 | 49/8 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 5 |
-| 2 | 2x+14 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
-| 3 | 4x+16 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
-| 4 | I'm stuck: HINT | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
-| 5 | A,C | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
-| 6 | 2x+8 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 7 | B,C | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
-| 8 | 21x+56 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 9 | 12 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 10 | 5 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 11 | A | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 10 |
-| 12 | 11 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 0 | (start on Q07) | 2 — BINDING: disabled (binding call); REPLY: disabled (per call: none of the three cases) | ACCEPTED, ACCEPTED | 6 |
+| 1 | 36/5 — on Solve 5(x + 9) = 45 for x. (Q07 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 5 |
+| 2 | 6x+48 — on Expand 6(x + 8). Write your answer without parentheses. (E06 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
+| 3 | 6x+54 — on Expand 6(x + 9). Write your answer without parentheses. (E06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
+| 4 | I'm stuck: HINT — on Which of these expressions are equal to 6(x + 5) for every value of x? Select every one that is. / A) 6x + 30 / B) 6x + 5 / C) x + 11 / D) 6 · x + 6 · 5 (E06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
+| 5 | A,D — on Which of these expressions are equal to 6(x + 5) for every value of x? Select every one that is. / A) 6x + 30 / B) 6x + 5 / C) x + 11 / D) 6 · x + 6 · 5 (E06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
+| 6 | 7x+42 — on Expand 7(x + 6). Write your answer without parentheses. (E06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 7 | C — on Which of these expressions are equal to 4(x + 3) for every value of x? Select every one that is. / A) x + 7 / B) 4x + 3 / C) 4 · x + 4 · 3 / D) x + 12 (E06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 8 | 4x+4y+20 — on Expand 4(x + y + 5). Write your answer without parentheses. (E06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 9 | 0 — on Solve 5(x + 4) = 20 for x. (Q07 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 10 | 12 — on Solve 7(x + 4) = 112 for x. (Q07 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 11 | A,C — on Here is an equation: 7(x − 2) = 56. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply both terms in the parentheses by 7: 7x − 14 = 56 / B) Divide only the left side by 7: x − 2 = 56 / C) Divide both sides by 7: x − 2 = 8 / D) Multiply only the x by 7: 7x − 2 = 56 (Q07 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 11 |
+| 12 | 1 — on Solve 8(x − 9) − 12 = −76 for x. (Q07 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
 
 ## Conversation as the student saw it (the last 80 lines the session keeps)
 
 - **tutor (message):** Let's work on solve equations containing parentheses. Start with this practice question, and tell me if anything is unclear.
-- **tutor (problem):** Solve 8(x + 7) = 56 for x.
-- **student (message):** 49/8
-- **app (result):** Not yet. / On 8(x + 7) = 56 you answered 49/8.
-- **tutor (message):** Your answer multiplied only the first term inside the parentheses by 8. Let's practise that part on its own first. What happens to each term inside the parentheses?
-- **tutor (problem):** Expand 2(x + 7). Write your answer without parentheses.
-- **student (message):** 2x+14
-- **app (result):** Correct. / On 2(x + 7) you answered 2x+14.
+- **tutor (problem):** Solve 5(x + 9) = 45 for x.
+- **student (message):** 36/5
+- **app (result):** Not yet. / On 5(x + 9) = 45 you answered 36/5.
+- **tutor (message):** Your answer multiplied only the first term inside the parentheses by 5. Let's practise that part on its own first. What happens to each term inside the parentheses?
+- **tutor (problem):** Expand 6(x + 8). Write your answer without parentheses.
+- **student (message):** 6x+48
+- **app (result):** Correct. / On 6(x + 8) you answered 6x+48.
 - **tutor (message):** Yes: you used the distributive property: the number outside multiplies every term inside the parentheses.
-- **app (check):** Expand 4(x + 4). Write your answer without parentheses.
-- **student (message):** 4x+16
-- **app (result):** Correct. / On 4(x + 4) you answered 4x+16.
+- **app (check):** Expand 6(x + 9). Write your answer without parentheses.
+- **student (message):** 6x+54
+- **app (result):** Correct. / On 6(x + 9) you answered 6x+54.
 - **tutor (message):** Yes: you used the distributive property: the number outside multiplies every term inside the parentheses.
-- **app (check):** Which of these expressions are equal to 4(x + 7) for every value of x? Select every one that is. / A) 4x + 28 / B) 4x + 7 / C) 4 · x + 4 · 7 / D) x + 11
+- **app (check):** Which of these expressions are equal to 6(x + 5) for every value of x? Select every one that is. / A) 6x + 30 / B) 6x + 5 / C) x + 11 / D) 6 · x + 6 · 5
 - **student (message):** I'm stuck: give me a hint.
 - **tutor (message):** Here is a hint: look at what is being done to x, and in what order. What could you undo first while keeping both sides equal?
-- **student (message):** A,C
-- **app (result):** Correct. / On 4(x + 7) you chose A and C.
+- **student (message):** A,D
+- **app (result):** Correct. / On 6(x + 5) you chose A and D.
 - **tutor (message):** Yes: you used the distributive property: the number outside multiplies every term inside the parentheses.
-- **app (check):** Expand 2(x + 4). Write your answer without parentheses.
-- **student (message):** 2x+8
-- **app (result):** Correct. / On 2(x + 4) you answered 2x+8.
+- **app (check):** Expand 7(x + 6). Write your answer without parentheses.
+- **student (message):** 7x+42
+- **app (result):** Correct. / On 7(x + 6) you answered 7x+42.
 - **tutor (message):** Yes: you used the distributive property: the number outside multiplies every term inside the parentheses.
-- **app (check):** Which of these expressions are equal to 5(x + 1) for every value of x? Select every one that is. / A) x + 5 / B) 5 · x + 5 · 1 / C) 5x + 5 / D) x + 6
-- **student (message):** B,C
-- **app (result):** Correct. / On 5(x + 1) you chose B and C.
+- **app (check):** Which of these expressions are equal to 4(x + 3) for every value of x? Select every one that is. / A) x + 7 / B) 4x + 3 / C) 4 · x + 4 · 3 / D) x + 12
+- **student (message):** C
+- **app (result):** Correct. / On 4(x + 3) you chose C.
 - **tutor (message):** Yes: you used the distributive property: the number outside multiplies every term inside the parentheses.
-- **app (check):** Expand 7(3x + 8). Write your answer without parentheses.
-- **student (message):** 21x+56
-- **app (result):** Correct. / On 7(3x + 8) you answered 21x+56.
+- **app (check):** Expand 4(x + y + 5). Write your answer without parentheses.
+- **student (message):** 4x+4y+20
+- **app (result):** Correct. / On 4(x + y + 5) you answered 4x+4y+20.
 - **tutor (message):** Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. Let's go back to the topic you started with.
-- **tutor (problem):** Solve 7(x + 4) = 112 for x.
+- **tutor (problem):** Solve 5(x + 4) = 20 for x.
+- **student (message):** 0
+- **app (result):** Correct. / On 5(x + 4) = 20 you answered 0.
+- **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal.
+- **app (check):** Solve 7(x + 4) = 112 for x.
 - **student (message):** 12
 - **app (result):** Correct. / On 7(x + 4) = 112 you answered 12.
 - **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal.
-- **app (check):** Solve 2(x − 9) = −8 for x.
-- **student (message):** 5
-- **app (result):** Correct. / On 2(x − 9) = −8 you answered 5.
+- **app (check):** Here is an equation: 7(x − 2) = 56. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply both terms in the parentheses by 7: 7x − 14 = 56 / B) Divide only the left side by 7: x − 2 = 56 / C) Divide both sides by 7: x − 2 = 8 / D) Multiply only the x by 7: 7x − 2 = 56
+- **student (message):** A,C
+- **app (result):** Correct. / On 7(x − 2) = 56 you chose A and C.
 - **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal.
-- **app (check):** Here is an equation: 8(x + 4) = 56. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply both terms in the parentheses by 8: 8x + 32 = 56 / B) Multiply only the x by 8: 8x + 4 = 56 / C) Divide only the left side by 8: x + 4 = 56 / D) Subtract 4 to undo the 4: 8x = 52
-- **student (message):** A
-- **app (result):** Correct. / On 8(x + 4) = 56 you chose A.
-- **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal.
-- **app (check):** Solve 5(x − 5) + 13 = 43 for x.
-- **student (message):** 11
-- **app (result):** Correct. / On 5(x − 5) + 13 = 43 you answered 11.
+- **app (check):** Solve 8(x − 9) − 12 = −76 for x.
+- **student (message):** 1
+- **app (result):** Correct. / On 8(x − 9) − 12 = −76 you answered 1.
 - **tutor (message):** Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. That completes the work planned for this session. You can look at your summary now.
 
 ## Every tutor message, with the answered and open problem it was written for
@@ -71,52 +71,61 @@
 | Field | Text | Answered problem (attempt) | Open problem |
 |---|---|---|---|
 | student_message | Let's work on solve equations containing parentheses. Start with this practice question, and tell me if anything is unclear. | — | — |
-| student_message | Your answer multiplied only the first term inside the parentheses by 8. Let's practise that part on its own first. What happens to each term inside the parentheses? | prb_b6d811a3948f2fa5abe908ef (evt_29ef45287092d9ea91647aab) | — |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_8a551b318d1229d7f4accaec (evt_45c0c4efa98c25204144b240) | — |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_108edb18fe416bcedfc9d7f4 (evt_1556f27e88b4aaa629563eb4) | — |
-| student_message | Here is a hint: look at what is being done to x, and in what order. What could you undo first while keeping both sides equal? | prb_108edb18fe416bcedfc9d7f4 (evt_1556f27e88b4aaa629563eb4) | prb_551947d759e30e800c51cfdb check |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_551947d759e30e800c51cfdb (evt_615a57939bca960eda0526f1) | — |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_5f6871356561e6300401b420 (evt_19c61c5044142137bb7c145f) | — |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_479507252aec1ed3b924a471 (evt_cbfd2f990c2330fd1b9974c2) | — |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. Let's go back to the topic you started with. | prb_49b3b9381be32a5dcf0a6472 (evt_d87fb3c022565631aab24f44) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_fc04d3023a2db240f18974d6 (evt_81220096de8adc8ca680b4f4) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_0f65bdd4b166ccd9f4215977 (evt_5796ff865bf9811a947ef1c7) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_0e13e062a485e9781b93b99f (evt_a84aaabc5ee03bfb8ab51565) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. That completes the work planned for this session. You can look at your summary now. | prb_2852db0ae7d401ae669c63be (evt_397425c3a9f501482768c91b) | — |
+| student_message | Your answer multiplied only the first term inside the parentheses by 5. Let's practise that part on its own first. What happens to each term inside the parentheses? | prb_d793de5434b3b7dcbc9a4eea (evt_0cb060c8f9f0a9b753399b50) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_b0c5b2de7e068de57e3697af (evt_cfa67081a8aea00b551a7481) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_941493a86b5ed1bb346aaf73 (evt_c3307177eae6eba58b2ca4b8) | — |
+| student_message | Here is a hint: look at what is being done to x, and in what order. What could you undo first while keeping both sides equal? | prb_941493a86b5ed1bb346aaf73 (evt_c3307177eae6eba58b2ca4b8) | prb_627a9ab63db8411d0b62ed75 check |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_627a9ab63db8411d0b62ed75 (evt_a8283012feff72888a2158ec) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_e23391768bbbdc5db2f6772a (evt_d66585b50b37775c26dac9f5) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_bbb2db549c7e81473434cc34 (evt_c6bb17d7dc3b551e600aa98e) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. Let's go back to the topic you started with. | prb_65f27b0d00ebda62c7e5214f (evt_c631a6276c971cd221286904) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_8bf9c9805d942bf96bbb4911 (evt_a8686be1beae67609afad49b) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_34e919ceec22a083e8bf72cb (evt_d2f20dd7140f0599ddf658ef) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_7fad5fb98e86f049b0aa88ef (evt_ccc6f472f837a745f6ac90f3) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. That completes the work planned for this session. You can look at your summary now. | prb_a8babaf22607bca03f41f66d (evt_925f2590379fd93e7939310a) | — |
 
 ## Verdicts recorded by code
 
 | Problem | Purpose | Entry | Read as | Verdict | Help | Slip | Held |
 |---|---|---|---|---|---|---|---|
-| Solve 8(x + 7) = 56 for x. | PRACTICE | 49/8 | 49/8 | INCORRECT |  |  |  |
-| Expand 2(x + 7). Write your answer without parentheses. | PRACTICE | 2x+14 | 2x+14 | CORRECT |  |  |  |
-| Expand 4(x + 4). Write your answer without parentheses. | CHECK | 4x+16 | 4x+16 | CORRECT |  |  |  |
-| Which of these expressions are equal to 4(x + 7) for every value of x? Select every one that is. / A) 4x + 28 / B) 4x + 7 / C) 4 · x + 4 · 7 / D) x + 11 | CHECK | A,C | A,C | CORRECT | HINT |  |  |
-| Expand 2(x + 4). Write your answer without parentheses. | CHECK | 2x+8 | 2x+8 | CORRECT |  |  |  |
-| Which of these expressions are equal to 5(x + 1) for every value of x? Select every one that is. / A) x + 5 / B) 5 · x + 5 · 1 / C) 5x + 5 / D) x + 6 | CHECK | B,C | B,C | CORRECT |  |  |  |
-| Expand 7(3x + 8). Write your answer without parentheses. | CHECK | 21x+56 | 21x+56 | CORRECT |  |  |  |
-| Solve 7(x + 4) = 112 for x. | PRACTICE | 12 | 12 | CORRECT |  |  |  |
-| Solve 2(x − 9) = −8 for x. | CHECK | 5 | 5 | CORRECT |  |  |  |
-| Here is an equation: 8(x + 4) = 56. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply both terms in the parentheses by 8: 8x + 32 = 56 / B) Multiply only the x by 8: 8x + 4 = 56 / C) Divide only the left side by 8: x + 4 = 56 / D) Subtract 4 to undo the 4: 8x = 52 | CHECK | A | A | CORRECT |  |  |  |
-| Solve 5(x − 5) + 13 = 43 for x. | CHECK | 11 | 11 | CORRECT |  |  |  |
+| Solve 5(x + 9) = 45 for x. | PRACTICE | 36/5 | 36/5 | INCORRECT |  |  |  |
+| Expand 6(x + 8). Write your answer without parentheses. | PRACTICE | 6x+48 | 6x+48 | CORRECT |  |  |  |
+| Expand 6(x + 9). Write your answer without parentheses. | CHECK | 6x+54 | 6x+54 | CORRECT |  |  |  |
+| Which of these expressions are equal to 6(x + 5) for every value of x? Select every one that is. / A) 6x + 30 / B) 6x + 5 / C) x + 11 / D) 6 · x + 6 · 5 | CHECK | A,D | A,D | CORRECT | HINT |  |  |
+| Expand 7(x + 6). Write your answer without parentheses. | CHECK | 7x+42 | 7x+42 | CORRECT |  |  |  |
+| Which of these expressions are equal to 4(x + 3) for every value of x? Select every one that is. / A) x + 7 / B) 4x + 3 / C) 4 · x + 4 · 3 / D) x + 12 | CHECK | C | C | CORRECT |  |  |  |
+| Expand 4(x + y + 5). Write your answer without parentheses. | CHECK | 4x+4y+20 | 4x+4y+20 | CORRECT |  |  |  |
+| Solve 5(x + 4) = 20 for x. | PRACTICE | 0 | 0 | CORRECT |  |  |  |
+| Solve 7(x + 4) = 112 for x. | CHECK | 12 | 12 | CORRECT |  |  |  |
+| Here is an equation: 7(x − 2) = 56. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply both terms in the parentheses by 7: 7x − 14 = 56 / B) Divide only the left side by 7: x − 2 = 56 / C) Divide both sides by 7: x − 2 = 8 / D) Multiply only the x by 7: 7x − 2 = 56 | CHECK | A,C | A,C | CORRECT |  |  |  |
+| Solve 8(x − 9) − 12 = −76 for x. | CHECK | 1 | 1 | CORRECT |  |  |  |
 
 ## Check answers
 
 | Check problem | Entry | Verdict | Counted as |
 |---|---|---|---|
-| Expand 4(x + 4). Write your answer without parentheses. | 4x+16 | CORRECT | counted unassisted |
-| Which of these expressions are equal to 4(x + 7) for every value of x? Select every one that is. / A) 4x + 28 / B) 4x + 7 / C) 4 · x + 4 · 7 / D) x + 11 | A,C | CORRECT | with help: I'm stuck: HINT |
-| Expand 2(x + 4). Write your answer without parentheses. | 2x+8 | CORRECT | counted unassisted |
-| Which of these expressions are equal to 5(x + 1) for every value of x? Select every one that is. / A) x + 5 / B) 5 · x + 5 · 1 / C) 5x + 5 / D) x + 6 | B,C | CORRECT | counted unassisted |
-| Expand 7(3x + 8). Write your answer without parentheses. | 21x+56 | CORRECT | counted unassisted |
-| Solve 2(x − 9) = −8 for x. | 5 | CORRECT | counted unassisted |
-| Here is an equation: 8(x + 4) = 56. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply both terms in the parentheses by 8: 8x + 32 = 56 / B) Multiply only the x by 8: 8x + 4 = 56 / C) Divide only the left side by 8: x + 4 = 56 / D) Subtract 4 to undo the 4: 8x = 52 | A | CORRECT | counted unassisted |
-| Solve 5(x − 5) + 13 = 43 for x. | 11 | CORRECT | counted unassisted |
+| Expand 6(x + 9). Write your answer without parentheses. | 6x+54 | CORRECT | counted unassisted |
+| Which of these expressions are equal to 6(x + 5) for every value of x? Select every one that is. / A) 6x + 30 / B) 6x + 5 / C) x + 11 / D) 6 · x + 6 · 5 | A,D | CORRECT | with help: I'm stuck: HINT |
+| Expand 7(x + 6). Write your answer without parentheses. | 7x+42 | CORRECT | counted unassisted |
+| Which of these expressions are equal to 4(x + 3) for every value of x? Select every one that is. / A) x + 7 / B) 4x + 3 / C) 4 · x + 4 · 3 / D) x + 12 | C | CORRECT | counted unassisted |
+| Expand 4(x + y + 5). Write your answer without parentheses. | 4x+4y+20 | CORRECT | counted unassisted |
+| Solve 7(x + 4) = 112 for x. | 12 | CORRECT | counted unassisted |
+| Here is an equation: 7(x − 2) = 56. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply both terms in the parentheses by 7: 7x − 14 = 56 / B) Divide only the left side by 7: x − 2 = 56 / C) Divide both sides by 7: x − 2 = 8 / D) Multiply only the x by 7: 7x − 2 = 56 | A,C | CORRECT | counted unassisted |
+| Solve 8(x − 9) − 12 = −76 for x. | 1 | CORRECT | counted unassisted |
 
 ## Help on open check problems
 
 - Help moves on open checks: HINT 1; with a practice item: 0
-- Help recorded on Which of these expressions are equal to 4(x + 7) for every value of x? Select every one that is. / A) 4x + 28 / B) 4x + 7 / C) 4 · x + 4 · 7 / D) x + 11 (check): I'm stuck: HINT
+- Help recorded on Which of these expressions are equal to 6(x + 5) for every value of x? Select every one that is. / A) 6x + 30 / B) 6x + 5 / C) x + 11 / D) 6 · x + 6 · 5 (check): I'm stuck: HINT
+
+## Route (round 10 §4.3; code's record)
+
+- DETOUR E06: Expand 6(x + 8). Write your answer without parentheses.
+- RETURN_TO_SKILL Q07: Solve 5(x + 4) = 20 for x.
+- Detour to E06: 6 problem(s), 6 correct, 0 not yet; returned to Q07 through practice, then 4 correct and 0 not yet
+- Fresh evidence on Q07 after the first return: 3 check answer(s) counted, 3 correct
+- Prerequisite answers: 6; not yet before the first success: 0
+- Boundary (N18, N03): not reached; deepest skill posed: E06; moves outside the tutor rejected: 0
 
 ## equation_step answers
 
@@ -126,7 +135,7 @@ None.
 
 | Problem | Purpose | Entry | Eligible for the pause | Signatures | Detail sent to the tutor |
 |---|---|---|---|---|---|
-| Solve 8(x + 7) = 56 for x. | PRACTICE | 49/8 | no | FIRST_TERM_ONLY |  |
+| Solve 5(x + 9) = 45 for x. | PRACTICE | 36/5 | no | FIRST_TERM_ONLY |  |
 
 ## Detector signals (logged only; the text was shown unchanged, nothing held)
 

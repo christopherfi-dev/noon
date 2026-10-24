@@ -329,7 +329,7 @@ final class CheatingTest extends TestCase
         $this->assertSame([$check['problem_id'], 'practice', ['HELP'], true], [$ctx['ORIGINAL_PROBLEM']['problem_id'], $ctx['ORIGINAL_PROBLEM']['purpose'],
             $ctx['ORIGINAL_PROBLEM']['help_given'], $ctx['ALLOWED']['may_pose_problem']]);
         $this->assertSame(['kind' => 'linear_equation', 'expression' => '3x + 4 = 19'], $ctx['ORIGINAL_PROBLEM']['spec']);
-        $this->assertFalse($ctx['ALLOWED']['may_pose_check'], 'practice only while the original waits (owner\'s decision)');
+        $this->assertTrue($ctx['ALLOWED']['may_pose_check'], 'round 10 §4.2: a waiting original no longer blocks a check');
         // The mock brings the original back; it is shown as practice with help, and its answer is recorded on that check with help.
         $this->assertSame([$check['problem_id'], 'practice', 'Practice', true], [$h->open()['problem_id'], $h->view['open_problem']['purpose'],
             $h->view['open_problem']['label'], $h->view['open_problem']['with_help']]);

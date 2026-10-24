@@ -36,7 +36,7 @@ final class TutorReport
     {
         $snap = $row['snapshot'];
         $attempts = Gradebook::attempts($events);
-        $goals = Goals::compute($attempts);
+        $goals = Goals::fromEvents($events);
         $topics = [];
         $moves = [];
         $audit = [];
@@ -131,19 +131,22 @@ final class TutorReport
         }
 
         $learner = $this->learner($perSkill, $topics, $goals, $help, $moves);
+        $route = self::routeSummary($events, $attempts, $problems);
         $teacher = $this->teacher($perSkill, $topics, $goals, $help, $moves, $audit, $slips, $readings, $open, $status, $provider, $row['engine']['progress']['earlier'] ?? [], $held,
-            array_values(array_filter($attempts, fn ($a) => $a['corrections'] !== [])));
+            array_values(array_filter($attempts, fn ($a) => $a['corrections'] !== [])), $this->routeLines($route));
         $report = $this->record($snap, $attempts, $goals, $perSkill, $topics, $moves, $status, $provider, $now);
         return [
             'report' => $report,
             'per_skill' => array_values($perSkill),
             'provider' => $provider,
             'provider_label' => $provider === 'mock' ? 'MOCK (simulated tutor; no live provider was used)' : 'LIVE PROVIDER',
-            'architecture' => ['version' => '1.7', 'sha256' => $snap['binding']['architecture_sha256'], 'binding_acknowledged' => $snap['binding']['acknowledged'],
+            'architecture' => ['version' => '1.8', 'sha256' => $snap['binding']['architecture_sha256'], 'binding_acknowledged' => $snap['binding']['acknowledged'],
                 'binding_note' => 'An acknowledged binding is not evidence of enforcement; the app enforces the guarantees.'],
             'audit' => array_map(fn ($a) => ['problem_id' => $a['problem_id'], 'phrases' => $a['phrases']], $audit),
             'summary' => ['learner' => $learner + ['earlier' => $this->words->earlier($row['engine']['progress']['earlier'] ?? [], false)], 'teacher' => $teacher],
-            'policy_version' => '1.7',
+            'policy_version' => '1.8',
+            // Round 10 §4.10: the original completed with help, returns to the target, fresh evidence after a return, and each detour; evidence, not a score.
+            'route' => $route,
         ];
     }
 
@@ -290,7 +293,142 @@ final class TutorReport
         return $lines;
     }
 
-    private function teacher(array $perSkill, array $topics, array $goals, array $help, array $moves, array $audit, array $slips, array $readings, array $open, string $status, string $provider, array $earlier, array $held = [], array $corrected = []): array
+    /**
+     * Round 10 §4.10: the route from the ledger's ROUTE events. Each detour:
+     * its skill, the target at the time, the problems it lasted, correct and
+     * not-yet answers on the detour skill, the first return to the target after
+     * it (and how), and the student's results on the target afterwards. Each
+     * original completed with help or set aside. Fresh evidence: check answers
+     * on the target counted without help after the first return.
+     *
+     * @return array{detours:list<array>,originals:list<array>,returns:list<array>,fresh_evidence:list<array>}
+     */
+    public static function routeSummary(array $events, array $attempts, array $problems): array
+    {
+        $detours = [];
+        $originals = [];
+        $returns = [];
+        $active = null;
+        $lastPresented = null;
+        $setAsideWhy = [];
+        foreach ($events as $seq => $e) {
+            $d = $e['data'];
+            if ($e['type'] === 'PROBLEM_PRESENTED') {
+                $lastPresented = $d['problem_id'];
+                if ($active !== null) {
+                    $detours[$active]['problems']++;
+                }
+            } elseif ($e['type'] === 'PROBLEM_CLOSED' && isset($d['original_set_aside'])) {
+                $setAsideWhy[$d['problem_id']] = $d['original_set_aside'];
+            } elseif ($e['type'] === 'ROUTE') {
+                $kind = $d['kind'];
+                $mine = $active !== null && $lastPresented === $d['problem_id'];
+                if ($kind === 'DETOUR') {
+                    if ($mine) {
+                        $detours[$active]['problems']--; // that problem starts the new detour
+                    }
+                    if ($active !== null) {
+                        $detours[$active]['end_seq'] = $seq;
+                    }
+                    $detours[] = ['skill_id' => $d['skill_id'], 'target_skill_id' => $d['target_skill_id'] ?? null, 'problem_id' => $d['problem_id'],
+                        'start_seq' => $seq, 'end_seq' => null, 'problems' => 1, 'returned' => null];
+                    $active = array_key_last($detours);
+                } elseif (in_array($kind, ['RETURN_TO_SKILL', 'RETURN_ORIGINAL', 'RETURN_FRESH'], true)) {
+                    $purpose = $problems[$d['problem_id']]['purpose'] ?? null;
+                    $how = $kind === 'RETURN_ORIGINAL' ? 'original' : ($kind === 'RETURN_FRESH' || $purpose === 'CHECK' ? 'fresh_check' : 'practice');
+                    $returns[] = ['kind' => $kind, 'skill_id' => $d['skill_id'], 'problem_id' => $d['problem_id'], 'seq' => $seq, 'how' => $how];
+                    if ($active !== null) {
+                        if ($mine) {
+                            $detours[$active]['problems']--;
+                        }
+                        $detours[$active]['end_seq'] = $seq;
+                        $active = null;
+                    }
+                    foreach ($detours as $i => $dt) {
+                        if ($dt['returned'] === null && $dt['skill_id'] !== $d['skill_id']) {
+                            $detours[$i]['returned'] = ['kind' => $kind, 'how' => $how, 'seq' => $seq, 'skill_id' => $d['skill_id']];
+                        }
+                    }
+                } elseif ($kind === 'ORIGINAL_COMPLETED_WITH_HELP' || $kind === 'ORIGINAL_SET_ASIDE') {
+                    $originals[] = ['outcome' => $kind === 'ORIGINAL_COMPLETED_WITH_HELP' ? 'completed_with_help' : 'set_aside', 'skill_id' => $d['skill_id'],
+                        'problem_id' => $d['problem_id'], 'prompt' => $problems[$d['problem_id']]['prompt'] ?? null,
+                        'set_aside_because' => $kind === 'ORIGINAL_SET_ASIDE' ? ($setAsideWhy[$d['problem_id']] ?? null) : null];
+                }
+            }
+        }
+        $out = [];
+        foreach ($detours as $dt) {
+            $end = $dt['end_seq'] ?? PHP_INT_MAX;
+            $on = array_filter($attempts, fn ($a) => $a['skill_id'] === $dt['skill_id'] && $a['seq'] > $dt['start_seq'] - 2 && $a['seq'] < $end);
+            $target = $dt['returned']['skill_id'] ?? $dt['target_skill_id'];
+            // Target results after the return, up to the next detour.
+            $next = PHP_INT_MAX;
+            foreach ($detours as $later) {
+                if ($dt['returned'] !== null && $later['start_seq'] > $dt['returned']['seq']) {
+                    $next = min($next, $later['start_seq']);
+                }
+            }
+            $after = $dt['returned'] === null ? [] : array_filter($attempts, fn ($a) => $a['skill_id'] === $target && $a['seq'] > $dt['returned']['seq'] && $a['seq'] < $next);
+            $out[] = ['skill_id' => $dt['skill_id'], 'target_skill_id' => $target, 'problems' => max(1, $dt['problems']),
+                'correct' => count(array_filter($on, fn ($a) => $a['verdict'] === 'CORRECT')), 'not_yet' => count(array_filter($on, fn ($a) => $a['verdict'] !== 'CORRECT')),
+                'returned_to_target' => $dt['returned'] !== null, 'returned_through' => $dt['returned']['how'] ?? null,
+                'target_after' => ['correct' => count(array_filter($after, fn ($a) => $a['verdict'] === 'CORRECT')), 'not_yet' => count(array_filter($after, fn ($a) => $a['verdict'] !== 'CORRECT'))]];
+        }
+        $fresh = [];
+        foreach ($returns as $r) {
+            if (isset($fresh[$r['skill_id']])) {
+                continue; // after the first return to each target
+            }
+            $counted = array_filter($attempts, fn ($a) => $a['skill_id'] === $r['skill_id'] && $a['seq'] > $r['seq'] - 2 && $a['purpose'] === 'CHECK' && $a['help'] === [] && ($a['held'] ?? null) === null);
+            $fresh[$r['skill_id']] = ['skill_id' => $r['skill_id'], 'checks_counted' => count($counted), 'correct' => count(array_filter($counted, fn ($a) => $a['verdict'] === 'CORRECT'))];
+        }
+        return ['detours' => $out, 'originals' => $originals, 'returns' => array_map(fn ($r) => array_diff_key($r, ['seq' => 1]), $returns), 'fresh_evidence' => array_values($fresh)];
+    }
+
+    /**
+     * Round 10 §4.10, owner-approved wording ("Route and return", teacher view
+     * only). The set-aside line for an original replaced by a newer helped
+     * problem (owner's decision 3) is worded to match.
+     *
+     * @return list<string>
+     */
+    private function routeLines(array $route): array
+    {
+        $lines = [];
+        $n = fn (int $k, string $one, string $many) => $k . ' ' . ($k === 1 ? $one : $many);
+        $through = ['practice' => 'through practice', 'original' => 'through the original problem', 'fresh_check' => 'through a fresh check question'];
+        // The teacher view never shows a bare skill ID (round UI rule): every ID follows its title.
+        $named = fn (string $id) => $this->words->title($id) . ' (' . $id . ')';
+        foreach ($route['detours'] as $d) {
+            $target = (string) $d['target_skill_id'];
+            $line = 'Detour to ' . $named((string) $d['skill_id']) . ': ' . $n($d['problems'], 'problem', 'problems') . ', '
+                . $d['correct'] . ' correct and ' . $d['not_yet'] . ' not yet.';
+            $line .= $d['returned_to_target']
+                ? ' Work returned to ' . $named($target) . ' ' . $through[$d['returned_through']] . '. On ' . $named($target) . ' afterwards: '
+                    . $d['target_after']['correct'] . ' correct and ' . $d['target_after']['not_yet'] . ' not yet.'
+                : ' Work did not return to ' . $named($target) . '.';
+            $lines[] = $line;
+        }
+        foreach ($route['originals'] as $o) {
+            $prompt = '“' . ($o['prompt'] ?? 'a problem') . '”';
+            if ($o['outcome'] === 'completed_with_help') {
+                $lines[] = 'The original problem ' . $prompt . ' was completed with help through connected steps. It earns no goal credit.';
+            } elseif (str_starts_with((string) $o['set_aside_because'], 'a fresh check')) {
+                $lines[] = 'The original problem ' . $prompt . ' was set aside unfinished when a fresh check question on ' . $named((string) $o['skill_id']) . ' was posed.';
+            } else {
+                $lines[] = 'The original problem ' . $prompt . ' was set aside unfinished when help on another problem took its place.';
+            }
+        }
+        foreach ($route['fresh_evidence'] as $f) {
+            $lines[] = 'Fresh evidence on ' . $named((string) $f['skill_id']) . ' without help after the return: ' . $n($f['checks_counted'], 'check answer', 'check answers') . ' counted, ' . $f['correct'] . ' correct.';
+        }
+        if ($lines !== []) {
+            $lines[] = 'These are evidence, not a score.';
+        }
+        return $lines;
+    }
+
+    private function teacher(array $perSkill, array $topics, array $goals, array $help, array $moves, array $audit, array $slips, array $readings, array $open, string $status, string $provider, array $earlier, array $held = [], array $corrected = [], array $routeAndReturn = []): array
     {
         $skills = [];
         foreach ($perSkill as $id => $s) {
@@ -393,6 +531,7 @@ final class TutorReport
                 $section('Answers read from the student\'s wording', $readLines, 'Every answer was read as typed.'),
                 $section('Held check answers', $heldLines, 'No check answers were held.'),
                 ...($corrected === [] ? [] : [$section('Corrections', $this->correctionLines($corrected), '')]),
+                ...($routeAndReturn === [] ? [] : [['heading' => 'Route and return', 'lines' => $routeAndReturn, 'empty' => '']]),
                 ['heading' => 'Before check questions (audit)', 'lines' => SummaryView::unique($auditLines), 'empty' => 'No forward-looking words were used before a check question.'],
                 $section('Still open or not checked', $open, 'Nothing listed.'),
                 $section('What would show more', $next, 'Nothing listed.'),
@@ -437,7 +576,7 @@ final class TutorReport
             'report_id' => Ids::make('rep'),
             'session_id' => $snap['session_id'],
             'state_revision' => $snap['revision'],
-            'architecture_version' => '1.7',
+            'architecture_version' => '1.8',
             'curriculum_version' => CurriculumRepository::CURRICULUM_VERSION,
             'status' => $status,
             'targets_attempted' => $topics,

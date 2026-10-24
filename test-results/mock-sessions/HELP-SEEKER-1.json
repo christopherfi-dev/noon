@@ -5,7 +5,7 @@
         {
             "input": "(start on Q06)",
             "status": 200,
-            "ms": 7,
+            "ms": 5,
             "value_answer": false,
             "graded": false,
             "calls": 2,
@@ -24,11 +24,17 @@
             "counted": true
         },
         {
-            "input": "-2",
+            "input": "5",
             "status": 200,
-            "ms": 7,
+            "ms": 5,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 7x + 2 = 37 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -44,9 +50,15 @@
         {
             "input": "can you give me a hint for this one?",
             "status": 200,
-            "ms": 7,
+            "ms": 6,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4x − 6 = 30 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -60,11 +72,17 @@
             "counted": true
         },
         {
-            "input": "-4",
+            "input": "4",
             "status": 200,
-            "ms": 11,
+            "ms": 5,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 7x + 6 = 34 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -80,9 +98,15 @@
         {
             "input": "idk",
             "status": 200,
-            "ms": 7,
+            "ms": 5,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4x − 6 = 30 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -98,99 +122,15 @@
         {
             "input": "just tell me the answer",
             "status": 200,
-            "ms": 7,
+            "ms": 5,
             "value_answer": false,
             "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "enabled:low (per call: a free-text message about the math)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "-6",
-            "status": 200,
-            "ms": 8,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "can you give me a hint for this one?",
-            "status": 200,
-            "ms": 9,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "1",
-            "status": 200,
-            "ms": 9,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "idk",
-            "status": 200,
-            "ms": 8,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "just tell me the answer",
-            "status": 200,
-            "ms": 9,
-            "value_answer": false,
-            "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4x − 6 = 30 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -206,9 +146,135 @@
         {
             "input": "9",
             "status": 200,
-            "ms": 7,
+            "ms": 6,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4x − 6 = 30 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 7,
+            "value_answer": false,
+            "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −6x − 5 = −11 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 6x + 13 = 37 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "idk",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −6x − 5 = −11 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "just tell me the answer",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −6x − 5 = −11 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "enabled:low (per call: a free-text message about the math)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8",
+            "status": 200,
+            "ms": 11,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −6x − 5 = −11 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -222,29 +288,17 @@
             "counted": true
         },
         {
-            "input": "-9",
-            "status": 200,
-            "ms": 7,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "2",
+            "input": "-1",
             "status": 200,
             "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 2x − 5 = −7 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -260,9 +314,15 @@
         {
             "input": "can you give me a hint for this one?",
             "status": 200,
-            "ms": 8,
+            "ms": 9,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 6x + 1 = −41 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -278,9 +338,15 @@
         {
             "input": "9",
             "status": 200,
-            "ms": 8,
+            "ms": 11,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −7x + 12 = −51 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -296,9 +362,15 @@
         {
             "input": "idk",
             "status": 200,
-            "ms": 7,
+            "ms": 8,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 6x + 1 = −41 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -317,6 +389,12 @@
             "ms": 7,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 6x + 1 = −41 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -335,6 +413,12 @@
             "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 6x + 1 = −41 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -353,6 +437,12 @@
             "ms": 8,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4x − 15 = −39 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -368,9 +458,15 @@
         {
             "input": "8",
             "status": 200,
-            "ms": 8,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −4x + 1 = −31 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -389,6 +485,12 @@
             "ms": 8,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4x − 15 = −39 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -407,6 +509,12 @@
             "ms": 8,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4x − 15 = −39 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -422,9 +530,15 @@
         {
             "input": "-6",
             "status": 200,
-            "ms": 8,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4x − 15 = −39 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -443,6 +557,12 @@
             "ms": 8,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 6x + 14 = −46 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -458,9 +578,15 @@
         {
             "input": "-2",
             "status": 200,
-            "ms": 8,
+            "ms": 10,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 5x − 11 = −21 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -476,9 +602,15 @@
         {
             "input": "idk",
             "status": 200,
-            "ms": 8,
+            "ms": 12,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 6x + 14 = −46 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -497,6 +629,12 @@
             "ms": 8,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 6x + 14 = −46 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -515,6 +653,12 @@
             "ms": 11,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 6x + 14 = −46 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -530,9 +674,15 @@
         {
             "input": "can you give me a hint for this one?",
             "status": 200,
-            "ms": 9,
+            "ms": 11,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 7x + 11 = 18 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -548,9 +698,39 @@
         {
             "input": "10",
             "status": 200,
-            "ms": 9,
+            "ms": 12,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 4x + 5 = 45 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "idk",
+            "status": 200,
+            "ms": 11,
+            "value_answer": false,
+            "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 7x + 11 = 18 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -565,15 +745,115 @@
         }
     ],
     "goals_met": [],
+    "start_skill": "Q06",
+    "route": {
+        "detours": [],
+        "originals": [],
+        "returns": [
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_4fc38664b59e0b27f40a1920",
+                "how": "original"
+            },
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_2ef892cc1caa6a6a9205ebf0",
+                "how": "original"
+            },
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_d5ac32f8294805b6a5530901",
+                "how": "original"
+            },
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_fb460dd60647ea0f7ccca9df",
+                "how": "original"
+            },
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_2e49a709b09c4db0910a9d84",
+                "how": "original"
+            },
+            {
+                "kind": "RETURN_ORIGINAL",
+                "skill_id": "Q06",
+                "problem_id": "prb_0f790405f39a1666e9043b2b",
+                "how": "original"
+            }
+        ],
+        "fresh_evidence": [
+            {
+                "skill_id": "Q06",
+                "checks_counted": 0,
+                "correct": 0
+            }
+        ]
+    },
+    "route_log": [
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve 4x − 6 = 30 for x."
+        },
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve −6x − 5 = −11 for x."
+        },
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve 6x + 1 = −41 for x."
+        },
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve 4x − 15 = −39 for x."
+        },
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve 6x + 14 = −46 for x."
+        },
+        {
+            "kind": "RETURN_ORIGINAL",
+            "skill_id": "Q06",
+            "prompt": "Solve 7x + 11 = 18 for x."
+        }
+    ],
+    "prerequisite": {
+        "wrong_before_first_success": 0,
+        "first_success": false,
+        "answers": 0
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 0,
+        "deepest": "Q06",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": [],
     "check_answers": {
         "unassisted": 0,
         "unassisted_correct": 0,
-        "with_help": 6,
+        "with_help": 5,
         "held": 0
     },
     "check_causes": {
         "with_help": {
-            "tutor move HELP": 6
+            "tutor move HELP": 5
         },
         "held": []
     },
@@ -582,20 +862,18 @@
     },
     "help_moves_with_practice_item": 6,
     "original_problem": [
-        "waits as the original: prb_8acfd98f9a9f2bef16b71bbe",
-        "original brought back: prb_8acfd98f9a9f2bef16b71bbe",
-        "waits as the original: prb_bec7d23251dd7808ff6f5103",
-        "original brought back: prb_bec7d23251dd7808ff6f5103",
-        "waits as the original: prb_bec7d23251dd7808ff6f5103",
-        "original brought back: prb_bec7d23251dd7808ff6f5103",
-        "waits as the original: prb_47dd9df05c1c7213b2e6d5ff",
-        "original brought back: prb_47dd9df05c1c7213b2e6d5ff",
-        "waits as the original: prb_5ae9631b8b0d1ada886ada0b",
-        "original brought back: prb_5ae9631b8b0d1ada886ada0b",
-        "waits as the original: prb_f1a814f302e0f0d12d2eb540",
-        "original brought back: prb_f1a814f302e0f0d12d2eb540",
-        "waits as the original: prb_eb615ca82b6abd7b16958eb2",
-        "original brought back: prb_eb615ca82b6abd7b16958eb2"
+        "waits as the original: prb_4fc38664b59e0b27f40a1920",
+        "original brought back: prb_4fc38664b59e0b27f40a1920",
+        "waits as the original: prb_2ef892cc1caa6a6a9205ebf0",
+        "original brought back: prb_2ef892cc1caa6a6a9205ebf0",
+        "waits as the original: prb_d5ac32f8294805b6a5530901",
+        "original brought back: prb_d5ac32f8294805b6a5530901",
+        "waits as the original: prb_fb460dd60647ea0f7ccca9df",
+        "original brought back: prb_fb460dd60647ea0f7ccca9df",
+        "waits as the original: prb_2e49a709b09c4db0910a9d84",
+        "original brought back: prb_2e49a709b09c4db0910a9d84",
+        "waits as the original: prb_0f790405f39a1666e9043b2b",
+        "original brought back: prb_0f790405f39a1666e9043b2b"
     ],
     "guards": [],
     "guard_phrases": [],
@@ -619,9 +897,9 @@
     },
     "slips": [
         {
-            "prompt": "Solve 8x + 3 = 19 for x.",
+            "prompt": "Solve −6x − 5 = −11 for x.",
             "purpose": "CHECK",
-            "entry": "9",
+            "entry": "8",
             "eligible": false,
             "codes": [],
             "detail": null
@@ -639,5 +917,5 @@
     },
     "calls": 32,
     "finish_length": 0,
-    "attempts": 14
+    "attempts": 13
 }

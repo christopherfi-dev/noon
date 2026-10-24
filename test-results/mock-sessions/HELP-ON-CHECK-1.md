@@ -2,229 +2,245 @@
 
 | # | Learner input | Calls (purpose: reasoning setting) | Outcomes | Wait ms |
 |---|---|---|---|---|
-| 0 | (start on Q06) | 2 — BINDING: disabled (binding call); REPLY: disabled (per call: none of the three cases) | ACCEPTED, ACCEPTED | 5 |
-| 1 | -10 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
-| 2 | can you give me a hint for this one? | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 5 |
-| 3 | 2 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
-| 4 | 4 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
-| 5 | can you give me a hint for this one? | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
-| 6 | -5 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
-| 7 | -1 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
-| 8 | can you give me a hint for this one? | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
-| 9 | 1 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
-| 10 | 1 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
-| 11 | can you give me a hint for this one? | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
-| 12 | 8 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 13 | 9 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
-| 14 | can you give me a hint for this one? | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
-| 15 | -4 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 16 | 8 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 17 | can you give me a hint for this one? | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
-| 18 | 2 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
-| 19 | 2 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 20 | can you give me a hint for this one? | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 11 |
-| 21 | -4 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
-| 22 | -3 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 23 | can you give me a hint for this one? | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 24 | 5 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 25 | 8 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 26 | can you give me a hint for this one? | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
-| 27 | 10 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 28 | -4 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
-| 29 | can you give me a hint for this one? | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
-| 30 | -10 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 0 | (start on Q06) | 2 — BINDING: disabled (binding call); REPLY: disabled (per call: none of the three cases) | ACCEPTED, ACCEPTED | 10 |
+| 1 | 6 — on Solve −5x − 12 = −42 for x. (Q06 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
+| 2 | can you give me a hint for this one? — on Solve −6x + 7 = −11 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
+| 3 | 10 — on Solve 9x + 6 = 96 for x. (Q06 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
+| 4 | 3 — on Solve −6x + 7 = −11 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
+| 5 | can you give me a hint for this one? — on Solve −5x + 10 = −5 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
+| 6 | -9 — on Solve −6x − 4 = 50 for x. (Q06 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
+| 7 | 3 — on Solve −5x + 10 = −5 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 8 | can you give me a hint for this one? — on Solve 7x − 15 = 41 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
+| 9 | -4 — on Solve −7x + 3 = 31 for x. (Q06 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 10 | 8 — on Solve 7x − 15 = 41 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 12 |
+| 11 | can you give me a hint for this one? — on Solve 7x − 13 = −6 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 12 | 9 — on Solve −8x + 15 = −57 for x. (Q06 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 13 | 1 — on Solve 7x − 13 = −6 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 14 | can you give me a hint for this one? — on Solve −7x + 8 = 15 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 10 |
+| 15 | -1 — on Solve −8x − 3 = 5 for x. (Q06 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 12 |
+| 16 | -1 — on Solve −7x + 8 = 15 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 15 |
+| 17 | can you give me a hint for this one? — on Solve −8x − 1 = 79 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 12 |
+| 18 | 1 — on Solve 4x + 9 = 13 for x. (Q06 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 14 |
+| 19 | -10 — on Solve −8x − 1 = 79 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 20 | can you give me a hint for this one? — on Solve −6x + 9 = −9 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 21 | 9 — on Solve −7x + 7 = −56 for x. (Q06 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 9 |
+| 22 | 3 — on Solve −6x + 9 = −9 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 13 |
+| 23 | can you give me a hint for this one? — on Solve 7x + 2 = −33 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 11 |
+| 24 | 8 — on Solve 9x + 13 = 85 for x. (Q06 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 11 |
+| 25 | -5 — on Solve 7x + 2 = −33 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 10 |
+| 26 | can you give me a hint for this one? — on Solve −5x + 5 = 40 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 10 |
+| 27 | 2 — on Solve 4x + 7 = 15 for x. (Q06 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 10 |
+| 28 | -7 — on Solve −5x + 5 = 40 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 11 |
+| 29 | can you give me a hint for this one? — on Solve 5x + 6 = 21 for x. (Q06 check) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 11 |
+| 30 | -3 — on Solve 5x + 13 = −2 for x. (Q06 practice) | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 11 |
 
 ## Conversation as the student saw it (the last 80 lines the session keeps)
 
-- **app (result):** Correct. / On 8x + 15 = 23 you answered 1.
+- **app (result):** Correct. / On −7x + 3 = 31 you answered -4.
 - **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question.
+- **tutor (problem):** Solve 7x − 15 = 41 for x.
+- **student (message):** 8
+- **app (result):** Correct. / On 7x − 15 = 41 you answered 8.
+- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
+- **app (check):** Solve 7x − 13 = −6 for x.
+- **student (message):** can you give me a hint for this one?
+- **tutor (message):** Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question.
+- **tutor (problem):** Solve −8x + 15 = −57 for x.
+- **student (message):** 9
+- **app (result):** Correct. / On −8x + 15 = −57 you answered 9.
+- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question.
+- **tutor (problem):** Solve 7x − 13 = −6 for x.
+- **student (message):** 1
+- **app (result):** Correct. / On 7x − 13 = −6 you answered 1.
+- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
+- **app (check):** Solve −7x + 8 = 15 for x.
+- **student (message):** can you give me a hint for this one?
+- **tutor (message):** Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question.
+- **tutor (problem):** Solve −8x − 3 = 5 for x.
+- **student (message):** -1
+- **app (result):** Correct. / On −8x − 3 = 5 you answered -1.
+- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question.
+- **tutor (problem):** Solve −7x + 8 = 15 for x.
+- **student (message):** -1
+- **app (result):** Correct. / On −7x + 8 = 15 you answered -1.
+- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
+- **app (check):** Solve −8x − 1 = 79 for x.
+- **student (message):** can you give me a hint for this one?
+- **tutor (message):** Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question.
 - **tutor (problem):** Solve 4x + 9 = 13 for x.
 - **student (message):** 1
 - **app (result):** Correct. / On 4x + 9 = 13 you answered 1.
+- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question.
+- **tutor (problem):** Solve −8x − 1 = 79 for x.
+- **student (message):** -10
+- **app (result):** Correct. / On −8x − 1 = 79 you answered -10.
 - **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
-- **app (check):** Solve −7x + 7 = −56 for x.
+- **app (check):** Solve −6x + 9 = −9 for x.
 - **student (message):** can you give me a hint for this one?
 - **tutor (message):** Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question.
-- **tutor (problem):** Solve 6x + 7 = 55 for x.
-- **student (message):** 8
-- **app (result):** Correct. / On 6x + 7 = 55 you answered 8.
-- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question.
 - **tutor (problem):** Solve −7x + 7 = −56 for x.
 - **student (message):** 9
 - **app (result):** Correct. / On −7x + 7 = −56 you answered 9.
+- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question.
+- **tutor (problem):** Solve −6x + 9 = −9 for x.
+- **student (message):** 3
+- **app (result):** Correct. / On −6x + 9 = −9 you answered 3.
 - **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
-- **app (check):** Solve 9x + 13 = 85 for x.
+- **app (check):** Solve 7x + 2 = −33 for x.
 - **student (message):** can you give me a hint for this one?
 - **tutor (message):** Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question.
-- **tutor (problem):** Solve 7x − 13 = −41 for x.
-- **student (message):** -4
-- **app (result):** Correct. / On 7x − 13 = −41 you answered -4.
-- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question.
 - **tutor (problem):** Solve 9x + 13 = 85 for x.
 - **student (message):** 8
 - **app (result):** Correct. / On 9x + 13 = 85 you answered 8.
+- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question.
+- **tutor (problem):** Solve 7x + 2 = −33 for x.
+- **student (message):** -5
+- **app (result):** Correct. / On 7x + 2 = −33 you answered -5.
 - **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
-- **app (check):** Solve 4x + 7 = 15 for x.
+- **app (check):** Solve −5x + 5 = 40 for x.
 - **student (message):** can you give me a hint for this one?
 - **tutor (message):** Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question.
-- **tutor (problem):** Solve 4x + 13 = 21 for x.
-- **student (message):** 2
-- **app (result):** Correct. / On 4x + 13 = 21 you answered 2.
-- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question.
 - **tutor (problem):** Solve 4x + 7 = 15 for x.
 - **student (message):** 2
 - **app (result):** Correct. / On 4x + 7 = 15 you answered 2.
+- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question.
+- **tutor (problem):** Solve −5x + 5 = 40 for x.
+- **student (message):** -7
+- **app (result):** Correct. / On −5x + 5 = 40 you answered -7.
 - **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
-- **app (check):** Solve 5x + 13 = −2 for x.
+- **app (check):** Solve 5x + 6 = 21 for x.
 - **student (message):** can you give me a hint for this one?
 - **tutor (message):** Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question.
-- **tutor (problem):** Solve 5x − 11 = −31 for x.
-- **student (message):** -4
-- **app (result):** Correct. / On 5x − 11 = −31 you answered -4.
-- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question.
 - **tutor (problem):** Solve 5x + 13 = −2 for x.
 - **student (message):** -3
 - **app (result):** Correct. / On 5x + 13 = −2 you answered -3.
-- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
-- **app (check):** Solve −9x − 12 = −84 for x.
-- **student (message):** can you give me a hint for this one?
-- **tutor (message):** Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question.
-- **tutor (problem):** Solve −4x − 11 = −31 for x.
-- **student (message):** 5
-- **app (result):** Correct. / On −4x − 11 = −31 you answered 5.
 - **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question.
-- **tutor (problem):** Solve −9x − 12 = −84 for x.
-- **student (message):** 8
-- **app (result):** Correct. / On −9x − 12 = −84 you answered 8.
-- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
-- **app (check):** Solve −5x + 15 = 35 for x.
-- **student (message):** can you give me a hint for this one?
-- **tutor (message):** Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question.
-- **tutor (problem):** Solve −5x + 7 = −43 for x.
-- **student (message):** 10
-- **app (result):** Correct. / On −5x + 7 = −43 you answered 10.
-- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question.
-- **tutor (problem):** Solve −5x + 15 = 35 for x.
-- **student (message):** -4
-- **app (result):** Correct. / On −5x + 15 = 35 you answered -4.
-- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides.
-- **app (check):** Solve 6x + 10 = −32 for x.
-- **student (message):** can you give me a hint for this one?
-- **tutor (message):** Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question.
-- **tutor (problem):** Solve −8x + 8 = 88 for x.
-- **student (message):** -10
-- **app (result):** Correct. / On −8x + 8 = 88 you answered -10.
-- **tutor (message):** Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question.
-- **tutor (problem):** Solve 6x + 10 = −32 for x.
+- **tutor (problem):** Solve 5x + 6 = 21 for x.
 
 ## Every tutor message, with the answered and open problem it was written for
 
 | Field | Text | Answered problem (attempt) | Open problem |
 |---|---|---|---|
 | student_message | Let's work on solve two-step equations. Start with this practice question, and tell me if anything is unclear. | — | — |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_c1c46ca22ed9d499570bf5ea (evt_d6110806c4905c43ebfc3efd) | — |
-| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_c1c46ca22ed9d499570bf5ea (evt_d6110806c4905c43ebfc3efd) | prb_5b087ac942f4e9293f087661 check |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_186a6ba218576d4c610e7fd3 (evt_011c8189a826300ba290107b) | — |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_5b087ac942f4e9293f087661 (evt_31733cf2f98607e14d361f1f) | — |
-| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_5b087ac942f4e9293f087661 (evt_31733cf2f98607e14d361f1f) | prb_94004d1a457913cffd5c352a check |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_abea2a9ca84594c5f3d1c7d6 (evt_e5b62ac14c18f373a8efb2db) | — |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_94004d1a457913cffd5c352a (evt_775ce03c30bd4d47fd91db99) | — |
-| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_94004d1a457913cffd5c352a (evt_775ce03c30bd4d47fd91db99) | prb_a3d26386b018c4cd65d0dd04 check |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_83c73e3d3d4d0006d1603ad3 (evt_fa6925fe5cc5dbc6cf256890) | — |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_a3d26386b018c4cd65d0dd04 (evt_c4d8911d928225b0639f184a) | — |
-| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_a3d26386b018c4cd65d0dd04 (evt_c4d8911d928225b0639f184a) | prb_0f59d4e3834d88c1dc2c9c95 check |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_3350a30508e12e097f8c8ad1 (evt_d691674ce9900db955857f50) | — |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_0f59d4e3834d88c1dc2c9c95 (evt_71380d2053dceaa488269250) | — |
-| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_0f59d4e3834d88c1dc2c9c95 (evt_71380d2053dceaa488269250) | prb_fea9ad7a9c5a2fb1d3d8af76 check |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_34ba009a77485b240d81b4ea (evt_616d67f37dd4a6e58a97d87b) | — |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_fea9ad7a9c5a2fb1d3d8af76 (evt_e1ba465db3d19a4f38de043b) | — |
-| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_fea9ad7a9c5a2fb1d3d8af76 (evt_e1ba465db3d19a4f38de043b) | prb_db04f2674c698c013904fd8e check |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_27fa87e60adc43ec6a6f67d4 (evt_d5146f008f7f11caa627ff9c) | — |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_db04f2674c698c013904fd8e (evt_9dbbfdda4c5b7702fd5a9c64) | — |
-| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_db04f2674c698c013904fd8e (evt_9dbbfdda4c5b7702fd5a9c64) | prb_0a21ab57f29e23ef52c34bc6 check |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_69a257b315b75e46ef45d138 (evt_6702b1018672f21c788bb2b1) | — |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_0a21ab57f29e23ef52c34bc6 (evt_22eadc3896acbee3eebb8a3a) | — |
-| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_0a21ab57f29e23ef52c34bc6 (evt_22eadc3896acbee3eebb8a3a) | prb_96a8211ad2fce804759aa0ec check |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_f7bde9a5a3da7fdad9ee5d0f (evt_6a0b8fa4daa0da65cfb37533) | — |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_96a8211ad2fce804759aa0ec (evt_e9462638fcbce32176753de5) | — |
-| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_96a8211ad2fce804759aa0ec (evt_e9462638fcbce32176753de5) | prb_1a8f17f65c8b39f186758eda check |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_9a351371af7c50f7d36a3ef9 (evt_a6cd9799e3460ec8a998a3f9) | — |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_1a8f17f65c8b39f186758eda (evt_31e66947df51b041f3ef834b) | — |
-| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_1a8f17f65c8b39f186758eda (evt_31e66947df51b041f3ef834b) | prb_d204383a48c67ae1e5e4caaf check |
-| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_a7a0dee52a21e40d1604b4e3 (evt_3600c414dead941c0e10fbb9) | — |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_6bd3d493872e1d4448c41f20 (evt_cd71f1fec61f1c3ef5ec357a) | — |
+| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_6bd3d493872e1d4448c41f20 (evt_cd71f1fec61f1c3ef5ec357a) | prb_c4536bcec32bc0da86951806 check |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_3cc3cd39344e87e51b78f05d (evt_ae3363a216b8fe185e905c4e) | — |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_c4536bcec32bc0da86951806 (evt_643a44ba8424c9f39ee7bc60) | — |
+| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_c4536bcec32bc0da86951806 (evt_643a44ba8424c9f39ee7bc60) | prb_fb3593a9ce435c6aec36781f check |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_f6a23a58b7f5b6ac497819d7 (evt_e3bedc5e1796042c116c890a) | — |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_fb3593a9ce435c6aec36781f (evt_33f53a4a56e8450c816f5caf) | — |
+| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_fb3593a9ce435c6aec36781f (evt_33f53a4a56e8450c816f5caf) | prb_0efe202e55e9f9bf8d7985aa check |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_bd7cdb75ee5e6fe17124ff8d (evt_e152438a5d44d9ecf74f15f4) | — |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_0efe202e55e9f9bf8d7985aa (evt_431be99ea5e9a83875fe3c06) | — |
+| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_0efe202e55e9f9bf8d7985aa (evt_431be99ea5e9a83875fe3c06) | prb_09ccd1fe7ceb2c90ee60485f check |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_01f2c965cb84af78dbe39572 (evt_a4489ce53e4e125921f78d07) | — |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_09ccd1fe7ceb2c90ee60485f (evt_470358d37f9fa222a1e7fda4) | — |
+| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_09ccd1fe7ceb2c90ee60485f (evt_470358d37f9fa222a1e7fda4) | prb_1320f29947d91c94dd2dd63e check |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_45ba367b31524528fafddee0 (evt_fdda539086328d0e12f195af) | — |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_1320f29947d91c94dd2dd63e (evt_72bf9f2ba1bc8eacd0528c6f) | — |
+| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_1320f29947d91c94dd2dd63e (evt_72bf9f2ba1bc8eacd0528c6f) | prb_afbdb38f253537cba5a67910 check |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_460a849014563eadd12c9571 (evt_936fbd44e33192f6836860af) | — |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_afbdb38f253537cba5a67910 (evt_3cf3e6e21105b6dd781cc06d) | — |
+| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_afbdb38f253537cba5a67910 (evt_3cf3e6e21105b6dd781cc06d) | prb_7a461f667639998dcd46f545 check |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_d76daf66332b705dfde675d4 (evt_2b553b75a40b1268b41fb3f4) | — |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_7a461f667639998dcd46f545 (evt_01cf2e7f4571cee3ff5fd3ed) | — |
+| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_7a461f667639998dcd46f545 (evt_01cf2e7f4571cee3ff5fd3ed) | prb_45dc7c49faaf509fe4642985 check |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_ea0cad81db80c267097b2fe0 (evt_96e139102aa04fbc2755eef5) | — |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_45dc7c49faaf509fe4642985 (evt_b4d8270456ac564eb70d854b) | — |
+| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_45dc7c49faaf509fe4642985 (evt_b4d8270456ac564eb70d854b) | prb_e8cdb8a7d52506b35ce95c7c check |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_4f9dd0e1328922be27a1d69d (evt_1e370b24fb36f7355a2aef87) | — |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. | prb_e8cdb8a7d52506b35ce95c7c (evt_fc9a67d05a7bd02043b94523) | — |
+| student_message | Let's take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question. | prb_e8cdb8a7d52506b35ce95c7c (evt_fc9a67d05a7bd02043b94523) | prb_3917ce7c869b7d848714d28c check |
+| student_message | Yes: you undid the added number first and then the multiplication, doing the same to both sides. Now go back to the earlier question. | prb_31d4d9d7de906828f1bdabbb (evt_b440e8f2bb8e43921b38ee92) | — |
 
 ## Verdicts recorded by code
 
 | Problem | Purpose | Entry | Read as | Verdict | Help | Slip | Held |
 |---|---|---|---|---|---|---|---|
-| Solve −3x + 1 = 31 for x. | PRACTICE | -10 | -10 | CORRECT |  |  |  |
-| Solve −9x − 7 = −25 for x. | PRACTICE | 2 | 2 | CORRECT |  |  |  |
-| Solve 3x − 2 = 10 for x. | CHECK | 4 | 4 | CORRECT | HELP |  |  |
-| Solve −6x + 7 = 37 for x. | PRACTICE | -5 | -5 | CORRECT |  |  |  |
-| Solve −8x − 3 = 5 for x. | CHECK | -1 | -1 | CORRECT | HELP |  |  |
-| Solve 8x + 15 = 23 for x. | PRACTICE | 1 | 1 | CORRECT |  |  |  |
-| Solve 4x + 9 = 13 for x. | CHECK | 1 | 1 | CORRECT | HELP |  |  |
-| Solve 6x + 7 = 55 for x. | PRACTICE | 8 | 8 | CORRECT |  |  |  |
-| Solve −7x + 7 = −56 for x. | CHECK | 9 | 9 | CORRECT | HELP |  |  |
-| Solve 7x − 13 = −41 for x. | PRACTICE | -4 | -4 | CORRECT |  |  |  |
-| Solve 9x + 13 = 85 for x. | CHECK | 8 | 8 | CORRECT | HELP |  |  |
-| Solve 4x + 13 = 21 for x. | PRACTICE | 2 | 2 | CORRECT |  |  |  |
-| Solve 4x + 7 = 15 for x. | CHECK | 2 | 2 | CORRECT | HELP |  |  |
-| Solve 5x − 11 = −31 for x. | PRACTICE | -4 | -4 | CORRECT |  |  |  |
-| Solve 5x + 13 = −2 for x. | CHECK | -3 | -3 | CORRECT | HELP |  |  |
-| Solve −4x − 11 = −31 for x. | PRACTICE | 5 | 5 | CORRECT |  |  |  |
-| Solve −9x − 12 = −84 for x. | CHECK | 8 | 8 | CORRECT | HELP |  |  |
-| Solve −5x + 7 = −43 for x. | PRACTICE | 10 | 10 | CORRECT |  |  |  |
-| Solve −5x + 15 = 35 for x. | CHECK | -4 | -4 | CORRECT | HELP |  |  |
-| Solve −8x + 8 = 88 for x. | PRACTICE | -10 | -10 | CORRECT |  |  |  |
+| Solve −5x − 12 = −42 for x. | PRACTICE | 6 | 6 | CORRECT |  |  |  |
+| Solve 9x + 6 = 96 for x. | PRACTICE | 10 | 10 | CORRECT |  |  |  |
+| Solve −6x + 7 = −11 for x. | CHECK | 3 | 3 | CORRECT | HELP |  |  |
+| Solve −6x − 4 = 50 for x. | PRACTICE | -9 | -9 | CORRECT |  |  |  |
+| Solve −5x + 10 = −5 for x. | CHECK | 3 | 3 | CORRECT | HELP |  |  |
+| Solve −7x + 3 = 31 for x. | PRACTICE | -4 | -4 | CORRECT |  |  |  |
+| Solve 7x − 15 = 41 for x. | CHECK | 8 | 8 | CORRECT | HELP |  |  |
+| Solve −8x + 15 = −57 for x. | PRACTICE | 9 | 9 | CORRECT |  |  |  |
+| Solve 7x − 13 = −6 for x. | CHECK | 1 | 1 | CORRECT | HELP |  |  |
+| Solve −8x − 3 = 5 for x. | PRACTICE | -1 | -1 | CORRECT |  |  |  |
+| Solve −7x + 8 = 15 for x. | CHECK | -1 | -1 | CORRECT | HELP |  |  |
+| Solve 4x + 9 = 13 for x. | PRACTICE | 1 | 1 | CORRECT |  |  |  |
+| Solve −8x − 1 = 79 for x. | CHECK | -10 | -10 | CORRECT | HELP |  |  |
+| Solve −7x + 7 = −56 for x. | PRACTICE | 9 | 9 | CORRECT |  |  |  |
+| Solve −6x + 9 = −9 for x. | CHECK | 3 | 3 | CORRECT | HELP |  |  |
+| Solve 9x + 13 = 85 for x. | PRACTICE | 8 | 8 | CORRECT |  |  |  |
+| Solve 7x + 2 = −33 for x. | CHECK | -5 | -5 | CORRECT | HELP |  |  |
+| Solve 4x + 7 = 15 for x. | PRACTICE | 2 | 2 | CORRECT |  |  |  |
+| Solve −5x + 5 = 40 for x. | CHECK | -7 | -7 | CORRECT | HELP |  |  |
+| Solve 5x + 13 = −2 for x. | PRACTICE | -3 | -3 | CORRECT |  |  |  |
 
 ## Check answers
 
 | Check problem | Entry | Verdict | Counted as |
 |---|---|---|---|
-| Solve 3x − 2 = 10 for x. | 4 | CORRECT | with help: tutor move HELP |
-| Solve −8x − 3 = 5 for x. | -1 | CORRECT | with help: tutor move HELP |
-| Solve 4x + 9 = 13 for x. | 1 | CORRECT | with help: tutor move HELP |
-| Solve −7x + 7 = −56 for x. | 9 | CORRECT | with help: tutor move HELP |
-| Solve 9x + 13 = 85 for x. | 8 | CORRECT | with help: tutor move HELP |
-| Solve 4x + 7 = 15 for x. | 2 | CORRECT | with help: tutor move HELP |
-| Solve 5x + 13 = −2 for x. | -3 | CORRECT | with help: tutor move HELP |
-| Solve −9x − 12 = −84 for x. | 8 | CORRECT | with help: tutor move HELP |
-| Solve −5x + 15 = 35 for x. | -4 | CORRECT | with help: tutor move HELP |
+| Solve −6x + 7 = −11 for x. | 3 | CORRECT | with help: tutor move HELP |
+| Solve −5x + 10 = −5 for x. | 3 | CORRECT | with help: tutor move HELP |
+| Solve 7x − 15 = 41 for x. | 8 | CORRECT | with help: tutor move HELP |
+| Solve 7x − 13 = −6 for x. | 1 | CORRECT | with help: tutor move HELP |
+| Solve −7x + 8 = 15 for x. | -1 | CORRECT | with help: tutor move HELP |
+| Solve −8x − 1 = 79 for x. | -10 | CORRECT | with help: tutor move HELP |
+| Solve −6x + 9 = −9 for x. | 3 | CORRECT | with help: tutor move HELP |
+| Solve 7x + 2 = −33 for x. | -5 | CORRECT | with help: tutor move HELP |
+| Solve −5x + 5 = 40 for x. | -7 | CORRECT | with help: tutor move HELP |
 
 ## Help on open check problems
 
 - Help moves on open checks: HELP 10; with a practice item: 10
-- Help recorded on Solve 3x − 2 = 10 for x. (check): tutor move HELP
-- Help recorded on Solve −8x − 3 = 5 for x. (check): tutor move HELP
-- Help recorded on Solve 4x + 9 = 13 for x. (check): tutor move HELP
-- Help recorded on Solve −7x + 7 = −56 for x. (check): tutor move HELP
-- Help recorded on Solve 9x + 13 = 85 for x. (check): tutor move HELP
-- Help recorded on Solve 4x + 7 = 15 for x. (check): tutor move HELP
-- Help recorded on Solve 5x + 13 = −2 for x. (check): tutor move HELP
-- Help recorded on Solve −9x − 12 = −84 for x. (check): tutor move HELP
-- Help recorded on Solve −5x + 15 = 35 for x. (check): tutor move HELP
-- Help recorded on Solve 6x + 10 = −32 for x. (check): tutor move HELP
-- waits as the original: Solve 3x − 2 = 10 for x.
-- original brought back: Solve 3x − 2 = 10 for x.
-- waits as the original: Solve −8x − 3 = 5 for x.
-- original brought back: Solve −8x − 3 = 5 for x.
-- waits as the original: Solve 4x + 9 = 13 for x.
-- original brought back: Solve 4x + 9 = 13 for x.
-- waits as the original: Solve −7x + 7 = −56 for x.
-- original brought back: Solve −7x + 7 = −56 for x.
-- waits as the original: Solve 9x + 13 = 85 for x.
-- original brought back: Solve 9x + 13 = 85 for x.
-- waits as the original: Solve 4x + 7 = 15 for x.
-- original brought back: Solve 4x + 7 = 15 for x.
-- waits as the original: Solve 5x + 13 = −2 for x.
-- original brought back: Solve 5x + 13 = −2 for x.
-- waits as the original: Solve −9x − 12 = −84 for x.
-- original brought back: Solve −9x − 12 = −84 for x.
-- waits as the original: Solve −5x + 15 = 35 for x.
-- original brought back: Solve −5x + 15 = 35 for x.
-- waits as the original: Solve 6x + 10 = −32 for x.
-- original brought back: Solve 6x + 10 = −32 for x.
+- Help recorded on Solve −6x + 7 = −11 for x. (check): tutor move HELP
+- Help recorded on Solve −5x + 10 = −5 for x. (check): tutor move HELP
+- Help recorded on Solve 7x − 15 = 41 for x. (check): tutor move HELP
+- Help recorded on Solve 7x − 13 = −6 for x. (check): tutor move HELP
+- Help recorded on Solve −7x + 8 = 15 for x. (check): tutor move HELP
+- Help recorded on Solve −8x − 1 = 79 for x. (check): tutor move HELP
+- Help recorded on Solve −6x + 9 = −9 for x. (check): tutor move HELP
+- Help recorded on Solve 7x + 2 = −33 for x. (check): tutor move HELP
+- Help recorded on Solve −5x + 5 = 40 for x. (check): tutor move HELP
+- Help recorded on Solve 5x + 6 = 21 for x. (check): tutor move HELP
+- waits as the original: Solve −6x + 7 = −11 for x.
+- original brought back: Solve −6x + 7 = −11 for x.
+- waits as the original: Solve −5x + 10 = −5 for x.
+- original brought back: Solve −5x + 10 = −5 for x.
+- waits as the original: Solve 7x − 15 = 41 for x.
+- original brought back: Solve 7x − 15 = 41 for x.
+- waits as the original: Solve 7x − 13 = −6 for x.
+- original brought back: Solve 7x − 13 = −6 for x.
+- waits as the original: Solve −7x + 8 = 15 for x.
+- original brought back: Solve −7x + 8 = 15 for x.
+- waits as the original: Solve −8x − 1 = 79 for x.
+- original brought back: Solve −8x − 1 = 79 for x.
+- waits as the original: Solve −6x + 9 = −9 for x.
+- original brought back: Solve −6x + 9 = −9 for x.
+- waits as the original: Solve 7x + 2 = −33 for x.
+- original brought back: Solve 7x + 2 = −33 for x.
+- waits as the original: Solve −5x + 5 = 40 for x.
+- original brought back: Solve −5x + 5 = 40 for x.
+- waits as the original: Solve 5x + 6 = 21 for x.
+- original brought back: Solve 5x + 6 = 21 for x.
+
+## Route (round 10 §4.3; code's record)
+
+- RETURN_ORIGINAL Q06: Solve −6x + 7 = −11 for x.
+- RETURN_ORIGINAL Q06: Solve −5x + 10 = −5 for x.
+- RETURN_ORIGINAL Q06: Solve 7x − 15 = 41 for x.
+- RETURN_ORIGINAL Q06: Solve 7x − 13 = −6 for x.
+- RETURN_ORIGINAL Q06: Solve −7x + 8 = 15 for x.
+- RETURN_ORIGINAL Q06: Solve −8x − 1 = 79 for x.
+- RETURN_ORIGINAL Q06: Solve −6x + 9 = −9 for x.
+- RETURN_ORIGINAL Q06: Solve 7x + 2 = −33 for x.
+- RETURN_ORIGINAL Q06: Solve −5x + 5 = 40 for x.
+- RETURN_ORIGINAL Q06: Solve 5x + 6 = 21 for x.
+- Fresh evidence on Q06 after the first return: 0 check answer(s) counted, 0 correct
+- Prerequisite answers: 0; not yet before the first success: 0 (no success on a prerequisite)
+- Boundary (N18, N03): not reached; deepest skill posed: Q06; moves outside the tutor rejected: 0
 
 ## equation_step answers
 

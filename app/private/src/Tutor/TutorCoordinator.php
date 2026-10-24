@@ -27,6 +27,8 @@ final class TutorCoordinator
     public const MAX_REPAIRS = 1;
     /** Round 9 §4.1: no longer returned by the model; code attaches them. */
     public const IDENTITY_FIELDS = ['session_id', 'state_revision', 'reply_to_event_id'];
+    /** Round 10 §4.1: fields code sets; a reply that still carries them has them ignored. */
+    public const CODE_FIELDS = ['message_type'];
     private const PROPOSAL_CLAIMS = '/\b(master(ed|y|ing)?|goal\s+met|met\s+the\s+goal|criterion\s+met|verified|passed|learned\s+this)\b/i';
 
     private string $handshake;
@@ -86,7 +88,7 @@ final class TutorCoordinator
             $messages[] = ['role' => 'assistant', 'content' => mb_substr($text, 0, 2000)];
             $messages[] = ['role' => 'user', 'content' => 'CONTROL: That reply is not the exact activation line. Respond with only the exact line from Section 16, or the exact halt line.'];
         }
-        return ['ok' => false, 'failure' => ['type' => 'BINDING_NOT_ESTABLISHED', 'detail' => 'The provider did not return the exact architecture 1.7 activation line after one repair.']];
+        return ['ok' => false, 'failure' => ['type' => 'BINDING_NOT_ESTABLISHED', 'detail' => 'The provider did not return the exact architecture 1.8 activation line after one repair.']];
     }
 
     /**
@@ -179,10 +181,10 @@ final class TutorCoordinator
     private function check(array $env, object $raw, array $x): array
     {
         // Round 9 §4.2: code attaches the identity captured with the request; any identity fields the model still sends are ignored (owner's decision).
-        $out = ['errors' => [], 'message' => '', 'problem' => null, 'move' => null, 'proposals' => [], 'findings' => [], 'card' => null,
+        $out = ['errors' => [], 'message' => '', 'message_type' => null, 'problem' => null, 'move' => null, 'proposals' => [], 'findings' => [], 'card' => null,
             'issue' => null, 'ai_prompt' => '', 'dropped_prompt_chars' => 0, 'reading' => null,
             'identity' => ['session_id' => $x['session_id'], 'state_revision' => $x['revision'], 'reply_to_event_id' => $x['event_id'], 'open_problem' => $x['open_problem'] ?? null]];
-        foreach (self::IDENTITY_FIELDS as $field) {
+        foreach (array_merge(self::IDENTITY_FIELDS, self::CODE_FIELDS) as $field) {
             unset($raw->{$field}, $env[$field]);
         }
         $errors = $this->schemas->errors($raw, 'tutor-envelope.schema.json');
@@ -191,9 +193,10 @@ final class TutorCoordinator
             return $out;
         }
         if ($x['mode'] === 'READING') {
-            if ($env['message_type'] !== 'CONTROL' || $env['reading'] === null || $env['item'] !== null) {
-                $errors[] = 'for a READING turn return message_type CONTROL, item null and a reading object';
+            if ($env['reading'] === null || $env['item'] !== null) {
+                $errors[] = 'for a READING turn return item null and a reading object';
             }
+            $out['message_type'] = 'CONTROL';
             $out['errors'] = $errors;
             $out['reading'] = $env['reading'];
             return $out;
@@ -202,9 +205,6 @@ final class TutorCoordinator
             $errors[] = 'reading must be null unless TURN.kind is READING';
         }
         $item = $env['item'];
-        if (!in_array($env['message_type'], ['QUESTION', 'FEEDBACK'], true) || ($env['message_type'] === 'QUESTION') !== ($item !== null)) {
-            $errors[] = 'message_type must be QUESTION when item is present and FEEDBACK otherwise';
-        }
         $message = trim($env['student_message']);
         if ($message === '' && $item === null) {
             $errors[] = 'student_message must not be empty when no problem is posed';
@@ -265,6 +265,8 @@ final class TutorCoordinator
         }
         $out['message'] = $message;
         $out['problem'] = $problem;
+        // Round 10 §4.1: code sets message_type on every accepted reply.
+        $out['message_type'] = $problem !== null ? 'QUESTION' : 'FEEDBACK';
         $out['move'] = $move;
         $out['issue'] = $env['issue'];
         $out['proposals'] = $this->reviewProposals($env, $x['known_event_ids'] ?? []);

@@ -67,7 +67,7 @@ function flow(string $base, string $jar, callable $check, string $bootstrapLabel
     [$c, $v3] = req('POST', "$base/api.php?action=event", ['idempotency_key' => bin2hex(random_bytes(10)), 'expected_revision' => $v2['revision'] ?? 0, 'action' => 'END_SESSION', 'problem_id' => null, 'problem_version' => null, 'payload' => new stdClass()], ["X-CSRF-Token: $csrf"], $jar);
     $check('end session', $c === 200 && ($v3['status'] ?? '') === 'CLOSED', "HTTP $c");
     [$c, $r] = req('GET', "$base/api.php?action=report", null, [], $jar);
-    $check('report is labelled mock and written by code', $c === 200 && str_starts_with($r['provider_label'] ?? '', 'MOCK') && ($r['report']['architecture_version'] ?? '') === '1.7', "HTTP $c");
+    $check('report is labelled mock and written by code', $c === 200 && str_starts_with($r['provider_label'] ?? '', 'MOCK') && ($r['report']['architecture_version'] ?? '') === '1.8', "HTTP $c");
     [$c] = req('POST', "$base/api.php?action=event", ['idempotency_key' => bin2hex(random_bytes(10)), 'expected_revision' => 0, 'action' => 'END_SESSION', 'problem_id' => null, 'problem_version' => null, 'payload' => new stdClass()], [], $jar);
     $check('mutation without CSRF refused', $c === 403, "HTTP $c");
     return $headers;
@@ -210,8 +210,8 @@ $check(basename($vpsZip) . ': no config.php, nothing inside var/', $names !== []
 foreach (['004_progress.sql', '005_round6_call_detail.sql', '006_round7_cached_tokens.sql'] as $migration) {
     $check(basename($vpsZip) . ': carries migration ' . $migration, (bool) array_filter($names, fn ($n) => str_ends_with($n, '/migrations/' . $migration)));
 }
-$check(basename($vpsZip) . ': carries architecture v1.7 and no older architecture', (bool) array_filter($names, fn ($n) => str_ends_with($n, '/Algebra_Constraint_Architecture_v1.7.md'))
-    && !array_filter($names, fn ($n) => preg_match('#/Algebra_Constraint_Architecture_v1\.[0-6]\.md$#', $n) === 1));
+$check(basename($vpsZip) . ': carries architecture v1.8 and no older architecture', (bool) array_filter($names, fn ($n) => str_ends_with($n, '/Algebra_Constraint_Architecture_v1.8.md'))
+    && !array_filter($names, fn ($n) => preg_match('#/Algebra_Constraint_Architecture_v1\.[0-7]\.md$#', $n) === 1));
 $check(basename($vpsZip) . ': carries no host requirements, changelog, CLAUDE.md or conductor file (round 8 §2)',
     !array_filter($names, fn ($n) => !str_contains($n, '/vendor/') && preg_match('#(HOST_REQUIREMENTS|CHANGELOG|CLAUDE|CONDUCTOR_)[^/]*\.md$#', $n) === 1));
 echo $fail === 0 ? "BUNDLE SMOKE PASSED\n" : "BUNDLE SMOKE FAILED ($fail)\n";

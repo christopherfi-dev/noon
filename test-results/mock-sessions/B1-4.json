@@ -5,7 +5,7 @@
         {
             "input": "(start on Q07)",
             "status": 200,
-            "ms": 6,
+            "ms": 7,
             "value_answer": false,
             "graded": false,
             "calls": 2,
@@ -26,9 +26,15 @@
         {
             "input": "2",
             "status": 200,
-            "ms": 5,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 6(x + 8) = 60 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -44,9 +50,15 @@
         {
             "input": "11",
             "status": 200,
-            "ms": 6,
+            "ms": 7,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 5(x − 4) = 35 for x.",
+                "skill_id": "Q07",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -62,9 +74,15 @@
         {
             "input": "A",
             "status": 200,
-            "ms": 6,
+            "ms": 7,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Here is an equation: 5(x − 1) = 50. Which of these first steps give an equation with exactly the same solution? Select every one that does.\nA) Add 1 to undo the −1: 5x = 51\nB) Multiply only the x by 5: 5x − 1 = 50\nC) Divide only the left side by 5: x − 1 = 50\nD) Divide both sides by 5: x − 1 = 10",
+                "skill_id": "Q07",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -80,9 +98,15 @@
         {
             "input": "2",
             "status": 200,
-            "ms": 7,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −8x − 7 = −23 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -101,6 +125,12 @@
             "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 7x + 13 = 41 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -119,6 +149,12 @@
             "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −3x + 15 = 45 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -134,9 +170,15 @@
         {
             "input": "7",
             "status": 200,
-            "ms": 9,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 9x − 5 = 58 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -152,9 +194,15 @@
         {
             "input": "-1",
             "status": 200,
-            "ms": 9,
+            "ms": 10,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 5(x − 3) = −20 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -170,9 +218,15 @@
         {
             "input": "3",
             "status": 200,
-            "ms": 14,
+            "ms": 13,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 2(x − 7) = −8 for x.",
+                "skill_id": "Q07",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -188,9 +242,15 @@
         {
             "input": "D",
             "status": 200,
-            "ms": 10,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Here is an equation: 7(x − 4) = −14. Which of these first steps give an equation with exactly the same solution? Select every one that does.\nA) Divide only the left side by 7: x − 4 = −14\nB) Add 4 to undo the −4: 7x = −10\nC) Multiply only the x by 7: 7x − 4 = −14\nD) Multiply both terms in the parentheses by 7: 7x − 28 = −14",
+                "skill_id": "Q07",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -206,9 +266,15 @@
         {
             "input": "7",
             "status": 200,
-            "ms": 10,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 6(x − 2) − 6 = 24 for x.",
+                "skill_id": "Q07",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -226,6 +292,70 @@
         "Q07",
         "Q06"
     ],
+    "start_skill": "Q07",
+    "route": {
+        "detours": [
+            {
+                "skill_id": "Q06",
+                "target_skill_id": "Q07",
+                "problems": 4,
+                "correct": 4,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 4,
+                    "not_yet": 0
+                }
+            }
+        ],
+        "originals": [],
+        "returns": [
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_7f37ec5e472d784eb162eeac",
+                "how": "practice"
+            }
+        ],
+        "fresh_evidence": [
+            {
+                "skill_id": "Q07",
+                "checks_counted": 3,
+                "correct": 3
+            }
+        ]
+    },
+    "route_log": [
+        {
+            "kind": "DETOUR",
+            "skill_id": "Q06",
+            "prompt": "Solve −8x − 7 = −23 for x."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 5(x − 3) = −20 for x."
+        }
+    ],
+    "prerequisite": {
+        "wrong_before_first_success": 0,
+        "first_success": true,
+        "answers": 4
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 0,
+        "deepest": "Q06",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": [],
     "check_answers": {
         "unassisted": 8,
         "unassisted_correct": 7,

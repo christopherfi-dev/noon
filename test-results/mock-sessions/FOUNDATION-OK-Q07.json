@@ -1,0 +1,1370 @@
+{
+    "name": "FOUNDATION-OK-Q07",
+    "provider": "MOCK (simulated tutor; not a live result, not evidence of learning, latency not meaningful)",
+    "turns": [
+        {
+            "input": "(start on Q07)",
+            "status": 200,
+            "ms": 15,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "BINDING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (binding call)",
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "56/5",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Solve 5(x + 9) = 65 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "5x+20",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 5(x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x+24",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 6(x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "B",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Which of these expressions are equal to 2(x + 10) for every value of x? Select every one that is.\nA) x + 20\nB) 2 · x + 2 · 10\nC) 2x + 10\nD) x + 12",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "42x+28",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 7(6x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "19/2",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Solve 4(x + 2) = 40 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "5x+60",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 5(x + 12). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "12",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Solve 5(x + 5) = 65 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "7x+63",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 7(x + 9). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-5/2",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Solve 2(x − 7) = −12 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x+48",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 6(x + 8). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-13/4",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Solve 4(x − 7) = −20 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x+72",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 6(x + 12). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "106/9",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Solve 9(x + 2) = 108 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4x+16",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 4(x + 4). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "41/4",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Solve 8(x + 6) = 88 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8x+56",
+            "status": 200,
+            "ms": 10,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 8(x + 7). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-12/5",
+            "status": 200,
+            "ms": 13,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Solve 5(x + 7) = −5 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8x+40",
+            "status": 200,
+            "ms": 11,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 8(x + 5). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-52/5",
+            "status": 200,
+            "ms": 15,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Solve 5(x − 8) = −60 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x+60",
+            "status": 200,
+            "ms": 12,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 6(x + 10). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "1",
+            "status": 200,
+            "ms": 12,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Solve 3(x − 6) = −3 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "7x+21",
+            "status": 200,
+            "ms": 12,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 7(x + 3). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "5",
+            "status": 200,
+            "ms": 12,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Solve 3(x + 9) = 24 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "9x+99",
+            "status": 200,
+            "ms": 12,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 9(x + 11). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-41/4",
+            "status": 200,
+            "ms": 12,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Solve 4(x − 7) = −48 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4x+28",
+            "status": 200,
+            "ms": 12,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 4(x + 7). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "5",
+            "status": 200,
+            "ms": 12,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Solve 4(x + 4) = 24 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2x+14",
+            "status": 200,
+            "ms": 12,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 2(x + 7). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-31/3",
+            "status": 200,
+            "ms": 12,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Solve 9(x − 6) = −99 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        }
+    ],
+    "goals_met": [
+        "E06"
+    ],
+    "start_skill": "Q07",
+    "route": {
+        "detours": [
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 4,
+                "correct": 4,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 0,
+                "not_yet": 0,
+                "returned_to_target": false,
+                "returned_through": null,
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 0
+                }
+            }
+        ],
+        "originals": [],
+        "returns": [
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_0dc2976341c777e8eae3595f",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_865e7ee458b4a99bbe1e063a",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_58b8070face543452dd9611c",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_27cbd5ac204c5d6e070a13cd",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_cdbbe2e47d16caa6bf120853",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_7b2ef1aa4d861c8ce3a7e200",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_2513b1f4501ac86226a04f3a",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_1f4bfb709667aeb38def1e55",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_8be28f33f0eabdf1b6943993",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_fa07ffb618666a7be41a1eae",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_2b036e9d79d2ecd9d80deb8b",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_dad4801025afe333e5cc80b3",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_e6aabb223762afe5fe7791f1",
+                "how": "practice"
+            }
+        ],
+        "fresh_evidence": [
+            {
+                "skill_id": "Q07",
+                "checks_counted": 0,
+                "correct": 0
+            }
+        ]
+    },
+    "route_log": [
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 5(x + 4). Write your answer without parentheses."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 4(x + 2) = 40 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 5(x + 12). Write your answer without parentheses."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 5(x + 5) = 65 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 7(x + 9). Write your answer without parentheses."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 2(x − 7) = −12 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 6(x + 8). Write your answer without parentheses."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 4(x − 7) = −20 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 6(x + 12). Write your answer without parentheses."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 9(x + 2) = 108 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 4(x + 4). Write your answer without parentheses."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 8(x + 6) = 88 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 8(x + 7). Write your answer without parentheses."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 5(x + 7) = −5 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 8(x + 5). Write your answer without parentheses."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 5(x − 8) = −60 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 6(x + 10). Write your answer without parentheses."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 3(x − 6) = −3 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 7(x + 3). Write your answer without parentheses."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 3(x + 9) = 24 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 9(x + 11). Write your answer without parentheses."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 4(x − 7) = −48 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 4(x + 7). Write your answer without parentheses."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 4(x + 4) = 24 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 2(x + 7). Write your answer without parentheses."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 9(x − 6) = −99 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 7(x + 7). Write your answer without parentheses."
+        }
+    ],
+    "prerequisite": {
+        "wrong_before_first_success": 0,
+        "first_success": true,
+        "answers": 16
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 0,
+        "deepest": "E06",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": {
+        "FIRST_TERM_ONLY": 14
+    },
+    "check_answers": {
+        "unassisted": 3,
+        "unassisted_correct": 3,
+        "with_help": 0,
+        "held": 0
+    },
+    "check_causes": {
+        "with_help": [],
+        "held": []
+    },
+    "help_moves_on_open_checks": [],
+    "help_moves_with_practice_item": 0,
+    "original_problem": [],
+    "guards": [],
+    "guard_phrases": [],
+    "counters": [],
+    "repairs": [],
+    "holds": [],
+    "held_attempts": [],
+    "readings": {
+        "sent_for_reading": 0,
+        "is_answer_true": 0,
+        "is_answer_false": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "readings_differ": 0,
+        "clarifying_questions_shown": 0
+    },
+    "equation_step": [],
+    "slip_eligibility": {
+        "eligible": 0,
+        "not eligible": 14
+    },
+    "slips": [
+        {
+            "prompt": "Solve 5(x + 9) = 65 for x.",
+            "purpose": "PRACTICE",
+            "entry": "56/5",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 4(x + 2) = 40 for x.",
+            "purpose": "PRACTICE",
+            "entry": "19/2",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 5(x + 5) = 65 for x.",
+            "purpose": "PRACTICE",
+            "entry": "12",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 2(x − 7) = −12 for x.",
+            "purpose": "PRACTICE",
+            "entry": "-5/2",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 4(x − 7) = −20 for x.",
+            "purpose": "PRACTICE",
+            "entry": "-13/4",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 9(x + 2) = 108 for x.",
+            "purpose": "PRACTICE",
+            "entry": "106/9",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 8(x + 6) = 88 for x.",
+            "purpose": "PRACTICE",
+            "entry": "41/4",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 5(x + 7) = −5 for x.",
+            "purpose": "PRACTICE",
+            "entry": "-12/5",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 5(x − 8) = −60 for x.",
+            "purpose": "PRACTICE",
+            "entry": "-52/5",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 3(x − 6) = −3 for x.",
+            "purpose": "PRACTICE",
+            "entry": "1",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 3(x + 9) = 24 for x.",
+            "purpose": "PRACTICE",
+            "entry": "5",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 4(x − 7) = −48 for x.",
+            "purpose": "PRACTICE",
+            "entry": "-41/4",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 4(x + 4) = 24 for x.",
+            "purpose": "PRACTICE",
+            "entry": "5",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 9(x − 6) = −99 for x.",
+            "purpose": "PRACTICE",
+            "entry": "-31/3",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        }
+    ],
+    "ungraded_value_answers": 0,
+    "value_answers_graded": 0,
+    "empty_replies": 0,
+    "binding": {
+        "calls": 1,
+        "accepted": 1,
+        "outcomes": [
+            "ACCEPTED"
+        ]
+    },
+    "calls": 32,
+    "finish_length": 0,
+    "attempts": 30
+}

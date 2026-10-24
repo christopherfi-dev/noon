@@ -1,5 +1,5 @@
 {
-  "ran_at": "2026-10-24T01:00:43.998Z",
+  "ran_at": "2026-10-24T06:51:20.450Z",
   "results": [
     {
       "name": "Conversation journey: step back, check card, message during the check, help, wrap-up, summary (mobile 390x844)",
@@ -103,7 +103,7 @@
           "text": "TutorI am not sure how to read that. Could you write just your answer, with numbers and symbols?"
         },
         "notMarked": true,
-        "keptAfterFailure": "-1",
+        "keptAfterFailure": "12",
         "banner": "The connection failed. Your typed text is kept; please try again.",
         "resultShown": true,
         "statusRegion": "polite",

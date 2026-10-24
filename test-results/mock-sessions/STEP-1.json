@@ -5,7 +5,7 @@
         {
             "input": "(start on Q06)",
             "status": 200,
-            "ms": 6,
+            "ms": 7,
             "value_answer": false,
             "graded": false,
             "calls": 2,
@@ -29,6 +29,12 @@
             "ms": 4,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −8x + 5 = 13 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -42,83 +48,17 @@
             "counted": true
         },
         {
-            "input": "6",
+            "input": "-1",
             "status": 200,
-            "ms": 7,
+            "ms": 5,
             "value_answer": false,
             "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "can you show me the first step on this one?",
-            "status": 200,
-            "ms": 7,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "enabled:low (per call: a free-text message about the math)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "-10",
-            "status": 200,
-            "ms": 8,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "can you show me the first step on this one?",
-            "status": 200,
-            "ms": 6,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "enabled:low (per call: a free-text message about the math)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "5",
-            "status": 200,
-            "ms": 6,
-            "value_answer": false,
-            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −8x + 5 = 13 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -137,6 +77,12 @@
             "ms": 5,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 9x − 4 = 59 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -150,11 +96,113 @@
             "counted": true
         },
         {
-            "input": "9",
+            "input": "7",
             "status": 200,
             "ms": 6,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 9x − 4 = 59 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you show me the first step on this one?",
+            "status": 200,
+            "ms": 5,
+            "value_answer": false,
+            "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −3x − 10 = 14 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "enabled:low (per call: a free-text message about the math)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-8",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −3x − 10 = 14 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you show me the first step on this one?",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −3x − 11 = −8 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "enabled:low (per call: a free-text message about the math)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-1",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −3x − 11 = −8 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -171,6 +219,32 @@
     "goals_met": [
         "Q06"
     ],
+    "start_skill": "Q06",
+    "route": {
+        "detours": [],
+        "originals": [],
+        "returns": [],
+        "fresh_evidence": []
+    },
+    "route_log": [],
+    "prerequisite": {
+        "wrong_before_first_success": 0,
+        "first_success": false,
+        "answers": 0
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 0,
+        "deepest": "Q06",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": [],
     "check_answers": {
         "unassisted": 3,
         "unassisted_correct": 3,

@@ -13,7 +13,7 @@
       "minimum": 0
     },
     "architecture_version": {
-      "const": "1.7"
+      "const": "1.8"
     },
     "curriculum_id": {
       "const": "ACE-ALGEBRA1"

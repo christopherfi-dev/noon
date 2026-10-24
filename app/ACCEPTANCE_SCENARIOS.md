@@ -1,8 +1,29 @@
-# Acceptance scenarios — status in the AI tutor (round 6, updated for rounds 7, 8 and 9)
+# Acceptance scenarios — status in the AI tutor (round 6, updated for rounds 7, 8, 9 and 10)
 
 Source: `contracts/acceptance-scenarios.json` (53 scenarios). Map file: `app/tests/acceptance-map.json` (checked by `tests/Integration/ScenarioMapTest.php`). Every result is from mock mode (the scripted mock tutor); none is a live-provider, deployment or learning result.
 
 The beta's own tests (B1–B16, P3, the round UI checks) asserted the retired state machine's sequencing or its fixed lines; they are listed with one-line reasons and their replacements in `tests/RETIRED_TESTS.md`.
+
+## Round 10 tests (CONDUCTOR_ROUND_10.md §5)
+
+Where round 10 reversed a round 9 behaviour (§3), the rows below replace the round 9 rows (items 3 and 9 of round 9 and the v1.7 binding row).
+
+| Item | What is checked | Test |
+|---|---|---|
+| 1. The reset loophole | Two correct checks, help, the original set aside, a later correct check: the earlier two don't carry over | `Round10Test::testTheResetLoophole` |
+| 2. No double reset | `Goals::compute()` on a constructed event record: help on A, two fresh checks correct, A answered with help: the two count, A adds nothing, no second reset | `Round10Test::testNoDoubleReset` |
+| 3. A step back to a prerequisite | Keeps `TARGET` and the waiting `ORIGINAL_PROBLEM`; records a `DETOUR` (and `RETURN_ORIGINAL` when the original comes back) | `Round10Test::testAStepBackKeepsTargetAndOriginalAndRecordsADetour` |
+| 4. A fresh check while help is recorded | `may_pose_check` is false only for an unanswered check without help; a helped or waiting problem blocks nothing; the fresh check is accepted | `Round10Test::testAFreshCheckIsAvailableWhileAHelpedProblemIsRecorded`; `CheatingTest` (waiting original) |
+| 5. Setting the original aside | An accepted fresh check on the target sets it aside (`RETURN_FRESH`, `ORIGINAL_SET_ASIDE`), not completed, no further reset; a rejected proposal changes nothing; easier practice on the same skill does not set it aside | `Round10Test::testAnAcceptedFreshCheckSetsTheOriginalAside`, `::testARejectedCheckProposalChangesNothing`, `::testEasierPracticeOnTheSameSkillDoesNotSetTheOriginalAside` |
+| 6. Completion through connected steps | A connected chain to the solution records `ORIGINAL_COMPLETED_WITH_HELP` with no goal credit; a coincidental final answer or unrelated arithmetic does not | `Round10Test::testAConnectedChainCompletesTheOriginalWithHelp`, `::testACoincidentalAnswerOrOtherArithmeticDoesNotComplete` |
+| 7. Several prerequisite problems wrong | Each step back is a `DETOUR`; the route summary and the teacher's "Route and return" lines count each detour's answers | `Round10Test::testSeveralPrerequisiteProblemsWrongThenSuccess` |
+| 8. `goal_newly_met` | In the request on the turn a goal is met, absent on the next turn; `GOAL_MET` still written at commit | `Round10Test::testGoalNewlyMetIsInTheRequestOnlyOnTheTurnTheGoalIsMet` |
+| 9. A correction of the latest attempt | The next request shows the corrected verdict (and help) in `ANSWERED_PROBLEM`, `GRADEBOOK` and `GOALS`; slip state of that attempt is cleared | `Round10Test::testTheNextRequestShowsACorrectionOfTheLatestAttempt`, `::testACorrectionClearsSlipStateOfThatAttempt` |
+| 10. Repairs | The repair instruction carries the new sentence; a repaired reply whose item changed may change its wording | `Round10Test::testRepairsCarryTheNewSentenceAndMayRewordAChangedItem` |
+| 11. `message_type` | Set by code; a reply without it is accepted; one that still sends a disagreeing value is accepted with code's value | `Round10Test::testMessageTypeIsSetByCode`; `EngineUnitsTest::testTheOutputContractHoldsNoBehaviourRules` |
+| 12. Result lines | The three forms of §4.7 | `Round10Test::testTheThreeResultLineForms`; `OwnerCasesTest` |
+| 13. Small items (§4.8) | "one" as a determiner; the wider goal-claim detector; the SIGN_ERROR_B observation; factor-of-1; corrections during a session | `Round10Test::testTheSmallItems` |
+| v1.8 binding and contract | The app loads v1.8 only; a session bound to 1.7 is rebound; the §4.1 edits word for word; no conductor text reaches a model request | `HostTest::testHost13BindingModes`, `::testASessionBoundTo17IsReboundTo18`; `EngineUnitsTest::testTheOutputContractHoldsNoBehaviourRules`; `TutorLoopTest::testNoHostRequirementsChangelogClaudeOrConductorTextReachesAModelRequest` |
 
 ## Round 9 tests (CONDUCTOR_ROUND_9.md §5)
 

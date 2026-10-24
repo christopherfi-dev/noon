@@ -39,6 +39,9 @@ final class TextGuard
         '/\bproficien(?:t|cy)\b/i',
         '/\bgoals?\s+(?:is\s+|are\s+|has\s+been\s+|have\s+been\s+)?(?:met|reached|achieved|completed?)\b/i',
         '/\b(?:met|reached|achieved)\s+(?:the|your|this|that)\s+goal\b/i',
+        // Round 10 §4.8: "the goal for … is met" and "the … goal is met".
+        '/\bgoals?\s+for\s+[^.!?\n]{1,80}?\s+(?:is|are|has\s+been|have\s+been)\s+(?:now\s+)?(?:met|reached|achieved|completed?)\b/i',
+        '/\bthe\s+(?:[\w\-]+\s+){1,6}?goal\s+(?:is|has\s+been)\s+(?:now\s+)?(?:met|reached|achieved|completed?)\b/i',
     ];
 
     /**
@@ -69,7 +72,7 @@ final class TextGuard
      * Round 8 §3.4: when the text is followed directly by a check card, the
      * support words ("on your own", "by yourself", "independently", "without
      * help", "no help") in its last sentence are not flagged; inviting the
-     * student to try a check on their own is accurate (architecture v1.7 §4).
+     * student to try a check on their own is accurate (architecture v1.8 §4).
      * Everywhere else they are flagged as before.
      *
      * @param list<array> $protected problem records whose answers must not appear (the open problem, a retry target, a problem posed now)

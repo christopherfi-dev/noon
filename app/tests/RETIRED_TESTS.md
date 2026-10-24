@@ -137,3 +137,16 @@ Tests whose behaviour round 9 changed on purpose (§3 lists the reversed round 8
 | HostTest::testASessionBoundTo15IsReboundTo16 | §2.1: v1.7 governs | HostTest::testASessionBoundTo16IsReboundTo17 |
 | EngineUnitsTest::testTheOutputContractHoldsNoBehaviourRules (round 8 sentences) | §4.1: the exact edits | The same test, asserting each §4.1 sentence word for word |
 | Browser journey: help during the check shows the check as practice | §4.3 | Browser journey: help reply, then the practice step, then the helped check back as practice |
+
+## Round 10 (CONDUCTOR_ROUND_10.md)
+
+Tests whose behaviour round 10 changed on purpose (§3 lists the reversed round 9 behaviours); each is replaced or rewritten, none was deleted to get green.
+
+| Round 9 test | Why it changed | Replaced by |
+| --- | --- | --- |
+| CheatingTest (ORIGINAL_PROBLEM waiting: `may_pose_check` false, "practice only while the original waits") | §3.1 and §4.2: a waiting original no longer blocks a check | The same test: `may_pose_check` true; Round10Test::testAFreshCheckIsAvailableWhileAHelpedProblemIsRecorded |
+| Round9Test::testHelpAndASmallerStepTogether (helped open problem: `may_pose_check` false) | §4.2: a helped problem does not block a check | The same test: `may_pose_check` true |
+| OwnerCasesTest (result line "Read as 9x + 8." and "Read as 25.") | §3.5 and §4.7: the result lines change (owner-approved wording) | The same tests: "On 9(x + 8), read from your message: 9x + 8." and "On 2x + 3 = 53, read from your message: 25."; Round10Test::testTheThreeResultLineForms |
+| EngineUnitsTest::testTheOutputContractHoldsNoBehaviourRules (defines message_type) | §3.4 and §4.1 item 2: the model no longer writes message_type | The same test: the contract no longer contains message_type; Round10Test::testMessageTypeIsSetByCode |
+| HostTest::testASessionBoundTo16IsReboundTo17 | §2.1: v1.8 governs | HostTest::testASessionBoundTo17IsReboundTo18 |
+| Harness goal oracle (Goals::compute over attempts only) | §3.3 and §4.4: the run restarts when help is recorded | Goals::fromEvents (attempts and HELP_GIVEN events); Round10Test::testTheResetLoophole, Round10Test::testNoDoubleReset |

@@ -5,7 +5,7 @@
         {
             "input": "(start on Q06)",
             "status": 200,
-            "ms": 5,
+            "ms": 6,
             "value_answer": false,
             "graded": false,
             "calls": 2,
@@ -24,11 +24,17 @@
             "counted": true
         },
         {
-            "input": "I took away 10 from both sides first",
+            "input": "I took away 30 from both sides first",
             "status": 200,
             "ms": 6,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 6x − 6 = −30 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 2,
             "purposes": [
                 "READING",
@@ -45,11 +51,17 @@
             "counted": true
         },
         {
-            "input": "My answer is 7. Why does that step work?",
+            "input": "My answer is -4. Why does that step work?",
             "status": 200,
             "ms": 7,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 6x − 6 = −30 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
             "calls": 2,
             "purposes": [
                 "READING",
@@ -66,11 +78,17 @@
             "counted": true
         },
         {
-            "input": "3",
+            "input": "10",
             "status": 200,
             "ms": 6,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 5x + 9 = 59 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -84,11 +102,17 @@
             "counted": true
         },
         {
-            "input": "I took away 6 from both sides first",
+            "input": "I took away 4 from both sides first",
             "status": 200,
-            "ms": 7,
+            "ms": 6,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 7x − 4 = 66 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 2,
             "purposes": [
                 "READING",
@@ -105,11 +129,17 @@
             "counted": true
         },
         {
-            "input": "My answer is -3. Why does that step work?",
+            "input": "My answer is 10. Why does that step work?",
             "status": 200,
-            "ms": 10,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 7x − 4 = 66 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 2,
             "purposes": [
                 "READING",
@@ -126,11 +156,17 @@
             "counted": true
         },
         {
-            "input": "-10",
+            "input": "5",
             "status": 200,
             "ms": 6,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −4x − 4 = −24 for x.",
+                "skill_id": "Q06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -147,6 +183,32 @@
     "goals_met": [
         "Q06"
     ],
+    "start_skill": "Q06",
+    "route": {
+        "detours": [],
+        "originals": [],
+        "returns": [],
+        "fresh_evidence": []
+    },
+    "route_log": [],
+    "prerequisite": {
+        "wrong_before_first_success": 0,
+        "first_success": false,
+        "answers": 0
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 0,
+        "deepest": "Q06",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": [],
     "check_answers": {
         "unassisted": 3,
         "unassisted_correct": 3,

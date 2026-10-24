@@ -146,7 +146,7 @@ final class Round9Test extends TestCase
         $g->send('ok');
         $g->send('what next?');
         $ctx = TutorLoopTest::context($g);
-        $this->assertSame(['practice', ['HELP'], true, false], [$ctx['OPEN_PROBLEM']['purpose'], $ctx['OPEN_PROBLEM']['help_given'], $ctx['ALLOWED']['may_pose_problem'], $ctx['ALLOWED']['may_pose_check']]);
+        $this->assertSame(['practice', ['HELP'], true, true], [$ctx['OPEN_PROBLEM']['purpose'], $ctx['OPEN_PROBLEM']['help_given'], $ctx['ALLOWED']['may_pose_problem'], $ctx['ALLOWED']['may_pose_check']], 'round 10 §4.2: a helped problem does not block a check');
         // Help recorded on a check held from a verdict conflict also restarts the run.
         $v = $this->withCheck();
         self::queueCheck($v, 'Q06', '4x + 3 = 31', '7');

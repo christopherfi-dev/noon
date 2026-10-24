@@ -5,7 +5,7 @@
         {
             "input": "(start on Q07)",
             "status": 200,
-            "ms": 6,
+            "ms": 10,
             "value_answer": false,
             "graded": false,
             "calls": 2,
@@ -29,6 +29,12 @@
             "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 9(x + 9) = 171 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -44,9 +50,15 @@
         {
             "input": "7x+63",
             "status": 200,
-            "ms": 6,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 7(x + 9). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -62,9 +74,15 @@
         {
             "input": "8x+24",
             "status": 200,
-            "ms": 8,
+            "ms": 10,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 8(x + 3). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -80,9 +98,15 @@
         {
             "input": "I'm stuck: HINT",
             "status": 200,
-            "ms": 6,
+            "ms": 9,
             "value_answer": false,
             "graded": false,
+            "catalogue": null,
+            "open": {
+                "prompt": "Which of these expressions are equal to 6(x + 11) for every value of x? Select every one that is.\nA) 6x + 66\nB) 6x + 11\nC) 6 · x + 6 · 11\nD) x + 17",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -98,9 +122,15 @@
         {
             "input": "A,C",
             "status": 200,
-            "ms": 7,
+            "ms": 11,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Which of these expressions are equal to 6(x + 11) for every value of x? Select every one that is.\nA) 6x + 66\nB) 6x + 11\nC) 6 · x + 6 · 11\nD) x + 17",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -114,11 +144,17 @@
             "counted": true
         },
         {
-            "input": "7x+21",
+            "input": "4x+24",
             "status": 200,
-            "ms": 8,
+            "ms": 11,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 4(x + 6). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -132,11 +168,17 @@
             "counted": true
         },
         {
-            "input": "C",
+            "input": "B",
             "status": 200,
-            "ms": 8,
+            "ms": 11,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Which of these expressions are equal to 6(x + 9) for every value of x? Select every one that is.\nA) 6x + 9\nB) 6x + 54\nC) x + 15\nD) x + 54",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -150,11 +192,17 @@
             "counted": true
         },
         {
-            "input": "30x+50",
+            "input": "54x+72",
             "status": 200,
-            "ms": 8,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 9(6x + 8). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -168,11 +216,17 @@
             "counted": true
         },
         {
-            "input": "-3",
+            "input": "4",
             "status": 200,
-            "ms": 8,
+            "ms": 10,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 9(x − 9) = −45 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -186,11 +240,17 @@
             "counted": true
         },
         {
-            "input": "-7",
+            "input": "11",
             "status": 200,
-            "ms": 8,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 3(x + 1) = 36 for x.",
+                "skill_id": "Q07",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -204,11 +264,17 @@
             "counted": true
         },
         {
-            "input": "A,D",
+            "input": "A,C",
             "status": 200,
             "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Here is an equation: 7(x + 4) = 49. Which of these first steps give an equation with exactly the same solution? Select every one that does.\nA) Divide both sides by 7: x + 4 = 7\nB) Divide only the left side by 7: x + 4 = 49\nC) Multiply both terms in the parentheses by 7: 7x + 28 = 49\nD) Subtract 4 to undo the 4: 7x = 45",
+                "skill_id": "Q07",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -222,11 +288,17 @@
             "counted": true
         },
         {
-            "input": "6",
+            "input": "-8",
             "status": 200,
             "ms": 8,
             "value_answer": false,
             "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve −50 = 5(x − 2) for x.",
+                "skill_id": "Q07",
+                "purpose": "CHECK"
+            },
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -244,6 +316,70 @@
         "E06",
         "Q07"
     ],
+    "start_skill": "Q07",
+    "route": {
+        "detours": [
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 6,
+                "correct": 6,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 4,
+                    "not_yet": 0
+                }
+            }
+        ],
+        "originals": [],
+        "returns": [
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_28f3d0219edfa3536ad90f66",
+                "how": "practice"
+            }
+        ],
+        "fresh_evidence": [
+            {
+                "skill_id": "Q07",
+                "checks_counted": 3,
+                "correct": 3
+            }
+        ]
+    },
+    "route_log": [
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 7(x + 9). Write your answer without parentheses."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 9(x − 9) = −45 for x."
+        }
+    ],
+    "prerequisite": {
+        "wrong_before_first_success": 0,
+        "first_success": true,
+        "answers": 6
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 0,
+        "deepest": "E06",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": [],
     "check_answers": {
         "unassisted": 7,
         "unassisted_correct": 7,

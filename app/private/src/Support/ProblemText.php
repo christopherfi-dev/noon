@@ -11,7 +11,7 @@ namespace AlgebraEngine\Support;
  */
 final class ProblemText
 {
-    private const MAX_ANSWER = 40;
+    public const MAX_ANSWER = 40;
 
     /**
      * Runs of mathematical text: numbers, the variables x and y, operators and

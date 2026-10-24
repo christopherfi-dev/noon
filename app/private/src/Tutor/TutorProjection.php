@@ -120,7 +120,7 @@ final class TutorProjection
         if ($skill === null || !BetaScope::contains($skill)) {
             return null;
         }
-        $g = Goals::forSkill(Goals::compute(Gradebook::attempts($events)), $skill);
+        $g = Goals::forSkill(Goals::fromEvents($events), $skill);
         $title = $this->curriculum->title($skill);
         if ($g['met']) {
             $lines = ['Goal met in this session for ' . $title . ': ' . Goals::WORDING . '.'];

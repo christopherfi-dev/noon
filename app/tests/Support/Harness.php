@@ -215,7 +215,7 @@ final class Harness
 
     public function goal(string $skill): array
     {
-        return Goals::forSkill(Goals::compute($this->attempts()), $skill);
+        return Goals::forSkill(Goals::fromEvents($this->events()), $skill);
     }
 
     /** The conversation lines added by the last request. */
@@ -261,7 +261,7 @@ final class Harness
             }
         }
         $row = $this->app->store->session($sid);
-        $goals = Goals::compute(Gradebook::attempts($events));
+        $goals = Goals::fromEvents($events);
         foreach ($row['snapshot']['goals'] as $g) {
             Assert::assertSame($goals[$g['skill_id']]['met'] ?? false, $g['met'], 'goals in the snapshot are code\'s goals');
             Assert::assertSame($goals[$g['skill_id']]['count'] ?? 0, $g['count']);

@@ -14,16 +14,20 @@ use AlgebraEngine\Curriculum\BetaScope;
  * new form. Only check attempts count:
  * - correct with no help between presentation and answer: the run grows;
  * - incorrect: the run resets;
- * - answered after help (a hint, an explanation, a stuck entry): the run
- *   resets (owner rule, round 5.1);
+ * - help on a check (a hint, a help move, "I'm stuck"): the run restarts
+ *   when the help is recorded, and that check's later answer counts neither
+ *   for nor against the goal (round 10 §4.4, from the HELP_GIVEN events);
+ *   only the first help on a check restarts it, since the check is practice
+ *   with help after that. Help known only from a correction restarts the run
+ *   at the answer, as before (round 5.1);
  * - a code-confirmed slip: the first in a run pauses the count (the slipped
  *   answer and its retry don't count, the run is not reset); a second slip
  *   in the same run resets it;
  * - partially correct (right value, not the form asked): neither;
  * - practice and retry attempts, skipped or not-learned problems: neither;
  * - a held attempt (a result under review; round 7 §5): neither; the run
- *   neither advances nor resets, unless help was recorded on it, which
- *   restarts the run (round 9 §4.3);
+ *   neither advances nor resets; help recorded on it restarted the run when
+ *   the help was recorded (round 10 §4.4);
  * - a corrected attempt counts with its corrected values (round 9 §4.7).
  * A goal met in this session stays met in this session. Goals are an
  * in-session criterion only; nothing here is a mastery claim.
@@ -33,19 +37,45 @@ final class Goals
     public const REQUIRED = 3;
     public const WORDING = '3 correct without help (one slip may pause the count)';
 
+    /** Round 10 §4.4: goals from a ledger, with help taken into account when it was recorded. */
+    public static function fromEvents(array $events): array
+    {
+        return self::compute(Gradebook::attempts($events), Gradebook::checkHelp($events));
+    }
+
     /**
      * @param list<array<string,mixed>> $attempts Gradebook::attempts()
+     * @param list<array{seq:int,problem_id:string,skill_id:string}>|null $checkHelp Gradebook::checkHelp(); null: help counts at the answer only
      * @return array<string,array{skill_id:string,count:int,required:int,met:bool,met_attempt_ids:list<string>,covered:list<string>,
      *   still_needed:list<string>,pause_used:bool,paused:bool,run_attempt_ids:list<string>,three_variant:bool}>
      *   paused: the last check attempt was a slip that paused the count
      */
-    public static function compute(array $attempts): array
+    public static function compute(array $attempts, ?array $checkHelp = null): array
     {
         $state = [];
-        foreach ($attempts as $a) {
+        $timeline = [];
+        foreach ($attempts as $i => $a) {
+            $timeline[] = [$a['seq'] ?? $i, 1, $a];
+        }
+        foreach ($checkHelp ?? [] as $h) {
+            $timeline[] = [$h['seq'], 0, $h];
+        }
+        usort($timeline, fn ($x, $y) => [$x[0], $x[1]] <=> [$y[0], $y[1]]);
+        $restarted = [];
+        foreach ($timeline as [, $isAttempt, $a]) {
+            if (!$isAttempt) {
+                // Round 10 §4.4: the first help on an unanswered check restarts that skill's run now.
+                if (!isset($restarted[$a['problem_id']])) {
+                    $restarted[$a['problem_id']] = true;
+                    $state[$a['skill_id']] ??= self::fresh($a['skill_id']);
+                    self::reset($state[$a['skill_id']]);
+                    $state[$a['skill_id']]['paused'] = false;
+                }
+                continue;
+            }
             $helped = $a['help'] !== [];
-            // Round 9 §4.3: help recorded on a held check also restarts the run; a held check without help counts neither way.
-            if ($a['purpose'] !== 'CHECK' || (($a['held'] ?? null) !== null && !$helped)) {
+            // A check whose help already restarted the run counts neither for nor against; so does a held check without help.
+            if ($a['purpose'] !== 'CHECK' || isset($restarted[$a['problem_id']]) || (($a['held'] ?? null) !== null && !$helped)) {
                 continue;
             }
             $s = $a['skill_id'];

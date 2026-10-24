@@ -212,7 +212,7 @@ Host (AlgebraEngine\Tests\Integration\Host)
  ✔ Host 16 forget and expiry
  ✔ Host 17 cost limits
  ✔ End while pending
- ✔ A session bound to 16 is rebound to 17
+ ✔ A session bound to 17 is rebound to 18
  ✔ Migrations are safe to run twice
 
 Key Leak (AlgebraEngine\Tests\Integration\KeyLeak)
@@ -272,6 +272,25 @@ Report (AlgebraEngine\Tests\Integration\Report)
  ✔ Evid 06 untested skills carry no label
  ✔ Plain words for stored text
 
+Round10 (AlgebraEngine\Tests\Integration\Round10)
+ ✔ The reset loophole
+ ✔ No double reset
+ ✔ A step back keeps target and original and records a detour
+ ✔ A fresh check is available while a helped problem is recorded
+ ✔ An accepted fresh check sets the original aside
+ ✔ A rejected check proposal changes nothing
+ ✔ Easier practice on the same skill does not set the original aside
+ ✔ A connected chain completes the original with help
+ ✔ A coincidental answer or other arithmetic does not complete
+ ✔ Several prerequisite problems wrong then success
+ ✔ Goal newly met is in the request only on the turn the goal is met
+ ✔ The next request shows a correction of the latest attempt
+ ✔ A correction clears slip state of that attempt
+ ✔ Repairs carry the new sentence and may reword a changed item
+ ✔ Message type is set by code
+ ✔ The three result line forms
+ ✔ The small items
+
 Round9 (AlgebraEngine\Tests\Integration\Round9)
  ✔ Working is not read as an answer
  ✔ An answer with a question is graded
@@ -311,6 +330,6 @@ Tutor Loop (AlgebraEngine\Tests\Integration\TutorLoop)
  ✔ The two counters log only
  ✔ No host requirements changelog claude or conductor text reaches a model request
 
-Time: 00:11.752, Memory: 110.00 MB
+Time: 00:15.539, Memory: 110.00 MB
 
-OK (257 tests, 31775 assertions)
+OK (274 tests, 33637 assertions)

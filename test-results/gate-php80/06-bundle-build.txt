@@ -1,3 +1,3 @@
 Warning: The lock file is not up to date with the latest changes in composer.json. You may be getting outdated dependencies. It is recommended that you run `composer update` or `composer update <package name>`.
-Wrote /home/user/noon/dist/algebra-engine-ai-vps-upload.zip (677 files, 836 KiB)
-sha256 5ef7dd5aa6e40a72bdee07d66d35479913b6633cebbb88cf237a80882cda7fbe
+Wrote /home/user/noon/dist/algebra-engine-ai-vps-upload.zip (677 files, 842 KiB)
+sha256 ea53b90b677688480bf92aee41629b43547f84d10869cf3934de247e076da0fe

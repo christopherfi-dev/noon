@@ -3,17 +3,7 @@
   "type": "object",
   "properties": {
     "architecture_version": {
-      "const": "1.7"
-    },
-    "message_type": {
-      "type": "string",
-      "enum": [
-        "CONTROL",
-        "QUESTION",
-        "FEEDBACK",
-        "REPORT",
-        "HOLD"
-      ]
+      "const": "1.8"
     },
     "student_message": {
       "type": "string",
@@ -395,7 +385,6 @@
   },
   "required": [
     "architecture_version",
-    "message_type",
     "student_message",
     "item",
     "proposed_transition",
@@ -406,5 +395,5 @@
     "reading"
   ],
   "additionalProperties": false,
-  "description": "Round 9 tutor envelope (architecture 1.7): the rounds 3-5 JSON envelope, with item as a problem proposal that code verifies (source original and the equation_step spec added in round 9), proposed_transition as the tutor move, teacher_report always null, and reading for entries code asks the AI to read. The identity fields are attached by code, not returned by the model (round 9 §4.1)."
+  "description": "Round 10 tutor envelope (architecture 1.8): the rounds 3-5 JSON envelope, with item as a problem proposal that code verifies (source original and the equation_step spec added in round 9), proposed_transition as the tutor move, teacher_report always null, and reading for entries code asks the AI to read. The identity fields are attached by code, not returned by the model (round 9 §4.1). Round 10 §4.1: message_type is set by code, not returned by the model."
 }

@@ -122,6 +122,10 @@ final class DisclosureGuard
      */
     private static function oneAsDeterminer(string $text, int $start, int $end): bool
     {
+        // Round 10 §4.8: "one to try", "one more", "one of" are never the value 1.
+        if (preg_match('/^\s+(?:to|more|of)\b/', substr($text, $end))) {
+            return true;
+        }
         $before = substr($text, 0, $start);
         if (preg_match('/(\b(is|was|be|equals|equal to|comes to|get|gets|got|give|gives|make|makes|answer|value)|=)\s*$/', $before)) {
             return false;
