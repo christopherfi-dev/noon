@@ -1,0 +1,698 @@
+{
+    "name": "WORKING-1",
+    "provider": "LIVE openai_compatible / deepseek-flash, provider_thinking disabled",
+    "turns": [
+        {
+            "input": "(start on Q06)",
+            "status": 200,
+            "ms": 2877,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "BINDING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (binding call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "I took away 1 from both sides first",
+            "status": 200,
+            "ms": 4154,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "My answer is 3x = -18. Why does that step work?",
+            "status": 200,
+            "ms": 3853,
+            "value_answer": false,
+            "graded": true,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-6",
+            "status": 200,
+            "ms": 2287,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "I took away 11 from both sides first",
+            "status": 200,
+            "ms": 4177,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "My answer is -6. Why does that step work?",
+            "status": 200,
+            "ms": 3815,
+            "value_answer": false,
+            "graded": true,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-3",
+            "status": 200,
+            "ms": 2683,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "I took away 2 from both sides first",
+            "status": 200,
+            "ms": 3504,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "My answer is -4. Why does that step work?",
+            "status": 200,
+            "ms": 4484,
+            "value_answer": false,
+            "graded": true,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "ok, what next?",
+            "status": 200,
+            "ms": 2685,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4",
+            "status": 200,
+            "ms": 2500,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "B,C",
+            "status": 200,
+            "ms": 2244,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "I took away 7 from both sides first",
+            "status": 200,
+            "ms": 4269,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "My answer is 6. Why does that step work?",
+            "status": 200,
+            "ms": 6267,
+            "value_answer": false,
+            "graded": true,
+            "calls": 3,
+            "purposes": [
+                "READING",
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-8",
+            "status": 200,
+            "ms": 2106,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "I took away 4 from both sides first",
+            "status": 200,
+            "ms": 3658,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "My answer is 5. Why does that step work?",
+            "status": 200,
+            "ms": 3588,
+            "value_answer": false,
+            "graded": true,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "C",
+            "status": 200,
+            "ms": 2537,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4",
+            "status": 200,
+            "ms": 2152,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "I took away 5 from both sides first",
+            "status": 200,
+            "ms": 3671,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "My answer is -8. Why does that step work?",
+            "status": 200,
+            "ms": 4165,
+            "value_answer": false,
+            "graded": true,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "1",
+            "status": 200,
+            "ms": 2460,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "A,C",
+            "status": 200,
+            "ms": 2337,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "I took away 8 from both sides first",
+            "status": 200,
+            "ms": 4302,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "My answer is 12. Why does that step work?",
+            "status": 200,
+            "ms": 3755,
+            "value_answer": false,
+            "graded": true,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3",
+            "status": 200,
+            "ms": 2589,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "A,C",
+            "status": 200,
+            "ms": 2196,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "I took away 2 from both sides first",
+            "status": 200,
+            "ms": 4038,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "My answer is -1. Why does that step work?",
+            "status": 200,
+            "ms": 4054,
+            "value_answer": false,
+            "graded": true,
+            "calls": 2,
+            "purposes": [
+                "READING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "ok, what next?",
+            "status": 200,
+            "ms": 2432,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-5",
+            "status": 200,
+            "ms": 2210,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        }
+    ],
+    "goals_met": [
+        "Q07"
+    ],
+    "check_answers": {
+        "unassisted": 12,
+        "unassisted_correct": 12,
+        "with_help": 6,
+        "held": 0
+    },
+    "check_causes": {
+        "with_help": {
+            "tutor move HINT": 6
+        },
+        "held": []
+    },
+    "help_moves_on_open_checks": {
+        "HINT": 6
+    },
+    "help_moves_with_practice_item": 0,
+    "original_problem": [],
+    "guards": {
+        "ANSWER_LEAK": 3,
+        "CHECK_CARD_ANSWER_SIGNAL": 2,
+        "CHECK_CARD_INVITATION": 19,
+        "CHECK_CARD_SHARED_NUMBER": 13,
+        "CHECK_CARD_ANSWER": 1,
+        "HELP_CLAIM": 1
+    },
+    "guard_phrases": {
+        "CHECK_CARD_INVITATION: try": 19,
+        "CHECK_CARD_INVITATION: another one": 3,
+        "CHECK_CARD_INVITATION: next": 2,
+        "HELP_CLAIM: on your own": 1
+    },
+    "counters": {
+        "RESOLVE_AFTER_CORRECT": 1
+    },
+    "repairs": [
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "message_type and item disagree",
+            "errors": [
+                "message_type must be QUESTION when item is present and FEEDBACK otherwise"
+            ],
+            "text": "Correct — x = 6 solves 70 = 7(x + 4). You asked why that step works: dividing both sides of an equation by the same nonzero number keeps the two sides equal, so 70 ÷ 7 = 10 leaves x + 4 = 10, and subtracting 4 from both sides keeps them equal too. Your goal for equations with parentheses still needs a new kind of equation, so here is one to try on your own."
+        }
+    ],
+    "holds": [],
+    "held_attempts": [],
+    "readings": {
+        "sent_for_reading": 16,
+        "is_answer_true": 8,
+        "is_answer_false": 8,
+        "accepted": 8,
+        "rejected": 0,
+        "readings_differ": 0,
+        "clarifying_questions_shown": 0
+    },
+    "equation_step": {
+        "STEP_CORRECT": 1
+    },
+    "slip_eligibility": {
+        "eligible": 0,
+        "not eligible": 0
+    },
+    "slips": [],
+    "ungraded_value_answers": 0,
+    "value_answers_graded": 0,
+    "empty_replies": 0,
+    "binding": {
+        "calls": 1,
+        "accepted": 1,
+        "outcomes": [
+            "ACCEPTED"
+        ]
+    },
+    "calls": 49,
+    "finish_length": 0,
+    "attempts": 20
+}
