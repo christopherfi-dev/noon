@@ -324,7 +324,7 @@ final class TutorEngine
             'points_to' => array_values(array_unique(array_filter(array_column($r['signatures'], 'branch')))),
             'slip' => $r['slip'] === null ? null : ['code' => $r['slip']['code'], 'detail' => $r['slip']['detail']],
             'help' => $open['help'] ?? [], 'response_sha256' => $sha, 'scope' => $r['scope'], 'form_issue' => $r['form_issue'],
-        ]);
+        ] + ($open['answer']['kind'] === 'equation_step' ? ['step_verdict' => $r['observation']] : []));
         $t->results[] = ['checker_result_id' => Ids::make('chk'), 'item_id' => $open['problem_id'], 'item_version' => $open['version'], 'event_id' => $attemptId,
             'response_sha256' => $sha, 'verdict' => $r['verdict'], 'verification_scope' => $r['scope'], 'created_at' => Time::iso($t->now)];
         // Round 7 §8.2: the answered problem's identity, carried in every later request until the next answer.
