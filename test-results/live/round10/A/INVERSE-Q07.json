@@ -1,0 +1,1076 @@
+{
+    "name": "INVERSE-Q07",
+    "provider": "LIVE openai_compatible / deepseek-flash, provider_thinking disabled",
+    "turns": [
+        {
+            "input": "(start on Q07)",
+            "status": 200,
+            "ms": 3202,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "BINDING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (binding call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-1",
+            "status": 200,
+            "ms": 2686,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve 3(x − 7) = −24 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-14",
+            "status": 200,
+            "ms": 2774,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "DIVIDE_THEN_ADD_B",
+            "open": {
+                "prompt": "Solve 6(x − 5) = −54 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 15",
+            "status": 200,
+            "ms": 2541,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 5 to both sides of x − 5 = 9. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "14",
+            "status": 200,
+            "ms": 2979,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 9 + 5.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 15",
+            "status": 200,
+            "ms": 2831,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 5 to both sides of x − 5 = 9. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 15",
+            "status": 200,
+            "ms": 6366,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 5 to both sides of x − 5 = 9. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "0",
+            "status": 200,
+            "ms": 2960,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate −5 + 5.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 15",
+            "status": 200,
+            "ms": 3245,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 5 to both sides of x − 5 = 9. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-14",
+            "status": 200,
+            "ms": 2659,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the opposite sign",
+            "open": {
+                "prompt": "Calculate 9 + 5.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "14",
+            "status": 200,
+            "ms": 3031,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 9 + 5.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 15",
+            "status": 200,
+            "ms": 3453,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 5 to both sides of x − 5 = 9. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 15",
+            "status": 200,
+            "ms": 3067,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 5 to both sides of x − 5 = 9. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "14",
+            "status": 200,
+            "ms": 3033,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 9 + 5.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 15",
+            "status": 200,
+            "ms": 3506,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 5 to both sides of x − 5 = 9. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-14",
+            "status": 200,
+            "ms": 5407,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the opposite sign",
+            "open": {
+                "prompt": "Calculate 9 + 5.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "14",
+            "status": 200,
+            "ms": 2780,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 9 + 5.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 15",
+            "status": 200,
+            "ms": 6222,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 5 to both sides of x − 5 = 9. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 15",
+            "status": 200,
+            "ms": 3680,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 5 to both sides of x − 5 = 9. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 14",
+            "status": 200,
+            "ms": 2967,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Add 5 to both sides of x − 5 = 9. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4",
+            "status": 200,
+            "ms": 2888,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "DIVIDE_THEN_ADD_B",
+            "open": {
+                "prompt": "Solve 6(x + 6) = −12 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "7x + 1",
+            "status": 200,
+            "ms": 2690,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 7(x + 1). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "7",
+            "status": 200,
+            "ms": 4350,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 7 × 1.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8x + 1",
+            "status": 200,
+            "ms": 2546,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 8(x + 1). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-8",
+            "status": 200,
+            "ms": 5055,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the opposite sign",
+            "open": {
+                "prompt": "Calculate 8 × 1.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8",
+            "status": 200,
+            "ms": 4824,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 8 × 1.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "REJECTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "(resume after a hold)",
+            "status": 200,
+            "ms": 5446,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8x + 1",
+            "status": 200,
+            "ms": 2939,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 8(x + 1). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8x + 1",
+            "status": 200,
+            "ms": 3110,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FIRST_TERM_ONLY",
+            "open": {
+                "prompt": "Expand 8(x + 1). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8x+8",
+            "status": 200,
+            "ms": 2646,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Expand 8(x + 1). Write your answer without parentheses.",
+                "skill_id": "E06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "A",
+            "status": 200,
+            "ms": 2502,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "FACTOR_NOT_EVERY_TERM_CHOICE",
+            "open": {
+                "prompt": "Which of these expressions are equal to 7(x + 9) for every value of x? Select every one that is.\nA) 7x + 9\nB) 7 · x + 7 · 9\nC) x + 63\nD) x + 16",
+                "skill_id": "E06",
+                "purpose": "CHECK"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        }
+    ],
+    "goals_met": [],
+    "start_skill": "Q07",
+    "route": {
+        "detours": [
+            {
+                "skill_id": "Q06",
+                "target_skill_id": "Q07",
+                "problems": 17,
+                "correct": 6,
+                "not_yet": 11,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "E06",
+                "target_skill_id": "Q07",
+                "problems": 9,
+                "correct": 3,
+                "not_yet": 6,
+                "returned_to_target": false,
+                "returned_through": null,
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 0
+                }
+            }
+        ],
+        "originals": [],
+        "returns": [
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_841744635983ffe47b79147a",
+                "how": "practice"
+            }
+        ],
+        "fresh_evidence": [
+            {
+                "skill_id": "Q07",
+                "checks_counted": 0,
+                "correct": 0
+            }
+        ]
+    },
+    "route_log": [
+        {
+            "kind": "DETOUR",
+            "skill_id": "Q06",
+            "prompt": "Add 5 to both sides of x − 5 = 9. Write the equation you get."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 6(x + 6) = −12 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "E06",
+            "prompt": "Expand 7(x + 1). Write your answer without parentheses."
+        }
+    ],
+    "prerequisite": {
+        "wrong_before_first_success": 1,
+        "first_success": true,
+        "answers": 26
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 0,
+        "deepest": "E06",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": {
+        "DIVIDE_THEN_ADD_B": 2,
+        "NO_RECIPE: the step with its right side off by one": 9,
+        "NO_RECIPE: the opposite sign": 3,
+        "FIRST_TERM_ONLY": 4,
+        "FACTOR_NOT_EVERY_TERM_CHOICE": 1
+    },
+    "check_answers": {
+        "unassisted": 1,
+        "unassisted_correct": 0,
+        "with_help": 0,
+        "held": 0
+    },
+    "check_causes": {
+        "with_help": [],
+        "held": []
+    },
+    "help_moves_on_open_checks": [],
+    "help_moves_with_practice_item": 0,
+    "original_problem": [],
+    "guards": {
+        "ANSWER_LEAK": 8
+    },
+    "guard_phrases": [],
+    "counters": [],
+    "repairs": [
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: other",
+            "errors": [
+                "item: spec.expression could not be read as a numeric step (UNSUPPORTED_VARIABLE)"
+            ],
+            "text": "Not yet — on “Add 5 to both sides of x − 5 = 9” you wrote x = 15. The right side is fine, since you already found 9 + 5 = 14. The left side is where it breaks: what does x − 5 become when you add 5 to it? Let's isolate just that."
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "move: slip check not allowed",
+            "errors": [
+                "SLIP_CHECK is only possible right after an answer that code found eligible for the slip pause (SLIP.eligible_for_pause is false)"
+            ],
+            "text": "Not yet — on “Calculate 9 + 5” you wrote −14. You've had 9 + 5 = 14 correct before, so the sign is what changed here. Think about where 9 sits on a number line and which way adding 5 moves you: does the result land above 9 or below it?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: other",
+            "errors": [
+                "item: spec.expression could not be read as a numeric step (UNSUPPORTED_VARIABLE)"
+            ],
+            "text": "Not yet — on “Add 5 to both sides of x − 5 = 9” you wrote x = 15 again. You've already confirmed 9 + 5 = 14, so the right side is settled. Look at the left side on its own: what does x − 5 become when you add 5 to it?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: original problem",
+            "errors": [
+                "item: source original is valid only when ORIGINAL_PROBLEM is not null, with purpose practice"
+            ],
+            "text": "Correct — 7 × 1 = 7. The rule: a factor outside parentheses multiplies every term inside. You found the second product; now put it together with the first term you already had."
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "move: slip check not allowed",
+            "errors": [
+                "SLIP_CHECK is only possible right after an answer that code found eligible for the slip pause (SLIP.eligible_for_pause is false)"
+            ],
+            "text": "Not yet — on 8 × 1 you wrote -8. The sign is the issue here: 8 and 1 are both positive, so the product is positive. What is 8 times 1?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: other",
+            "errors": [
+                "/item: Additional object properties are not allowed: operation, operand",
+                "/item: The data (object) must match the type: null"
+            ],
+            "text": "Correct — 8 × 1 = 8. The rule: a positive times a positive is positive. You now have both products for 8(x + 1); put them together with the term you already had."
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 1,
+            "cause": "item: original problem",
+            "errors": [
+                "item: source original is valid only when ORIGINAL_PROBLEM is not null, with purpose practice"
+            ],
+            "text": "Correct — 8 × 1 = 8. The rule: a positive times a positive is positive. You now have both products for 8(x + 1); put them together with the term you already had."
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: original problem",
+            "errors": [
+                "item: source original is valid only when ORIGINAL_PROBLEM is not null, with purpose practice"
+            ],
+            "text": "Correct — 8 × 1 = 8. The rule: a positive number times 1 is that same positive number. Now back to the expansion: in 8(x + 1), the 8 multiplies every term inside the parentheses, so the second term is 8 × 1. Try the expansion again."
+        }
+    ],
+    "holds": [
+        "repair limit: item: original problem"
+    ],
+    "held_attempts": [],
+    "readings": {
+        "sent_for_reading": 0,
+        "is_answer_true": 0,
+        "is_answer_false": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "readings_differ": 0,
+        "clarifying_questions_shown": 0
+    },
+    "equation_step": {
+        "NOT_EQUIVALENT": 9,
+        "STEP_CORRECT": 1
+    },
+    "slip_eligibility": {
+        "eligible": 0,
+        "not eligible": 10
+    },
+    "slips": [
+        {
+            "prompt": "Solve 6(x − 5) = −54 for x.",
+            "purpose": "PRACTICE",
+            "entry": "-14",
+            "eligible": false,
+            "codes": [
+                "SIGN_ERROR_B",
+                "DIVIDE_THEN_ADD_B"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Calculate 9 + 5.",
+            "purpose": "PRACTICE",
+            "entry": "-14",
+            "eligible": false,
+            "codes": [],
+            "detail": null
+        },
+        {
+            "prompt": "Calculate 9 + 5.",
+            "purpose": "PRACTICE",
+            "entry": "-14",
+            "eligible": false,
+            "codes": [],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 6(x + 6) = −12 for x.",
+            "purpose": "PRACTICE",
+            "entry": "4",
+            "eligible": false,
+            "codes": [
+                "SIGN_ERROR_B",
+                "DIVIDE_THEN_ADD_B"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 7(x + 1). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "7x + 1",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 8(x + 1). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "8x + 1",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Calculate 8 × 1.",
+            "purpose": "PRACTICE",
+            "entry": "-8",
+            "eligible": false,
+            "codes": [],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 8(x + 1). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "8x + 1",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 8(x + 1). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "8x + 1",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Which of these expressions are equal to 7(x + 9) for every value of x? Select every one that is.\nA) 7x + 9\nB) 7 · x + 7 · 9\nC) x + 63\nD) x + 16",
+            "purpose": "CHECK",
+            "entry": "A",
+            "eligible": false,
+            "codes": [
+                "FACTOR_NOT_EVERY_TERM_CHOICE"
+            ],
+            "detail": null
+        }
+    ],
+    "ungraded_value_answers": 0,
+    "value_answers_graded": 0,
+    "empty_replies": 0,
+    "binding": {
+        "calls": 1,
+        "accepted": 1,
+        "outcomes": [
+            "ACCEPTED"
+        ]
+    },
+    "calls": 39,
+    "finish_length": 0,
+    "attempts": 29
+}

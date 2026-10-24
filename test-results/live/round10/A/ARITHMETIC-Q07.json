@@ -1,0 +1,1226 @@
+{
+    "name": "ARITHMETIC-Q07",
+    "provider": "LIVE openai_compatible / deepseek-flash, provider_thinking disabled",
+    "turns": [
+        {
+            "input": "(start on Q07)",
+            "status": 200,
+            "ms": 3118,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "BINDING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (binding call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "12",
+            "status": 200,
+            "ms": 2868,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_FINAL_PLUS",
+            "open": {
+                "prompt": "Solve 6(x − 9) = 12 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x-9 = 3",
+            "status": 200,
+            "ms": 3198,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2",
+            "status": 200,
+            "ms": 2990,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 12 ÷ 6.",
+                "skill_id": "N18",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x-9 = 3",
+            "status": 200,
+            "ms": 8144,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-2",
+            "status": 200,
+            "ms": 3118,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the opposite sign",
+            "open": {
+                "prompt": "Calculate 12 ÷ 6.",
+                "skill_id": "N18",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2",
+            "status": 200,
+            "ms": 3167,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 8 ÷ 4.",
+                "skill_id": "N18",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x-9 = 3",
+            "status": 200,
+            "ms": 2628,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-2",
+            "status": 200,
+            "ms": 3134,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the opposite sign",
+            "open": {
+                "prompt": "Calculate 12 ÷ 6.",
+                "skill_id": "N18",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2",
+            "status": 200,
+            "ms": 3215,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 12 ÷ 6.",
+                "skill_id": "N18",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x-9 = 3",
+            "status": 200,
+            "ms": 2841,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x-9 = 3",
+            "status": 200,
+            "ms": 3137,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2",
+            "status": 200,
+            "ms": 3282,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 12 ÷ 6.",
+                "skill_id": "N18",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x-9 = 3",
+            "status": 200,
+            "ms": 5838,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x-9 = 3",
+            "status": 200,
+            "ms": 3173,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2",
+            "status": 200,
+            "ms": 3065,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 12 ÷ 6.",
+                "skill_id": "N18",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x-9 = 3",
+            "status": 200,
+            "ms": 3218,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-2",
+            "status": 200,
+            "ms": 3177,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the opposite sign",
+            "open": {
+                "prompt": "Calculate 12 ÷ 6.",
+                "skill_id": "N18",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2",
+            "status": 200,
+            "ms": 3339,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 12 ÷ 6.",
+                "skill_id": "N18",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x-9 = 3",
+            "status": 200,
+            "ms": 3289,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x-9 = 3",
+            "status": 200,
+            "ms": 3305,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x-9 = 2",
+            "status": 200,
+            "ms": 3034,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-7",
+            "status": 200,
+            "ms": 2979,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "WRONG_INVERSE",
+            "open": {
+                "prompt": "Solve x − 9 = 2 for x.",
+                "skill_id": "Q04",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 12",
+            "status": 200,
+            "ms": 3375,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 9 to both sides of x − 9 = 2. Write the equation you get.",
+                "skill_id": "Q04",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "5",
+            "status": 200,
+            "ms": 3245,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Solve x − 1 = 4 for x.",
+                "skill_id": "Q04",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2",
+            "status": 200,
+            "ms": 2852,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_FINAL_PLUS",
+            "open": {
+                "prompt": "Solve 9(x + 3) = 36 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 2",
+            "status": 200,
+            "ms": 2844,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Subtract 3 from both sides of x + 3 = 4. Write the equation you get.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 1",
+            "status": 200,
+            "ms": 5062,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Subtract 3 from both sides of x + 3 = 4. Write the equation you get.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "13",
+            "status": 200,
+            "ms": 5094,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ARITH_FINAL_PLUS",
+            "open": {
+                "prompt": "Solve 4(x + 2) = 56 for x.",
+                "skill_id": "Q07",
+                "purpose": "PRACTICE"
+            },
+            "calls": 2,
+            "purposes": [
+                "REPLY",
+                "REPAIR"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "REJECTED",
+                "ACCEPTED_AFTER_REPAIR"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-11",
+            "status": 200,
+            "ms": 2834,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "QUOTIENT_SIGN",
+            "open": {
+                "prompt": "Solve 4x = 44 for x.",
+                "skill_id": "Q05",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "11",
+            "status": 200,
+            "ms": 3350,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 44 ÷ 4.",
+                "skill_id": "N18",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        }
+    ],
+    "goals_met": [],
+    "start_skill": "Q07",
+    "route": {
+        "detours": [
+            {
+                "skill_id": "N18",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "N18",
+                "target_skill_id": "Q07",
+                "problems": 2,
+                "correct": 1,
+                "not_yet": 1,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "N18",
+                "target_skill_id": "Q07",
+                "problems": 2,
+                "correct": 1,
+                "not_yet": 1,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 2
+                }
+            },
+            {
+                "skill_id": "N18",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 2
+                }
+            },
+            {
+                "skill_id": "N18",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 1
+                }
+            },
+            {
+                "skill_id": "N18",
+                "target_skill_id": "Q07",
+                "problems": 2,
+                "correct": 1,
+                "not_yet": 1,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 1,
+                    "not_yet": 2
+                }
+            },
+            {
+                "skill_id": "Q04",
+                "target_skill_id": "Q07",
+                "problems": 3,
+                "correct": 1,
+                "not_yet": 2,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 1,
+                    "not_yet": 3
+                }
+            },
+            {
+                "skill_id": "Q05",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 0,
+                "not_yet": 1,
+                "returned_to_target": false,
+                "returned_through": null,
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 0
+                }
+            },
+            {
+                "skill_id": "N18",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": false,
+                "returned_through": null,
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 0
+                }
+            },
+            {
+                "skill_id": "N06",
+                "target_skill_id": "Q07",
+                "problems": 1,
+                "correct": 0,
+                "not_yet": 0,
+                "returned_to_target": false,
+                "returned_through": null,
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 0
+                }
+            }
+        ],
+        "originals": [],
+        "returns": [
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_5025b29f1797b3389638f836",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_22885c5f48395085326bcfb3",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_de3b0066edaa309e0333e111",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_c2899a979a173862b1293b3a",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_cc03194120efa90bf51f3ffd",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_60c3aa68d1c741033c5080b5",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q07",
+                "problem_id": "prb_668c4f765522c88f93183fd5",
+                "how": "practice"
+            }
+        ],
+        "fresh_evidence": [
+            {
+                "skill_id": "Q07",
+                "checks_counted": 0,
+                "correct": 0
+            }
+        ]
+    },
+    "route_log": [
+        {
+            "kind": "DETOUR",
+            "skill_id": "N18",
+            "prompt": "Calculate 12 ÷ 6."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "N18",
+            "prompt": "Calculate 12 ÷ 6."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "N18",
+            "prompt": "Calculate 12 ÷ 6."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "N18",
+            "prompt": "Calculate 12 ÷ 6."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "N18",
+            "prompt": "Calculate 12 ÷ 6."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "N18",
+            "prompt": "Calculate 12 ÷ 6."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Divide both sides of 6(x − 9) = 12 by 6. Write the equation you get."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "Q04",
+            "prompt": "Solve x − 9 = 2 for x."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q07",
+            "prompt": "Solve 9(x + 3) = 36 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "Q05",
+            "prompt": "Solve 4x = 44 for x."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "N18",
+            "prompt": "Calculate 44 ÷ 4."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "N06",
+            "prompt": "Calculate 96 ÷ (−12)."
+        }
+    ],
+    "prerequisite": {
+        "wrong_before_first_success": 0,
+        "first_success": true,
+        "answers": 14
+    },
+    "boundary": {
+        "reached": true,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 10,
+        "deepest": "N18",
+        "first_not_yet_at_floor": "Calculate 12 ÷ 6. — entry -2",
+        "tutor_said": [
+            "student_message: Not yet — 12 ÷ 6 isn't -2. Think about what number times 6 gives 12. Try this one first.",
+            "student_message: Correct — 8 ÷ 4 = 2. Dividing a product by one of its factors leaves the other factor. Now back to the equation: dividing both sides of 6(x − 9) = 12 by 6 leaves x − 9 on the left, and the right side is 12 ÷ 6. Write the equation you get when you divide both sides of 6(x − 9) = 12 by 6.",
+            "student_message: Your left side, x − 9, is right. The right side still isn't: 12 ÷ 6 is not 3. You just found that 8 ÷ 4 = 2, and 12 ÷ 6 works the same way — what number times 6 gives 12?"
+        ],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": {
+        "ARITH_FINAL_PLUS": 3,
+        "NO_RECIPE: the step with its right side off by one": 12,
+        "NO_RECIPE: the opposite sign": 3,
+        "WRONG_INVERSE": 1,
+        "QUOTIENT_SIGN": 1
+    },
+    "check_answers": {
+        "unassisted": 0,
+        "unassisted_correct": 0,
+        "with_help": 0,
+        "held": 0
+    },
+    "check_causes": {
+        "with_help": [],
+        "held": []
+    },
+    "help_moves_on_open_checks": [],
+    "help_moves_with_practice_item": 0,
+    "original_problem": [],
+    "guards": {
+        "ANSWER_LEAK": 4
+    },
+    "guard_phrases": [],
+    "counters": [],
+    "repairs": [
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "move: slip check not allowed",
+            "errors": [
+                "SLIP_CHECK is only possible right after an answer that code found eligible for the slip pause (SLIP.eligible_for_pause is false)"
+            ],
+            "text": "Your step x − 9 = 3 isn't right yet. The right side is where the trouble is: you divided 6(x − 9) by 6 correctly, but 12 ÷ 6 is not 3. You already computed 12 ÷ 6 correctly a moment ago. What is 12 ÷ 6?"
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: original problem",
+            "errors": [
+                "item: source original is valid only when ORIGINAL_PROBLEM is not null, with purpose practice"
+            ],
+            "text": "Your left side, x − 9, is right again. The right side is where it keeps breaking: you wrote 3, but 12 ÷ 6 is 2. Dividing both sides by 6 means the right side becomes 12 ÷ 6. Write the equation you get when you divide both sides of 6(x − 9) = 12 by 6."
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "item: original problem",
+            "errors": [
+                "item: source original is valid only when ORIGINAL_PROBLEM is not null, with purpose practice"
+            ],
+            "text": "Correct — x = 1. Subtracting the same number from both sides of an equation keeps the two sides equal, so the 3 comes off each side. That step is solid; now let's take it back to the grouped equation you were working on."
+        },
+        {
+            "purpose": "REPLY",
+            "attempt": 0,
+            "cause": "move: slip check not allowed",
+            "errors": [
+                "SLIP_CHECK is only possible right after an answer that code found eligible for the slip pause (SLIP.eligible_for_pause is false)"
+            ],
+            "text": "You wrote 13, and that's not the solution yet. Let's check the last step on its own."
+        }
+    ],
+    "holds": [],
+    "held_attempts": [],
+    "readings": {
+        "sent_for_reading": 0,
+        "is_answer_true": 0,
+        "is_answer_false": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "readings_differ": 0,
+        "clarifying_questions_shown": 0
+    },
+    "equation_step": {
+        "NOT_EQUIVALENT": 12,
+        "STEP_CORRECT": 2
+    },
+    "slip_eligibility": {
+        "eligible": 0,
+        "not eligible": 8
+    },
+    "slips": [
+        {
+            "prompt": "Solve 6(x − 9) = 12 for x.",
+            "purpose": "PRACTICE",
+            "entry": "12",
+            "eligible": false,
+            "codes": [
+                "ARITH_FINAL_PLUS"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Calculate 12 ÷ 6.",
+            "purpose": "PRACTICE",
+            "entry": "-2",
+            "eligible": false,
+            "codes": [],
+            "detail": null
+        },
+        {
+            "prompt": "Calculate 12 ÷ 6.",
+            "purpose": "PRACTICE",
+            "entry": "-2",
+            "eligible": false,
+            "codes": [],
+            "detail": null
+        },
+        {
+            "prompt": "Calculate 12 ÷ 6.",
+            "purpose": "PRACTICE",
+            "entry": "-2",
+            "eligible": false,
+            "codes": [],
+            "detail": null
+        },
+        {
+            "prompt": "Solve x − 9 = 2 for x.",
+            "purpose": "PRACTICE",
+            "entry": "-7",
+            "eligible": false,
+            "codes": [
+                "WRONG_INVERSE"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 9(x + 3) = 36 for x.",
+            "purpose": "PRACTICE",
+            "entry": "2",
+            "eligible": false,
+            "codes": [
+                "ARITH_FINAL_PLUS"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 4(x + 2) = 56 for x.",
+            "purpose": "PRACTICE",
+            "entry": "13",
+            "eligible": false,
+            "codes": [
+                "ARITH_FINAL_PLUS"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 4x = 44 for x.",
+            "purpose": "PRACTICE",
+            "entry": "-11",
+            "eligible": false,
+            "codes": [
+                "QUOTIENT_SIGN"
+            ],
+            "detail": null
+        }
+    ],
+    "ungraded_value_answers": 0,
+    "value_answers_graded": 0,
+    "empty_replies": 0,
+    "binding": {
+        "calls": 1,
+        "accepted": 1,
+        "outcomes": [
+            "ACCEPTED"
+        ]
+    },
+    "calls": 36,
+    "finish_length": 0,
+    "attempts": 30
+}

@@ -1,0 +1,1008 @@
+{
+    "name": "INVERSE-Q06",
+    "provider": "LIVE openai_compatible / deepseek-flash, provider_thinking disabled",
+    "turns": [
+        {
+            "input": "(start on Q06)",
+            "status": 200,
+            "ms": 2794,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "BINDING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (binding call)",
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-7/3",
+            "status": 200,
+            "ms": 2728,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ADD_INSTEAD_OF_SUBTRACT",
+            "open": {
+                "prompt": "Solve 6x − 10 = −4 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x = 7",
+            "status": 200,
+            "ms": 2828,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 10 to both sides of 6x − 10 = −4. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6",
+            "status": 200,
+            "ms": 3096,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate −4 + 10.",
+                "skill_id": "N03",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x = 7",
+            "status": 200,
+            "ms": 3130,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 10 to both sides of 6x − 10 = −4. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x = 7",
+            "status": 200,
+            "ms": 3431,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 10 to both sides of 6x − 10 = −4. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "0",
+            "status": 200,
+            "ms": 3725,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate −10 + 10.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x = 7",
+            "status": 200,
+            "ms": 2753,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 10 to both sides of 6x − 10 = −4. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "1",
+            "status": 200,
+            "ms": 2675,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: off by one",
+            "open": {
+                "prompt": "Calculate −10 + 10.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "0",
+            "status": 200,
+            "ms": 2740,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate −10 + 10.",
+                "skill_id": "N03",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x = 7",
+            "status": 200,
+            "ms": 3377,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 10 to both sides of 6x − 10 = −4. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x = 7",
+            "status": 200,
+            "ms": 2789,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 10 to both sides of 6x − 10 = −4. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "0",
+            "status": 200,
+            "ms": 3342,
+            "value_answer": true,
+            "graded": false,
+            "catalogue": null,
+            "open": null,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6x = 6",
+            "status": 200,
+            "ms": 3327,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Add 10 to both sides of 6x − 10 = −4. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-8/3",
+            "status": 200,
+            "ms": 2683,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "ADD_INSTEAD_OF_SUBTRACT",
+            "open": {
+                "prompt": "Solve 3x − 13 = 5 for x.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-18",
+            "status": 200,
+            "ms": 3715,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the opposite sign",
+            "open": {
+                "prompt": "Calculate 5 + 13.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "18",
+            "status": 200,
+            "ms": 3274,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 5 + 13.",
+                "skill_id": "N03",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3x = 19",
+            "status": 200,
+            "ms": 3047,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 13 to both sides of 3x − 13 = 5. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3x = 19",
+            "status": 200,
+            "ms": 2990,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Add 13 to both sides of 3x − 13 = 5. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "3x = 18",
+            "status": 200,
+            "ms": 3206,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Add 13 to both sides of 3x − 13 = 5. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 7",
+            "status": 200,
+            "ms": 3011,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 3x = 18 by 3. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 7",
+            "status": 200,
+            "ms": 2925,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 3x = 18 by 3. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6",
+            "status": 200,
+            "ms": 3073,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 18 ÷ 3.",
+                "skill_id": "N18",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 7",
+            "status": 200,
+            "ms": 3372,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 3x = 18 by 3. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 7",
+            "status": 200,
+            "ms": 2753,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 3x = 18 by 3. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4",
+            "status": 200,
+            "ms": 3578,
+            "value_answer": true,
+            "graded": false,
+            "catalogue": null,
+            "open": null,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "6",
+            "status": 200,
+            "ms": 3335,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": null,
+            "open": {
+                "prompt": "Calculate 18 ÷ 3.",
+                "skill_id": "N18",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 7",
+            "status": 200,
+            "ms": 3001,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 3x = 18 by 3. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "ok, what next?",
+            "status": 200,
+            "ms": 3224,
+            "value_answer": false,
+            "graded": false,
+            "catalogue": null,
+            "open": null,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "x = 7",
+            "status": 200,
+            "ms": 3100,
+            "value_answer": false,
+            "graded": true,
+            "catalogue": "NO_RECIPE: the step with its right side off by one",
+            "open": {
+                "prompt": "Divide both sides of 3x = 18 by 3. Write the equation you get.",
+                "skill_id": "Q06",
+                "purpose": "PRACTICE"
+            },
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4",
+            "status": 200,
+            "ms": 3116,
+            "value_answer": true,
+            "graded": false,
+            "catalogue": null,
+            "open": null,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (configured: disabled on every call)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        }
+    ],
+    "goals_met": [],
+    "start_skill": "Q06",
+    "route": {
+        "detours": [
+            {
+                "skill_id": "N03",
+                "target_skill_id": "Q06",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 1,
+                    "not_yet": 4
+                }
+            },
+            {
+                "skill_id": "N03",
+                "target_skill_id": "Q06",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 1,
+                    "not_yet": 4
+                }
+            },
+            {
+                "skill_id": "N03",
+                "target_skill_id": "Q06",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 1,
+                    "not_yet": 4
+                }
+            },
+            {
+                "skill_id": "N18",
+                "target_skill_id": "Q06",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 2
+                }
+            },
+            {
+                "skill_id": "N18",
+                "target_skill_id": "Q06",
+                "problems": 1,
+                "correct": 1,
+                "not_yet": 0,
+                "returned_to_target": true,
+                "returned_through": "practice",
+                "target_after": {
+                    "correct": 0,
+                    "not_yet": 2
+                }
+            }
+        ],
+        "originals": [],
+        "returns": [
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q06",
+                "problem_id": "prb_d20d8436d84a3c6c81e4d8ef",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q06",
+                "problem_id": "prb_bfd11ead99f0e5e983b6b6b0",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q06",
+                "problem_id": "prb_6f2f55ca97061cd8dc53aea5",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q06",
+                "problem_id": "prb_5591c30fbc1a7a02b2b5cdac",
+                "how": "practice"
+            },
+            {
+                "kind": "RETURN_TO_SKILL",
+                "skill_id": "Q06",
+                "problem_id": "prb_c43916585f2040d9088cd730",
+                "how": "practice"
+            }
+        ],
+        "fresh_evidence": [
+            {
+                "skill_id": "Q06",
+                "checks_counted": 0,
+                "correct": 0
+            }
+        ]
+    },
+    "route_log": [
+        {
+            "kind": "DETOUR",
+            "skill_id": "N03",
+            "prompt": "Calculate −4 + 10."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q06",
+            "prompt": "Add 10 to both sides of 6x − 10 = −4. Write the equation you get."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "N03",
+            "prompt": "Calculate −10 + 10."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q06",
+            "prompt": "Add 10 to both sides of 6x − 10 = −4. Write the equation you get."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "N03",
+            "prompt": "Calculate 5 + 13."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q06",
+            "prompt": "Add 13 to both sides of 3x − 13 = 5. Write the equation you get."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "N18",
+            "prompt": "Calculate 18 ÷ 3."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q06",
+            "prompt": "Divide both sides of 3x = 18 by 3. Write the equation you get."
+        },
+        {
+            "kind": "DETOUR",
+            "skill_id": "N18",
+            "prompt": "Calculate 18 ÷ 3."
+        },
+        {
+            "kind": "RETURN_TO_SKILL",
+            "skill_id": "Q06",
+            "prompt": "Divide both sides of 3x = 18 by 3. Write the equation you get."
+        }
+    ],
+    "prerequisite": {
+        "wrong_before_first_success": 0,
+        "first_success": true,
+        "answers": 5
+    },
+    "boundary": {
+        "reached": false,
+        "floor_skills": [
+            "N18",
+            "N03"
+        ],
+        "floor_problems": 5,
+        "deepest": "N03",
+        "first_not_yet_at_floor": null,
+        "tutor_said": [],
+        "moves_outside_rejected": 0
+    },
+    "catalogue_errors_used": {
+        "ADD_INSTEAD_OF_SUBTRACT": 2,
+        "NO_RECIPE: the step with its right side off by one": 14,
+        "NO_RECIPE: off by one": 1,
+        "NO_RECIPE: the opposite sign": 1
+    },
+    "check_answers": {
+        "unassisted": 0,
+        "unassisted_correct": 0,
+        "with_help": 0,
+        "held": 0
+    },
+    "check_causes": {
+        "with_help": [],
+        "held": []
+    },
+    "help_moves_on_open_checks": [],
+    "help_moves_with_practice_item": 0,
+    "original_problem": [],
+    "guards": {
+        "ANSWER_LEAK": 1
+    },
+    "guard_phrases": [],
+    "counters": {
+        "VALUE_QUESTION_IN_TEXT": 3
+    },
+    "repairs": [],
+    "holds": [],
+    "held_attempts": [],
+    "readings": {
+        "sent_for_reading": 0,
+        "is_answer_true": 0,
+        "is_answer_false": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "readings_differ": 0,
+        "clarifying_questions_shown": 0
+    },
+    "equation_step": {
+        "NOT_EQUIVALENT": 14,
+        "STEP_CORRECT": 2
+    },
+    "slip_eligibility": {
+        "eligible": 0,
+        "not eligible": 4
+    },
+    "slips": [
+        {
+            "prompt": "Solve 6x − 10 = −4 for x.",
+            "purpose": "PRACTICE",
+            "entry": "-7/3",
+            "eligible": false,
+            "codes": [
+                "ADD_INSTEAD_OF_SUBTRACT"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Calculate −10 + 10.",
+            "purpose": "PRACTICE",
+            "entry": "1",
+            "eligible": false,
+            "codes": [],
+            "detail": null
+        },
+        {
+            "prompt": "Solve 3x − 13 = 5 for x.",
+            "purpose": "PRACTICE",
+            "entry": "-8/3",
+            "eligible": false,
+            "codes": [
+                "ADD_INSTEAD_OF_SUBTRACT"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Calculate 5 + 13.",
+            "purpose": "PRACTICE",
+            "entry": "-18",
+            "eligible": false,
+            "codes": [],
+            "detail": null
+        }
+    ],
+    "ungraded_value_answers": 3,
+    "value_answers_graded": 0,
+    "empty_replies": 0,
+    "binding": {
+        "calls": 1,
+        "accepted": 1,
+        "outcomes": [
+            "ACCEPTED"
+        ]
+    },
+    "calls": 32,
+    "finish_length": 0,
+    "attempts": 26
+}
