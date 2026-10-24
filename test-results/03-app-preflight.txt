@@ -6,7 +6,7 @@ PASS  MBSTRING             loaded
 PASS  CTYPE                loaded
 WARN  CONFIG               No config.php; defaults apply (mock provider). Copy config.example.php to config.php.
 PASS  PROVIDER             mock provider (no outbound calls). Live provider not configured.
-PASS  FILE                 resources/architecture/Algebra_Constraint_Architecture_v1.6.md
+PASS  FILE                 resources/architecture/Algebra_Constraint_Architecture_v1.7.md
 PASS  FILE                 resources/curriculum/algebra-map.json
 PASS  FILE                 resources/contracts/tutor-envelope.schema.json
 PASS  FILE                 resources/contracts/tutor-event.schema.json
@@ -20,7 +20,7 @@ PASS  FILE                 migrations/004_progress.sql
 PASS  FILE                 migrations/005_round6_call_detail.sql
 PASS  FILE                 migrations/006_round7_cached_tokens.sql
 PASS  FILE                 vendor/autoload.php
-PASS  ARCHITECTURE_HASH    v1.6 c5591d3dfa6aa87bf79b026936abce724e71ec9dd3e7316c7c7991553d390b7b
+PASS  ARCHITECTURE_HASH    v1.7 afe9a01e82122f8fcb5c9b1c7e12a493d17ab307b14161656accd4e947dc9188
 PASS  STORAGE_DIR          writable: /home/user/noon/app/private/var
 PASS  SQLITE_OPEN          database opened and writable
 PASS  SCHEMA               6 update(s) to apply (1, 2, 3, 4, 5, 6); applied automatically on the next request, without deleting or rewriting existing data

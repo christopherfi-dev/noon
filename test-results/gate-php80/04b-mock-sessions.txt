@@ -6,11 +6,15 @@ ran B1-5: 12 turns, 13 calls, goals met Q07, Q06
 ran descent-1: 13 turns, 14 calls, goals met E06, Q07
 ran descent-2: 13 turns, 14 calls, goals met E06, Q07
 ran descent-3: 13 turns, 14 calls, goals met E06, Q07
-ran B11-1: 10 turns, 11 calls, goals met Q06
-ran B11-2: 10 turns, 11 calls, goals met E06
+ran B11-1: 11 turns, 12 calls, goals met Q06
+ran B11-2: 11 turns, 12 calls, goals met E06
 ran N1-1: 10 turns, 13 calls, goals met E06
-ran N1-2: 13 turns, 16 calls, goals met E06, N18
+ran N1-2: 10 turns, 13 calls, goals met E06
 ran HELP-SEEKER-1: 31 turns, 32 calls, goals met none
-ran BREAKER-1: 9 turns, 11 calls, goals met Q07
-Wrote 14 transcripts; METRICS.md covers 14 sessions in /home/user/noon/test-results/mock-sessions
-Calls per turn: {"1":163,"2":19}
+ran BREAKER-1: 15 turns, 17 calls, goals met Q06, Q07
+ran WORKING-1: 7 turns, 12 calls, goals met Q06
+ran HELP-ON-CHECK-1: 31 turns, 32 calls, goals met none
+ran SLIPS-1: 12 turns, 14 calls, goals met Q07, Q06
+ran STEP-1: 9 turns, 10 calls, goals met Q06
+Wrote 18 transcripts; METRICS.md covers 18 sessions in /home/user/noon/test-results/mock-sessions
+Calls per turn: {"1":218,"2":28}

@@ -48,7 +48,7 @@ step "App preflight" 03-app-preflight.txt php "$APP/private/bin/preflight.php" -
 cd "$APP"
 step "PHPUnit unit + integration" 04-phpunit.txt php private/vendor/bin/phpunit --testdox --log-junit "$OUT/04-phpunit-junit.xml"
 # Round 6 §9.5: calls per turn on scripted mock sessions (never a live config here).
-step "Mock tutor sessions (calls per turn)" 04b-mock-sessions.txt env -u ALGEBRA_CONFIG php tools/tutor_sessions.php --out="$OUT/mock-sessions" --help-seeker=1 --breaker=1
+step "Mock tutor sessions (calls per turn)" 04b-mock-sessions.txt env -u ALGEBRA_CONFIG php tools/tutor_sessions.php --out="$OUT/mock-sessions" --help-seeker=1 --breaker=1 --working=1 --help-on-check=1 --slips=1 --step=1
 step "Browser (conversation UI, 360/390/1280)" 05-browser.txt node tests/Browser/run_browser.mjs "$OUT/browser"
 step "Bundle build (side-by-side VPS)" 06-bundle-build.txt "$BUILD_PHP" tools/build_bundle.php
 step "Bundle smoke (deploy layout)" 07-bundle-smoke.txt php tools/bundle_smoke.php "$REPO/dist"

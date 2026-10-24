@@ -1,19 +1,39 @@
-# Acceptance scenarios — status in the AI tutor (round 6, updated for rounds 7 and 8)
+# Acceptance scenarios — status in the AI tutor (round 6, updated for rounds 7, 8 and 9)
 
 Source: `contracts/acceptance-scenarios.json` (53 scenarios). Map file: `app/tests/acceptance-map.json` (checked by `tests/Integration/ScenarioMapTest.php`). Every result is from mock mode (the scripted mock tutor); none is a live-provider, deployment or learning result.
 
 The beta's own tests (B1–B16, P3, the round UI checks) asserted the retired state machine's sequencing or its fixed lines; they are listed with one-line reasons and their replacements in `tests/RETIRED_TESTS.md`.
 
+## Round 9 tests (CONDUCTOR_ROUND_9.md §5)
+
+Where round 9 reversed a round 8 behaviour (§3), the rows below replace the round 8 rows.
+
+| Item | What is checked | Test |
+|---|---|---|
+| 1. Working read as an answer | "I added 9" with a problem open is not graded; the problem stays open | `Round9Test::testWorkingIsNotReadAsAnAnswer` |
+| 2. An answer with a question | "My answer is 10. Why does dividing by 5 work?" is graded as 10 | `Round9Test::testAnAnswerWithAQuestionIsGraded` |
+| 3. Help and a smaller step | A HELP or HINT reply during a check carries a practice item; help is recorded before the reply; the item is shown after it; the next request presents the helped problem as practice (ORIGINAL_PROBLEM or OPEN_PROBLEM); help on a held check restarts the run | `Round9Test::testHelpAndASmallerStepTogether`; `CheatingTest::testAHelpRequestDuringAnOpenCheckIsHelpedAndRecorded`; browser journey |
+| 4. ANSWER_QUESTION used for help | No help recorded; the text is logged (MOVE_DURING_CHECK, DURING_CHECK); the answer counts | `Round9Test::testAnswerQuestionDuringACheckRecordsNoHelp`; `CheatingTest::testOnlyHelpAndHintDuringAnOpenCheckCountAsHelp` |
+| 5. A stale reply | Discarded before anything is committed; identity fields in a reply are ignored | `Round9Test::testAStaleReplyIsDiscarded` |
+| 6. Slip eligibility | Every case in §4.4, with the strings sent to the tutor | `Round9Test::testSlipEligibility`; `LearnerInstrumentsTest::testOtherSlipSignatures`, `::testProductSlipConfirmedWithItsMicroStep` |
+| 7. equation_step | Every case in §4.5, the wording, the rewrite request and the verifier's rejections | `Round9Test::testEquationStep` |
+| 8. Removed rules | A check whose answer appears in it is accepted; nothing is substituted; no detector holds anything | `Round9Test::testRemovedRules`; `CheatingTest::testAnAnswerInTheQuestionIsAcceptedForACheck`, `::testTextBeforeACheckCardWithAStrategyPhraseIsASignal`, `::testTheBackstopDuringAnOpenCheckIsASignal`; `ProblemInstrumentsTest::testPreparedProblemsPreferNoOverlapAndAcceptIt` |
+| 9. Corrections | A counted check corrected to with help stops counting; a corrected or suspended verdict updates counts and report; original and correction traceable, nothing counted twice; the CLI tool | `Round9Test::testACountedCheckCorrectedToWithHelpStopsCounting`, `::testACorrectedOrSuspendedVerdictUpdatesCountsAndReport`, `::testCorrectionsAreTraceableAndNothingCountsTwice`, `::testTheCorrectionCliTool` |
+| §4.6 detectors | Standalone option letters and number words; no digits inside codes; skill codes; the two counters' scope | `Round9Test::testDetectorsAndCounters` |
+| v1.7 binding and contract | The app loads v1.7 only; a session bound to 1.6 is rebound; the §4.1 sentences word for word; no TRUSTED_SESSION | `HostTest::testHost13BindingModes`, `::testASessionBoundTo16IsReboundTo17`, `::testHost09PromptInjectionIsData`; `EngineUnitsTest::testTheOutputContractHoldsNoBehaviourRules`; `TutorLoopTest::testNoHostRequirementsChangelogClaudeOrConductorTextReachesAModelRequest` |
+
 ## Round 8 tests (CONDUCTOR_ROUND_8.md §4)
+
+Rows marked (reversed) describe round 8 behaviour that round 9 §3 reversed; their tests were rewritten as listed in `tests/RETIRED_TESTS.md`.
 
 | Item | What is checked | Test |
 |---|---|---|
 | Help request on an open check | The reply is shown; HELP_GIVEN (source TUTOR_MOVE) is recorded before it; the check becomes practice; the answer does not count | `CheatingTest::testAHelpRequestDuringAnOpenCheckIsHelpedAndRecorded`; browser journey |
-| HINT, EXPLAIN, ANSWER_QUESTION on an open check | Each counts as help in the same way; the same move with no check open records nothing | `CheatingTest::testHintExplainAndAnswerQuestionDuringAnOpenCheckCountAsHelp` |
-| Backstop | Text during an open check with its numbers or expression and no help move holds the check (HELP_DURING_CHECK); a refusal with no numbers records nothing and the answer counts | `CheatingTest::testTheBackstopDuringAnOpenCheck`, `::testAnAnswerLeakDuringAnOpenCheckHoldsTheAttempt`; `LearnerInstrumentsTest::testTextDuringAnOpenCheck` |
+| HINT, EXPLAIN, ANSWER_QUESTION on an open check (reversed) | Each counts as help in the same way; the same move with no check open records nothing | `CheatingTest::testHintExplainAndAnswerQuestionDuringAnOpenCheckCountAsHelp` |
+| Backstop (reversed: a signal) | Text during an open check with its numbers or expression and no help move holds the check (HELP_DURING_CHECK); a refusal with no numbers records nothing and the answer counts | `CheatingTest::testTheBackstopDuringAnOpenCheck`, `::testAnAnswerLeakDuringAnOpenCheckHoldsTheAttempt`; `LearnerInstrumentsTest::testTextDuringAnOpenCheck` |
 | Handover before a check card | "Here is one more to try on your own." holds nothing (CHECK_CARD_INVITATION logged, phrase by phrase) and raises no help claim; support words elsewhere are flagged | `CheatingTest::testANeutralHandoverBeforeACheckCard`; `LearnerInstrumentsTest::testHelpClaimsAndTheHandoverSentence`, `::testTextBeforeACheckCard` |
-| Answer before a check card | Equal to the check's answer and from the previous answer: logged only (CHECK_CARD_ANSWER_SIGNAL); from nowhere: held | `CheatingTest::testTheCheckAnswerBeforeACardFromThePreviousAnswerIsASignal`, `::testTextBeforeACheckCardWithItsAnswerHoldsTheAttempt` |
-| Answer in the question | A practice problem is accepted; a check problem is repaired once, then replaced by a prepared check problem, logged, with no hold; prepared problems satisfy the rule | `CheatingTest::testAnAnswerInTheQuestionAcceptedForPracticeAndReplacedForACheck`; `ProblemInstrumentsTest::testPracticeWordingIsRenderedByCodeFromTheSpec`, `::testPreparedProblemsSatisfyTheCheckRule` |
+| Answer before a check card (reversed: a signal) | Equal to the check's answer and from the previous answer: logged only (CHECK_CARD_ANSWER_SIGNAL); from nowhere: held | `CheatingTest::testTheCheckAnswerBeforeACardFromThePreviousAnswerIsASignal`, `::testTextBeforeACheckCardWithItsAnswerHoldsTheAttempt` |
+| Answer in the question (reversed: accepted) | A practice problem is accepted; a check problem is repaired once, then replaced by a prepared check problem, logged, with no hold; prepared problems satisfy the rule | `CheatingTest::testAnAnswerInTheQuestionAcceptedForPracticeAndReplacedForACheck`; `ProblemInstrumentsTest::testPracticeWordingIsRenderedByCodeFromTheSpec`, `::testPreparedProblemsSatisfyTheCheckRule` |
 | Counters | RESOLVE_AFTER_CORRECT and VALUE_QUESTION_IN_TEXT fire on built cases and log only; plain feedback records nothing | `TutorLoopTest::testTheTwoCountersLogOnly` |
 | What the model receives | Only the architecture, the output contract, the activation exchange and the JSON block; no host-requirements, changelog, CLAUDE.md or conductor text | `TutorLoopTest::testNoHostRequirementsChangelogClaudeOrConductorTextReachesAModelRequest`; bundle smoke (no such file in the upload) |
 | v1.6 binding | The app loads v1.6 only; a session bound to 1.5 is rebound; HELP is a field value in the output contract | `HostTest::testHost13BindingModes`, `HostTest::testASessionBoundTo15IsReboundTo16`, `EngineUnitsTest::testTheOutputContractHoldsNoBehaviourRules` |

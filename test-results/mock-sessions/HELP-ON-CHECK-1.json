@@ -1,0 +1,640 @@
+{
+    "name": "HELP-ON-CHECK-1",
+    "provider": "MOCK (simulated tutor; not a live result, not evidence of learning, latency not meaningful)",
+    "turns": [
+        {
+            "input": "(start on Q06)",
+            "status": 200,
+            "ms": 5,
+            "value_answer": false,
+            "graded": false,
+            "calls": 2,
+            "purposes": [
+                "BINDING",
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (binding call)",
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED",
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-10",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 5,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "4",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-5",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-1",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 6,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "1",
+            "status": 200,
+            "ms": 7,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "1",
+            "status": 200,
+            "ms": 7,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 7,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "9",
+            "status": 200,
+            "ms": 7,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 7,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-4",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 7,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "2",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 11,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-4",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-3",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "5",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "8",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "10",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-4",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-10",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        }
+    ],
+    "goals_met": [],
+    "check_answers": {
+        "unassisted": 0,
+        "unassisted_correct": 0,
+        "with_help": 9,
+        "held": 0
+    },
+    "check_causes": {
+        "with_help": {
+            "tutor move HELP": 9
+        },
+        "held": []
+    },
+    "help_moves_on_open_checks": {
+        "HELP": 10
+    },
+    "help_moves_with_practice_item": 10,
+    "original_problem": [
+        "waits as the original: prb_5b087ac942f4e9293f087661",
+        "original brought back: prb_5b087ac942f4e9293f087661",
+        "waits as the original: prb_94004d1a457913cffd5c352a",
+        "original brought back: prb_94004d1a457913cffd5c352a",
+        "waits as the original: prb_a3d26386b018c4cd65d0dd04",
+        "original brought back: prb_a3d26386b018c4cd65d0dd04",
+        "waits as the original: prb_0f59d4e3834d88c1dc2c9c95",
+        "original brought back: prb_0f59d4e3834d88c1dc2c9c95",
+        "waits as the original: prb_fea9ad7a9c5a2fb1d3d8af76",
+        "original brought back: prb_fea9ad7a9c5a2fb1d3d8af76",
+        "waits as the original: prb_db04f2674c698c013904fd8e",
+        "original brought back: prb_db04f2674c698c013904fd8e",
+        "waits as the original: prb_0a21ab57f29e23ef52c34bc6",
+        "original brought back: prb_0a21ab57f29e23ef52c34bc6",
+        "waits as the original: prb_96a8211ad2fce804759aa0ec",
+        "original brought back: prb_96a8211ad2fce804759aa0ec",
+        "waits as the original: prb_1a8f17f65c8b39f186758eda",
+        "original brought back: prb_1a8f17f65c8b39f186758eda",
+        "waits as the original: prb_d204383a48c67ae1e5e4caaf",
+        "original brought back: prb_d204383a48c67ae1e5e4caaf"
+    ],
+    "guards": [],
+    "guard_phrases": [],
+    "counters": [],
+    "repairs": [],
+    "holds": [],
+    "held_attempts": [],
+    "readings": {
+        "sent_for_reading": 0,
+        "is_answer_true": 0,
+        "is_answer_false": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "readings_differ": 0,
+        "clarifying_questions_shown": 0
+    },
+    "equation_step": [],
+    "slip_eligibility": {
+        "eligible": 0,
+        "not eligible": 0
+    },
+    "slips": [],
+    "ungraded_value_answers": 0,
+    "value_answers_graded": 0,
+    "empty_replies": 0,
+    "binding": {
+        "calls": 1,
+        "accepted": 1,
+        "outcomes": [
+            "ACCEPTED"
+        ]
+    },
+    "calls": 32,
+    "finish_length": 0,
+    "attempts": 20
+}

@@ -5,7 +5,7 @@
         {
             "input": "(start on E06)",
             "status": 200,
-            "ms": 5,
+            "ms": 7,
             "value_answer": false,
             "graded": false,
             "calls": 2,
@@ -24,7 +24,7 @@
             "counted": true
         },
         {
-            "input": "7X + 7",
+            "input": "8X + 8",
             "status": 200,
             "ms": 5,
             "value_answer": false,
@@ -42,9 +42,9 @@
             "counted": true
         },
         {
-            "input": "2 x x + 12",
+            "input": "6 x x + 6",
             "status": 200,
-            "ms": 10,
+            "ms": 7,
             "value_answer": false,
             "graded": true,
             "calls": 2,
@@ -63,7 +63,7 @@
             "counted": true
         },
         {
-            "input": "6x + 7",
+            "input": "9x + 80",
             "status": 200,
             "ms": 6,
             "value_answer": false,
@@ -81,9 +81,9 @@
             "counted": true
         },
         {
-            "input": "28 because I worked it out in my head",
+            "input": "90 because I worked it out in my head",
             "status": 200,
-            "ms": 7,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
             "calls": 2,
@@ -104,7 +104,7 @@
         {
             "input": "is there a quicker way to do these?",
             "status": 200,
-            "ms": 6,
+            "ms": 7,
             "value_answer": false,
             "graded": false,
             "calls": 1,
@@ -120,7 +120,7 @@
             "counted": true
         },
         {
-            "input": "24",
+            "input": "9x+90",
             "status": 200,
             "ms": 7,
             "value_answer": false,
@@ -138,9 +138,9 @@
             "counted": true
         },
         {
-            "input": "33",
+            "input": "7x+49",
             "status": 200,
-            "ms": 6,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -156,7 +156,7 @@
             "counted": true
         },
         {
-            "input": "12",
+            "input": "B,D",
             "status": 200,
             "ms": 7,
             "value_answer": false,
@@ -174,63 +174,9 @@
             "counted": true
         },
         {
-            "input": "4x+20",
+            "input": "8x+8y+8",
             "status": 200,
-            "ms": 7,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "6x+30",
-            "status": 200,
-            "ms": 7,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "B",
-            "status": 200,
-            "ms": 7,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "4x+4y+8",
-            "status": 200,
-            "ms": 7,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -247,12 +193,11 @@
         }
     ],
     "goals_met": [
-        "E06",
-        "N18"
+        "E06"
     ],
     "check_answers": {
-        "unassisted": 7,
-        "unassisted_correct": 6,
+        "unassisted": 4,
+        "unassisted_correct": 3,
         "with_help": 0,
         "held": 0
     },
@@ -261,22 +206,50 @@
         "held": []
     },
     "help_moves_on_open_checks": [],
-    "backstop_holds": 0,
+    "help_moves_with_practice_item": 0,
+    "original_problem": [],
     "guards": [],
     "guard_phrases": [],
     "counters": [],
     "repairs": [],
     "holds": [],
     "held_attempts": [],
-    "substitutions": 0,
     "readings": {
         "sent_for_reading": 2,
+        "is_answer_true": 2,
+        "is_answer_false": 0,
         "accepted": 2,
         "rejected": 0,
         "readings_differ": 0,
-        "clarifying_questions_shown": 0,
-        "not_an_answer": 0
+        "clarifying_questions_shown": 0
     },
+    "equation_step": [],
+    "slip_eligibility": {
+        "eligible": 1,
+        "not eligible": 1
+    },
+    "slips": [
+        {
+            "prompt": "Expand 8(x + 8). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "8X + 8",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 9(x + 10). Write your answer without parentheses.",
+            "purpose": "CHECK",
+            "entry": "9x + 80",
+            "eligible": true,
+            "codes": [
+                "PRODUCT_FACT"
+            ],
+            "detail": "The other terms match; the constant 80 is a near miss of 9 × 10 = 90."
+        }
+    ],
     "ungraded_value_answers": 0,
     "value_answers_graded": 0,
     "empty_replies": 0,
@@ -287,7 +260,7 @@
             "ACCEPTED"
         ]
     },
-    "calls": 16,
+    "calls": 13,
     "finish_length": 0,
-    "attempts": 11
+    "attempts": 8
 }

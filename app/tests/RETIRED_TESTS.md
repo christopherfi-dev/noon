@@ -112,3 +112,28 @@ Tests whose behaviour round 8 changed on purpose; each is replaced, none was del
 | ReportTest::testNoAiTextInTheReportAndTheAuditList ("next", "try" in the audit list) | §3.3 | The same test: only "remember" holds; "next" and "try" are logged invitations |
 | Browser journey: message during the check stays unassisted | §3.1 | Browser journey: a help request during the check is recorded and the check becomes practice |
 
+
+## Round 9 (CONDUCTOR_ROUND_9.md)
+
+Tests whose behaviour round 9 changed on purpose (§3 lists the reversed round 8 behaviours); each is replaced, none was deleted to get green.
+
+| Round 8 test | Why it changed | Replaced by |
+| --- | --- | --- |
+| CheatingTest::testTextBeforeACheckCardWithAStrategyPhraseHoldsTheAttempt | §3.2: every text detector logs only | CheatingTest::testTextBeforeACheckCardWithAStrategyPhraseIsASignal |
+| CheatingTest::testTextBeforeACheckCardWithItsAnswerHoldsTheAttempt | §3.2 | CheatingTest::testTextBeforeACheckCardWithItsAnswerIsASignal |
+| CheatingTest::testTheCheckAnswerBeforeACardFromThePreviousAnswerIsASignal (from nowhere: held) | §3.2 | CheatingTest::testTheCheckAnswerBeforeACardIsASignal |
+| CheatingTest::testAnAnswerInTheQuestionAcceptedForPracticeAndReplacedForACheck | §3.1: the answer-in-question rule and the substitution are removed | CheatingTest::testAnAnswerInTheQuestionIsAcceptedForACheck, Round9Test::testRemovedRules |
+| CheatingTest::testHintExplainAndAnswerQuestionDuringAnOpenCheckCountAsHelp | §3.3: only HELP and HINT count as help | CheatingTest::testOnlyHelpAndHintDuringAnOpenCheckCountAsHelp, Round9Test::testAnswerQuestionDuringACheckRecordsNoHelp |
+| CheatingTest::testTheBackstopDuringAnOpenCheck | §3.2: the backstop is a signal | CheatingTest::testTheBackstopDuringAnOpenCheckIsASignal |
+| CheatingTest::testAnAnswerLeakDuringAnOpenCheckHoldsTheAttempt | §3.2 | CheatingTest::testAnAnswerLeakDuringAnOpenCheckIsLogged |
+| CheatingTest::testAHelpRequestDuringAnOpenCheckIsHelpedAndRecorded (help only) | §4.3: the help reply may carry a practice step; the helped check waits as the original | The same test, rewritten; Round9Test::testHelpAndASmallerStepTogether |
+| CheatingTest::testTheAiPosesAProblemWhileACheckIsOpen (rejected after "I'm stuck") | §4.3.5: after help, ALLOWED.may_pose_problem is true | The same test: rejected without help, accepted after help |
+| ProblemInstrumentsTest::testPracticeWordingIsRenderedByCodeFromTheSpec (check with its answer rejected) | §3.1 | The same test: the check is accepted |
+| ProblemInstrumentsTest::testPreparedProblemsSatisfyTheCheckRule | §3.1: prepared problems prefer no overlap and accept it | ProblemInstrumentsTest::testPreparedProblemsPreferNoOverlapAndAcceptIt |
+| LearnerInstrumentsTest::testOtherSlipSignatures (Q07 off by one confirmed as a slip) | §4.4.2: a bare value of x is never eligible | The same test: signatures only, with the new observation string |
+| LearnerInstrumentsTest::testTextBeforeACheckCard (hold flag) | §3.2 | The same test, signals only |
+| ReportTest::testNoAiTextInTheReportAndTheAuditList ("The answer to it is held.") | §3.2 | The same test, without the hold sentence |
+| HostTest::testHost09PromptInjectionIsData (TRUSTED_SESSION values) | §4.1 and the owner's decision: TRUSTED_SESSION removed | The same test: no identity block; the revision is code's |
+| HostTest::testASessionBoundTo15IsReboundTo16 | §2.1: v1.7 governs | HostTest::testASessionBoundTo16IsReboundTo17 |
+| EngineUnitsTest::testTheOutputContractHoldsNoBehaviourRules (round 8 sentences) | §4.1: the exact edits | The same test, asserting each §4.1 sentence word for word |
+| Browser journey: help during the check shows the check as practice | §4.3 | Browser journey: help reply, then the practice step, then the helped check back as practice |

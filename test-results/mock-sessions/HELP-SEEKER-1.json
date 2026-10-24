@@ -5,7 +5,7 @@
         {
             "input": "(start on Q06)",
             "status": 200,
-            "ms": 4,
+            "ms": 7,
             "value_answer": false,
             "graded": false,
             "calls": 2,
@@ -24,9 +24,9 @@
             "counted": true
         },
         {
-            "input": "-8",
+            "input": "-2",
             "status": 200,
-            "ms": 5,
+            "ms": 7,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -60,9 +60,27 @@
             "counted": true
         },
         {
+            "input": "-4",
+            "status": 200,
+            "ms": 11,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
             "input": "idk",
             "status": 200,
-            "ms": 4,
+            "ms": 7,
             "value_answer": false,
             "graded": false,
             "calls": 1,
@@ -80,7 +98,7 @@
         {
             "input": "just tell me the answer",
             "status": 200,
-            "ms": 6,
+            "ms": 7,
             "value_answer": false,
             "graded": false,
             "calls": 1,
@@ -96,9 +114,9 @@
             "counted": true
         },
         {
-            "input": "-4",
+            "input": "-6",
             "status": 200,
-            "ms": 7,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -116,7 +134,7 @@
         {
             "input": "can you give me a hint for this one?",
             "status": 200,
-            "ms": 6,
+            "ms": 9,
             "value_answer": false,
             "graded": false,
             "calls": 1,
@@ -132,9 +150,27 @@
             "counted": true
         },
         {
+            "input": "1",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
             "input": "idk",
             "status": 200,
-            "ms": 7,
+            "ms": 8,
             "value_answer": false,
             "graded": false,
             "calls": 1,
@@ -152,7 +188,7 @@
         {
             "input": "just tell me the answer",
             "status": 200,
-            "ms": 7,
+            "ms": 9,
             "value_answer": false,
             "graded": false,
             "calls": 1,
@@ -170,7 +206,7 @@
         {
             "input": "9",
             "status": 200,
-            "ms": 8,
+            "ms": 7,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -186,152 +222,8 @@
             "counted": true
         },
         {
-            "input": "-3",
-            "status": 200,
-            "ms": 8,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "can you give me a hint for this one?",
-            "status": 200,
-            "ms": 8,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "idk",
-            "status": 200,
-            "ms": 8,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "just tell me the answer",
-            "status": 200,
-            "ms": 8,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "enabled:low (per call: a free-text message about the math)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
             "input": "-9",
             "status": 200,
-            "ms": 9,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "can you give me a hint for this one?",
-            "status": 200,
-            "ms": 9,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "idk",
-            "status": 200,
-            "ms": 10,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "just tell me the answer",
-            "status": 200,
-            "ms": 7,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "enabled:low (per call: a free-text message about the math)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "6",
-            "status": 200,
             "ms": 7,
             "value_answer": false,
             "graded": true,
@@ -348,11 +240,11 @@
             "counted": true
         },
         {
-            "input": "can you give me a hint for this one?",
+            "input": "2",
             "status": 200,
-            "ms": 7,
+            "ms": 8,
             "value_answer": false,
-            "graded": false,
+            "graded": true,
             "calls": 1,
             "purposes": [
                 "REPLY"
@@ -366,7 +258,7 @@
             "counted": true
         },
         {
-            "input": "idk",
+            "input": "can you give me a hint for this one?",
             "status": 200,
             "ms": 8,
             "value_answer": false,
@@ -384,6 +276,42 @@
             "counted": true
         },
         {
+            "input": "9",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "idk",
+            "status": 200,
+            "ms": 7,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
             "input": "just tell me the answer",
             "status": 200,
             "ms": 7,
@@ -395,6 +323,42 @@
             ],
             "reasoning": [
                 "enabled:low (per call: a free-text message about the math)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-7",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
             ],
             "outcomes": [
                 "ACCEPTED"
@@ -420,27 +384,9 @@
             "counted": true
         },
         {
-            "input": "can you give me a hint for this one?",
-            "status": 200,
-            "ms": 9,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
             "input": "idk",
             "status": 200,
-            "ms": 9,
+            "ms": 8,
             "value_answer": false,
             "graded": false,
             "calls": 1,
@@ -458,79 +404,7 @@
         {
             "input": "just tell me the answer",
             "status": 200,
-            "ms": 9,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "enabled:low (per call: a free-text message about the math)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "-10",
-            "status": 200,
-            "ms": 7,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "can you give me a hint for this one?",
-            "status": 200,
-            "ms": 7,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "idk",
-            "status": 200,
-            "ms": 7,
-            "value_answer": false,
-            "graded": false,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "just tell me the answer",
-            "status": 200,
-            "ms": 9,
+            "ms": 8,
             "value_answer": false,
             "graded": false,
             "calls": 1,
@@ -548,7 +422,133 @@
         {
             "input": "-6",
             "status": 200,
-            "ms": 10,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-2",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "idk",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "just tell me the answer",
+            "status": 200,
+            "ms": 8,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "enabled:low (per call: a free-text message about the math)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "-10",
+            "status": 200,
+            "ms": 11,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "can you give me a hint for this one?",
+            "status": 200,
+            "ms": 9,
+            "value_answer": false,
+            "graded": false,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "10",
+            "status": 200,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -568,34 +568,65 @@
     "check_answers": {
         "unassisted": 0,
         "unassisted_correct": 0,
-        "with_help": 7,
+        "with_help": 6,
         "held": 0
     },
     "check_causes": {
         "with_help": {
-            "tutor move HELP": 7
+            "tutor move HELP": 6
         },
         "held": []
     },
     "help_moves_on_open_checks": {
-        "HELP": 14
+        "HELP": 6
     },
-    "backstop_holds": 0,
+    "help_moves_with_practice_item": 6,
+    "original_problem": [
+        "waits as the original: prb_8acfd98f9a9f2bef16b71bbe",
+        "original brought back: prb_8acfd98f9a9f2bef16b71bbe",
+        "waits as the original: prb_bec7d23251dd7808ff6f5103",
+        "original brought back: prb_bec7d23251dd7808ff6f5103",
+        "waits as the original: prb_bec7d23251dd7808ff6f5103",
+        "original brought back: prb_bec7d23251dd7808ff6f5103",
+        "waits as the original: prb_47dd9df05c1c7213b2e6d5ff",
+        "original brought back: prb_47dd9df05c1c7213b2e6d5ff",
+        "waits as the original: prb_5ae9631b8b0d1ada886ada0b",
+        "original brought back: prb_5ae9631b8b0d1ada886ada0b",
+        "waits as the original: prb_f1a814f302e0f0d12d2eb540",
+        "original brought back: prb_f1a814f302e0f0d12d2eb540",
+        "waits as the original: prb_eb615ca82b6abd7b16958eb2",
+        "original brought back: prb_eb615ca82b6abd7b16958eb2"
+    ],
     "guards": [],
     "guard_phrases": [],
     "counters": [],
     "repairs": [],
     "holds": [],
     "held_attempts": [],
-    "substitutions": 0,
     "readings": {
         "sent_for_reading": 0,
+        "is_answer_true": 0,
+        "is_answer_false": 0,
         "accepted": 0,
         "rejected": 0,
         "readings_differ": 0,
-        "clarifying_questions_shown": 0,
-        "not_an_answer": 0
+        "clarifying_questions_shown": 0
     },
+    "equation_step": [],
+    "slip_eligibility": {
+        "eligible": 0,
+        "not eligible": 1
+    },
+    "slips": [
+        {
+            "prompt": "Solve 8x + 3 = 19 for x.",
+            "purpose": "CHECK",
+            "entry": "9",
+            "eligible": false,
+            "codes": [],
+            "detail": null
+        }
+    ],
     "ungraded_value_answers": 0,
     "value_answers_graded": 0,
     "empty_replies": 0,
@@ -608,5 +639,5 @@
     },
     "calls": 32,
     "finish_length": 0,
-    "attempts": 9
+    "attempts": 14
 }

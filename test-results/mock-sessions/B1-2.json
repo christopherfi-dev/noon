@@ -5,7 +5,7 @@
         {
             "input": "(start on Q07)",
             "status": 200,
-            "ms": 9,
+            "ms": 7,
             "value_answer": false,
             "graded": false,
             "calls": 2,
@@ -26,7 +26,7 @@
         {
             "input": "5",
             "status": 200,
-            "ms": 7,
+            "ms": 6,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -44,7 +44,7 @@
         {
             "input": "6",
             "status": 200,
-            "ms": 7,
+            "ms": 19,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -62,7 +62,7 @@
         {
             "input": "B",
             "status": 200,
-            "ms": 6,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -80,7 +80,7 @@
         {
             "input": "-10",
             "status": 200,
-            "ms": 7,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -116,7 +116,7 @@
         {
             "input": "5",
             "status": 200,
-            "ms": 9,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -134,7 +134,7 @@
         {
             "input": "2",
             "status": 200,
-            "ms": 8,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -152,7 +152,7 @@
         {
             "input": "-7",
             "status": 200,
-            "ms": 8,
+            "ms": 9,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -188,7 +188,7 @@
         {
             "input": "B",
             "status": 200,
-            "ms": 8,
+            "ms": 10,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -206,7 +206,7 @@
         {
             "input": "6",
             "status": 200,
-            "ms": 9,
+            "ms": 10,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -237,22 +237,40 @@
         "held": []
     },
     "help_moves_on_open_checks": [],
-    "backstop_holds": 0,
+    "help_moves_with_practice_item": 0,
+    "original_problem": [],
     "guards": [],
     "guard_phrases": [],
     "counters": [],
     "repairs": [],
     "holds": [],
     "held_attempts": [],
-    "substitutions": 0,
     "readings": {
         "sent_for_reading": 0,
+        "is_answer_true": 0,
+        "is_answer_false": 0,
         "accepted": 0,
         "rejected": 0,
         "readings_differ": 0,
-        "clarifying_questions_shown": 0,
-        "not_an_answer": 0
+        "clarifying_questions_shown": 0
     },
+    "equation_step": [],
+    "slip_eligibility": {
+        "eligible": 0,
+        "not eligible": 1
+    },
+    "slips": [
+        {
+            "prompt": "Here is an equation: 7(x − 3) = −35. Which of these first steps give an equation with exactly the same solution? Select every one that does.\nA) Multiply both terms in the parentheses by 7: 7x − 21 = −35\nB) Divide only the left side by 7: x − 3 = −35\nC) Add 3 to undo the −3: 7x = −32\nD) Multiply only the x by 7: 7x − 3 = −35",
+            "purpose": "CHECK",
+            "entry": "B",
+            "eligible": false,
+            "codes": [
+                "INVERSE_OPERATION_CHOICE"
+            ],
+            "detail": null
+        }
+    ],
     "ungraded_value_answers": 0,
     "value_answers_graded": 0,
     "empty_replies": 0,

@@ -5,7 +5,7 @@
         {
             "input": "(start on Q06)",
             "status": 200,
-            "ms": 7,
+            "ms": 5,
             "value_answer": false,
             "graded": false,
             "calls": 2,
@@ -26,7 +26,7 @@
         {
             "input": "idk",
             "status": 200,
-            "ms": 6,
+            "ms": 5,
             "value_answer": false,
             "graded": false,
             "calls": 1,
@@ -44,7 +44,7 @@
         {
             "input": "(((",
             "status": 200,
-            "ms": 6,
+            "ms": 5,
             "value_answer": false,
             "graded": false,
             "calls": 1,
@@ -62,7 +62,7 @@
         {
             "input": "x = 6",
             "status": 200,
-            "ms": 8,
+            "ms": 6,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -80,7 +80,7 @@
         {
             "input": "can you explain why that works?",
             "status": 200,
-            "ms": 7,
+            "ms": 5,
             "value_answer": false,
             "graded": false,
             "calls": 1,
@@ -98,7 +98,7 @@
         {
             "input": "???",
             "status": 200,
-            "ms": 8,
+            "ms": 5,
             "value_answer": false,
             "graded": false,
             "calls": 1,
@@ -116,7 +116,7 @@
         {
             "input": "8.0",
             "status": 200,
-            "ms": 9,
+            "ms": 7,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -132,9 +132,9 @@
             "counted": true
         },
         {
-            "input": "-3?",
+            "input": "8?",
             "status": 200,
-            "ms": 9,
+            "ms": 6,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -152,7 +152,7 @@
         {
             "input": "-10",
             "status": 200,
-            "ms": 9,
+            "ms": 7,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -170,7 +170,25 @@
         {
             "input": "6",
             "status": 200,
-            "ms": 9,
+            "ms": 7,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "1",
+            "status": 200,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -204,22 +222,32 @@
     "help_moves_on_open_checks": {
         "HELP": 1
     },
-    "backstop_holds": 0,
+    "help_moves_with_practice_item": 1,
+    "original_problem": [
+        "waits as the original: prb_d39645f8aea3c961a56c8a1b",
+        "original brought back: prb_d39645f8aea3c961a56c8a1b"
+    ],
     "guards": [],
     "guard_phrases": [],
     "counters": [],
     "repairs": [],
     "holds": [],
     "held_attempts": [],
-    "substitutions": 0,
     "readings": {
         "sent_for_reading": 0,
+        "is_answer_true": 0,
+        "is_answer_false": 0,
         "accepted": 0,
         "rejected": 0,
         "readings_differ": 0,
-        "clarifying_questions_shown": 0,
-        "not_an_answer": 0
+        "clarifying_questions_shown": 0
     },
+    "equation_step": [],
+    "slip_eligibility": {
+        "eligible": 0,
+        "not eligible": 0
+    },
+    "slips": [],
     "ungraded_value_answers": 0,
     "value_answers_graded": 0,
     "empty_replies": 0,
@@ -230,7 +258,7 @@
             "ACCEPTED"
         ]
     },
-    "calls": 11,
+    "calls": 12,
     "finish_length": 0,
-    "attempts": 5
+    "attempts": 6
 }

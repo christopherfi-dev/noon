@@ -1,6 +1,6 @@
 // Browser tests (mock mode) for the conversation UI (round 6, updated for
 // round 7), at 390 and 1280 wide: the conversation journey (step back, check
-// card, a message during the check reaching the tutor, help, wrap-up,
+// card, a help request during the check (help, a practice step, the helped check back), wrap-up,
 // summary), the slip pause, UI-01 (mobile keyboard, screen-reader status and
 // no lost answers at 360 wide), UI-02 (safe rendering), UI-03 (skill map),
 // UI-06 (result and check-card contrast) and UI-07 (progress code, welcome
@@ -140,14 +140,18 @@ try {
       && (await page.getByTestId('open-problem-label').textContent()) === 'Check question: on your own';
     await shot('03-check-card');
 
-    // Round 8 §3.1: while a check question is open, a request for help reaches the tutor; the help is recorded and the check becomes practice.
+    // Round 9 §4.3: while a check question is open, a request for help reaches the tutor; the help is recorded,
+    // the reply is shown, then the tutor's smaller practice step; the helped check waits as the original.
     const callsBefore = oracle().calls;
+    const checkPrompt = await page.getByTestId('open-problem').textContent();
     await send(page, 'can you explain this to me first?');
     const afterMessage = await lines(page);
-    checks.helpDuringCheck = afterMessage[afterMessage.length - 1].role === 'tutor' && afterMessage[afterMessage.length - 1].kind === 'message'
+    const n = afterMessage.length;
+    checks.helpDuringCheck = afterMessage[n - 2].role === 'tutor' && afterMessage[n - 2].kind === 'message'
+      && afterMessage[n - 1].role === 'tutor' && afterMessage[n - 1].kind === 'problem'
       && oracle().calls === callsBefore + 1 && (await page.getByTestId('open-problem').getAttribute('data-purpose')) === 'practice'
       && (await page.getByTestId('open-problem-label').textContent()) === 'Practice'
-      && (await page.getByTestId('with-help').count()) === 1;
+      && (await page.getByTestId('open-problem').textContent()) !== checkPrompt;
     await shot('04-help-during-check');
 
     // "I'm stuck": two choices (round 7 §6.4); a hint makes the answer one with help.
@@ -155,7 +159,12 @@ try {
     checks.stuckMenu = JSON.stringify(await menuLabels(page)) === JSON.stringify(['Give me a hint', "I haven't learned this yet"]);
     await page.getByTestId('hint').click();
     await idle(page);
-    checks.withHelp = (await page.getByTestId('with-help').count()) === 1 && (await page.getByTestId('goal').textContent()).includes('You had help on this one');
+    checks.withHelp = (await page.getByTestId('with-help').count()) === 1;
+    await answerCorrectly(page);
+    // The tutor brings the helped check back, shown as practice with help; its answer restarts the run.
+    checks.originalBack = (await page.getByTestId('open-problem').getAttribute('data-purpose')) === 'practice'
+      && (await page.getByTestId('open-problem').textContent()).includes(checkPrompt.replace(/^Check question: on your own/, '').trim().slice(0, 12))
+      && (await page.getByTestId('with-help').count()) === 1 && (await page.getByTestId('goal').textContent()).includes('You had help on this one');
     await answerCorrectly(page);
     checks.helpResets = (await dots(page)).filled === 0;
     await measure();

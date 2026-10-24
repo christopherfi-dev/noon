@@ -7,7 +7,7 @@ use AlgebraEngine\Math\Normalizer;
 
 /**
  * The AI's reading of a student entry may only re-express what the student
- * wrote (architecture v1.6 §4 and §7; round 6 §4.1; round 7 §7.1).
+ * wrote (architecture v1.7 §4 and §7; round 6 §4.1; round 7 §7.1).
  *
  * - Every number in the reading appears in the entry, as digits or as number
  *   words (compounds up to 999).

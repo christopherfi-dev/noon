@@ -2,19 +2,19 @@
 
 | # | Learner input | Calls (purpose: reasoning setting) | Outcomes | Wait ms |
 |---|---|---|---|---|
-| 0 | (start on Q07) | 2 — BINDING: disabled (binding call); REPLY: disabled (per call: none of the three cases) | ACCEPTED, ACCEPTED | 6 |
-| 1 | 55/9 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 5 |
+| 0 | (start on Q07) | 2 — BINDING: disabled (binding call); REPLY: disabled (per call: none of the three cases) | ACCEPTED, ACCEPTED | 7 |
+| 1 | 55/9 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
 | 2 | 2x+12 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
 | 3 | 7x+84 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
-| 4 | I'm stuck: HINT | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
-| 5 | B | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 5 |
+| 4 | I'm stuck: HINT | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
+| 5 | B | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
 | 6 | 3x+15 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
-| 7 | A,C | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 6 |
+| 7 | A,C | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
 | 8 | 8x+8y+88 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
-| 9 | -1 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 7 |
-| 10 | 1 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 11 |
-| 11 | D | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 10 |
-| 12 | 9 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 10 |
+| 9 | -1 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 10 | 1 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 11 | D | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
+| 12 | 9 | 1 — REPLY: disabled (per call: none of the three cases) | ACCEPTED | 8 |
 
 ## Conversation as the student saw it (the last 80 lines the session keeps)
 
@@ -71,18 +71,18 @@
 | Field | Text | Answered problem (attempt) | Open problem |
 |---|---|---|---|
 | student_message | Let's work on solve equations containing parentheses. Start with this practice question, and tell me if anything is unclear. | — | — |
-| student_message | Your answer multiplied only the first term inside the parentheses by 9. Let's practise that part on its own first. What happens to each term inside the parentheses? | prb_a977f6ab063bacbef4d49619 (evt_20b7ab5b074f9991ff1f833c) | — |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_555ab3e9318704f33eecd3ee (evt_e6fdad9dd3113f8e6c06507a) | — |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_de626951d2355c5dcde4dfaa (evt_18b893e34b17f87632499b5a) | — |
-| student_message | Here is a hint: look at what is being done to x, and in what order. What could you undo first while keeping both sides equal? | prb_de626951d2355c5dcde4dfaa (evt_18b893e34b17f87632499b5a) | prb_2f0f78fb4149fab32f0a1584 check |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_2f0f78fb4149fab32f0a1584 (evt_18c06d176581be06c16ad4a1) | — |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_bcfcd1850a47ce7fbf8e952e (evt_58458ce7fc7555af1f95f383) | — |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_2eab7ef1e1b6b8a584f3fed7 (evt_eddd635b345a782843676a65) | — |
-| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. Let's go back to the topic you started with. | prb_acbdf64ba3937b7ae1c00a10 (evt_46d95701f4cf9679b4cb799b) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_66742d5198c8779ae9457fd1 (evt_c7acffb92580a6ca16a18a5e) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_c18c72f67a2fcd888e0525ee (evt_5442905c36ec32e7546edc8e) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_5bcf9edf482d97f05dad42e8 (evt_725b924c63b68ddb370d78d4) | — |
-| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. That completes the work planned for this session. You can look at your summary now. | prb_b52a5a5811591db34c85c312 (evt_0401359b22c26f7087a3478a) | — |
+| student_message | Your answer multiplied only the first term inside the parentheses by 9. Let's practise that part on its own first. What happens to each term inside the parentheses? | prb_8e6a7f336d653c014186c0fe (evt_d4fea8a49dd4260899fd812b) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_b961a43d75da18e1390394a1 (evt_3e549f09b5c15a5fbb6c71df) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_5b0c2e325ba722c8d4ee43bc (evt_0eb9c1dbbac0f57619d468ad) | — |
+| student_message | Here is a hint: look at what is being done to x, and in what order. What could you undo first while keeping both sides equal? | prb_5b0c2e325ba722c8d4ee43bc (evt_0eb9c1dbbac0f57619d468ad) | prb_49d960a6425cdd8fbd41087d check |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_49d960a6425cdd8fbd41087d (evt_e07eb6891844aa7e577b2fef) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_21cd15f18c3e4cc465ae14f5 (evt_eb86028de222c4fb16bb4c28) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. | prb_198df118e48e83490485265b (evt_1b35761d94a93446aa6f0edb) | — |
+| student_message | Yes: you used the distributive property: the number outside multiplies every term inside the parentheses. Let's go back to the topic you started with. | prb_58c028e82de4248801c89f8b (evt_3b973ebccbb1ad797417e4c8) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_684abb3a5da15a0f685d1e4e (evt_3d34a0ae2c8278e2a4b50e99) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_fd58d149f15bb6860a81a982 (evt_46d584c6054c845ca6610edc) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. | prb_b62f72e9ad0e3046e5bcd32d (evt_058c010ea54f721747a938cb) | — |
+| student_message | Yes: you undid the multiplication by the number outside the parentheses and then the number inside, keeping both sides equal. That completes the work planned for this session. You can look at your summary now. | prb_5674749aeabf7a22a621e5da (evt_06ad38784a5677c3083f74ff) | — |
 
 ## Verdicts recorded by code
 
@@ -100,7 +100,7 @@
 | Here is an equation: 2(x − 9) = 4. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply only the x by 2: 2x − 9 = 4 / B) Divide only the left side by 2: x − 9 = 4 / C) Add 9 to undo the −9: 2x = 13 / D) Multiply both terms in the parentheses by 2: 2x − 18 = 4 | CHECK | D | D | CORRECT |  |  |  |
 | Solve 40 = 5(x − 1) for x. | CHECK | 9 | 9 | CORRECT |  |  |  |
 
-## Check answers (round 8 §5)
+## Check answers
 
 | Check problem | Entry | Verdict | Counted as |
 |---|---|---|---|
@@ -113,20 +113,26 @@
 | Here is an equation: 2(x − 9) = 4. Which of these first steps give an equation with exactly the same solution? Select every one that does. / A) Multiply only the x by 2: 2x − 9 = 4 / B) Divide only the left side by 2: x − 9 = 4 / C) Add 9 to undo the −9: 2x = 13 / D) Multiply both terms in the parentheses by 2: 2x − 18 = 4 | D | CORRECT | counted unassisted |
 | Solve 40 = 5(x − 1) for x. | 9 | CORRECT | counted unassisted |
 
-## Help on open check problems and backstop holds
+## Help on open check problems
 
-- Help moves on open checks: HINT 1
+- Help moves on open checks: HINT 1; with a practice item: 0
 - Help recorded on Which of these expressions are equal to 2(x + 12) for every value of x? Select every one that is. / A) 2x + 12 / B) 2x + 24 / C) x + 24 / D) x + 14 (check): I'm stuck: HINT
 
-## Guard findings (logged; the text was shown unchanged)
+## equation_step answers
+
+None.
+
+## Slip eligibility (every answer code found not yet correct)
+
+| Problem | Purpose | Entry | Eligible for the pause | Signatures | Detail sent to the tutor |
+|---|---|---|---|---|---|
+| Solve 9(x + 8) = 63 for x. | PRACTICE | 55/9 | no | FIRST_TERM_ONLY |  |
+
+## Detector signals (logged only; the text was shown unchanged, nothing held)
 
 None.
 
 ## Counters (logged only)
-
-None.
-
-## Prepared-problem substitutions
 
 None.
 

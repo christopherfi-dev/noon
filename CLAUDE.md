@@ -1,86 +1,101 @@
-# Build instructions — Algebra Engine, round 8 design (v1.6 governs the AI tutor)
+# Build instructions — Algebra Engine, round 9 design (v1.7 governs the AI tutor)
 
-This file describes the design on branch `round8-v1-6`, set by
-`CONDUCTOR_ROUND_8.md` on top of `CONDUCTOR_ROUND_7.md` and
-`CONDUCTOR_ROUND_6_v3.md`. Where a conductor file and this file differ, the
-newest conductor file governs. Do not touch `claude/elegant-volta-blu3uj` (the
+This file describes the design on branch `round9-v1-7`, set by
+`CONDUCTOR_ROUND_9.md` on top of `CONDUCTOR_ROUND_8.md`, `CONDUCTOR_ROUND_7.md`
+and `CONDUCTOR_ROUND_6_v3.md`. Where a conductor file and this file differ, the
+newest conductor file governs; `CONDUCTOR_ROUND_9.md` §3 lists the round 8
+behaviours it reverses. Do not touch `claude/elegant-volta-blu3uj` (the
 deployed beta, frozen at `061239c`), the `beta-1.0` tag, `round6-ai-autonomy`,
-`round6-ai-tutor` or `round7-v1-5`. Deploy nothing unless the owner asks.
+`round6-ai-tutor`, `round7-v1-5` or `round8-v1-6`. Deploy nothing unless the
+owner asks.
 
 ## Governing architecture
 
-`architecture/Algebra_Constraint_Architecture_v1.6.md` governs the tutor. It is
+`architecture/Algebra_Constraint_Architecture_v1.7.md` governs the tutor. It is
 loaded byte-identical from `app/private/resources/architecture/` (sha256
-`c5591d3dfa6aa87bf79b026936abce724e71ec9dd3e7316c7c7991553d390b7b`, no trailing
+`afe9a01e82122f8fcb5c9b1c7e12a493d17ab307b14161656accd4e947dc9188`, no trailing
 newline). Activation line:
-`ACE_BOUND: architecture=1.6 | first_principle=truth_over_approval | scope=algebra | role=tutor`.
-v1.1, v1.2, v1.3 and v1.5 stay in `architecture/` as history; the app loads
-v1.6 only. A stored session bound to an older version is rebound on its next
-turn.
+`ACE_BOUND: architecture=1.7 | first_principle=truth_over_approval | scope=algebra | role=tutor`.
+v1.1, v1.2, v1.3, v1.5 and v1.6 stay in `architecture/` as history; the app
+loads v1.7 only. A stored session bound to an older version is rebound on its
+next turn.
 
-`architecture/HOST_REQUIREMENTS_v1.6.md` holds the requirements on code that
-were moved out of the architecture word for word. Code is built and tested
-against it; it is never sent to the model.
+`architecture/HOST_REQUIREMENTS_v1.7.md` holds the requirements on code. Code is
+built and tested against it; it is never sent to the model.
 
-## Working method (CONDUCTOR_ROUND_8.md §0)
+## Working method (CONDUCTOR_ROUND_9.md §0)
 
-1. **The AI is the tutor.** The constraint architecture governs it. Code checks
-   the math, keeps the gradebook, computes goals, writes the report, and handles
-   plumbing and security. Code does not write tutoring text, choose replies, or
-   make teaching decisions.
-2. **Never edit the architecture file.** If it conflicts with the code or the
-   conductor instructions, report the conflict. Do not fix it in the file and do
-   not work around it in code.
-3. **Behaviour guards log; they do not block.** Problems and envelopes that fail
-   mathematical or structural acceptance are repaired once, then held or
-   replaced as the conductor says.
+1. **The AI is the tutor.** Code checks the math, keeps the gradebook, computes
+   goals, writes the report, and handles plumbing and security. Code does not
+   write tutoring text, choose replies, or make teaching decisions.
+2. **Never edit the architecture file.** If you find a conflict, report it.
+3. **Every text detector logs only.** No detector holds a check, changes a
+   count or alters the tutor's text.
 4. **No example responses** in any prompt or model-facing string.
-5. **No cost work of any kind, ever.** No budgets, no estimates, no projections
-   and no balance checks. Cost is not mentioned in reports.
-6. **Report failures; don't fix the architecture.** For every failure seen in a
-   live run, quote the exact transcript lines. Do not propose architecture
-   wording; the architect traces each failure to its line.
-7. Stop where the conductor says to stop, push, and report.
+5. **No cost work of any kind.**
+6. **Model-facing text is exact.** Every sentence the model receives that a
+   conductor file specifies is used word for word. Any other model-facing string
+   added or changed (context labels, observation strings, repair messages) is
+   listed, quoted, in the round's report.
+7. **Stop and ask the owner** before deciding anything not specified that
+   affects what the student sees, what counts toward a goal, or what the tutor
+   is told. Purely technical choices, such as names or file layout, are ours;
+   list them in the report.
+8. **Do not touch** the branches and tag named above. Deploy nothing.
+9. Stop where the conductor says to stop, push, and report.
 
 ## The prompt
 
 Each AI call is built anew. The model receives only: the architecture (system),
 a message headed `OUTPUT CONTRACT` that defines only the envelope's fields and
-when each value is valid (including the `to_mode` value HELP: the tutor helped
-with the open check problem), the activation request and the accepted
-handshake, then one JSON context block. No text from the host requirements, the
-changelog, this file or a conductor file reaches a model request (tested).
+when each value is valid (with the round 9 §4.1 sentences word for word), the
+activation request and the accepted handshake, then one JSON context block (no
+`TRUSTED_SESSION` block; owner's decision). No text from the host requirements,
+the changelog, this file or a conductor file reaches a model request, except
+the contract sentences a conductor file specifies (tested).
 
 ## What code does (as implemented)
 
+- **Identity.** Code captures the session, state revision, triggering event and
+  open problem with each request and attaches them to the reply; identity
+  fields in a reply are ignored. A reply whose revision changed while the call
+  was in flight is discarded before anything is committed. A help move binds
+  to the open problem captured with its request.
 - **Answers and verdicts.** Code computes every typed-answer key from a spec
-  (`SpecMath`, the 14 recipes in `ItemFactory`) and records every verdict. The
-  displayed wording of every scored problem is rendered by code from its
-  verified spec; the AI's wording is not shown as the problem.
+  (`SpecMath`, the recipes in `ItemFactory`, and `equation_step`, practice
+  only: STEP_CORRECT, EQUIVALENT_NOT_STEP, NOT_EQUIVALENT; a non-equation is a
+  rewrite request) and records every verdict. The displayed wording of every
+  problem is rendered by code from its verified spec.
 - **Problem acceptance.** Stated answer equals code's, unique solution, numbers
-  in range, check pattern, fresh numbers, and for check problems only: a
-  single-number answer (or its opposite) is not a number in the problem. A
-  failing problem or envelope gets one repair; if that fails, the turn is a
-  HOLD (`HOLD_LINE`, with a retry), except a check problem that still shows its
-  answer, which a prepared check problem for the same skill replaces (logged).
-  Every prepared problem satisfies the check rule.
-- **Text guards are detectors.** Answer leak, internal vocabulary, mastery and
-  goal claims, help claims (not in the handover sentence before a check card),
-  verdict contradiction and the before-check-card audit are recorded with the
-  exact text. Two counters log only: `RESOLVE_AFTER_CORRECT` and
-  `VALUE_QUESTION_IN_TEXT`. The student sees the AI's text unchanged.
-- **Help on an open check.** A reply during an open check whose move is HELP,
-  HINT, EXPLAIN or ANSWER_QUESTION records `HELP_GIVEN` before it is shown; the
-  check becomes practice and the goal policy applies. "I'm stuck" records help
-  before the AI call, as before. Code never classifies typed text as help.
-- **Held attempts.** A check is held (counting neither for nor against the
-  goal) when the text before its card has a hint, method, strategy or reminder
-  phrase, or its answer from neither the previous problem nor the student's
-  entry; when the tutor's text during it uses its expression, a number from it
-  or its answer with no help move (the backstop); or when the AI raises a
-  verdict conflict in `issue`. Neutral invitations and shared numbers are
-  logged only.
-- **Readings, goals and the report** as in round 7: code checks every reading,
+  in range, check pattern, fresh numbers. A failing problem or envelope gets
+  one repair; if that fails, the turn is a HOLD. There is no answer-in-question
+  rule and no substitution. Code's own problems prefer parameters whose answer
+  is not among the problem's numbers and accept the overlap when none fit.
+- **Text detectors are signals.** Answer leak, internal vocabulary, skill
+  codes, mastery and goal claims, help claims, verdict contradiction, the
+  before-check-card audit and the during-check backstop are recorded with the
+  exact text and hold nothing. Two counters log only:
+  `RESOLVE_AFTER_CORRECT` (substitution checks left out) and
+  `VALUE_QUESTION_IN_TEXT` (expression requests in, operation questions out).
+- **Help on an open check.** Only HELP and HINT count. Such a reply records
+  `HELP_GIVEN` before it is shown; the check becomes practice and the goal
+  policy applies. It may carry a practice item, shown after the reply; the
+  helped check then waits as `ORIGINAL_PROBLEM` (practice only, no check may be
+  posed) until the tutor brings it back (item source `original`), poses a
+  problem on another skill, the topic changes, or the student skips or chooses
+  "I haven't learned this yet". "I'm stuck" records help before the AI call.
+  Code never classifies typed text as help.
+- **Slips.** `SLIP.eligible_for_pause`: expansions only when the other terms
+  match and the constant is a near miss of the product (not a + b, b, a or the
+  product's opposite); signed multiplication and division as before; a bare
+  value of x never. Strings to the tutor state what the answer did, never why.
+- **Holds.** Only a verdict conflict raised in `issue` holds an attempt; help
+  recorded on a held check restarts the run.
+- **Corrections.** `app/tools/correct_attempt.php` (private CLI) appends a
+  `CORRECTION` event; the gradebook applies the latest correction per field,
+  and goals, progress and the stored report are recomputed. The teacher view
+  lists each correction.
+- **Readings, goals and the report** as in round 8: code checks every reading,
   computes goals (three qualifying checks without help; one slip may pause the
   count) and writes the report from the gradebook.
 - **Kept as built:** CSRF, idempotency, revision checks, cookie rules,

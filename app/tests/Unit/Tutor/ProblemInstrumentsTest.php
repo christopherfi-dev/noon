@@ -211,19 +211,47 @@ final class ProblemInstrumentsTest extends TestCase
         $this->assertNotContains($recipes[$ref]['fingerprint'], array_column($again, 'fingerprint'));
     }
 
-    /** Round 8 §3.6: every prepared problem may become a check problem, so every one satisfies the check rule. */
-    public function testPreparedProblemsSatisfyTheCheckRule(): void
+    /**
+     * Round 9 §3.1: prepared problems prefer parameters whose answer is not
+     * among the problem's numbers, accept the overlap when none fit, and are
+     * never withheld because of overlap.
+     */
+    public function testPreparedProblemsPreferNoOverlapAndAcceptIt(): void
     {
         $rec = new Recipes($this->problems);
         $total = 0;
+        $overlap = 0;
         foreach (range(1, 200) as $i) {
             $needed = $i % 2 === 0 ? ['Q07' => ['transfer', 'contrast'], 'E06' => ['transfer', 'contrast']] : [];
             foreach ($rec->pregenerate(['Q04', 'Q05', 'Q06', 'Q07', 'N03', 'N04', 'N05', 'N06', 'N18', 'E06'], RandomSource::seeded('coincide' . $i), [], $needed) as $p) {
                 $total++;
-                $this->assertFalse(ProblemFactory::answerShownInProblem(['purpose' => 'CHECK'] + $p), 'a prepared problem shows its own answer: ' . $p['prompt']);
+                $overlap += ProblemFactory::answerShownInProblem($p) ? 1 : 0;
             }
         }
         $this->assertSame(4000, $total, 'two prepared problems per skill every time');
+        $this->assertSame(0, $overlap, 'with other parameters available, the overlap is avoided');
+        // Every fresh Q05 problem without overlap already used: the overlapping ones are accepted, never nothing.
+        $template = $this->problems->items()->get('ONE_STEP_MULTIPLY');
+        $used = [];
+        foreach (range(-12, 12) as $a) {
+            foreach (range(-12, 12) as $k) {
+                $params = ['a' => $a, 'b' => $a * $k];
+                if ($template->validate($params) === []) {
+                    $p = $this->problems->fromRecipe('ONE_STEP_MULTIPLY', $params, 'PRACTICE');
+                    if (!ProblemFactory::answerShownInProblem($p)) {
+                        $used[] = $p['fingerprint'];
+                    }
+                }
+            }
+        }
+        $accepted = 0;
+        foreach (range(1, 20) as $i) {
+            foreach ($rec->pregenerate(['Q05'], RandomSource::seeded('overlap' . $i), $used) as $p) {
+                $this->assertTrue(ProblemFactory::answerShownInProblem($p), $p['prompt']);
+                $accepted++;
+            }
+        }
+        $this->assertGreaterThan(0, $accepted, 'an overlapping problem is accepted when no other fits');
     }
 
     public function testRetryOnlyAfterASlip(): void

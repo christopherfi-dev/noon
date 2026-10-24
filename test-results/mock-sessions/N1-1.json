@@ -5,7 +5,7 @@
         {
             "input": "(start on E06)",
             "status": 200,
-            "ms": 5,
+            "ms": 8,
             "value_answer": false,
             "graded": false,
             "calls": 2,
@@ -24,9 +24,9 @@
             "counted": true
         },
         {
-            "input": "3X + 7",
+            "input": "2X + 10",
             "status": 200,
-            "ms": 5,
+            "ms": 6,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -42,9 +42,9 @@
             "counted": true
         },
         {
-            "input": "4 x x + 16",
+            "input": "2 x x + 2",
             "status": 200,
-            "ms": 9,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
             "calls": 2,
@@ -63,9 +63,9 @@
             "counted": true
         },
         {
-            "input": "3x + 14",
+            "input": "4x + 30",
             "status": 200,
-            "ms": 12,
+            "ms": 7,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -81,7 +81,7 @@
             "counted": true
         },
         {
-            "input": "24 because I worked it out in my head",
+            "input": "40 because I worked it out in my head",
             "status": 200,
             "ms": 8,
             "value_answer": false,
@@ -120,9 +120,9 @@
             "counted": true
         },
         {
-            "input": "3x+24",
+            "input": "4x+40",
             "status": 200,
-            "ms": 6,
+            "ms": 12,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -138,25 +138,7 @@
             "counted": true
         },
         {
-            "input": "8x+88",
-            "status": 200,
-            "ms": 8,
-            "value_answer": false,
-            "graded": true,
-            "calls": 1,
-            "purposes": [
-                "REPLY"
-            ],
-            "reasoning": [
-                "disabled (per call: none of the three cases)"
-            ],
-            "outcomes": [
-                "ACCEPTED"
-            ],
-            "counted": true
-        },
-        {
-            "input": "D",
+            "input": "3x+18",
             "status": 200,
             "ms": 7,
             "value_answer": false,
@@ -174,7 +156,25 @@
             "counted": true
         },
         {
-            "input": "2x+2y+20",
+            "input": "B,C",
+            "status": 200,
+            "ms": 7,
+            "value_answer": false,
+            "graded": true,
+            "calls": 1,
+            "purposes": [
+                "REPLY"
+            ],
+            "reasoning": [
+                "disabled (per call: none of the three cases)"
+            ],
+            "outcomes": [
+                "ACCEPTED"
+            ],
+            "counted": true
+        },
+        {
+            "input": "54x+27",
             "status": 200,
             "ms": 7,
             "value_answer": false,
@@ -206,22 +206,50 @@
         "held": []
     },
     "help_moves_on_open_checks": [],
-    "backstop_holds": 0,
+    "help_moves_with_practice_item": 0,
+    "original_problem": [],
     "guards": [],
     "guard_phrases": [],
     "counters": [],
     "repairs": [],
     "holds": [],
     "held_attempts": [],
-    "substitutions": 0,
     "readings": {
         "sent_for_reading": 2,
+        "is_answer_true": 2,
+        "is_answer_false": 0,
         "accepted": 2,
         "rejected": 0,
         "readings_differ": 0,
-        "clarifying_questions_shown": 0,
-        "not_an_answer": 0
+        "clarifying_questions_shown": 0
     },
+    "equation_step": [],
+    "slip_eligibility": {
+        "eligible": 1,
+        "not eligible": 1
+    },
+    "slips": [
+        {
+            "prompt": "Expand 2(x + 10). Write your answer without parentheses.",
+            "purpose": "PRACTICE",
+            "entry": "2X + 10",
+            "eligible": false,
+            "codes": [
+                "FIRST_TERM_ONLY"
+            ],
+            "detail": null
+        },
+        {
+            "prompt": "Expand 4(x + 10). Write your answer without parentheses.",
+            "purpose": "CHECK",
+            "entry": "4x + 30",
+            "eligible": true,
+            "codes": [
+                "PRODUCT_FACT"
+            ],
+            "detail": "The other terms match; the constant 30 is a near miss of 4 × 10 = 40."
+        }
+    ],
     "ungraded_value_answers": 0,
     "value_answers_graded": 0,
     "empty_replies": 0,

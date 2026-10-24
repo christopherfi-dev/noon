@@ -22,7 +22,7 @@ use AlgebraEngine\Support\Time;
 
 /**
  * The tutor loop (round 6, as changed by rounds 7 and 8). The AI leads the
- * conversation and decides every move under architecture v1.6; this engine
+ * conversation and decides every move under architecture v1.7; this engine
  * holds the instruments and the guarantees.
  *
  * One learner turn (an answer, a free-text message, or an "I'm stuck"
@@ -404,7 +404,7 @@ final class TutorEngine
         }
         $others = $this->differentReadings($open, $text, $reading);
         if ($others !== []) {
-            // Architecture v1.6 §7: plausible readings that would change the verdict are clarified before anything is graded.
+            // Architecture v1.7 §7: plausible readings that would change the verdict are clarified before anything is graded.
             $t->event('READINGS_DIFFER', ['problem_id' => $open['problem_id'], 'version' => $open['version'], 'entry' => $text, 'readings' => array_merge([$reading['text']], $others),
                 'note' => 'Plausible readings would be scored differently; nothing is recorded until the student clarifies.']);
             $this->clarify($t, $text, $reading, ['kind' => 'ENTRY_NOT_READ', 'entry' => $text, 'reading' => $reading['text'], 'other_readings' => $others,
@@ -1086,10 +1086,10 @@ final class TutorEngine
     }
 
     /**
-     * Round 7 §2.3 and round 8 §2.1: a session stored under an earlier
-     * architecture (1.3 or 1.5) continues under 1.6. Its snapshot takes the
-     * new version, and because the binding's architecture hash no longer
-     * matches, ensureBinding() rebinds it to v1.6 before the next AI call.
+     * Round 7 §2.3, round 8 §2.1 and round 9 §2.1: a session stored under an
+     * earlier architecture (1.3, 1.5 or 1.6) continues under 1.7. Its snapshot
+     * takes the new version, and because the binding's architecture hash no
+     * longer matches, ensureBinding() rebinds it to v1.7 before the next AI call.
      */
     private static function upgrade(array $row): array
     {

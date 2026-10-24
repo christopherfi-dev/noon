@@ -69,7 +69,7 @@ final class TextGuard
      * Round 8 §3.4: when the text is followed directly by a check card, the
      * support words ("on your own", "by yourself", "independently", "without
      * help", "no help") in its last sentence are not flagged; inviting the
-     * student to try a check on their own is accurate (architecture v1.6 §4).
+     * student to try a check on their own is accurate (architecture v1.7 §4).
      * Everywhere else they are flagged as before.
      *
      * @param list<array> $protected problem records whose answers must not appear (the open problem, a retry target, a problem posed now)

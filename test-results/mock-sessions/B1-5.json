@@ -5,7 +5,7 @@
         {
             "input": "(start on Q07)",
             "status": 200,
-            "ms": 5,
+            "ms": 6,
             "value_answer": false,
             "graded": false,
             "calls": 2,
@@ -26,7 +26,7 @@
         {
             "input": "-9",
             "status": 200,
-            "ms": 5,
+            "ms": 6,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -62,7 +62,7 @@
         {
             "input": "A",
             "status": 200,
-            "ms": 7,
+            "ms": 6,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -152,7 +152,7 @@
         {
             "input": "-3",
             "status": 200,
-            "ms": 7,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -170,7 +170,7 @@
         {
             "input": "9",
             "status": 200,
-            "ms": 7,
+            "ms": 8,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -188,7 +188,7 @@
         {
             "input": "C,D",
             "status": 200,
-            "ms": 8,
+            "ms": 7,
             "value_answer": false,
             "graded": true,
             "calls": 1,
@@ -237,22 +237,40 @@
         "held": []
     },
     "help_moves_on_open_checks": [],
-    "backstop_holds": 0,
+    "help_moves_with_practice_item": 0,
+    "original_problem": [],
     "guards": [],
     "guard_phrases": [],
     "counters": [],
     "repairs": [],
     "holds": [],
     "held_attempts": [],
-    "substitutions": 0,
     "readings": {
         "sent_for_reading": 0,
+        "is_answer_true": 0,
+        "is_answer_false": 0,
         "accepted": 0,
         "rejected": 0,
         "readings_differ": 0,
-        "clarifying_questions_shown": 0,
-        "not_an_answer": 0
+        "clarifying_questions_shown": 0
     },
+    "equation_step": [],
+    "slip_eligibility": {
+        "eligible": 0,
+        "not eligible": 1
+    },
+    "slips": [
+        {
+            "prompt": "Here is an equation: 3(x + 4) = 45. Which of these first steps give an equation with exactly the same solution? Select every one that does.\nA) Divide only the left side by 3: x + 4 = 45\nB) Multiply both terms in the parentheses by 3: 3x + 12 = 45\nC) Subtract 4 to undo the 4: 3x = 41\nD) Multiply only the x by 3: 3x + 4 = 45",
+            "purpose": "CHECK",
+            "entry": "A",
+            "eligible": false,
+            "codes": [
+                "INVERSE_OPERATION_CHOICE"
+            ],
+            "detail": null
+        }
+    ],
     "ungraded_value_answers": 0,
     "value_answers_graded": 0,
     "empty_replies": 0,
