@@ -9,10 +9,12 @@ declare(strict_types=1);
  *
  *   php app/tools/tutor_sessions.php --out=DIR [--b1=5] [--descent=3] [--b11=2] [--n1=2] [--help-seeker=0] [--breaker=0]
  *       [--working=0] [--help-on-check=0] [--slips=0] [--step=0] [--r10-targeted=0] [--r10-broad=0] [--save-calls=0] [--only=B1-1,N1-2] [--label=NAME] [--max-turns=30]
+ *       [--metrics-file=METRICS.md] [--metrics-scope=run]
  *   ALGEBRA_CONFIG=/private/config.php php app/tools/tutor_sessions.php --out=DIR ...
  *
  * --only runs the named sessions of the list the counts define; METRICS.md
- * always covers every session file in --out. No cost is estimated (round 8 §0.5).
+ * covers every session file in --out, or with --metrics-scope=run only the
+ * sessions of this invocation (--metrics-file names the file). No cost is estimated (round 8 §0.5).
  *
  * Without ALGEBRA_CONFIG, or with provider 'mock', the mock tutor answers:
  * every output is labelled MOCK and says nothing about a live model, about
@@ -198,7 +200,7 @@ final class RecordingProvider implements ProviderAdapter
     }
 }
 
-$opts = getopt('', ['out:', 'b1::', 'descent::', 'b11::', 'n1::', 'help-seeker::', 'breaker::', 'working::', 'help-on-check::', 'slips::', 'step::', 'r10-targeted::', 'r10-broad::', 'save-calls::', 'only::', 'label::', 'max-turns::']);
+$opts = getopt('', ['out:', 'b1::', 'descent::', 'b11::', 'n1::', 'help-seeker::', 'breaker::', 'working::', 'help-on-check::', 'slips::', 'step::', 'r10-targeted::', 'r10-broad::', 'save-calls::', 'metrics-file::', 'metrics-scope::', 'only::', 'label::', 'max-turns::']);
 $out = $opts['out'] ?? '';
 if ($out === '') {
     fwrite(STDERR, "Usage: [ALGEBRA_CONFIG=/private/config.php] php tutor_sessions.php --out=DIR [--b1=5] [--descent=3] [--b11=2] [--n1=2] [--label=NAME]\n");
@@ -1387,6 +1389,11 @@ foreach (glob($out . '/*.json') ?: [] as $f) {
         $all[] = $j;
     }
 }
+// --metrics-scope=run: only the sessions of this invocation (e.g. one part of a round's live run); default: every session file in --out.
+if (($opts['metrics-scope'] ?? '') === 'run') {
+    $names = array_column($scripts, 0);
+    $all = array_values(array_filter($all, fn ($j) => in_array($j['name'], $names, true)));
+}
 usort($all, fn ($a, $b) => strnatcmp($a['name'], $b['name']));
 $tot = ['histogram' => [], 'waits' => [], 'guards' => [], 'phrases' => [], 'repairs' => [], 'holds' => [], 'held' => [], 'readings' => [], 'counters' => [], 'help_moves' => [],
     'with_help' => [], 'held_causes' => [], 'steps' => [], 'slips' => [], 'checks' => ['unassisted' => 0, 'unassisted_correct' => 0, 'with_help' => 0, 'held' => 0]];
@@ -1515,7 +1522,8 @@ foreach ($tot['histogram'] as $k => $n) {
 $r .= "\nTurns with exactly one call: " . ($tot['histogram']['1'] ?? 0) . " of $total (" . ($total ? round(100 * ($tot['histogram']['1'] ?? 0) / $total) : 0) . "%). The first turn of each session also makes the binding call; an entry the AI must read makes a reading call first; a rejected output makes one repair call.\n\n";
 $r .= "## Latency per turn (targets: median ≤ " . $app->config->int('latency_target_median_ms') . " ms, slowest ≤ " . $app->config->int('latency_target_slowest_ms') . " ms)\n\n"
     . 'Median ' . ($med === null ? '—' : (int) $med . ' ms') . ', slowest ' . ($tot['waits'] === [] ? '—' : max($tot['waits']) . ' ms') . ' over ' . count($tot['waits']) . ' turns.' . ($live ? '' : ' (Mock: not meaningful.)') . "\n";
-file_put_contents($out . '/METRICS.md', $r);
+$metricsFile = basename((string) ($opts['metrics-file'] ?? 'METRICS.md')) ?: 'METRICS.md';
+file_put_contents($out . '/' . $metricsFile, $r);
 @unlink($db);
-echo "Wrote " . count($scripts) . " transcripts; METRICS.md covers " . count($all) . " sessions in $out\n";
+echo "Wrote " . count($scripts) . " transcripts; $metricsFile covers " . count($all) . " sessions in $out\n";
 echo 'Calls per turn: ' . json_encode($tot['histogram']) . "\n";
