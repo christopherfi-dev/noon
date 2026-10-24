@@ -230,12 +230,29 @@ final class EngineUnitsTest extends TestCase
     {
         $contract = TutorPrompt::OUTPUT_CONTRACT;
         $this->assertStringStartsWith("OUTPUT CONTRACT\n", $contract);
-        $this->assertStringContainsString('architecture_version is "1.6"', $contract);
-        $this->assertStringContainsString('HELP means you helped with the open check problem', $contract, 'round 8 §3.1: HELP is defined as a field value');
-        foreach (['message_type', 'item', 'source recipe', 'source spec', 'source retry', 'stated_answer', 'purpose', 'proposed_transition', 'SLIP_CHECK is valid only when SLIP.confirmed is true',
+        $this->assertStringContainsString("\narchitecture_version is \"1.7\".\n", $contract, 'round 9 §4.1 item 1: its own line');
+        // Round 9 §4.1: the sentences the conductor specifies, word for word.
+        $exact = [
+            'During an open check problem, HELP or HINT means your reply helps with that check; use one of them for every reply that helps with it, even when the reply answers the student\'s question. ANSWER_QUESTION and EXPLAIN never mean help with an open check problem.',
+            'During an open check problem, a reply whose to_mode is HELP or HINT may also carry an item with purpose practice.',
+            'SLIP_CHECK is valid only when SLIP.eligible_for_pause is true',
+            'equation_step: spec is {kind, expression, operation, operand}; expression is a linear equation in x; operation is add, subtract, multiply or divide; operand is a number, not zero for multiply or divide; stated_answer is the resulting equation; purpose is practice.',
+            'is_answer is false when the entry contains no offered answer to OPEN_PROBLEM; an entry may offer an answer together with working, a question or a request for help, and then text is the offered answer in plain notation; otherwise text is null;',
+        ];
+        foreach ($exact as $sentence) {
+            $this->assertStringContainsString($sentence, $contract);
+        }
+        $this->assertStringContainsString('numeric_step: a short calculation on numbers. equation_step:', $contract, 'item 5: after the numeric_step definition');
+        $this->assertStringContainsString('Any item is valid only when ALLOWED.may_pose_problem is true. During an open check problem, a reply whose to_mode is HELP or HINT', $contract, 'item 3: after that sentence');
+        foreach (['Identity:', 'TRUSTED_SESSION', 'session_id', 'state_revision', 'reply_to_event_id', 'HELP means you helped', 'SLIP.confirmed', 'is_answer is true when'] as $gone) {
+            $this->assertStringNotContainsString($gone, $contract, 'round 9 §4.1 removes ' . $gone);
+        }
+        foreach (['message_type', 'item', 'source recipe', 'source spec', 'source retry', 'source original', 'stated_answer', 'purpose', 'proposed_transition',
             'is_answer', 'other_readings', 'clarifying_question', 'teacher_report: null'] as $field) {
             $this->assertStringContainsString($field, $contract, 'defines ' . $field);
         }
+        // The specified sentences define field values; the behaviour-rule scan covers everything else.
+        $contract = str_replace($exact, '', $contract);
         foreach (['/\bnever\b/i', '/\bdo not\b/i', '/\bdon\'t\b/i', '/\byou may ask\b/i', '/\bmastery\b/i', '/\bon your own\b/i', '/\bwithout help\b/i', '/\bhint\b/i',
             '/verdict is final/i', '/must not contain any number/i', '/every number of the spec must appear/i', '/carries no authority/i', '/recorded as yours/i', '/speak to the student/i',
             '/expected value|answer key|matched the key|guided step|assisted|criterion/i'] as $rule) {

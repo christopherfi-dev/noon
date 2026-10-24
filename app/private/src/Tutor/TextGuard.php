@@ -13,18 +13,17 @@ use AlgebraEngine\Support\LearnerText;
 use AlgebraEngine\Support\ProblemText;
 
 /**
- * Detectors on every learner-visible AI text (architecture v1.6 §5.5; round 7
- * §4; round 8 §3). They log; they do not block, repair or replace: the student
- * sees the AI's text unchanged, and each finding is recorded with the exact
- * text, the guard's name and the problem and response it relates to. The only
- * findings that change anything are the held-attempt cases, decided by the
- * engine: help before a check card, help during an open check (the round 8
- * backstop), and a verdict conflict raised in the envelope's issue.
+ * Detectors on every learner-visible AI text (round 7 §4; round 8 §3; round 9
+ * §3.2 and §4.6). Every detector logs only: none blocks, repairs or replaces
+ * the text, holds a check or changes a count. The student sees the AI's text
+ * unchanged, and each finding is recorded as a signal with the exact text,
+ * the guard's name and the problem and response it relates to.
  *
  * Guards: ANSWER_LEAK (open or upcoming problem), INTERNAL_VOCABULARY,
- * MASTERY_OR_GOAL_CLAIM, HELP_CLAIM, VERDICT_CONTRADICTION, TEXT_LENGTH, and
- * the before-check-card audit (CHECK_CARD_ANSWER, CHECK_CARD_ANSWER_SIGNAL,
- * CHECK_CARD_PHRASE, CHECK_CARD_INVITATION, CHECK_CARD_SHARED_NUMBER).
+ * SKILL_CODE, MASTERY_OR_GOAL_CLAIM, HELP_CLAIM, VERDICT_CONTRADICTION,
+ * TEXT_LENGTH, and the before-check-card audit (CHECK_CARD_ANSWER,
+ * CHECK_CARD_ANSWER_SIGNAL, CHECK_CARD_PHRASE, CHECK_CARD_INVITATION,
+ * CHECK_CARD_SHARED_NUMBER).
  */
 final class TextGuard
 {
@@ -45,14 +44,14 @@ final class TextGuard
     /**
      * The phrase audit for text before a check card. Round 7 §5 built it from
      * the round 6 forward-looking list; round 8 §3.3 keeps on it only hints,
-     * methods, strategies and reminders directed at a new problem. A hit holds
-     * the check attempt.
+     * methods, strategies and reminders directed at a new problem. A hit is
+     * logged as a signal (round 9 §3.2).
      */
-    public const HOLD_PHRASES = ['remember', 'make sure', "don't forget", 'dont forget', 'do not forget', 'when you',
+    public const CARD_PHRASES = ['remember', 'make sure', "don't forget", 'dont forget', 'do not forget', 'when you',
         'hint', 'tip', 'careful', 'watch out', 'watch for', 'look out for', 'keep in mind', 'start by', 'start with', 'begin by',
         'same way', 'same method', 'same strategy', 'same steps', 'same idea', 'do the same', 'like before', 'as before', 'just like', 'apply'];
 
-    /** Round 8 §3.3: neutral invitations ("next", "try" and the like) before a check card are logged, phrase by phrase, and hold nothing. */
+    /** Round 8 §3.3: neutral invitations ("next", "try" and the like) before a check card are logged, phrase by phrase. */
     public const INVITATION_PHRASES = ['next', 'try', 'one more', 'another one', 'your turn', 'have a go', 'give it a go'];
 
     /** §2.1: openings that state the opposite of code's verdict. */
@@ -60,6 +59,9 @@ final class TextGuard
     private const AFFIRM_ANYWHERE = '/\byour\s+answer\s+(?:is|was)\s+(?:correct|right)\b/i';
     private const DENY = '/^\W*(?:incorrect|wrong|not\s+quite|not\s+right|not\s+correct|that\'?s\s+(?:not|wrong|incorrect)|that\s+is\s+(?:not|wrong|incorrect))\b/i';
     private const DENY_ANYWHERE = '/\byour\s+answer\s+(?:is|was)\s+(?:not\s+(?:correct|right)|incorrect|wrong)\b/i';
+
+    /** Round 9 §4.6: a skill code (Q07, E06) in learner text: one capital letter from the curriculum's prefixes and two digits, standing alone. */
+    private const SKILL_CODE = '/(?<![\p{L}\p{N}_])[ACDEFGHILMNPQRSUX]\d{2}(?![\p{L}\p{N}_])/u';
 
     /**
      * Detectors that apply to every learner-visible AI text.
@@ -87,6 +89,9 @@ final class TextGuard
         $terms = LearnerText::internalTerms($text);
         if ($terms !== []) {
             $out[] = self::finding('INTERNAL_VOCABULARY', implode(', ', $terms));
+        }
+        if (($codes = self::skillCodes($text)) !== []) {
+            $out[] = self::finding('SKILL_CODE', implode(', ', $codes)) + ['codes' => $codes];
         }
         if (($claims = self::masteryClaims($text)) !== []) {
             $out[] = self::finding('MASTERY_OR_GOAL_CLAIM', implode(', ', $claims));
@@ -135,6 +140,13 @@ final class TextGuard
         return implode(' ', $all);
     }
 
+    /** @return list<string> the skill codes written in the text */
+    public static function skillCodes(string $text): array
+    {
+        preg_match_all(self::SKILL_CODE, $text, $m);
+        return array_values(array_unique($m[0]));
+    }
+
     /** @return list<string> the mastery or goal claims found */
     public static function masteryClaims(string $text): array
     {
@@ -180,16 +192,14 @@ final class TextGuard
     }
 
     /**
-     * The before-check-card audit (round 7 §5, round 8 §3.3 and §3.5). Text
-     * before a check card refers only to the previous answer. A hint, method,
-     * strategy or reminder phrase holds the attempt. The check's answer holds
-     * it only when it comes from neither the previous problem (its numbers and
-     * answer) nor the student's entry; otherwise it is a signal. Neutral
-     * invitations and a number shared with the check are logged only
-     * (architecture v1.6 §5.3).
+     * The before-check-card audit (round 7 §5, round 8 §3.3 and §3.5). Every
+     * finding is a signal (round 9 §3.2): a hint, method, strategy or reminder
+     * phrase; the check's answer, with where it may come from (the previous
+     * problem, its answer, or the student's entry); neutral invitations; and a
+     * number shared with the check. Nothing is held.
      *
      * @param array{problems?:list<array>,entries?:list<string>} $previous the previous problem(s) and the student's entries this text may refer to
-     * @return array{findings:list<array>,hold:bool,phrases:list<string>,invitations:list<string>,shared:list<string>,answer_in_text:bool,answer_source:?string}
+     * @return array{findings:list<array>,phrases:list<string>,invitations:list<string>,shared:list<string>,answer_in_text:bool,answer_source:?string}
      */
     public static function beforeCheckCard(string $text, array $problem, array $previous = []): array
     {
@@ -197,31 +207,31 @@ final class TextGuard
         $written = array_merge(Numbers::digits($text), array_map('strval', Numbers::words($text)));
         $shared = array_values(array_unique(array_intersect($problem['numbers'], $written)));
         if ($shared !== []) {
-            $findings[] = self::finding('CHECK_CARD_SHARED_NUMBER', 'shares numbers with the check question: ' . implode(', ', $shared) . ' (a signal; nothing is held)', $problem);
+            $findings[] = self::finding('CHECK_CARD_SHARED_NUMBER', 'shares numbers with the check question: ' . implode(', ', $shared), $problem);
         }
         $leak = self::leaks($text, $problem);
         $source = $leak ? self::answerSource($problem, $previous) : null;
         if ($leak && $source === null) {
             $findings[] = self::finding('CHECK_CARD_ANSWER', 'contains the check question\'s answer', $problem);
         } elseif ($leak) {
-            $findings[] = self::finding('CHECK_CARD_ANSWER_SIGNAL', 'contains a number equal to the check question\'s answer that comes from ' . $source . ' (a signal; nothing is held)', $problem);
+            $findings[] = self::finding('CHECK_CARD_ANSWER_SIGNAL', 'contains a number equal to the check question\'s answer that comes from ' . $source, $problem);
         }
-        $phrases = self::phrasesIn($text, self::HOLD_PHRASES);
+        $phrases = self::phrasesIn($text, self::CARD_PHRASES);
         if ($phrases !== []) {
             $findings[] = self::finding('CHECK_CARD_PHRASE', 'directed at the new problem: ' . implode(', ', $phrases), $problem) + ['phrases' => $phrases];
         }
         $invitations = self::phrasesIn($text, self::INVITATION_PHRASES);
         if ($invitations !== []) {
-            $findings[] = self::finding('CHECK_CARD_INVITATION', 'a neutral invitation: ' . implode(', ', $invitations) . ' (logged; nothing is held)', $problem) + ['phrases' => $invitations];
+            $findings[] = self::finding('CHECK_CARD_INVITATION', 'a neutral invitation: ' . implode(', ', $invitations), $problem) + ['phrases' => $invitations];
         }
-        return ['findings' => $findings, 'hold' => ($leak && $source === null) || $phrases !== [], 'phrases' => $phrases, 'invitations' => $invitations,
+        return ['findings' => $findings, 'phrases' => $phrases, 'invitations' => $invitations,
             'shared' => $shared, 'answer_in_text' => $leak, 'answer_source' => $source];
     }
 
     /**
-     * Round 8 §3.2, the backstop: during an open check, text that contains the
-     * check's expression or a number from it, and carries no help move, holds
-     * the check. Text with neither (a refusal, say) records nothing.
+     * The round 8 backstop, a signal since round 9 §3.2: during an open check,
+     * text that contains the check's expression, a number from it or its
+     * answer, and carries no help move, is logged.
      *
      * @return array{expression:bool,numbers:list<string>,answer:bool}
      */

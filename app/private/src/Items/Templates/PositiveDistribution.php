@@ -68,7 +68,7 @@ final class PositiveDistribution extends AbstractTemplate
         return PolynomialSignatures::match($outcome, ['x'], [
             ['FIRST_TERM_ONLY', 'matches distribution-to-first-term-only (the factor multiplied only the first term inside the parentheses)', 'A07', "$a*x+$b"],
             ['SECOND_TERM_ONLY', 'matches distribution-to-second-term-only (the factor multiplied only the constant)', 'A07', 'x+' . ($a * $b)],
-        ], ['PRODUCT_FACT', 'matches the correct structure with a multiplication-fact error in a coefficient', 'N18', $this->answerSpec($p)['expected']]);
+        ], ['PRODUCT_FACT', 'matches the expected terms with at least one coefficient different', 'N18', $this->answerSpec($p)['expected']]);
     }
 
     public function signatureFeedback(array $p, string $code): ?string

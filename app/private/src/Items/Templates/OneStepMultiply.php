@@ -70,7 +70,7 @@ final class OneStepMultiply extends AbstractTemplate
     {
         $s = intdiv($p['b'], $p['a']);
         return $this->matchScalar($outcome, [
-            ['QUOTIENT_SIGN', 'matches the correct size with the opposite sign (sign of a quotient)', 'N06', self::r(-$s)],
+            ['QUOTIENT_SIGN', 'matches the correct size with the opposite sign', 'N06', self::r(-$s)],
             ['MULTIPLIED', 'matches multiplying by the coefficient instead of dividing', 'Q03', self::r($p['a'] * $p['b'])],
             ['RECIPROCAL', 'matches dividing the coefficient by the constant', 'Q03', self::r($p['a'], $p['b'])],
             ['SUBTRACTED', 'matches subtracting the coefficient instead of dividing', 'Q03', self::r($p['b'] - $p['a'])],

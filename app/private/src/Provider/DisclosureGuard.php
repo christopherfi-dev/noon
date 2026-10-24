@@ -98,7 +98,8 @@ final class DisclosureGuard
             $n = $value->num();
             $word = self::WORDS[abs($n)] ?? null;
             if ($word !== null) {
-                $pattern = $n < 0 ? '/\b(minus|negative)\s+' . $word . '\b/' : '/(?<!minus |negative )\b' . $word . '\b/';
+                // Round 9 §4.6: a number word counts only as a standalone word ("two-step" is not 2).
+                $pattern = $n < 0 ? '/\b(minus|negative)\s+' . $word . '(?![\w-])/' : '/(?<!minus |negative )(?<![\w-])' . $word . '(?![\w-])/';
                 if (preg_match_all($pattern, $text, $m, PREG_OFFSET_CAPTURE)) {
                     foreach ($m[0] as [$found, $offset]) {
                         if ($n !== 1 || !self::oneAsDeterminer($text, $offset, $offset + strlen($found))) {
@@ -270,12 +271,28 @@ final class DisclosureGuard
         return (string) preg_replace('/\b(?:positive|negative|plus|minus)s?(?=\s+(?:' . self::OPERAND_NOUNS . ')\b)/', ' ', $text);
     }
 
+    /**
+     * Round 9 §4.6: an option letter counts only when it stands alone, never
+     * inside a formula such as a(b + c) or a(x + b) = c. Parenthesised groups
+     * that hold an operator are removed before the letters are looked for.
+     */
+    private static function withoutFormulas(string $text): string
+    {
+        do {
+            $before = $text;
+            $text = (string) preg_replace('/\([^()]*[+\-*\/=^][^()]*\)/', ' ', $text);
+        } while ($text !== $before);
+        return $text;
+    }
+
     private static function classificationHit(string $text, array $letters, array $options): bool
     {
         $text = self::withoutOperandSignWords(self::withoutAlternatives($text, $options));
+        $letterText = self::withoutFormulas($text);
         foreach ($letters as $letter) {
             $l = strtolower((string) $letter);
-            if (preg_match('/\b(option|choice|answer|letter)\s*(is\s*)?\(?' . $l . '\)?(?![a-z])/', $text) || preg_match('/(?<![a-z])' . $l . '\)/', $text)) {
+            if (preg_match('/\b(option|choice|answer|letter)\s*(is\s*)?\(?' . $l . '\)?(?![a-z0-9(])/', $letterText)
+                || preg_match('/(?:^|(?<=[\s(]))(?<![+\-*\/=^]\s)' . $l . '\)/', $letterText)) {
                 return true;
             }
         }

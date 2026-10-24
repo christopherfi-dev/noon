@@ -103,7 +103,7 @@ final class DistributionTransfer extends AbstractTemplate
                 ['NOT_EVERY_TERM', 'matches the factor reaching some but not all terms', 'A07', "$a*x+$a*y+$q"],
             ];
         return PolynomialSignatures::match($outcome, $this->vars($p), $patterns,
-            ['PRODUCT_FACT', 'matches the correct structure with a multiplication-fact error in a coefficient', 'N18', $this->answerSpec($p)['expected']]);
+            ['PRODUCT_FACT', 'matches the expected terms with at least one coefficient different', 'N18', $this->answerSpec($p)['expected']]);
     }
 
     public function signatureFeedback(array $p, string $code): ?string

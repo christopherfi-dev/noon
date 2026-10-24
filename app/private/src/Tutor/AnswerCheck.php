@@ -8,6 +8,7 @@ use AlgebraEngine\Checking\ClassificationChecker;
 use AlgebraEngine\Checking\EquationStepCheck;
 use AlgebraEngine\Checking\ExactRationalChecker;
 use AlgebraEngine\Checking\PolynomialChecker;
+use AlgebraEngine\Items\Fmt;
 use AlgebraEngine\Items\ItemFactory;
 use AlgebraEngine\Math\ScalarParser;
 
@@ -20,6 +21,10 @@ use AlgebraEngine\Math\ScalarParser;
 final class AnswerCheck
 {
     public const EQUIVALENT_NOT_STEP_LABEL = 'has the same solution as the starting equation, but its sides are not the equation after this step';
+
+    /** Round 9 §4.4: the observation sent for an answer one away from the solution of an equation; it states what the answer did. */
+    public const DIFFERENCE_LABEL = 'The answer {got} differs from the solution by {difference}.';
+    public const DIFFERENCE_CODES = ['ARITH_FINAL_PLUS', 'ARITH_FINAL_MINUS', 'ARITH_OFF_BY_ONE'];
 
     public function __construct(private ItemFactory $factory)
     {
@@ -49,6 +54,13 @@ final class AnswerCheck
         if ($problem['template_id'] !== null && $problem['params'] !== null) {
             $signatures = $this->factory->get($problem['template_id'])->matchSignatures($problem['params'], $text, $o);
         }
+        foreach ($signatures as $i => $s) {
+            if (in_array($s['code'], self::DIFFERENCE_CODES, true) && $o->normalizedResponse !== null) {
+                $got = ScalarParser::parse($o->normalizedResponse);
+                $difference = $got->sub(ScalarParser::parse((string) $problem['answer']['expected']))->abs();
+                $signatures[$i]['label'] = strtr(self::DIFFERENCE_LABEL, ['{got}' => Fmt::n($got), '{difference}' => Fmt::n($difference)]);
+            }
+        }
         if ($problem['answer']['kind'] === 'equation_step' && $o->observation === EquationStepCheck::EQUIVALENT_NOT_STEP) {
             // Round 9 §4.5: an observation for the tutor; it states what the entry did.
             $signatures[] = ['code' => EquationStepCheck::EQUIVALENT_NOT_STEP, 'label' => self::EQUIVALENT_NOT_STEP_LABEL, 'branch' => null];
@@ -61,7 +73,7 @@ final class AnswerCheck
             'clarification' => $o->clarification,
             'form_issue' => $o->formIssue,
             'signatures' => $signatures,
-            'slip' => SlipCheck::confirm($problem, $o, $signatures),
+            'slip' => SlipCheck::eligible($problem, $o, $signatures),
         ];
     }
 }

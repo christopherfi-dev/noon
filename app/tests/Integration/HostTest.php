@@ -215,8 +215,8 @@ final class HostTest extends TestCase
         $this->assertStringNotContainsString('INJECT_SKILLS', $system);
         $ctx = TutorLoopTest::context($h);
         $this->assertSame($evil, $ctx['TURN']['entry'], 'learner text appears only as data');
-        $this->assertSame($h->sessionId(), $ctx['TRUSTED_SESSION']['session_id']);
-        $this->assertNotSame(999, $ctx['TRUSTED_SESSION']['state_revision']);
+        $this->assertArrayNotHasKey('TRUSTED_SESSION', $ctx, 'round 9 (owner\'s decision): no identity block; code attaches identity itself');
+        $this->assertNotSame(999, $h->row()['revision'], 'the revision is code\'s');
         $this->assertNotContains('Z99', array_column($ctx['CURRICULUM'], 'skill_id'));
         $this->assertSame([], $h->attempts(), 'a message is not an answer');
     }

@@ -15,13 +15,14 @@ final class Numbers
     /**
      * Absolute numeric literals written with digits, normalised: "007" → "7",
      * "2.50" → "2.5". A sign is not part of a number; "3/4" gives 3 and 4.
+     * Digits inside a code such as Q07 are not a number (round 9 §4.6).
      *
      * @return list<string>
      */
     public static function digits(string $text): array
     {
         $text = Normalizer::normalize($text);
-        preg_match_all('/(?<![\d.])\d+(?:\.\d+)?(?![\d])/', $text, $m);
+        preg_match_all('/(?<![\d.\p{L}_])\d+(?:\.\d+)?(?![\d])/u', $text, $m);
         return array_values(array_unique(array_map([self::class, 'canonical'], $m[0])));
     }
 
@@ -72,7 +73,9 @@ final class Numbers
     /**
      * Number-word phrases in lower-case text, longest first at each position:
      * [unit] hundred [and] [tens[-unit] | unit], tens[-unit], or a unit.
-     * Words in a phrase are separated by spaces or one hyphen only.
+     * Words in a phrase are separated by spaces or one hyphen only. A phrase
+     * joined by a hyphen to another word ("two-step", "one-to-one") is part of
+     * that word, not a number (round 9 §4.6).
      *
      * @return list<array{value:int,start:int,end:int,text:string}> byte offsets
      */
@@ -115,7 +118,11 @@ final class Numbers
                 $i++;
                 continue;
             }
-            $out[] = ['value' => $value, 'start' => $w[$i]['s'], 'end' => $w[$j - 1]['e'], 'text' => substr($lower, $w[$i]['s'], $w[$j - 1]['e'] - $w[$i]['s'])];
+            $start = $w[$i]['s'];
+            $end = $w[$j - 1]['e'];
+            if (!preg_match('/\p{L}-$/u', substr($lower, 0, $start)) && !preg_match('/^-\p{L}/u', substr($lower, $end))) {
+                $out[] = ['value' => $value, 'start' => $start, 'end' => $end, 'text' => substr($lower, $start, $end - $start)];
+            }
             $i = $j;
         }
         return $out;

@@ -132,7 +132,8 @@ final class TutorLoopTest extends TestCase
         }
         $this->assertSame(['Q07' => 2, 'Q06' => 2, 'E06' => 2], $bySkill, 'two prepared problems per relevant skill');
         $this->assertCount(10, $ctx['CURRICULUM'], 'the ten-skill slice');
-        foreach (['TRUSTED_SESSION', 'TURN', 'CODE_RESULT', 'ANSWERED_PROBLEM', 'OPEN_PROBLEM', 'GOALS', 'GRADEBOOK', 'RECENT_CONVERSATION', 'TOPIC', 'FOCUS', 'CHECK_PATTERNS', 'PROBLEM_LIMITS', 'OUTPUT_CONTRACT'] as $block) {
+        $this->assertArrayNotHasKey('TRUSTED_SESSION', $ctx, 'round 9: removed (owner\'s decision)');
+        foreach (['TURN', 'CODE_RESULT', 'ANSWERED_PROBLEM', 'OPEN_PROBLEM', 'GOALS', 'GRADEBOOK', 'RECENT_CONVERSATION', 'TOPIC', 'FOCUS', 'CHECK_PATTERNS', 'PROBLEM_LIMITS', 'OUTPUT_CONTRACT'] as $block) {
             $this->assertArrayHasKey($block, $ctx);
         }
         $calls = array_values(array_filter($h->mock->log, fn ($c) => $c['json']));
@@ -507,13 +508,16 @@ final class TutorLoopTest extends TestCase
         $allowed = $flat($architecture);
         $sources = array_merge([ALGEBRA_REPO_ROOT . '/architecture/HOST_REQUIREMENTS_v1.7.md', ALGEBRA_REPO_ROOT . '/architecture/HOST_REQUIREMENTS_v1.6.md', ALGEBRA_REPO_ROOT . '/architecture/CHANGELOG.md', ALGEBRA_REPO_ROOT . '/CLAUDE.md'],
             glob(ALGEBRA_REPO_ROOT . '/CONDUCTOR_*.md') ?: []);
+        // Round 9 §0.6 and §4.1: a conductor file specifies output-contract sentences word for word; those reach the model by design.
+        $contract = $flat(\AlgebraEngine\Tutor\TutorPrompt::OUTPUT_CONTRACT);
         $checked = [];
         foreach ($sources as $file) {
             $this->assertFileExists($file);
+            $conductor = str_starts_with(basename($file), 'CONDUCTOR_');
             $plain = (string) preg_replace(['/`+/', '/\*\*?/', '/^#+\s*/m', '/^\s*(?:[-*>]|\d+\.)\s+/m', '/\|/'], ['', '', '', '', ' '], (string) file_get_contents($file));
             foreach (preg_split('/(?<=[.!?;:])\s+|\n+/u', $plain) ?: [] as $fragment) {
                 $fragment = $flat($fragment);
-                if (mb_strlen($fragment) < 30 || str_contains($allowed, $fragment)) {
+                if (mb_strlen($fragment) < 30 || str_contains($allowed, $fragment) || ($conductor && str_contains($contract, trim($fragment, '"')))) {
                     continue;
                 }
                 $checked[basename($file)] = ($checked[basename($file)] ?? 0) + 1;

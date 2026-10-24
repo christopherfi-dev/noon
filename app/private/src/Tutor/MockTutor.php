@@ -126,10 +126,17 @@ final class MockTutor implements ProviderAdapter
             case 'MESSAGE':
                 $text = mb_strtolower((string) ($turn['entry'] ?? ''));
                 if (($ctx['OPEN_PROBLEM']['purpose'] ?? null) === 'check') {
-                    // Architecture v1.6 §2 (Recorded Help): a request for help on an open check gets the smallest step, marked as help.
+                    // A request for help on an open check gets the smallest step, marked as help, with a practice problem
+                    // on the same skill in the same envelope (round 9 §4.1 item 3); the helped check then waits as the original.
                     if (preg_match('/\b(help|hint|stuck|explain|idk|no idea)\b|don\'?t know|not sure how/', $text)) {
-                        $env['student_message'] = 'Let\'s take the smallest step together: what is being done to x first, and how could you undo it?';
-                        $env['proposed_transition'] = $this->move('HELP', $focus);
+                        $skill = $ctx['OPEN_PROBLEM']['skill_id'];
+                        $env['student_message'] = 'Let\'s take a smaller step first: undo one operation at a time, keeping both sides equal. Try this one, then we will go back to your question.';
+                        $env['proposed_transition'] = $this->move('HELP', $skill);
+                        $ref = $this->recipe($ctx, $skill, 'practice');
+                        if ($ref !== null) {
+                            $env['message_type'] = 'QUESTION';
+                            $env['item'] = ['purpose' => 'practice', 'skill_id' => $skill, 'source' => 'recipe', 'recipe_ref' => $ref, 'spec' => null, 'prompt' => '', 'stated_answer' => null];
+                        }
                         return $env;
                     }
                     return $this->say($env, preg_match('/\banswer\b/', $text) ? 'I won\'t give you the answer to this one, but I can help you take a first step.' : 'Let\'s keep going with this question.', $focus);
@@ -160,6 +167,15 @@ final class MockTutor implements ProviderAdapter
         $purpose = $result['problem']['purpose'];
         if ($result['result'] === 'CORRECT') {
             $named = 'Yes: ' . (self::RULES[$skill] ?? 'you used the right steps') . '.';
+            $original = $ctx['ORIGINAL_PROBLEM'] ?? null;
+            if ($original !== null && $ctx['ALLOWED']['may_pose_problem']) {
+                // Round 9 §4.3: back to the helped problem, now practice.
+                $env['student_message'] = $named . ' Now go back to the earlier question.';
+                $env['message_type'] = 'QUESTION';
+                $env['item'] = ['purpose' => 'practice', 'skill_id' => $original['skill_id'], 'source' => 'original', 'recipe_ref' => null, 'spec' => null, 'prompt' => '', 'stated_answer' => null];
+                $env['proposed_transition'] = $this->move('CONTINUE', $original['skill_id']);
+                return $env;
+            }
             if ($slip['retry_available']) {
                 $env['student_message'] = $named . ' Now try the earlier check question again.';
                 $env['message_type'] = 'QUESTION';
@@ -181,7 +197,7 @@ final class MockTutor implements ProviderAdapter
         if ($result['result'] === 'PARTIAL') {
             return $this->pose($env, $ctx, $skill, 'practice', 'Your expression has the right value. Write it without parentheses and with like terms combined.', 'CONTINUE');
         }
-        if ($result['slip'] !== null && $slip['confirmed']) {
+        if ($result['slip'] !== null && $slip['eligible_for_pause']) {
             $step = $result['slip']['sub_step'];
             $env['student_message'] = 'You set this up the right way. One small calculation went wrong.';
             $env['message_type'] = 'QUESTION';
@@ -213,6 +229,8 @@ final class MockTutor implements ProviderAdapter
         $others = [];
         if (str_word_count($text) > 10 || preg_match('/[<>;$\{\}\\\\]/', $text)) {
             // A long message, or something that looks like code, is a message, not an answer.
+        } elseif (preg_match('/\b(?:i|we|you)\s+(?:added|subtracted|multiplied|divided|took|moved|put|did|got\s+rid)\b/', $text) && !preg_match('/\banswer\b|=/', $text)) {
+            // Working with no offered answer (round 9 §4.1 item 6): not an answer.
         } elseif (preg_match('/^\s*(-?\d+)\s*x\s+x\s*$/', $text, $m)) {
             $reading = $m[1] . 'x';
         } elseif (preg_match('/^[\d\sx+\-]+$/', $text) && preg_match('/\d\s*x\s+x(?![\p{L}])/u', $text)) {
@@ -308,12 +326,8 @@ final class MockTutor implements ProviderAdapter
 
     private function base(array $ctx, string $type): array
     {
-        $s = $ctx['TRUSTED_SESSION'];
         return [
             'architecture_version' => '1.7',
-            'session_id' => $s['session_id'],
-            'state_revision' => $s['state_revision'],
-            'reply_to_event_id' => $s['event_id'],
             'message_type' => $type,
             'student_message' => '',
             'item' => null,

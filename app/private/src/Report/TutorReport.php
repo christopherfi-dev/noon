@@ -131,7 +131,8 @@ final class TutorReport
         }
 
         $learner = $this->learner($perSkill, $topics, $goals, $help, $moves);
-        $teacher = $this->teacher($perSkill, $topics, $goals, $help, $moves, $audit, $slips, $readings, $open, $status, $provider, $row['engine']['progress']['earlier'] ?? [], $held);
+        $teacher = $this->teacher($perSkill, $topics, $goals, $help, $moves, $audit, $slips, $readings, $open, $status, $provider, $row['engine']['progress']['earlier'] ?? [], $held,
+            array_values(array_filter($attempts, fn ($a) => $a['corrections'] !== [])));
         $report = $this->record($snap, $attempts, $goals, $perSkill, $topics, $moves, $status, $provider, $now);
         return [
             'report' => $report,
@@ -262,7 +263,34 @@ final class TutorReport
         'VERDICT_CONFLICT' => 'result under review',
     ];
 
-    private function teacher(array $perSkill, array $topics, array $goals, array $help, array $moves, array $audit, array $slips, array $readings, array $open, string $status, string $provider, array $earlier, array $held = []): array
+    /** Round 9 §4.7: how a corrected value is named in the teacher view. */
+    public const CORRECTION_WORDS = [
+        'with_help' => 'with help', 'without_help' => 'without help',
+        'CORRECT' => 'correct', 'INCORRECT' => 'incorrect', 'PARTIAL' => 'partly correct',
+    ];
+
+    /**
+     * Round 9 §4.7 (owner's decision): one teacher line per correction, with
+     * the problem, the field, the old and new value, the reason and the date.
+     * The learner view shows only the corrected counts.
+     *
+     * @param list<array> $corrected attempts with at least one correction
+     * @return list<string>
+     */
+    private function correctionLines(array $corrected): array
+    {
+        $lines = [];
+        foreach ($corrected as $a) {
+            foreach ($a['corrections'] as $c) {
+                $word = fn ($v) => self::CORRECTION_WORDS[$v] ?? strtolower((string) $v);
+                $lines[] = 'On “' . $a['prompt'] . '”, the recorded ' . ($c['field'] === 'help' ? 'help' : 'result') . ' was corrected from ' . $word($c['previous'])
+                    . ' to ' . $word($c['value']) . ($c['at'] !== null ? ' on ' . substr((string) $c['at'], 0, 10) : '') . ': ' . rtrim(trim((string) $c['reason']), '.') . '.';
+            }
+        }
+        return $lines;
+    }
+
+    private function teacher(array $perSkill, array $topics, array $goals, array $help, array $moves, array $audit, array $slips, array $readings, array $open, string $status, string $provider, array $earlier, array $held = [], array $corrected = []): array
     {
         $skills = [];
         foreach ($perSkill as $id => $s) {
@@ -364,6 +392,7 @@ final class TutorReport
                 $section('Small slips', $slipLines, 'No slips were confirmed.'),
                 $section('Answers read from the student\'s wording', $readLines, 'Every answer was read as typed.'),
                 $section('Held check answers', $heldLines, 'No check answers were held.'),
+                ...($corrected === [] ? [] : [$section('Corrections', $this->correctionLines($corrected), '')]),
                 ['heading' => 'Before check questions (audit)', 'lines' => SummaryView::unique($auditLines), 'empty' => 'No forward-looking words were used before a check question.'],
                 $section('Still open or not checked', $open, 'Nothing listed.'),
                 $section('What would show more', $next, 'Nothing listed.'),

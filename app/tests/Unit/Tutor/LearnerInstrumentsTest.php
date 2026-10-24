@@ -166,14 +166,27 @@ final class LearnerInstrumentsTest extends TestCase
 
     public function testOtherSlipSignatures(): void
     {
+        // Round 9 §4.4.2: a bare value of x is never eligible; the arithmetic signatures stay observations, stating what the answer did.
         $q07 = $this->problems->fromRecipe('GROUPED_LINEAR', ['a' => 3, 'b' => 4, 'c' => 27], 'CHECK'); // x = 5
-        $this->assertSame('ARITH_FINAL_PLUS', $this->checker->check($q07, '6')['slip']['code']);
-        $this->assertSame(['ARITH_FINAL_MINUS', '9 - (4)', '5'], [$this->checker->check($q07, '4')['slip']['code'], $this->checker->check($q07, '4')['slip']['micro']['expression'], $this->checker->check($q07, '4')['slip']['micro']['answer']]);
+        foreach (['6' => ['ARITH_FINAL_PLUS', 'The answer 6 differs from the solution by 1.'], '4' => ['ARITH_FINAL_MINUS', 'The answer 4 differs from the solution by 1.']] as $entry => [$code, $label]) {
+            $r = $this->checker->check($q07, (string) $entry);
+            $this->assertNull($r['slip'], 'not eligible: ' . $entry);
+            $this->assertSame([[$code], [$label]], [array_column($r['signatures'], 'code'), array_column($r['signatures'], 'label')]);
+        }
         $this->assertNull($this->checker->check($q07, '9')['slip'], '27/3 = 9 without removing the 4 is not a slip');
+        $q06 = $this->problems->fromRecipe('TWO_STEP', ['a' => 3, 'b' => 4, 'c' => 19], 'CHECK'); // x = 5
+        $r = $this->checker->check($q06, '6');
+        $this->assertNull($r['slip']);
+        $this->assertSame(['ARITH_OFF_BY_ONE'], array_column($r['signatures'], 'code'));
+        $this->assertSame('The answer 6 differs from the solution by 1.', $r['signatures'][0]['label']);
+        // Round 9 §4.4.3: signed arithmetic keeps its rule; the detail states what the answer did.
         $n05 = $this->problems->fromRecipe('SIGNED_MULTIPLY', ['a' => -6, 'b' => 7], 'CHECK');
-        $this->assertSame('MAGNITUDE', $this->checker->check($n05, '-48')['slip']['code']);
+        $this->assertSame(['MAGNITUDE', 'The sign matches; the size is a near miss of 6 × 7 = 42.'], [$this->checker->check($n05, '-48')['slip']['code'], $this->checker->check($n05, '-48')['slip']['detail']]);
         $this->assertNull($this->checker->check($n05, '42')['slip'], 'a sign error is not a slip');
         $this->assertNull($this->checker->check($n05, '-40')['slip'], 'not a times-table neighbour');
+        $n06 = $this->problems->fromRecipe('SIGNED_DIVIDE', ['a' => -42, 'b' => 7], 'CHECK'); // −6
+        $this->assertSame('The sign matches; the size is a near miss of 42 ÷ 7 = 6.', $this->checker->check($n06, '-7')['slip']['detail']);
+        $this->assertNull($this->checker->check($n06, '7')['slip']);
     }
 
     // ------------------------------------------------------ gradebook and goals
@@ -301,15 +314,16 @@ final class LearnerInstrumentsTest extends TestCase
         $this->assertSame([], TextGuard::contradicts('You multiplied both terms by 7.', 'CORRECT'));
     }
 
-    /** Round 7 §5: a shared number is a signal; the check's answer or a phrase directed at it holds the attempt. */
+    /** Round 9 §3.2: before a check card, a shared number, the check's answer and a phrase directed at it are all signals; nothing holds. */
     public function testTextBeforeACheckCard(): void
     {
         $card = $this->problems->fromRecipe('GROUPED_LINEAR', ['a' => 4, 'b' => -3, 'c' => 28], 'CHECK'); // 4(x − 3) = 28, x = 10
         $guards = fn (array $r) => array_column($r['findings'], 'guard');
         $r = TextGuard::beforeCheckCard('You divided both sides by 4 first.', $card);
-        $this->assertSame([['CHECK_CARD_SHARED_NUMBER'], false, ['4']], [$guards($r), $r['hold'], $r['shared']], 'a shared number is logged and holds nothing');
+        $this->assertArrayNotHasKey('hold', $r, 'round 9 §3.2: the audit holds nothing');
+        $this->assertSame([['CHECK_CARD_SHARED_NUMBER'], ['4']], [$guards($r), $r['shared']], 'a shared number is logged');
         $r = TextGuard::beforeCheckCard('You divided both sides first, then undid the subtraction.', $card);
-        $this->assertSame([[], false], [$guards($r), $r['hold']]);
+        $this->assertSame([], $guards($r));
         $r = TextGuard::beforeCheckCard('Twenty-eight is a lot.', $card);
         $this->assertSame(['28'], $r['shared'], 'compound number words are detected before a check card');
         $r = TextGuard::beforeCheckCard('Twenty is a lot.', $card);
@@ -317,21 +331,20 @@ final class LearnerInstrumentsTest extends TestCase
         $r = TextGuard::beforeCheckCard('Three times something gives the total.', $this->problems->fromRecipe('GROUPED_LINEAR', ['a' => 3, 'b' => 4, 'c' => 27], 'CHECK'));
         $this->assertSame(['3'], $r['shared'], 'a number word for a number in the new problem');
         $r = TextGuard::beforeCheckCard('That works out to 10 in the end.', $card);
-        $this->assertSame([true, ['CHECK_CARD_ANSWER']], [$r['hold'], $guards($r)], 'the check\'s answer, from nowhere, holds the attempt');
+        $this->assertSame([true, ['CHECK_CARD_ANSWER']], [$r['answer_in_text'], $guards($r)], 'the check\'s answer, from nowhere, is logged');
         // Round 8 §3.5: the same number from the previous problem or the student's entry is a signal only.
         $previous = $this->problems->fromRecipe('GROUPED_LINEAR', ['a' => 2, 'b' => 3, 'c' => 26], 'PRACTICE'); // 2(x + 3) = 26, x = 10
         $r = TextGuard::beforeCheckCard('That works out to 10 in the end.', $card, ['problems' => [$previous], 'entries' => ['10']]);
-        $this->assertSame([false, ['CHECK_CARD_ANSWER_SIGNAL'], 'the previous problem\'s answer'], [$r['hold'], $guards($r), $r['answer_source']]);
+        $this->assertSame([['CHECK_CARD_ANSWER_SIGNAL'], 'the previous problem\'s answer'], [$guards($r), $r['answer_source']]);
         $r = TextGuard::beforeCheckCard('You wrote 10 there.', $card, ['problems' => [], 'entries' => ['x = 10']]);
-        $this->assertSame([false, 'the student\'s entry'], [$r['hold'], $r['answer_source']]);
+        $this->assertSame('the student\'s entry', $r['answer_source']);
         $r = TextGuard::beforeCheckCard('Good. Next, try this one and remember to check both sides. When you finish, make sure you don\'t forget the sign.', $card);
-        $this->assertTrue($r['hold']);
-        $this->assertSame(['remember', 'make sure', "don't forget", 'when you'], $r['phrases'], 'round 8 §3.3: hints, methods, strategies and reminders hold, phrase by phrase');
+        $this->assertSame(['remember', 'make sure', "don't forget", 'when you'], $r['phrases'], 'round 8 §3.3: hints, methods, strategies and reminders are logged, phrase by phrase');
         $this->assertSame(['next', 'try'], $r['invitations'], 'neutral invitations are logged');
         $r = TextGuard::beforeCheckCard('Here is one more to try.', $card);
-        $this->assertSame([false, ['CHECK_CARD_INVITATION'], ['try', 'one more']], [$r['hold'], $guards($r), $r['invitations']], 'a neutral invitation holds nothing');
+        $this->assertSame([['CHECK_CARD_INVITATION'], ['try', 'one more']], [$guards($r), $r['invitations']], 'a neutral invitation is logged');
         foreach (['Careful with the sign.', 'Start by dividing.', 'Use the same steps as before.', 'Here is a hint: divide.', 'Keep in mind the order.'] as $text) {
-            $this->assertTrue(TextGuard::beforeCheckCard($text, $card)['hold'], 'a hint, method, strategy or reminder: ' . $text);
+            $this->assertSame(['CHECK_CARD_PHRASE'], $guards(TextGuard::beforeCheckCard($text, $card)), 'a hint, method, strategy or reminder, logged: ' . $text);
         }
     }
 

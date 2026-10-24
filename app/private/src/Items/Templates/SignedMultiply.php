@@ -59,7 +59,7 @@ final class SignedMultiply extends AbstractTemplate
         $prod = $p['a'] * $p['b'];
         return $this->matchScalar($outcome, [
             ['SIGN_FLIP', 'matches the correct size with the opposite sign', 'N02', self::r(-$prod)],
-            ['MAGNITUDE', 'matches the correct sign with a different size (multiplication fact)', 'N18',
+            ['MAGNITUDE', 'matches the correct sign with a different size', 'N18',
                 fn (Rational $r) => $r->sign() === ($prod <=> 0) && !$r->abs()->equals(self::r(abs($prod)))],
         ]);
     }

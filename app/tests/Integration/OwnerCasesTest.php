@@ -79,7 +79,7 @@ final class OwnerCasesTest extends TestCase
         $g = $h->goal('E06');
         $this->assertSame([1, true], [$g['count'], $g['paused']], 'the run is paused, not reset');
         $ctx = TutorLoopTest::context($h);
-        $this->assertTrue($ctx['SLIP']['confirmed']);
+        $this->assertTrue($ctx['SLIP']['eligible_for_pause']);
         $this->assertSame('7 * 5', $ctx['CODE_RESULT']['slip']['sub_step']['expression']);
         // The tutor's micro-question is a practice spec; code renders its wording and checks the reply.
         $this->assertSame('practice', $h->view['open_problem']['purpose']);

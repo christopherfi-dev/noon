@@ -12,11 +12,13 @@ namespace AlgebraEngine\Tutor;
  *
  * Ledger events:
  *   PROBLEM_PRESENTED  problem_id, version, purpose, skill_id, source, kind, template_id, variant_id, prompt, fingerprint, retry_of
- *   HELP_GIVEN         problem_id, version, choice (HINT | NOT_LEARNED from "I'm stuck"; HELP | HINT | EXPLAIN | ANSWER_QUESTION
- *                      with source TUTOR_MOVE from a help move during an open check, round 8 §3.1; EXPLAIN and TYPED_STUCK in round 6 records)
+ *   HELP_GIVEN         problem_id, version, choice (HINT | NOT_LEARNED from "I'm stuck"; HELP | HINT with source TUTOR_MOVE from a
+ *                      help move during an open check, round 9 §3.3; EXPLAIN and ANSWER_QUESTION in round 8 records; EXPLAIN and
+ *                      TYPED_STUCK in round 6 records)
  *   ATTEMPT_RECORDED   problem_id, version, entry, read_as, reading_note, verdict, normalized, signatures, points_to, slip, response_sha256, scope
  *   PROBLEM_CLOSED     problem_id, version, reason (ANSWERED | SKIPPED | NOT_LEARNED | SET_ASIDE | SESSION_ENDED)
- *   CHECK_HELD         problem_id, version, reason (HELP_BEFORE_CHECK | HELP_DURING_CHECK, the round 8 backstop): attempts on it are held
+ *   CHECK_HELD         problem_id, version, reason (HELP_BEFORE_CHECK | HELP_DURING_CHECK): written in round 8 records only; round 9
+ *                      §3.2 makes every text detector a logged signal. Attempts on such a problem stay held.
  *   ATTEMPT_HELD       attempt_id, problem_id, reason (VERDICT_CONFLICT): that attempt is held
  *
  *   PROBLEM_WAITING    problem_id, version: a check with help waits as the original problem (round 9 §4.3)

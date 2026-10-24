@@ -32,6 +32,13 @@ use AlgebraEngine\Support\ProblemText;
  * VALUE_QUESTION_IN_TEXT: a question in student_message that asks for a
  * number, expression or equation while item is null.
  *
+ * Round 9 §4.6: RESOLVE_AFTER_CORRECT leaves out substitution checks (a side
+ * of the problem with the answer put in for x, as in "4·10 + 6 = 46 checks
+ * out", and the rest of that chain); VALUE_QUESTION_IN_TEXT also counts a
+ * request for an expression ("what is … written as", "how would you write …
+ * as …") and leaves out a question that asks for an operation ("what is the
+ * opposite of adding 2?").
+ *
  * HEURISTIC, declared scope: equations are the runs of mathematical text
  * that contain "="; values are digits only, for linear equations only, and
  * are the values of the problem's sub-expressions at its solution (and of the
@@ -58,11 +65,16 @@ final class Counters
         $problemSides = $main === '' ? [] : array_map('trim', explode('=', $main));
         $answerFlat = self::flat((string) $problem['answer']['expected']);
         $hits = [];
+        $checks = [];
         foreach (ProblemText::runs($text) as $run) {
             if (!str_contains($run, '=')) {
                 continue;
             }
             $sides = array_map('trim', explode('=', $run));
+            if (self::substitutionCheck($sides, $problem)) {
+                $checks[] = $run;
+                continue;
+            }
             for ($i = 0; $i + 1 < count($sides); $i++) {
                 [$l, $r] = [$sides[$i], $sides[$i + 1]];
                 if ($l === '' || $r === '') {
@@ -78,8 +90,9 @@ final class Counters
                 }
             }
         }
+        $rest = str_replace($checks, ' ', $text);
         foreach (self::values($problem, $student) as $value) {
-            if (in_array($value, Numbers::digits($text), true)) {
+            if (in_array($value, Numbers::digits($rest), true)) {
                 $hits[] = 'value ' . $value;
             }
         }
@@ -101,6 +114,73 @@ final class Counters
     }
 
     // ------------------------------------------------------------ resolve after correct
+
+    /**
+     * A chain of equal sides in which one side is a side of the problem (a
+     * linear equation) with the answer put in for x: a check by substitution,
+     * not a step on the way to the answer.
+     *
+     * @param list<string> $sides
+     */
+    private static function substitutionCheck(array $sides, array $problem): bool
+    {
+        if ($problem['kind'] !== 'linear_equation') {
+            return false;
+        }
+        try {
+            $patterns = EquationParser::parse(Normalizer::normalize(ProblemText::main($problem['prompt'])), ['x']);
+            $x0 = ScalarParser::parse((string) $problem['answer']['expected']);
+        } catch (MathInputError) {
+            return false;
+        }
+        foreach ($sides as $side) {
+            try {
+                $n = ExpressionParser::parse(Normalizer::normalize($side), ['x']);
+            } catch (MathInputError) {
+                continue;
+            }
+            foreach ($patterns as $pattern) {
+                if (self::hasVar($pattern) && self::substituted($n, $pattern, $x0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /** True when $n is $pattern with each x written as the number $x0. */
+    private static function substituted(Node $n, Node $pattern, Rational $x0): bool
+    {
+        if ($pattern instanceof VarRef) {
+            $v = self::hasVar($n) ? null : self::literal($n);
+            return $v !== null && $v->equals($x0);
+        }
+        if ($n instanceof Group && !($pattern instanceof Group)) {
+            return self::substituted($n->inner, $pattern, $x0);
+        }
+        if ($pattern instanceof Group) {
+            return self::substituted($n instanceof Group ? $n->inner : $n, $pattern->inner, $x0);
+        }
+        return match (true) {
+            $pattern instanceof Num => $n instanceof Num && $n->value->equals($pattern->value),
+            $pattern instanceof Neg => $n instanceof Neg && self::substituted($n->operand, $pattern->operand, $x0),
+            $pattern instanceof BinOp => $n instanceof BinOp && $n->op === $pattern->op
+                && self::substituted($n->left, $pattern->left, $x0) && self::substituted($n->right, $pattern->right, $x0),
+            $pattern instanceof Pow => $n instanceof Pow && $n->exponent === $pattern->exponent && self::substituted($n->base, $pattern->base, $x0),
+            default => false,
+        };
+    }
+
+    /** The value of a number written alone: 10, −8, (−8). */
+    private static function literal(Node $n): ?Rational
+    {
+        return match (true) {
+            $n instanceof Num => $n->value,
+            $n instanceof Neg => self::literal($n->operand)?->neg(),
+            $n instanceof Group => self::literal($n->inner),
+            default => null,
+        };
+    }
 
     private static function isStep(string $l, string $r, array $problem, array $vars, array $problemSides, string $answerFlat, array $studentFlat): bool
     {
@@ -351,6 +431,10 @@ final class Counters
     {
         $l = mb_strtolower(Normalizer::normalize(str_replace("\u{2019}", "'", $q)), 'UTF-8');
         $math = preg_match('/\d|(?<![\p{L}])x(?![\p{L}])|=/u', $l) === 1;
+        // Round 9 §4.6: a request for an expression counts.
+        if (preg_match('/\bwhat\s+(?:is|\'s|are|was|would|does)\b.*\bwritten\s+as\b|\bhow\s+(?:would|could|can|do|does|did|might|should|will)\s+(?:you|we)\s+(?:write|rewrite|express)\b.*\bas\b/u', $l)) {
+            return true;
+        }
         if (preg_match('/^\W*(?:why\b|how\s+(?:did|do|does|would|could|can|might)\b|do\s+you\b|did\s+you\b|would\s+you\b|are\s+you\b|can\s+you\s+explain\b|could\s+you\s+explain\b|does\s+that\b|is\s+that\b|ready\b|want\b|shall\b)/u', $l)) {
             return false;
         }
@@ -365,7 +449,8 @@ final class Counters
         }
         $action = '/\bwhat\s+(?:is|\'s|are|was)\s+(?:the\s+|a\s+|your\s+)?(?:first\s+|next\s+|last\s+|same\s+|other\s+|best\s+)?(?:step|operation|rule|property|idea|reason|thing|way|method|strategy|pattern|mistake|difference\s+between|connection|goal)\b'
             . '|\bwhat\s+(?:do|did|would|should|could|can|will|might)\s+(?:you|we)\s+(?:do|notice|think|see|try|need\s+to\s+do|want|remember)\b|\bwhat\s+happens\b|\bwhat\s+(?:operation|step|rule|property)\b'
-            . '|\bwhat\s+(?:is|\'s|are)\s+(?:being|happening|done|attached)\b/u';
+            . '|\bwhat\s+(?:is|\'s|are)\s+(?:being|happening|done|attached)\b'
+            . '|\bwhat\s+(?:is|\'s|was)\s+the\s+(?:opposite|inverse|reverse)\s+(?:operation\s+)?(?:of|to)\b|\b(?:what|which)\s+(?:single\s+|one\s+)?operations?\b/u';
         if (preg_match($action, $l)) {
             return false;
         }

@@ -11,48 +11,49 @@ use AlgebraEngine\Math\Rational;
 use AlgebraEngine\Math\ScalarParser;
 
 /**
- * Round 6 §4.4: code confirms a slip only when the recipe's slip signature
- * matches — the structure is correct and there is one lower-level arithmetic
- * error (7x + 25 for 7(x + 5)). A slip the structure contradicts (9x + 8 for
- * 9(x + 8): only the x was multiplied) is never confirmed.
+ * Round 9 §4.4: code decides whether a wrong answer is eligible for the slip
+ * pause (SLIP.eligible_for_pause).
  *
- * With each confirmed slip code names the sub-step that went wrong, as a
- * numeric_step spec the AI may use for its micro-question.
+ *   Expansions (POSITIVE_DISTRIBUTION, DISTRIBUTION_TRANSFER): every term but
+ *   the constant matches the answer, and the wrong constant is a times-table
+ *   neighbour of the product a × b (a × (b ± 1) or (a ± 1) × b) or differs
+ *   from it in exactly one digit by exactly 1, and is none of a + b, b, a or
+ *   −(a × b). For 7(x + 5): 7x + 25 and 7x + 30 are eligible; 7x + 95,
+ *   7x + 12 and 7x − 35 are not. A product with a factor of 1 is never one
+ *   (round 6 rule, kept).
+ *   Linear equations: a bare value of x is never eligible; the arithmetic
+ *   signatures stay observations.
+ *   Signed multiplication and division: the right sign and a times-table
+ *   neighbour of the right size (unchanged).
+ *
+ * The detail sent to the tutor states what the answer did, never why. With
+ * each eligible slip code names the sub-step, as a numeric_step spec the AI
+ * may use for its micro-question.
  */
 final class SlipCheck
 {
+    public const EXPANSION = 'The other terms match; the constant {got} is a near miss of {a} × {b} = {product}.';
+    public const MULTIPLICATION = 'The sign matches; the size is a near miss of {a} × {b} = {product}.';
+    public const DIVISION = 'The sign matches; the size is a near miss of {a} ÷ {b} = {quotient}.';
+
     /**
      * @param list<array{code:string}> $signatures
      * @return array{code:string,detail:string,micro:array{kind:string,expression:string,answer:string}}|null
      */
-    public static function confirm(array $problem, CheckOutcome $o, array $signatures): ?array
+    public static function eligible(array $problem, CheckOutcome $o, array $signatures): ?array
     {
         if ($o->verdict !== 'INCORRECT' || $o->normalizedResponse === null || $problem['params'] === null) {
             return null;
         }
         $codes = array_column($signatures, 'code');
-        $p = $problem['params'];
         try {
             switch ($problem['template_id']) {
                 case 'POSITIVE_DISTRIBUTION':
                 case 'DISTRIBUTION_TRANSFER':
-                    return in_array('PRODUCT_FACT', $codes, true) ? self::productSlip($problem, $o->normalizedResponse) : null;
-                case 'GROUPED_LINEAR':
-                case 'GROUPED_LINEAR_TRANSFER':
-                    $code = in_array('ARITH_FINAL_PLUS', $codes, true) ? 'ARITH_FINAL_PLUS' : (in_array('ARITH_FINAL_MINUS', $codes, true) ? 'ARITH_FINAL_MINUS' : null);
-                    if ($code === null) {
-                        return null;
-                    }
-                    $quotient = intdiv($p['c'] - ($p['d'] ?? 0), $p['a']);
-                    return self::slip($code, 'The steps were right; the last subtraction was off by one.', $quotient . ' - (' . $p['b'] . ')', $quotient - $p['b']);
-                case 'TWO_STEP':
-                    if (!in_array('ARITH_OFF_BY_ONE', $codes, true)) {
-                        return null;
-                    }
-                    return self::slip('ARITH_OFF_BY_ONE', 'The steps were right; the last division was off by one.', ($p['c'] - $p['b']) . ' / ' . $p['a'], intdiv($p['c'] - $p['b'], $p['a']));
+                    return self::expansionSlip($problem, $o->normalizedResponse);
                 case 'SIGNED_MULTIPLY':
                 case 'SIGNED_DIVIDE':
-                    return in_array('MAGNITUDE', $codes, true) ? self::factSlip($problem['template_id'], $p, ScalarParser::parse($o->normalizedResponse)) : null;
+                    return in_array('MAGNITUDE', $codes, true) ? self::factSlip($problem['template_id'], $problem['params'], ScalarParser::parse($o->normalizedResponse)) : null;
             }
         } catch (MathInputError) {
             return null;
@@ -60,32 +61,58 @@ final class SlipCheck
         return null;
     }
 
-    /** E06: same terms as the answer, exactly one coefficient wrong, and it is a product the student had to work out (no factor of 1). */
-    private static function productSlip(array $problem, string $normalized): ?array
+    private static function expansionSlip(array $problem, string $normalized): ?array
     {
         $vars = $problem['variables'] ?: ['x'];
         $r = Polynomial::fromNode(ExpressionParser::parse($normalized, $vars));
         $key = Polynomial::fromNode(ExpressionParser::parse((string) $problem['answer']['expected'], $vars));
-        $p = $problem['params'];
-        // Coefficients that are products the student computed: monomial key => [factor, factor].
-        $products = match ($problem['template_id']) {
-            'POSITIVE_DISTRIBUTION' => ['' => [$p['a'], $p['b']]],
-            default => $p['form'] === 'COEFF_INSIDE' ? ['x' => [$p['a'], $p['p']], '' => [$p['a'], $p['q']]] : ['' => [$p['a'], $p['q']]],
-        };
-        $wrong = [];
-        foreach (array_merge([''], $vars) as $k) {
-            if (!$r->coefficientOf($k)->equals($key->coefficientOf($k))) {
-                $wrong[] = $k;
-            }
-        }
-        if (count($wrong) !== 1 || !isset($products[$wrong[0]])) {
+        if ($r->degree() > 1) {
             return null;
         }
-        [$f1, $f2] = $products[$wrong[0]];
-        if (abs($f1) === 1 || abs($f2) === 1) {
-            return null; // a factor of 1 leaves nothing to work out: not a multiplication slip
+        foreach ($vars as $v) {
+            if (!$r->coefficientOf($v)->equals($key->coefficientOf($v))) {
+                return null; // a term other than the constant differs
+            }
         }
-        return self::slip('PRODUCT_FACT', 'The expansion was set out correctly; one multiplication (' . $f1 . ' × ' . $f2 . ') went wrong.', $f1 . ' * ' . $f2, $f1 * $f2);
+        $p = $problem['params'];
+        [$a, $b] = $problem['template_id'] === 'POSITIVE_DISTRIBUTION' ? [$p['a'], $p['b']] : [$p['a'], $p['q']];
+        $c = $r->coefficientOf('');
+        $product = $a * $b;
+        if (!$c->isInteger() || abs($a) === 1 || abs($b) === 1) {
+            return null;
+        }
+        $got = $c->num();
+        if ($got === $product || in_array($got, [$a + $b, $b, $a, -$product], true)) {
+            return null;
+        }
+        if (!in_array($got, [$a * ($b + 1), $a * ($b - 1), ($a + 1) * $b, ($a - 1) * $b], true) && !self::oneDigitOff($got, $product)) {
+            return null;
+        }
+        $detail = strtr(self::EXPANSION, ['{got}' => (string) $got, '{a}' => (string) $a, '{b}' => (string) $b, '{product}' => (string) $product]);
+        return self::slip('PRODUCT_FACT', $detail, $a . ' * ' . $b, $product);
+    }
+
+    /** Same sign and number of digits, and exactly one digit differs, by exactly 1. */
+    public static function oneDigitOff(int $got, int $product): bool
+    {
+        if (($got < 0) !== ($product < 0)) {
+            return false;
+        }
+        $g = (string) abs($got);
+        $p = (string) abs($product);
+        if (strlen($g) !== strlen($p)) {
+            return false;
+        }
+        $differing = 0;
+        for ($i = 0; $i < strlen($g); $i++) {
+            if ($g[$i] !== $p[$i]) {
+                if (abs((int) $g[$i] - (int) $p[$i]) !== 1) {
+                    return false;
+                }
+                $differing++;
+            }
+        }
+        return $differing === 1;
     }
 
     /** N05/N06: the right sign, and a times-table neighbour of the right size. */
@@ -99,11 +126,11 @@ final class SlipCheck
         }
         if ($templateId === 'SIGNED_MULTIPLY') {
             $near = in_array($got, [$a * ($b + 1), $a * ($b - 1), ($a + 1) * $b, ($a - 1) * $b], true);
-            return $near ? self::slip('MAGNITUDE', 'The sign was right; one multiplication fact (' . $a . ' × ' . $b . ') went wrong.', $a . ' * ' . $b, $a * $b) : null;
+            return $near ? self::slip('MAGNITUDE', strtr(self::MULTIPLICATION, ['{a}' => (string) $a, '{b}' => (string) $b, '{product}' => (string) ($a * $b)]), $a . ' * ' . $b, $a * $b) : null;
         }
         $q = intdiv($a, $b);
         return in_array($got, [$q + 1, $q - 1], true)
-            ? self::slip('MAGNITUDE', 'The sign was right; one division fact (' . $a . ' ÷ ' . $b . ') went wrong.', $a . ' / ' . $b, $q) : null;
+            ? self::slip('MAGNITUDE', strtr(self::DIVISION, ['{a}' => (string) $a, '{b}' => (string) $b, '{quotient}' => (string) $q]), $a . ' / ' . $b, $q) : null;
     }
 
     private static function slip(string $code, string $detail, string $micro, int $answer): array

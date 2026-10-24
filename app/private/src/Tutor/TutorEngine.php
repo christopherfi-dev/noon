@@ -942,7 +942,8 @@ final class TutorEngine
             ],
             'OPEN_PROBLEM' => $open === null ? null : self::openBlock($open),
             // Round 9 §4.3: the helped check waiting while a smaller step is open (owner's decision: the tutor brings it back with source original).
-            'ORIGINAL_PROBLEM' => ($t->eng['original'] ?? null) === null ? null : self::openBlock($t->eng['original']) + ['spec' => $t->eng['original']['spec']],
+            'ORIGINAL_PROBLEM' => ($t->eng['original'] ?? null) === null ? null : self::openBlock($t->eng['original'])
+                + ['spec' => ['kind' => $t->eng['original']['kind'], 'expression' => ProblemText::main($t->eng['original']['prompt']) ?: $t->eng['original']['spec']]],
             'SLIP' => [
                 'eligible_for_pause' => $slipAllowed,
                 'skill_id' => ($info['slip'] ?? null) !== null ? $info['problem']['skill_id'] : ($slip['problem']['skill_id'] ?? null),
@@ -1175,28 +1176,7 @@ final class TutorEngine
                 $this->store->appendEvent($sessionId, $e['type'], $revision, $e['data'], $now, $e['event_id']);
             }
             // Goals are always recomputed from the whole accepted ledger.
-            $events = $this->store->events($sessionId);
-            $goals = Goals::compute(Gradebook::attempts($events));
-            $recorded = [];
-            foreach ($events as $e) {
-                if ($e['type'] === 'GOAL_MET' || $e['type'] === 'GOAL_SUSPENDED') {
-                    $recorded[$e['data']['skill_id']] = $e['type'] === 'GOAL_MET';
-                }
-            }
-            foreach ($recorded as $skill => $met) {
-                // Architecture v1.6 §10: an attempt held after its goal was met suspends that goal; the earlier record stays.
-                if ($met && !($goals[$skill]['met'] ?? false)) {
-                    $this->store->appendEvent($sessionId, 'GOAL_SUSPENDED', $revision, ['skill_id' => $skill,
-                        'reason' => 'An attempt that met this goal is held for review; the goal is recomputed without it.'], $now);
-                    $recorded[$skill] = false;
-                }
-            }
-            foreach ($goals as $g) {
-                if ($g['met'] && !($recorded[$g['skill_id']] ?? false)) {
-                    $this->store->appendEvent($sessionId, 'GOAL_MET', $revision, ['skill_id' => $g['skill_id'], 'attempt_ids' => $g['met_attempt_ids'],
-                        'scope' => 'Three check questions correct in a row without help in this session' . ($g['three_variant'] ? ', covering a solve or expansion, a choice question and a new form' : '') . '. An in-session goal only; no retention or long-term learning claim.'], $now);
-                }
-            }
+            $goals = $this->reconcileGoals($sessionId, $revision, $now, 'An attempt that met this goal is held for review; the goal is recomputed without it.');
             $events = $this->store->events($sessionId);
             $snap = $t->snap;
             $snap['revision'] = $revision;
@@ -1233,6 +1213,104 @@ final class TutorEngine
         $this->issuedCode = $this->pendingCode;
         $this->pendingCode = null;
         return $view;
+    }
+
+    /**
+     * Recompute goals from the whole ledger and record each change: GOAL_MET
+     * for a goal newly met, GOAL_SUSPENDED for a recorded goal no longer met
+     * (the earlier record stays).
+     *
+     * @return array<string,array> the goals
+     */
+    private function reconcileGoals(string $sessionId, int $revision, \DateTimeImmutable $now, string $suspendReason): array
+    {
+        $events = $this->store->events($sessionId);
+        $goals = Goals::compute(Gradebook::attempts($events));
+        $recorded = [];
+        foreach ($events as $e) {
+            if ($e['type'] === 'GOAL_MET' || $e['type'] === 'GOAL_SUSPENDED') {
+                $recorded[$e['data']['skill_id']] = $e['type'] === 'GOAL_MET';
+            }
+        }
+        foreach ($recorded as $skill => $met) {
+            if ($met && !($goals[$skill]['met'] ?? false)) {
+                $this->store->appendEvent($sessionId, 'GOAL_SUSPENDED', $revision, ['skill_id' => $skill, 'reason' => $suspendReason], $now);
+                $recorded[$skill] = false;
+            }
+        }
+        foreach ($goals as $g) {
+            if ($g['met'] && !($recorded[$g['skill_id']] ?? false)) {
+                $this->store->appendEvent($sessionId, 'GOAL_MET', $revision, ['skill_id' => $g['skill_id'], 'attempt_ids' => $g['met_attempt_ids'],
+                    'scope' => 'Three check questions correct in a row without help in this session' . ($g['three_variant'] ? ', covering a solve or expansion, a choice question and a new form' : '') . '. An in-session goal only; no retention or long-term learning claim.'], $now);
+            }
+        }
+        return $goals;
+    }
+
+    // ============================================================ corrections
+
+    public const CORRECTION_VALUES = ['help' => ['with_help', 'without_help'], 'verdict' => ['CORRECT', 'INCORRECT', 'PARTIAL']];
+
+    /**
+     * Round 9 §4.7: the owner's correction of one recorded attempt, run from
+     * tools/correct_attempt.php. A CORRECTION event is appended; no earlier
+     * event is edited or deleted. The gradebook applies the latest correction
+     * of each field, and goals, the progress record and (when the session has
+     * a report) the report are recomputed in the same transaction, advancing
+     * the revision once. Refused while a provider call is in flight.
+     *
+     * @return array{event_id:string,revision:int,previous:string,goals:array<string,array>,report_rebuilt:bool}
+     */
+    public function applyCorrection(string $sessionId, string $attemptId, string $field, string $value, string $reason): array
+    {
+        if (!isset(self::CORRECTION_VALUES[$field]) || !in_array($value, self::CORRECTION_VALUES[$field], true)) {
+            throw new EngineError(400, 'INVALID_CORRECTION', 'field is help (with_help | without_help) or verdict (CORRECT | INCORRECT | PARTIAL)');
+        }
+        if (trim($reason) === '') {
+            throw new EngineError(400, 'INVALID_CORRECTION', 'a correction needs a reason');
+        }
+        $now = $this->clock->now();
+        return $this->store->db->transaction(function () use ($sessionId, $attemptId, $field, $value, $reason, $now) {
+            $row = $this->store->session($sessionId);
+            if ($row === null) {
+                throw new EngineError(404, 'SESSION_NOT_FOUND', 'No session with that id.');
+            }
+            if ($this->pendingActive($row) !== null) {
+                throw new EngineError(409, 'OPERATION_PENDING', 'A provider call is in flight for this session; run the correction again when it has finished.');
+            }
+            $attempt = null;
+            foreach (Gradebook::attempts($this->store->events($sessionId)) as $a) {
+                if ($a['attempt_id'] === $attemptId) {
+                    $attempt = $a;
+                }
+            }
+            if ($attempt === null) {
+                throw new EngineError(404, 'ATTEMPT_NOT_FOUND', 'No recorded attempt with that id in this session.');
+            }
+            $previous = $field === 'help' ? ($attempt['help'] === [] ? 'without_help' : 'with_help') : $attempt['verdict'];
+            $revision = $row['revision'] + 1;
+            $eventId = $this->store->appendEvent($sessionId, 'CORRECTION', $revision, [
+                'attempt_id' => $attemptId, 'problem_id' => $attempt['problem_id'], 'version' => $attempt['version'], 'field' => $field, 'value' => $value,
+                'previous' => $previous, 'reason' => trim($reason), 'source' => 'OWNER_CLI',
+                'note' => 'Appended by tools/correct_attempt.php; the original attempt record is unchanged. The latest correction of each field applies.',
+            ], $now);
+            $goals = $this->reconcileGoals($sessionId, $revision, $now, 'A correction changed an attempt this goal counted; the goal is recomputed with the correction.');
+            $events = $this->store->events($sessionId);
+            $snap = $row['snapshot'];
+            $snap['revision'] = $revision;
+            $snap['goals'] = array_values(array_map(fn ($g) => ['skill_id' => $g['skill_id'], 'count' => $g['count'], 'met' => $g['met'], 'pause_used' => $g['pause_used']], $goals));
+            $t = new TutorTurn($snap, $row['engine'], $now, 'CORRECTION');
+            $this->syncProgress($sessionId, $t, $events, $goals, $now);
+            $old = $this->store->latestReport($sessionId);
+            if ($old !== null) {
+                $report = $this->reports->build(['snapshot' => $snap, 'engine' => $row['engine'], 'session_id' => $sessionId], $events,
+                    $row['engine']['status'] === 'CLOSED' ? 'COMPLETED' : 'IN_PROGRESS', (string) $old['provider'], $now);
+                $this->store->insertReport($sessionId, $revision, $report, $now);
+            }
+            $this->store->appendEvent($sessionId, 'STATE_COMMITTED', $revision, ['snapshot' => $snap], $now);
+            $this->store->saveSnapshot($sessionId, $snap);
+            return ['event_id' => $eventId, 'revision' => $revision, 'previous' => $previous, 'goals' => $goals, 'report_rebuilt' => $old !== null];
+        });
     }
 
     /**

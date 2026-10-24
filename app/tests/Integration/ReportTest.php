@@ -134,7 +134,7 @@ final class ReportTest extends TestCase
         $h->event('END_SESSION', [], null, null, false);
         $report = $h->request('GET', 'report')->body;
         $section = array_values(array_filter($report['summary']['teacher']['sections'], fn ($s) => $s['heading'] === 'Before check questions (audit)'))[0];
-        $this->assertSame(['Before the check question “Solve 3x + 4 = 19 for x.”, the tutor\'s text had phrases directed at it: remember. The answer to it is held. (Audit list only; the tutor\'s own text is not part of this report.)'], $section['lines']);
+        $this->assertSame(['Before the check question “Solve 3x + 4 = 19 for x.”, the tutor\'s text had phrases directed at it: remember. (Audit list only; the tutor\'s own text is not part of this report.)'], $section['lines']);
         $json = json_encode($report);
         foreach (array_column(array_filter($h->lines(), fn ($l) => $l['role'] === 'tutor' && $l['kind'] === 'message'), 'text') as $tutorText) {
             $this->assertStringNotContainsString(json_encode($tutorText), $json, 'no AI-written text appears in the report');

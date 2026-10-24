@@ -94,6 +94,12 @@ final class Store
         );
     }
 
+    /** Round 9 §4.7: a correction changes the revision and the snapshot only; the session's activity times stay. */
+    public function saveSnapshot(string $sessionId, array $snapshot): void
+    {
+        $this->db->exec('UPDATE sessions SET revision = ?, snapshot_json = ? WHERE session_id = ?', [$snapshot['revision'], Json::encode($snapshot), $sessionId]);
+    }
+
     public function setPendingOperation(string $sessionId, ?string $operationId): void
     {
         $this->db->exec('UPDATE sessions SET pending_operation_id = ? WHERE session_id = ?', [$operationId, $sessionId]);

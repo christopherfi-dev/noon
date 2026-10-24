@@ -70,7 +70,7 @@ final class SignedDivide extends AbstractTemplate
         $q = intdiv($p['a'], $p['b']);
         return $this->matchScalar($outcome, [
             ['SIGN_FLIP', 'matches the correct size with the opposite sign', 'N05', self::r(-$q)],
-            ['MAGNITUDE', 'matches the correct sign with a different size (division fact)', 'N18',
+            ['MAGNITUDE', 'matches the correct sign with a different size', 'N18',
                 fn (Rational $r) => $r->sign() === ($q <=> 0) && !$r->abs()->equals(self::r(abs($q)))],
         ]);
     }

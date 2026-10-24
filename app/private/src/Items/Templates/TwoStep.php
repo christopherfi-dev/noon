@@ -86,13 +86,13 @@ final class TwoStep extends AbstractTemplate
         [$a, $b, $c] = [$p['a'], $p['b'], $p['c']];
         $s = intdiv($c - $b, $a);
         $sigs = [
-            ['ADD_INSTEAD_OF_SUBTRACT', 'matches adding the constant instead of undoing it (sign error on b)', 'Q04', self::r($c + $b, $a)],
+            ['ADD_INSTEAD_OF_SUBTRACT', 'matches adding the constant instead of undoing it', 'Q04', self::r($c + $b, $a)],
             ['DIVIDE_FIRST_ONLY', 'matches dividing only the right side by the coefficient before removing the constant', null, self::r($c, $a)->sub(self::r($b))],
             ['MULTIPLY_INSTEAD_OF_DIVIDE', 'matches multiplying by the coefficient instead of dividing', 'Q05', self::r(($c - $b) * $a)],
-            ['ARITH_OFF_BY_ONE', 'matches an arithmetic error of one in the final step', null, fn ($r) => $r->equals(self::r($s + 1)) || $r->equals(self::r($s - 1))],
+            ['ARITH_OFF_BY_ONE', 'matches the solution plus or minus one', null, fn ($r) => $r->equals(self::r($s + 1)) || $r->equals(self::r($s - 1))],
         ];
         if ($s !== 0) {
-            $sigs[] = ['QUOTIENT_SIGN', 'matches the correct size with the opposite sign (sign of a quotient)', 'Q05', self::r(-$s)];
+            $sigs[] = ['QUOTIENT_SIGN', 'matches the correct size with the opposite sign', 'Q05', self::r(-$s)];
         }
         return $this->matchScalar($outcome, $sigs);
     }

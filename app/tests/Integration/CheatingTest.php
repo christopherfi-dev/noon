@@ -147,7 +147,7 @@ final class CheatingTest extends TestCase
         TutorLoopTest::pose($h, 'check', 'E06', 'expand', '9(x + 8)', '9x + 72', '', 'Here is a check question.');
         $h->mock->queue('FALSE_SLIP');
         $h->send('9x + 8');
-        $this->rejectedWith($h, 'SLIP_CHECK is only possible right after a slip that code confirmed');
+        $this->rejectedWith($h, 'SLIP_CHECK is only possible right after an answer that code found eligible for the slip pause');
         $this->neverShown($h, 'Just a small slip.');
         $this->assertNull($h->attempts()[0]['slip']);
         $this->assertFalse($h->goal('E06')['paused'], 'no pause without a code-confirmed slip');
@@ -167,43 +167,35 @@ final class CheatingTest extends TestCase
         $this->assertSame(2, $h->goal('Q06')['count'], 'the attempt counts');
     }
 
-    /** Round 7 §9: a strategy phrase before a check card is logged, shown unchanged, and the attempt is held. */
-    public function testTextBeforeACheckCardWithAStrategyPhraseHoldsTheAttempt(): void
+    /** Round 9 §3.2: a strategy phrase before a check card is logged as a signal and shown unchanged; nothing is held and the attempt counts. */
+    public function testTextBeforeACheckCardWithAStrategyPhraseIsASignal(): void
     {
         $h = $this->withCheck();
         $text = 'Good. For the next one, start by undoing the addition.';
         $this->cardAfterAnswer($h, $text);
         $this->assertSame(1, $h->goal('Q06')['count']);
-        $this->loggedAndShown($h, 'CHECK_CARD_PHRASE', $text);
-        $held = $h->eventsOf('CHECK_HELD');
-        $this->assertCount(1, $held);
-        $this->assertSame(['HELP_BEFORE_CHECK', $h->view['open_problem']['problem_id']], [$held[0]['data']['reason'], $held[0]['data']['problem_id']]);
-        $this->cardAfterAnswer($h, 'Next, remember the order.', '5x + 2 = 42', '8');
-        $a = self::lastAttempt($h);
-        $this->assertSame(['CORRECT', 'HELP_BEFORE_CHECK'], [$a['verdict'], $a['held']], 'the verdict stays in the record');
-        $this->assertSame(1, $h->goal('Q06')['count'], 'the run neither advances');
-        // ...nor resets: a wrong answer on a held check does not reset the run either.
-        $h->send($h->wrong());
-        $this->assertSame('INCORRECT', self::lastAttempt($h)['verdict']);
-        $this->assertSame(1, $h->goal('Q06')['count'], 'nor resets');
-        $report = $h->request('GET', 'report')->body;
-        $sections = array_column($report['summary']['teacher']['sections'], 'lines', 'heading');
-        $this->assertCount(2, $sections['Held check answers']);
-        $this->assertStringContainsString('held: possible help before the check question', $sections['Held check answers'][0]);
-        $skill = $report['summary']['teacher']['skills'][0];
-        $this->assertSame(1, $skill['independent'], 'held answers are not counted as correct without help');
+        $f = $this->loggedAndShown($h, 'CHECK_CARD_PHRASE', $text);
+        $this->assertTrue($f['signal']);
+        $this->assertSame([], $h->eventsOf('CHECK_HELD'), 'no detector holds a check');
+        $h->answerCorrectly();
+        $this->assertSame(['CORRECT', null], [self::lastAttempt($h)['verdict'], self::lastAttempt($h)['held']]);
+        $this->assertSame(2, $h->goal('Q06')['count'], 'the attempt counts');
+        $sections = array_column($h->request('GET', 'report')->body['summary']['teacher']['sections'], 'lines', 'heading');
+        $this->assertSame([], $sections['Held check answers']);
+        $this->assertStringContainsString('phrases directed at it: start by', $sections['Before check questions (audit)'][0]);
+        $this->assertStringNotContainsString('held', $sections['Before check questions (audit)'][0]);
     }
 
-    /** Round 7 §9: the check's answer in the text before its card is logged, shown unchanged, and the attempt is held. */
-    public function testTextBeforeACheckCardWithItsAnswerHoldsTheAttempt(): void
+    /** Round 9 §3.2: the check's answer in the text before its card is logged as a signal and shown unchanged; nothing is held. */
+    public function testTextBeforeACheckCardWithItsAnswerIsASignal(): void
     {
         $h = $this->withCheck();
         $this->cardAfterAnswer($h, 'Good. The answer is 7.');
         $this->loggedAndShown($h, 'CHECK_CARD_ANSWER', 'Good. The answer is 7.');
-        $this->assertSame('HELP_BEFORE_CHECK', $h->eventsOf('CHECK_HELD')[0]['data']['reason']);
+        $this->assertSame([], $h->eventsOf('CHECK_HELD'));
         $h->answerCorrectly();
-        $this->assertSame('HELP_BEFORE_CHECK', self::lastAttempt($h)['held']);
-        $this->assertSame(1, $h->goal('Q06')['count']);
+        $this->assertNull(self::lastAttempt($h)['held']);
+        $this->assertSame(2, $h->goal('Q06')['count']);
     }
 
     /** Round 8 §3.3, §3.4 and §4: "Here is one more to try." before a card holds nothing, and "on your own" in that sentence raises no help claim. */
@@ -220,7 +212,8 @@ final class CheatingTest extends TestCase
         $this->assertSame(['try', 'one more'], $invitation['phrases'], 'phrase by phrase');
         $audits = $h->eventsOf('CHECK_CARD_AUDIT');
         $audit = end($audits)['data'];
-        $this->assertSame([[], ['try', 'one more'], ['on your own'], false], [$audit['phrases'], $audit['invitations'], $audit['handover_support_words'], $audit['held']]);
+        $this->assertSame([[], ['try', 'one more'], ['on your own']], [$audit['phrases'], $audit['invitations'], $audit['handover_support_words']]);
+        $this->assertArrayNotHasKey('held', $audit, 'round 9 §3.2: the audit holds nothing');
         $h->answerCorrectly();
         $this->assertNull(self::lastAttempt($h)['held']);
         $this->assertSame(2, $h->goal('Q06')['count'], 'the attempt counts');
@@ -230,62 +223,51 @@ final class CheatingTest extends TestCase
         $this->assertContains('HELP_CLAIM', array_column(array_column($g->eventsOf('GUARD_FINDING'), 'data'), 'guard'));
     }
 
-    /** Round 8 §3.5 and §4: a number before a card equal to the check's answer that was the previous answer is logged only; from nowhere it holds the check. */
-    public function testTheCheckAnswerBeforeACardFromThePreviousAnswerIsASignal(): void
+    /** Round 8 §3.5, round 9 §3.2: a number before a card equal to the check's answer is logged with where it may come from; from nowhere it is logged too. Nothing holds. */
+    public function testTheCheckAnswerBeforeACardIsASignal(): void
     {
         $h = $this->withCheck(); // 3x + 4 = 19, answer 5
         $this->cardAfterAnswer($h, 'Yes, 5 is right.', '2x + 3 = 13', '5'); // the new check's answer is also 5
-        $this->assertSame([], $h->eventsOf('CHECK_HELD'), 'the previous answer is a signal, not a hold');
         $signal = array_values(array_filter($h->eventsOf('GUARD_FINDING'), fn ($e) => $e['data']['guard'] === 'CHECK_CARD_ANSWER_SIGNAL'));
         $this->assertCount(1, $signal);
         $this->assertStringContainsString('the previous problem', $signal[0]['data']['detail']);
         $audits = $h->eventsOf('CHECK_CARD_AUDIT');
-        $this->assertSame([true, false], [end($audits)['data']['answer_in_text'], end($audits)['data']['held']]);
+        $this->assertTrue(end($audits)['data']['answer_in_text']);
         $h->answerCorrectly();
         $this->assertNull(self::lastAttempt($h)['held']);
-        // The same kind of number from nowhere holds the check.
+        // The same kind of number from nowhere is logged, and holds nothing either.
         $g = $this->withCheck();
         $this->cardAfterAnswer($g, 'Yes. Keep 7 in mind.', '4x + 3 = 31', '7');
-        $held = $g->eventsOf('CHECK_HELD');
-        $this->assertCount(1, $held);
-        $this->assertTrue($held[0]['data']['answer_in_text']);
+        $this->assertContains('CHECK_CARD_ANSWER', array_column(array_column($g->eventsOf('GUARD_FINDING'), 'data'), 'guard'));
+        $this->assertSame([], $g->eventsOf('CHECK_HELD'));
+        $g->answerCorrectly();
+        $this->assertSame([null, 2], [self::lastAttempt($g)['held'], $g->goal('Q06')['count']]);
     }
 
-    /** Round 8 §3.6 and §4: a practice problem may show its own answer; a check problem that does is repaired once, then replaced by a prepared check problem, with no hold. */
-    public function testAnAnswerInTheQuestionAcceptedForPracticeAndReplacedForACheck(): void
+    /** Round 9 §3.1 and §5.8: a check whose answer appears in it is accepted as posed; nothing is repaired or substituted. */
+    public function testAnAnswerInTheQuestionIsAcceptedForACheck(): void
     {
         $h = new Harness();
         $h->start('Q07');
         TutorLoopTest::pose($h, 'practice', 'Q07', 'linear_equation', '3(x + 3) = 18', '3');
         $this->assertStringContainsString('3(x + 3) = 18', $h->view['open_problem']['prompt'], 'a practice problem is accepted whatever its numbers');
-        $this->assertSame([], $h->eventsOf('MODEL_OUTPUT_REJECTED'));
 
         $g = new Harness();
         $g->start('Q07');
-        $g->mock->queue('ENVELOPE', ['persist' => true, 'set' => ['message_type' => 'QUESTION', 'student_message' => 'Here is a check question.', 'item' => [
+        $g->mock->queue('ENVELOPE', ['set' => ['message_type' => 'QUESTION', 'student_message' => 'Here is a check question.', 'item' => [
             'purpose' => 'check', 'skill_id' => 'Q07', 'source' => 'spec', 'recipe_ref' => null,
             'spec' => ['kind' => 'linear_equation', 'expression' => '3(x + 3) = 18'], 'prompt' => 'Solve 3(x + 3) = 18.', 'stated_answer' => '3']]]);
         $calls = $g->mock->calls;
         $g->send('I am ready for a check question');
-        $this->assertSame(2, $g->mock->calls - $calls, 'the reply and one repair');
-        $rejected = $g->eventsOf('MODEL_OUTPUT_REJECTED');
-        $this->assertCount(1, $rejected, 'repaired once');
-        $this->assertStringContainsString('shows its own answer', $rejected[0]['data']['errors'][0]);
-        $this->assertSame('READY', $g->view['status'], 'no hold');
-        $this->assertSame([], $g->eventsOf('TURN_HELD'));
-        $sub = $g->eventsOf('CHECK_SUBSTITUTED');
-        $this->assertCount(1, $sub, 'the substitution is logged');
-        $this->assertSame(['Q07', ['kind' => 'linear_equation', 'expression' => '3(x + 3) = 18']], [$sub[0]['data']['skill_id'], $sub[0]['data']['rejected_spec']]);
+        $this->assertSame(1, $g->mock->calls - $calls, 'accepted with no repair');
+        $this->assertSame([], $g->eventsOf('MODEL_OUTPUT_REJECTED'));
+        $this->assertSame([], $g->eventsOf('CHECK_SUBSTITUTED'), 'nothing is substituted');
         $open = $g->open();
-        $this->assertSame(['CHECK', 'Q07', 'RECIPE'], [$open['purpose'], $open['skill_id'], $open['source']], 'a prepared check problem for the same skill');
-        $this->assertSame($sub[0]['data']['problem_id'], $open['problem_id']);
-        $this->assertStringNotContainsString('3(x + 3) = 18', $g->view['open_problem']['prompt']);
-        $this->assertFalse(\AlgebraEngine\Tutor\ProblemFactory::answerShownInProblem($open), 'the prepared problem satisfies the rule');
-        $this->assertSame('ACCEPTED_WITH_SUBSTITUTION', $g->app->store->db->scalar("SELECT outcome FROM model_calls WHERE call_purpose = 'REPAIR' ORDER BY rowid DESC LIMIT 1"));
-        $tutor = array_values(array_filter($g->lines(), fn ($l) => $l['role'] === 'tutor' && $l['kind'] === 'message'));
-        $this->assertSame('Here is a check question.', end($tutor)['text'], 'the tutor\'s text is shown unchanged');
+        $this->assertSame(['CHECK', 'Q07', 'SPEC'], [$open['purpose'], $open['skill_id'], $open['source']]);
+        $this->assertStringContainsString('3(x + 3) = 18', $g->view['open_problem']['prompt']);
+        $this->assertSame('ACCEPTED', $g->app->store->db->scalar("SELECT outcome FROM model_calls WHERE call_purpose = 'REPLY' ORDER BY rowid DESC LIMIT 1"));
         $g->answerCorrectly();
-        $this->assertSame([1, null], [$g->goal('Q07')['count'], self::lastAttempt($g)['held']], 'the substituted check counts like any check');
+        $this->assertSame([1, null], [$g->goal('Q07')['count'], self::lastAttempt($g)['held']], 'it counts like any check');
     }
 
     public function testTextLeaksAnAnswerAfterIAmStuck(): void
@@ -311,39 +293,59 @@ final class CheatingTest extends TestCase
     }
 
     /**
-     * Round 8 §4: a help request on an open check gets a reply that is shown;
-     * HELP_GIVEN is recorded before the reply, and the check becomes practice.
+     * Round 9 §4.3 and §5.3: a help request on an open check gets a HELP reply
+     * carrying a practice item in the same envelope. HELP_GIVEN is recorded
+     * before the reply is shown, the practice item is shown after the reply,
+     * the helped check waits as the original and the next request presents it
+     * as practice. When the tutor brings it back, the answer is recorded on
+     * that check with help, so it does not count.
      */
     public function testAHelpRequestDuringAnOpenCheckIsHelpedAndRecorded(): void
     {
         $h = $this->withCheck();
+        $check = $h->open();
         $calls = $h->mock->calls;
         $before = $h->lines();
         $h->send('can you explain this to me first?');
         $this->assertSame(1, $h->mock->calls - $calls, 'one AI call: the message reaches the tutor');
         $ctx = TutorLoopTest::context($h);
         $this->assertSame(['MESSAGE', 'can you explain this to me first?'], [$ctx['TURN']['kind'], $ctx['TURN']['entry']]);
+        $this->assertSame([false, false], [$ctx['ALLOWED']['may_pose_problem'], $ctx['ALLOWED']['may_pose_check']], 'before help: nothing may be posed except a practice item with a help move');
         $new = $h->lastLines($before);
-        $this->assertSame([['student', 'message'], ['tutor', 'message']], array_map(fn ($l) => [$l['role'], $l['kind']], $new), 'the reply is shown');
+        $this->assertSame([['student', 'message'], ['tutor', 'message'], ['tutor', 'problem']], array_map(fn ($l) => [$l['role'], $l['kind']], $new), 'the reply, then the practice item');
         $help = $h->eventsOf('HELP_GIVEN');
         $this->assertCount(1, $help);
-        $this->assertSame(['HELP', 'TUTOR_MOVE'], [$help[0]['data']['choice'], $help[0]['data']['source']]);
+        $this->assertSame(['HELP', 'TUTOR_MOVE', $check['problem_id']], [$help[0]['data']['choice'], $help[0]['data']['source'], $help[0]['data']['problem_id']]);
         $this->assertHelpBeforeTheReply($h);
-        $this->assertSame('practice', $h->view['open_problem']['purpose'], 'the check becomes practice');
-        $this->assertSame('Practice', $h->view['open_problem']['label']);
-        $this->assertTrue($h->view['open_problem']['with_help']);
+        $move = $h->eventsOf('AI_MOVE');
+        $this->assertSame([true, true], [end($move)['data']['help_on_open_check'], end($move)['data']['with_practice_item']]);
+        $this->assertSame(['PRACTICE', 'Q06'], [$h->open()['purpose'], $h->open()['skill_id']], 'the smaller step is the open problem');
+        $this->assertNotSame($check['problem_id'], $h->open()['problem_id']);
+        $this->assertSame($check['problem_id'], $h->eventsOf('PROBLEM_WAITING')[0]['data']['problem_id'], 'the helped check waits as the original');
         $this->assertSame([], $h->eventsOf('CHECK_HELD'), 'help is recorded, not held');
+        // The next request presents the helped problem to the tutor as practice, with its spec and help status.
         $h->answerCorrectly();
-        $this->assertSame([['HELP'], null], [$h->attempts()[0]['help'], $h->attempts()[0]['held']]);
+        $ctx = TutorLoopTest::context($h);
+        $this->assertSame([$check['problem_id'], 'practice', ['HELP'], true], [$ctx['ORIGINAL_PROBLEM']['problem_id'], $ctx['ORIGINAL_PROBLEM']['purpose'],
+            $ctx['ORIGINAL_PROBLEM']['help_given'], $ctx['ALLOWED']['may_pose_problem']]);
+        $this->assertSame(['kind' => 'linear_equation', 'expression' => '3x + 4 = 19'], $ctx['ORIGINAL_PROBLEM']['spec']);
+        $this->assertFalse($ctx['ALLOWED']['may_pose_check'], 'practice only while the original waits (owner\'s decision)');
+        // The mock brings the original back; it is shown as practice with help, and its answer is recorded on that check with help.
+        $this->assertSame([$check['problem_id'], 'practice', 'Practice', true], [$h->open()['problem_id'], $h->view['open_problem']['purpose'],
+            $h->view['open_problem']['label'], $h->view['open_problem']['with_help']]);
+        $h->answerCorrectly();
+        $a = self::lastAttempt($h);
+        $this->assertSame([$check['problem_id'], 'CHECK', ['HELP'], null], [$a['problem_id'], $a['purpose'], $a['help'], $a['held']]);
         $this->assertSame(0, $h->goal('Q06')['count'], 'the goal policy applies: the answer does not count');
+        $this->assertNull(TutorLoopTest::context($h)['ORIGINAL_PROBLEM']);
     }
 
-    /** Round 8 §3.1 and §4: a reply during an open check with HINT, EXPLAIN or ANSWER_QUESTION counts as help in the same way, asked for or not. */
-    public function testHintExplainAndAnswerQuestionDuringAnOpenCheckCountAsHelp(): void
+    /** Round 9 §3.3 and §5.4: during an open check only HELP and HINT record help; EXPLAIN and ANSWER_QUESTION record none, and the text is logged. */
+    public function testOnlyHelpAndHintDuringAnOpenCheckCountAsHelp(): void
     {
-        foreach (['HINT', 'EXPLAIN', 'ANSWER_QUESTION'] as $move) {
+        foreach (['HELP', 'HINT'] as $move) {
             $h = $this->withCheck();
-            $h->mock->queue('ENVELOPE', ['set' => ['student_message' => 'Think about what is being done to x.',
+            $h->mock->queue('ENVELOPE', ['set' => ['student_message' => 'Think about what is being done to x.', 'item' => null, 'message_type' => 'FEEDBACK',
                 'proposed_transition' => ['to_mode' => $move, 'target_skill_id' => 'Q06', 'reason' => 'test', 'evidence_event_ids' => []]]]);
             $h->send('ok');
             $help = $h->eventsOf('HELP_GIVEN');
@@ -355,6 +357,19 @@ final class CheatingTest extends TestCase
             $this->assertSame([$move], $h->attempts()[0]['help'], $move);
             $this->assertSame(0, $h->goal('Q06')['count'], $move);
         }
+        foreach (['ANSWER_QUESTION', 'EXPLAIN'] as $move) {
+            $h = $this->withCheck();
+            $text = 'Dividing both sides keeps the equation balanced.';
+            $h->mock->queue('ENVELOPE', ['set' => ['student_message' => $text, 'item' => null, 'message_type' => 'FEEDBACK',
+                'proposed_transition' => ['to_mode' => $move, 'target_skill_id' => 'Q06', 'reason' => 'test', 'evidence_event_ids' => []]]]);
+            $h->send('why do we divide?');
+            $this->assertSame([], $h->eventsOf('HELP_GIVEN'), $move . ' records no help');
+            $f = $this->loggedAndShown($h, 'MOVE_DURING_CHECK', $text);
+            $this->assertSame($move, $f['move']);
+            $this->assertSame('check', $h->view['open_problem']['purpose']);
+            $h->answerCorrectly();
+            $this->assertSame([[], 1], [$h->attempts()[0]['help'], $h->goal('Q06')['count']], $move . ': the answer counts');
+        }
         // The same move with no check open records nothing.
         $h = new Harness();
         $h->start('Q06');
@@ -364,37 +379,29 @@ final class CheatingTest extends TestCase
         $this->assertSame([], $h->eventsOf('HELP_GIVEN'), 'a practice question is not a check');
     }
 
-    /** Round 8 §3.2 and §4: text during an open check that uses its numbers, with no help move, holds it; a refusal with no numbers records nothing. */
-    public function testTheBackstopDuringAnOpenCheck(): void
+    /** Round 9 §3.2: text during an open check that uses its numbers, expression or answer with no help move is logged as a signal; nothing is held. */
+    public function testTheBackstopDuringAnOpenCheckIsASignal(): void
     {
         $h = $this->withCheck();
         $text = 'What could you do to both sides to deal with the 4?';
-        $h->mock->queue('ENVELOPE', ['set' => ['student_message' => $text,
+        $h->mock->queue('ENVELOPE', ['set' => ['student_message' => $text, 'item' => null, 'message_type' => 'FEEDBACK',
             'proposed_transition' => ['to_mode' => 'CONTINUE', 'target_skill_id' => 'Q06', 'reason' => 'test', 'evidence_event_ids' => []]]]);
         $h->send('can I have a clue');
-        $held = $h->eventsOf('CHECK_HELD');
-        $this->assertCount(1, $held);
-        $this->assertSame(['HELP_DURING_CHECK', ['numbers'], ['4'], 'BACKSTOP'], [$held[0]['data']['reason'], $held[0]['data']['causes'], $held[0]['data']['numbers'], $held[0]['data']['source']]);
-        $this->assertSame([], $h->eventsOf('HELP_GIVEN'), 'held, not recorded as help');
-        $tutor = array_values(array_filter($h->lines(), fn ($l) => $l['role'] === 'tutor' && $l['kind'] === 'message'));
-        $this->assertSame($text, end($tutor)['text'], 'the text is shown unchanged');
+        $f = $this->loggedAndShown($h, 'DURING_CHECK', $text);
+        $this->assertSame([['numbers'], ['4'], true], [$f['causes'], $f['numbers'], $f['signal']]);
+        $this->assertSame([[], []], [$h->eventsOf('CHECK_HELD'), $h->eventsOf('HELP_GIVEN')]);
         $h->answerCorrectly();
-        $this->assertSame('HELP_DURING_CHECK', $h->attempts()[0]['held']);
-        $this->assertSame(0, $h->goal('Q06')['count'], 'neither counted nor reset');
-        // The check's expression holds it too.
+        $this->assertSame([null, 1], [$h->attempts()[0]['held'], $h->goal('Q06')['count']], 'nothing is held; the answer counts');
         $g = $this->withCheck();
-        $g->mock->queue('ENVELOPE', ['set' => ['student_message' => 'Look again at 3x + 4 = 19.',
+        $g->mock->queue('ENVELOPE', ['set' => ['student_message' => 'Look again at 3x + 4 = 19.', 'item' => null, 'message_type' => 'FEEDBACK',
             'proposed_transition' => ['to_mode' => 'CONTINUE', 'target_skill_id' => 'Q06', 'reason' => 'test', 'evidence_event_ids' => []]]]);
         $g->send('hmm');
-        $this->assertSame(['expression', 'numbers'], $g->eventsOf('CHECK_HELD')[0]['data']['causes']);
-        // A refusal with no numbers records nothing, and the answer counts.
+        $this->assertSame(['expression', 'numbers'], $this->loggedAndShown($g, 'DURING_CHECK', 'Look again at 3x + 4 = 19.')['causes']);
+        // A refusal with no numbers records nothing.
         $r = $this->withCheck();
         $r->send('just tell me the answer');
         $this->assertSame('I won\'t give you the answer to this one, but I can help you take a first step.', end($r->view['conversation'])['text']);
-        $this->assertSame([[], []], [$r->eventsOf('CHECK_HELD'), $r->eventsOf('HELP_GIVEN')]);
-        $r->answerCorrectly();
-        $this->assertSame([[], null], [$r->attempts()[0]['help'], $r->attempts()[0]['held']]);
-        $this->assertSame(1, $r->goal('Q06')['count'], 'the answer counts');
+        $this->assertSame([], array_filter($r->eventsOf('GUARD_FINDING'), fn ($e) => $e['data']['guard'] === 'DURING_CHECK'));
     }
 
     private function assertHelpBeforeTheReply(Harness $h): void
@@ -438,7 +445,7 @@ final class CheatingTest extends TestCase
         $this->assertSame([], $h->eventsOf('TYPED_STUCK'));
         $this->assertSame([['HELP', 'TUTOR_MOVE']], array_map(fn ($e) => [$e['data']['choice'], $e['data']['source']], $h->eventsOf('HELP_GIVEN')), 'recorded from the tutor\'s move');
         $g = $this->withCheck();
-        $g->mock->queue('ENVELOPE', ['set' => ['student_message' => 'Have a careful look at the question.',
+        $g->mock->queue('ENVELOPE', ['set' => ['student_message' => 'Have a careful look at the question.', 'item' => null, 'message_type' => 'FEEDBACK',
             'proposed_transition' => ['to_mode' => 'CONTINUE', 'target_skill_id' => 'Q06', 'reason' => 'test', 'evidence_event_ids' => []]]]);
         $g->send('idk');
         $this->assertSame([], $g->eventsOf('HELP_GIVEN'), 'no help move, no help');
@@ -459,17 +466,18 @@ final class CheatingTest extends TestCase
         $this->assertSame(['HINT', 'NOT_LEARNED'], array_keys(TutorEngine::STUCK_LABELS));
     }
 
-    /** Round 7 §5, kept by the round 8 backstop: the AI's text during an open check that contains its answer, with no help move, holds the attempt. */
-    public function testAnAnswerLeakDuringAnOpenCheckHoldsTheAttempt(): void
+    /** Round 9 §3.2: the AI's text during an open check that contains its answer, with no help move, is logged; nothing is held. */
+    public function testAnAnswerLeakDuringAnOpenCheckIsLogged(): void
     {
         $h = $this->withCheck();
         $h->mock->queue('LEAK');
         $h->send('just tell me the answer');
         $this->loggedAndShown($h, 'ANSWER_LEAK', 'The answer is 5.');
-        $this->assertSame(['HELP_DURING_CHECK', ['answer']], [$h->eventsOf('CHECK_HELD')[0]['data']['reason'], $h->eventsOf('CHECK_HELD')[0]['data']['causes']]);
+        $this->assertSame(['answer'], $this->loggedAndShown($h, 'DURING_CHECK', 'The answer is 5.')['causes']);
+        $this->assertSame([], $h->eventsOf('CHECK_HELD'));
         $h->answerCorrectly();
-        $this->assertSame('HELP_DURING_CHECK', $h->attempts()[0]['held']);
-        $this->assertSame(0, $h->goal('Q06')['count'], 'not counted as correct without help');
+        $this->assertNull($h->attempts()[0]['held']);
+        $this->assertSame(1, $h->goal('Q06')['count'], 'no detector changes a count');
     }
 
     /** Round 7 §5 and §9: a verdict conflict in issue holds the attempt; the report says it is under review. */
@@ -490,14 +498,22 @@ final class CheatingTest extends TestCase
         $this->assertNotSame([], array_filter($report['report']['unresolved_or_untested'], fn ($l) => str_contains($l, 'result under review')));
     }
 
+    /** A problem posed during an open check without help is rejected; with help recorded (round 9 §4.3) the tutor may pose practice. */
     public function testTheAiPosesAProblemWhileACheckIsOpen(): void
     {
         $h = $this->withCheck();
         $check = $h->view['open_problem']['problem_id'];
         $h->mock->queue('POSE_ANYWAY');
-        $h->stuck('HINT');
+        $h->send('ok');
         $this->rejectedWith($h, 'no problem may be posed this turn');
         $this->assertSame($check, $h->view['open_problem']['problem_id'], 'the check question is still the open problem');
-        $this->assertSame('practice', $h->view['open_problem']['purpose'], 'with help, it is shown as practice (round 8 §3.1)');
+        $this->assertSame('check', $h->view['open_problem']['purpose']);
+        // After "I'm stuck", help is recorded and ALLOWED.may_pose_problem is true.
+        $g = $this->withCheck();
+        $g->mock->queue('POSE_ANYWAY');
+        $g->stuck('HINT');
+        $this->assertTrue(TutorLoopTest::context($g)['ALLOWED']['may_pose_problem']);
+        $this->assertSame([], $g->eventsOf('MODEL_OUTPUT_REJECTED'));
+        $this->assertSame(['PRACTICE', 'N18'], [$g->open()['purpose'], $g->open()['skill_id']]);
     }
 }

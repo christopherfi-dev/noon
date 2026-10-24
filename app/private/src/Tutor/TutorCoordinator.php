@@ -256,7 +256,8 @@ final class TutorCoordinator
         if ($problem !== null) {
             $protected[] = $problem;
         }
-        $card = $problem !== null && $problem['purpose'] === 'CHECK';
+        // A helped check brought back as the original problem is practice (round 9 §4.3): no check card follows.
+        $card = $problem !== null && $problem['purpose'] === 'CHECK' && ($problem['source'] ?? null) !== 'ORIGINAL';
         $out['findings'] = TextGuard::findings($message, $protected, $x['verdict'] ?? null, $card);
         if ($card) {
             $out['card'] = TextGuard::beforeCheckCard($message, $problem, $x['previous'] ?? []);

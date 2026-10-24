@@ -173,14 +173,13 @@ final class ProblemInstrumentsTest extends TestCase
         // Round 8 §3.6: a practice problem is accepted whatever its numbers, even when its answer is a number shown in it.
         $r = $this->verifier->verify($this->spec('practice', 'Q07', 'linear_equation', '3(x + 3) = 18', '3', 'Solve 3(x + 3) = 18.'), $this->ctx());
         $this->assertTrue($r['ok'], implode('; ', $r['errors']));
-        // A check problem whose single-number answer, or its opposite, is a number in it is rejected, with a code a substitution can act on.
+        // Round 9 §3.1: the "answer appears in the question" rule is removed; such a check problem is accepted.
         foreach ([['3(x + 3) = 18', '3'], ['5(x + 8) = 15', '-5']] as [$expr, $answer]) {
             $r = $this->verifier->verify($this->spec('check', 'Q07', 'linear_equation', $expr, $answer, ''), $this->ctx());
-            $this->assertFalse($r['ok'], $expr);
-            $this->assertStringContainsString('shows its own answer', $r['errors'][0]);
-            $this->assertSame(ProblemVerifier::ANSWER_IN_QUESTION, $r['code']);
-            $this->assertSame('Q07', $r['rejected']['skill_id']);
+            $this->assertTrue($r['ok'], $expr . ': ' . implode('; ', $r['errors']));
         }
+        $this->assertFalse(defined(ProblemVerifier::class . '::ANSWER_IN_QUESTION'));
+        $this->assertFalse(method_exists(ProblemVerifier::class, 'preparedCheck'));
     }
 
     public function testRecipeChoicesAndFreshness(): void
