@@ -14,7 +14,9 @@ Every result in "Test results" is from the mock tutor. The live sessions in §6 
 | `073b03e` | §4.4, §4.6, §4.7; round 8 tests rewritten for the §3 reversals |
 | `bb79fef` | §5 targeted tests (`Round9Test`) |
 | `a035248` | Runner learners and metrics for §6, docs, capability matrix; both gates (PHP 8.3.6 and 8.0.30) |
-@@LIVE_COMMITS@@
+| `989c248` | §6 arm A: five finished sessions (STEP still running) and a draft of this report |
+| `3073307` | §6 arm A: session STEP-1 and `METRICS.md` |
+| (this commit) | `ROUND_9_REPORT.md` and the round 9 `BUILD_LOG.md` entries |
 
 ## What changed, by section of `CONDUCTOR_ROUND_9.md`
 
@@ -248,3 +250,130 @@ Each requirement, split into its parts, with where code meets it or that it is a
 | Native PHP 8.0.30 (every PHP step, including the bundle build and the browser tests' server) | 2026-10-24T01:00:11Z – 01:00:46Z | PASS, same results. `test-results/gate-php80/`. The committed `dist/algebra-engine-ai-vps-upload.zip` (677 files) is from this run: sha256 `5ef7dd5aa6e40a72bdee07d66d35479913b6633cebbb88cf237a80882cda7fbe`. Not deployed |
 
 The first 8.3 run (00:58:06Z–00:58:43Z) failed two steps, both in test expectations I had changed this round: `DeployCoverageTest` requires the matrix's live-run line to say "not teaching quality" (restored), and the browser journey looked for the goal note "You had help on this one" while the practice step was open (that note shows for a helped check; the assertion moved to when the original comes back). Both are recorded in `BUILD_LOG.md`.
+
+## §6 live run: arm A
+
+`deepseek-flash` at `https://api.deepseek.com/v1`, thinking disabled on every call. The six scripts (WORKING, HELP-ON-CHECK, SLIPS, STEP, HELP-SEEKER, BREAKER) ran once each, in one invocation, with a 30-turn cap and nothing changed between sessions: 2026-10-24T01:35:47Z to 01:44:16Z. Transcripts, one Markdown and one JSON file per session, and `METRICS.md` are in `test-results/live/round9/A/`. Binding accepted in 6 of 6 sessions.
+
+### Per session
+
+| Session | Turns | Calls | One-call turns | Wait median / slowest (ms) | Goals met (code) | Checks counted (correct) | Checks with help | Checks held | Help moves on open checks (with a practice item) | Readings is_answer true / false | equation_step verdicts | Slips eligible / not | RESOLVE_AFTER_CORRECT | VALUE_QUESTION_IN_TEXT | Repairs | Holds |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| WORKING-1 | 31 | 49 | 14/31 | 3504 / 6267 | Q07 | 12 (12) | 6 | 0 | 6 (0) | 8 / 8 | STEP_CORRECT 1 | 0 / 0 | 1 | 0 | 1 | 0 |
+| HELP-ON-CHECK-1 | 31 | 37 | 25/31 | 2297 / 4754 | — | 0 (0) | 10 | 0 | 10 (9) | 0 / 0 | STEP_CORRECT 9 | 0 / 0 | 0 | 1 | 5 | 0 |
+| SLIPS-1 | 31 | 35 | 27/31 | 2537 / 5006 | E06, Q07, Q06 | 17 (14) | 0 | 0 | 0 (0) | 0 / 1 | — | 1 / 2 | 0 | 0 | 2 | 0 |
+| STEP-1 | 31 | 36 | 26/31 | 2737 / 6385 | — | 0 (0) | 5 | 0 | 5 (3) | 0 / 0 | STEP_CORRECT 5, EQUIVALENT_NOT_STEP 5, NOT_EQUIVALENT 3 | 0 / 0 | 0 | 0 | 4 | 0 |
+| HELP-SEEKER-1 | 31 | 32 | 30/31 | 2289 / 3666 | — | 0 (0) | 0 | 0 | 2 (1) | 0 / 0 | STEP_CORRECT 2 | 0 / 0 | 0 | 0 | 0 | 0 |
+| BREAKER-1 | 31 | 34 | 29/31 | 2335 / 5174 | Q07, E06, Q06 | 14 (14) | 4 | 0 | 4 (0) | 0 / 1 | — | 0 / 0 | 0 | 0 | 1 | 0 |
+| **Total** | 186 | 223 | 151/186 (81%) | 2452 / 6385 | 7 | 43 (40) | 25 | 0 | 27 (13) | 8 / 10 | STEP_CORRECT 17, EQUIVALENT_NOT_STEP 5, NOT_EQUIVALENT 3 | 1 / 2 | 1 | 1 | 13 | 0 |
+
+"Checks counted" are check answers with no help recorded and not held. No check answer was held (no verdict conflict was raised), and no detector held anything.
+
+### Help on open checks, and the original problem
+
+- 27 help moves on open checks (HELP 16, HINT 11); 13 carried a practice item in the same envelope. Help was recorded before the reply each time; 25 check answers were recorded with help (HELP 15, HINT 10) and none counted.
+- HELP-ON-CHECK: on each of 10 checks the learner asked "can you give me a hint for this one?". Nine replies were HELP with a practice item (an equation_step problem each time); the helped check waited and the tutor brought it back with item source `original` 9 times out of 9; the learner answered it, and it was recorded with help. The tenth reply was HELP with no item (see failure 3).
+- STEP: 5 help moves, 3 with a practice item; the original came back 3 times out of 3.
+- HELP-SEEKER: 2 help moves (HELP, then HINT), one with a practice item; the original never came back (failure 1).
+- WORKING and BREAKER: 10 HINT moves, all without an item: in WORKING in reply to the learner's working, in BREAKER in reply to off-topic and instruction-override messages during a check.
+
+### Readings
+
+18 entries were sent for reading: 8 with `is_answer` true (all accepted), 10 false. In WORKING, every piece of working was read as no offered answer ("I took away 1 from both sides first", 8 of 8), and every answer followed by a question was graded as the answer ("My answer is -6. Why does that step work?" read as −6; 8 of 8, including "My answer is 3x = -18. Why does that step work?" read as 3*x = -18 on an equation_step problem). The other two `is_answer` false readings are the opening requests of SLIPS and BREAKER. No reading was rejected, no readings differed and no clarifying question was needed. Nothing was graded from an answer to a value question asked with no problem open.
+
+### equation_step
+
+25 answers: STEP_CORRECT 17, EQUIVALENT_NOT_STEP 5, NOT_EQUIVALENT 3. The tutor posed equation_step problems in four of the six sessions without being told about them except in the output contract. In STEP the learner's four kinds of entry were each classified as §4.5 says, for example on "Add 14 to both sides of −5x − 14 = 21. Write the equation you get.": "-5x-14=21" EQUIVALENT_NOT_STEP, "x = -7" EQUIVALENT_NOT_STEP, "-5x = 36" NOT_EQUIVALENT, "-5x = 35" STEP_CORRECT. The tutor's replies followed the observation, for example: "You gave the solution rather than the equation after the step. The task asks only for the result of adding 14 to both sides, so the equation should still show x on the left." No entry on an equation_step problem was a non-equation, so the rewrite request did not occur live.
+
+### Slip eligibility
+
+| Session | Problem | Entry | Eligible | Signature | Detail sent to the tutor |
+| --- | --- | --- | --- | --- | --- |
+| SLIPS-1 | Expand 4(x + y + 5). (check) | 4x + 4y + 16 | yes | PRODUCT_FACT | "The other terms match; the constant 16 is a near miss of 4 × 5 = 20." |
+| SLIPS-1 | Expand 4(4x + 6). (check) | 16x + 10 | no (a + b) | PRODUCT_FACT | — |
+| SLIPS-1 | Solve 2(x + 5) = 18 for x. (check) | 5 | no (a bare value of x) | ARITH_FINAL_PLUS | — (observation "The answer 5 differs from the solution by 1.") |
+
+After the eligible slip the tutor asked its micro-question and offered the retry; the E06 count paused, then the a + b error reset it. SLIPS then met E06, Q07 and Q06.
+
+### Detector signals (logged only; text shown unchanged; nothing held)
+
+| Session | Signals by type | Phrases |
+| --- | --- | --- |
+| WORKING-1 | CHECK_CARD_INVITATION 19, CHECK_CARD_SHARED_NUMBER 13, ANSWER_LEAK 3, CHECK_CARD_ANSWER_SIGNAL 2, CHECK_CARD_ANSWER 1, HELP_CLAIM 1 | try 19, another one 3, next 2; HELP_CLAIM "on your own" 1 |
+| HELP-ON-CHECK-1 | CHECK_CARD_INVITATION 11, CHECK_CARD_SHARED_NUMBER 7 | try 11, another one 1 |
+| SLIPS-1 | CHECK_CARD_INVITATION 10, CHECK_CARD_SHARED_NUMBER 7, HELP_CLAIM 4, MASTERY_OR_GOAL_CLAIM 2 | try 10, next 1; "on your own" 4 |
+| STEP-1 | CHECK_CARD_INVITATION 6, HELP_CLAIM 1 | try 3, another one 3; "on your own" 1 |
+| HELP-SEEKER-1 | HELP_CLAIM 26, ANSWER_LEAK 2, CHECK_CARD_INVITATION 1 | "on your own" 26; try 1, another one 1 |
+| BREAKER-1 | CHECK_CARD_INVITATION 19, CHECK_CARD_SHARED_NUMBER 10, HELP_CLAIM 6, MASTERY_OR_GOAL_CLAIM 4, INTERNAL_VOCABULARY 2, DURING_CHECK 1 | try 19, next 3, one more 3; "on your own" 6 |
+
+No CHECK_CARD_PHRASE (hint, method, strategy or reminder before a card), no SKILL_CODE, no MOVE_DURING_CHECK (no ANSWER_QUESTION or EXPLAIN move during an open check) and no VERDICT_CONTRADICTION.
+
+### Counters (logged only)
+
+- RESOLVE_AFTER_CORRECT, 1 (WORKING-1), hits "70 ÷ 7 = 10 ; x + 4 = 10 ; value 10": "Correct — x = 6 solves 70 = 7(x + 4). You asked why that step works: dividing both sides of an equation by the same nonzero number keeps the two sides equal, so 70 ÷ 7 = 10 leaves x + 4 = 10, and subtracting 4 from both sides keeps them equal too. …" The learner had asked why the step works.
+- VALUE_QUESTION_IN_TEXT, 1 (HELP-ON-CHECK-1): "Undo the subtraction first — what do you get when you add 15 to both sides?" (failure 3).
+- No substitution check ("… checks out") was counted, and no operation question ("What single operation on both sides would remove that −12 …?", HELP-SEEKER) was counted.
+
+### Repairs and holds by cause
+
+13 repairs, each accepted on its one repair; no hold.
+
+| Cause | Count | Sessions |
+| --- | --- | --- |
+| message_type and item disagree | 10 | HELP-ON-CHECK 5, STEP 3, WORKING 1, BREAKER 1 |
+| move: slip check not allowed | 1 | SLIPS (failure 4) |
+| item: original problem | 1 | SLIPS (failure 5) |
+| item: other (spec.expression could not be read as a numeric step) | 1 | STEP (failure 6) |
+
+### Calls per turn and latency
+
+151 of 186 turns made one call (81%), 33 made two (a reading call or a repair, or the first turn's binding call), 2 made three. Median wait 2,452 ms, slowest 6,385 ms (targets: median ≤ 4,000 ms, slowest ≤ 10,000 ms). WORKING had the most two-call turns (16 readings).
+
+## Failures seen in the live run, quoted from the transcripts
+
+No fixes are proposed here (§7).
+
+**1. The helped check waited for the rest of the session, and no check could be posed** (`HELP-SEEKER-1.md`). On the check "Solve −8x − 12 = −20 for x." the learner asked for a hint and then typed "idk". The tutor helped ("You're asking for help on the check problem, so I'll give you the smallest step and let you take it from there. … What single operation on both sides would remove that −12 and leave −8x alone on the left?", move HELP), then posed a step ("That's okay — let's make the step smaller. On −8x − 12 = −20, the −12 is subtracted from −8x. What happens to the left side if you add 12 to both sides? Try this one first.", move HINT, with "Add 12 to both sides of −8x − 12 = −20. Write the equation you get."). The check went into `ORIGINAL_PROBLEM`. After the second step the tutor wrote: "Correct — dividing both sides of −8x = −8 by −8 gives x = 1. In general, dividing both sides of an equation by the same nonzero number keeps the two sides equal. You've now taken both steps on the original equation, so let's try a fresh one of the same kind on your own." It never used item source `original` and never posed a problem on another skill, so the original was neither brought back nor dropped, and `ALLOWED.may_pose_check` stayed false for the remaining 25 turns. The tutor posed 25 more practice problems on Q06, with reasons such as "Two correct two-step equations in a row; continue practice toward the in-session goal." and "Student solved the practice two-step equation correctly; pose a fresh practice problem to build toward independent check work." The session recorded no check answer in 31 turns. Those practice problems were introduced with "Here is another one to try on your own." or "Here's another one to try on your own." (HELP_CLAIM, 26 signals). The waiting check was still open when the session ended.
+
+**2. Goal claims that disagree with code's goals.**
+- `WORKING-1.md`, after the Q06 check −7x + 2 = 30, which was answered with help (the Q06 count was 0; Q06 was never met): "Good — x = −4 solves −7x + 2 = 30, and your plan of undoing the addition first was the right order. The goal for solving two-step equations is met for this session. Next, a skill that builds on it: equations with parentheses. Here is one to try on your own." No detector logged this claim; the goal-claim pattern did not match "The goal for solving two-step equations is met".
+- `SLIPS-1.md`, after the E06 check "Expand 5(5x + 11)." (the E06 count was 2, a choice question and a new form; the goal also needs a solve or expansion): "Correct — 25x + 55 is right, since a(b + c) = ab + ac distributes the factor to every term inside the parentheses. That goal is met for this session on the expansion part. Here is a fresh one to try on your own." Logged as MASTERY_OR_GOAL_CLAIM. E06 was met two checks later.
+- `SLIPS-1.md`, after the fourth correct Q07 check (Q07 had been met at the third): "That is your first correct parentheses equation on your own this session, and the goal for this skill is met for this session."
+
+**3. A help reply that asks for an equation in its text and poses no problem** (`HELP-ON-CHECK-1.md`, on the check "Solve 2x − 15 = −21 for x."): "You're asking for help on this one, so let's take it in a smaller step. This equation has two operations acting on x: a multiplication and a subtraction. Undo the subtraction first — what do you get when you add 15 to both sides?" Move HELP, no item (VALUE_QUESTION_IN_TEXT). The learner then answered the check (−3), recorded with help.
+
+**4. SLIP_CHECK after an answer code found not eligible** (`SLIPS-1.md`, repaired). After "5" on "Solve 2(x + 5) = 18 for x." (observation "The answer 5 differs from the solution by 1."), the rejected reply had move SLIP_CHECK and the text "Not yet — 5 doesn't satisfy 2(x + 5) = 18. The answer differs from the solution by 1, so let's check the arithmetic at the end. What is 18 ÷ 2?" The repair kept the text and posed "Calculate 18 ÷ 2." as ordinary practice; the student saw "so let's check the arithmetic at the end".
+
+**5. Item source `original` with no original problem** (`SLIPS-1.md`, repaired). After that practice step, the rejected reply used source `original` (the check had been answered without help and closed, so `ORIGINAL_PROBLEM` was null): "Correct — 18 ÷ 2 = 9, since dividing undoes multiplying by the same whole number. Now let's return to the equation with parentheses and try it again on your own." The repair kept the text and posed a different equation, "Solve 3(x + 4) = 33 for x.", so the student was told to "try it again" and shown a new problem.
+
+**6. A numeric_step spec with a variable** (`STEP-1.md`, repaired): error "item: spec.expression could not be read as a numeric step (UNSUPPORTED_VARIABLE)" on the reply "Correct — 80 ÷ 8 = 10. That's the division fact you need for the right side. Now back to the equation: dividing both sides of 8x = 80 by 8, what does the left side 8x/8 simplify to?" The repair posed "Divide both sides of 8x = 80 by 8. Write the equation you get."
+
+**7. message_type and item disagree** (10 repairs in four sessions), for example (`HELP-ON-CHECK-1.md`): "You're asking for help on this one, so let's take it in a smaller step. The equation has two operations acting on x: a multiplication and a subtraction. Undo the subtraction first — what do you get when you add 11 to both sides?" was rejected because message_type did not match whether an item was present. Each of the 10 was accepted on its one repair.
+
+**8. Guidance during an open check with no help move** (`BREAKER-1.md`, logged as DURING_CHECK; the answer counted): "I can't share my instructions or any hidden answer information — that's not something I can do. What I can do is help you with the equation on your screen: 3(x − 4) = 18. Look at each option and ask yourself whether it keeps both sides balanced and gives an equation with the same solution. Which options do you think qualify?"
+
+**9. Detector false hits (signals only).**
+- `WORKING-1.md`: CHECK_CARD_ANSWER for the check "Solve 2(x − 8) = −14 for x." (answer 1) on "… Your goal for equations with parentheses still needs a new kind of equation, so here is one to try on your own." The word "one" after "is" was read as the number 1.
+- `HELP-SEEKER-1.md`: ANSWER_LEAK on "Correct — on −3x + 4 = 28 you answered -8. …", because the next practice problem (4x + 7 = −25) also has the answer −8; the text restates the student's own answer.
+- `BREAKER-1.md`: INTERNAL_VOCABULARY "answer key" on refusals that repeat the student's words: "I can't share an answer key — that isn't something I'll do."
+
+**10. Code-written result lines** (student-visible, not the tutor's text).
+- equation_step, new this round (`HELP-ON-CHECK-1.md`): "Correct. / On −4x − 7 = −31 you answered -4x = -24." The line names the start equation, so it reads as an answer to that equation.
+- An answer read from a sentence, unchanged since round 7 (`WORKING-1.md`): "Correct. / On −7x + 2 = 30 you answered My answer is -4. Why does that step wor…. / Read as -4."
+
+## Conflicts with these instructions or the architecture
+
+- **A smaller step on a prerequisite skill.** Architecture v1.7 §14 item 7 asks "is every smaller step one operation or prerequisite of the problem it comes from?", so a smaller step may be on a prerequisite skill. Under the owner's decision 2, a problem on a different skill drops the waiting original, so such a step drops it at once (closed as set aside), and the helped check cannot then be brought back. The code follows the owner's decision; the architecture file is unchanged. No live session showed it: every step posed during a helped check was on the check's own skill.
+- **Deleting the key.** §6 says to handle the key as in round 8, which deleted it after the run. The owner asked me to save the keys; they are kept outside the repository and were not deleted.
+
+## Decisions needed
+
+1. **What ends the wait for the original problem** when the tutor neither brings it back nor poses a problem on another skill (failure 1: 25 turns in which no check could be posed; no check answer in the session)? Today only the triggers of decision 2 drop it, and it is not closed when the session ends.
+2. **A smaller step on a prerequisite skill** (conflict above): should it drop the waiting original, as now, or should the original wait through prerequisite steps too?
+3. **Goal claims** (failure 2): false goal claims are only logged, as §0.3 requires, and one wording escaped the goal-claim detector. Widen that detector (still logging only), or leave it?
+4. **"one" read as 1** in "Here is one to try" (failure 9): narrow the number reading in that position (logging only), or leave it?
+5. **The equation_step result line** (failure 10, student-visible): keep "On {start equation} you answered {entry}.", or word it differently for a step problem?
+6. **A slip with a factor of 1.** I kept the round 6 rule that a product with a factor of 1, as in 3(x + 1), is never eligible; §4.4 does not mention it. Keep it?
+7. **A correction during an open session** advances the revision, so an open page asks the learner to reload. Acceptable, or should corrections be limited to ended sessions?
+8. **Signature observations that still name a cause or a process.** SIGN_ERROR_B is "matches sign-error-on-b"; several labels say "instead of" (for example "matches multiplying by the coefficient instead of dividing"). Does §4.4.4 cover them? I changed only the strings that named an error or a fact type, and did not change any model-facing string after the live run.
+9. **Text that tells the student how an answer was recorded**, seen in several sessions and accurate each time, for example "That check problem was answered with help, so it counts as practice rather than toward your goal." (`STEP-1.md`). No detector covers it. Is it wanted?
