@@ -17,6 +17,7 @@ use AlgebraEngine\Math\MathInputError;
 use AlgebraEngine\Math\Normalizer;
 use AlgebraEngine\Math\Polynomial;
 use AlgebraEngine\Math\Rational;
+use AlgebraEngine\Math\ScalarParser;
 
 /**
  * Round 6 §4.2: code computes the answer of every typed-answer question from
@@ -29,7 +30,9 @@ use AlgebraEngine\Math\Rational;
  */
 final class SpecMath
 {
-    public const KINDS = ['linear_equation', 'expand', 'signed_arithmetic', 'numeric_step'];
+    public const KINDS = ['linear_equation', 'expand', 'signed_arithmetic', 'numeric_step', 'equation_step'];
+    /** Round 9 §4.5: the operations of an equation_step spec. */
+    public const STEP_OPERATIONS = ['add', 'subtract', 'multiply', 'divide'];
     /** The configured range (config keys spec_number_limit, spec_answer_limit, spec_denominator_limit). */
     public const LIMITS = ['number' => 200, 'answer' => 1000, 'denominator' => 12];
     public const MAX_LENGTH = 120;
@@ -50,6 +53,9 @@ final class SpecMath
         if ($expression === '' || mb_strlen($expression) > self::MAX_LENGTH) {
             throw new SpecError('UNREADABLE', 'spec.expression must be 1 to ' . self::MAX_LENGTH . ' characters');
         }
+        if ($kind === 'equation_step') {
+            throw new SpecError('NOT_THIS_KIND', 'an equation_step spec needs operation and operand');
+        }
         try {
             return match ($kind) {
                 'linear_equation' => self::linear($expression, $lim),
@@ -60,6 +66,67 @@ final class SpecMath
         } catch (MathInputError $e) {
             throw new SpecError('UNREADABLE', 'spec.expression could not be read as a ' . str_replace('_', ' ', $kind) . ' (' . $e->errorCode . ')');
         }
+    }
+
+    /**
+     * Round 9 §4.5: the equation after one step (practice only). From a linear
+     * equation in x with one solution, add or subtract a number on both sides,
+     * or multiply or divide both sides by a number other than zero. Code
+     * computes the resulting equation; its two sides are the expected answer.
+     *
+     * @param array{number?:int,answer?:int,denominator?:int} $limits
+     */
+    public static function equationStep(string $expression, mixed $operation, mixed $operand, array $limits = []): array
+    {
+        $lim = $limits + self::LIMITS;
+        $expression = trim($expression);
+        if ($expression === '' || mb_strlen($expression) > self::MAX_LENGTH) {
+            throw new SpecError('UNREADABLE', 'spec.expression must be 1 to ' . self::MAX_LENGTH . ' characters');
+        }
+        if (!is_string($operation) || !in_array($operation, self::STEP_OPERATIONS, true)) {
+            throw new SpecError('STEP_OPERATION', 'spec.operation must be add, subtract, multiply or divide');
+        }
+        if (!is_string($operand) && !is_int($operand) && !is_float($operand)) {
+            throw new SpecError('STEP_OPERAND', 'spec.operand must be a number');
+        }
+        try {
+            $k = ScalarParser::parse(is_float($operand) ? rtrim(rtrim(sprintf('%.6F', $operand), '0'), '.') : (string) $operand);
+            [$l, $r] = EquationParser::parse($expression, ['x']);
+        } catch (MathInputError $e) {
+            throw new SpecError('UNREADABLE', 'spec.expression could not be read as an equation step (' . $e->errorCode . ')');
+        }
+        if ($k->isZero() && in_array($operation, ['multiply', 'divide'], true)) {
+            throw new SpecError('STEP_OPERAND', 'spec.operand must not be zero for multiply or divide');
+        }
+        if (abs($k->num()) > $lim['number'] || $k->den() > $lim['denominator']) {
+            throw new SpecError('OUT_OF_RANGE', 'spec.operand is outside the configured range');
+        }
+        self::checkLiterals([$l, $r], $lim);
+        $sol = LinearEquation::solve($l, $r);
+        if ($sol->kind !== 'UNIQUE' || $sol->value === null) {
+            throw new SpecError('NO_UNIQUE_SOLUTION', 'spec.expression must be a linear equation in x with exactly one solution');
+        }
+        $kp = Polynomial::constant($k);
+        [$lp, $rp] = [Polynomial::fromNode($l), Polynomial::fromNode($r)];
+        [$el, $er] = match ($operation) {
+            'add' => [$lp->add($kp), $rp->add($kp)],
+            'subtract' => [$lp->sub($kp), $rp->sub($kp)],
+            'multiply' => [$lp->mul($kp), $rp->mul($kp)],
+            'divide' => [$lp->mul(Polynomial::constant(Rational::of(1)->div($k))), $rp->mul(Polynomial::constant(Rational::of(1)->div($k)))],
+        };
+        $out = self::out('equation_step', $expression, MathFormat::equation([$l, $r]), 'equation', ['x'], [
+            'kind' => 'equation_step', 'expected' => $el->toString() . ' = ' . $er->toString(), 'requested_form' => 'equation_after_step',
+            'start' => self::canonical($expression), 'operation' => $operation, 'operand' => $k->toString(),
+        ], [$l, $r], $sol->value);
+        $out['canonical'] = self::canonical($expression) . '|' . $operation . '|' . $k->toString();
+        $out['operation'] = $operation;
+        $out['operand'] = $k;
+        return $out;
+    }
+
+    private static function canonical(string $expression): string
+    {
+        return strtolower(str_replace(' ', '', Normalizer::normalize($expression)));
     }
 
     private static function linear(string $expression, array $lim): array

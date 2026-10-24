@@ -21,12 +21,13 @@ final class TutorPrompt
     /**
      * Round 7 §3: the output contract, and nothing else. It defines the
      * envelope's fields and when each value is valid; every behaviour rule is
-     * the architecture's. Round 8 §3.1 adds the to_mode value HELP.
+     * the architecture's. Round 8 §3.1 adds the to_mode value HELP; round 9
+     * §4.1 makes the exact edits listed in ROUND_9_REPORT.md.
      */
     public const OUTPUT_CONTRACT = <<<'TXT'
 OUTPUT CONTRACT
 Reply with exactly one JSON object that follows OUTPUT_CONTRACT in the JSON block. No prose outside it, no Markdown fences.
-Identity: copy session_id and state_revision from TRUSTED_SESSION, and reply_to_event_id from TRUSTED_SESSION.event_id, exactly. architecture_version is "1.6".
+architecture_version is "1.7".
 Fields:
 - message_type: QUESTION when item is not null; FEEDBACK when item is null; CONTROL when TURN.kind is READING. REPORT and HOLD are not used.
 - student_message: the learner-facing text. For a READING turn it is the empty string.
@@ -35,17 +36,18 @@ Fields:
   - skill_id: one of the ten skills in CURRICULUM.
   - source recipe: recipe_ref is a ref from PREPARED_PROBLEMS for that skill_id; spec is null; stated_answer is null or that problem's answer.
   - source spec: spec is {kind, expression}; recipe_ref is null; stated_answer is the answer you computed for the spec, in plain notation.
-    spec.kind linear_equation: a linear equation in x with exactly one solution. expand: an expression to expand or simplify. signed_arithmetic: one operation on two whole numbers. numeric_step: a short calculation on numbers.
+    spec.kind linear_equation: a linear equation in x with exactly one solution. expand: an expression to expand or simplify. signed_arithmetic: one operation on two whole numbers. numeric_step: a short calculation on numbers. equation_step: spec is {kind, expression, operation, operand}; expression is a linear equation in x; operation is add, subtract, multiply or divide; operand is a number, not zero for multiply or divide; stated_answer is the resulting equation; purpose is practice.
     spec.expression: the equation or expression in plain notation, using numbers within PROBLEM_LIMITS.
   - source retry: purpose retry, valid only when SLIP.retry_available is true; skill_id is SLIP.skill_id; recipe_ref, spec and stated_answer are null.
+  - source original: purpose practice, valid only when ORIGINAL_PROBLEM is not null; skill_id is ORIGINAL_PROBLEM.skill_id; recipe_ref, spec and stated_answer are null.
   - prompt: a string, which may be empty. Code renders the displayed wording of every problem from its spec; this value is recorded and not displayed.
-  - Any item is valid only when ALLOWED.may_pose_problem is true. A check item is valid only when ALLOWED.may_pose_check is true; a check spec matches that skill's pattern in CHECK_PATTERNS, and a choice check question is a prepared problem.
-- proposed_transition: null, or {to_mode, target_skill_id, reason, evidence_event_ids}. to_mode is one of the values in OUTPUT_CONTRACT.allowed_values; HELP means you helped with the open check problem. target_skill_id is one of the ten skills in CURRICULUM, or null. SLIP_CHECK is valid only when SLIP.confirmed is true, and an item posed with it has purpose practice. reason is a short string. evidence_event_ids lists attempt_id values from this request, or is empty.
+  - Any item is valid only when ALLOWED.may_pose_problem is true. During an open check problem, a reply whose to_mode is HELP or HINT may also carry an item with purpose practice. A check item is valid only when ALLOWED.may_pose_check is true; a check spec matches that skill's pattern in CHECK_PATTERNS, and a choice check question is a prepared problem.
+- proposed_transition: null, or {to_mode, target_skill_id, reason, evidence_event_ids}. to_mode is one of the values in OUTPUT_CONTRACT.allowed_values. During an open check problem, HELP or HINT means your reply helps with that check; use one of them for every reply that helps with it, even when the reply answers the student's question. ANSWER_QUESTION and EXPLAIN never mean help with an open check problem. target_skill_id is one of the ten skills in CURRICULUM, or null. SLIP_CHECK is valid only when SLIP.eligible_for_pause is true, and an item posed with it has purpose practice. reason is a short string. evidence_event_ids lists attempt_id values from this request, or is empty.
 - evidence_proposals: a list, possibly empty, of {kind, statement, evidence_event_ids, hypothesis_status}. kind is OBSERVATION, HYPOTHESIS or INSTRUCTIONAL_TRIAL. hypothesis_status is UNRESOLVED, PROVISIONAL, SUPPORTED_FOR_OBSERVED_PATTERN or CONTRADICTED for a HYPOTHESIS, and null otherwise.
 - resource_requests: a list, possibly empty, of {skill_id, purpose}.
 - teacher_report: null.
 - issue: null, or {type, affected_scope, detail, next_action}. type VERIFICATION_CONFLICT is a conflict with the verdict in ANSWERED_PROBLEM; detail names the problem, the entry and the conflicting calculation.
-- reading: null unless TURN.kind is READING. Then {is_answer, text, other_readings, clarifying_question}: is_answer is true when the entry is an answer to OPEN_PROBLEM; text is your reading of that answer in plain notation, or null; other_readings lists other plausible readings in plain notation, or is empty; clarifying_question is a short question to the student for when the entry cannot be read faithfully or the readings differ, or null. For a READING turn, item is null.
+- reading: null unless TURN.kind is READING. Then {is_answer, text, other_readings, clarifying_question}: is_answer is false when the entry contains no offered answer to OPEN_PROBLEM; an entry may offer an answer together with working, a question or a request for help, and then text is the offered answer in plain notation; otherwise text is null; other_readings lists other plausible readings in plain notation, or is empty; clarifying_question is a short question to the student for when the entry cannot be read faithfully or the readings differ, or null. For a READING turn, item is null.
 Plain notation: numbers, the problem's variables, + - * / ^ ( ) and =.
 TXT;
 

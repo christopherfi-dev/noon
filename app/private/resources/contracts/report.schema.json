@@ -17,7 +17,7 @@
       "minimum": 0
     },
     "architecture_version": {
-      "const": "1.6"
+      "const": "1.7"
     },
     "curriculum_version": {
       "const": "1.1.0"

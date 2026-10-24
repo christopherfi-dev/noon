@@ -18,13 +18,15 @@ use AlgebraEngine\Support\JsonSyntax;
  * problem through ProblemVerifier. Only those failures get a repair: exactly
  * one repair call, and if that fails too the caller holds the turn. The text
  * guards run on the accepted envelope and are returned as findings to log;
- * they never cause a repair. A check problem that still shows its own answer
- * after the repair is replaced by a prepared check problem (round 8 §3.6).
- * The provider's reasoning text is never read.
+ * they never cause a repair. A problem or envelope that still fails after
+ * its repair holds the turn (round 9 §3.1). The provider's reasoning text is
+ * never read.
  */
 final class TutorCoordinator
 {
     public const MAX_REPAIRS = 1;
+    /** Round 9 §4.1: no longer returned by the model; code attaches them. */
+    public const IDENTITY_FIELDS = ['session_id', 'state_revision', 'reply_to_event_id'];
     private const PROPOSAL_CLAIMS = '/\b(master(ed|y|ing)?|goal\s+met|met\s+the\s+goal|criterion\s+met|verified|passed|learned\s+this)\b/i';
 
     private string $handshake;
@@ -84,7 +86,7 @@ final class TutorCoordinator
             $messages[] = ['role' => 'assistant', 'content' => mb_substr($text, 0, 2000)];
             $messages[] = ['role' => 'user', 'content' => 'CONTROL: That reply is not the exact activation line. Respond with only the exact line from Section 16, or the exact halt line.'];
         }
-        return ['ok' => false, 'failure' => ['type' => 'BINDING_NOT_ESTABLISHED', 'detail' => 'The provider did not return the exact architecture 1.6 activation line after one repair.']];
+        return ['ok' => false, 'failure' => ['type' => 'BINDING_NOT_ESTABLISHED', 'detail' => 'The provider did not return the exact architecture 1.7 activation line after one repair.']];
     }
 
     /**
@@ -127,12 +129,11 @@ final class TutorCoordinator
             [$env, $raw, $errors] = $this->parse($resp);
             $result = null;
             if ($errors === []) {
-                // Round 8 §3.6: only the repaired envelope may have its check problem replaced by a prepared one.
-                $result = $this->check($env, $raw, $expect + ['substitute' => $attempt === self::MAX_REPAIRS]);
+                $result = $this->check($env, $raw, $expect);
                 $errors = $result['errors'];
             }
             if ($errors === []) {
-                $log($callPurpose, $result['substitution'] !== null ? 'ACCEPTED_WITH_SUBSTITUTION' : ($attempt === 0 ? 'ACCEPTED' : 'ACCEPTED_AFTER_REPAIR'), $resp, $reasoning);
+                $log($callPurpose, $attempt === 0 ? 'ACCEPTED' : 'ACCEPTED_AFTER_REPAIR', $resp, $reasoning);
                 return ['ok' => true, 'repairs' => $repairs] + $result;
             }
             $log($callPurpose, 'REJECTED', $resp, $reasoning);
@@ -177,15 +178,17 @@ final class TutorCoordinator
      */
     private function check(array $env, object $raw, array $x): array
     {
+        // Round 9 §4.2: code attaches the identity captured with the request; any identity fields the model still sends are ignored (owner's decision).
         $out = ['errors' => [], 'message' => '', 'problem' => null, 'move' => null, 'proposals' => [], 'findings' => [], 'card' => null,
-            'issue' => null, 'ai_prompt' => '', 'dropped_prompt_chars' => 0, 'reading' => null, 'substitution' => null];
+            'issue' => null, 'ai_prompt' => '', 'dropped_prompt_chars' => 0, 'reading' => null,
+            'identity' => ['session_id' => $x['session_id'], 'state_revision' => $x['revision'], 'reply_to_event_id' => $x['event_id'], 'open_problem' => $x['open_problem'] ?? null]];
+        foreach (self::IDENTITY_FIELDS as $field) {
+            unset($raw->{$field}, $env[$field]);
+        }
         $errors = $this->schemas->errors($raw, 'tutor-envelope.schema.json');
         if ($errors !== []) {
             $out['errors'] = $errors;
             return $out;
-        }
-        if ($env['session_id'] !== $x['session_id'] || $env['state_revision'] !== $x['revision'] || $env['reply_to_event_id'] !== $x['event_id']) {
-            $errors[] = 'session_id, state_revision and reply_to_event_id must equal the values in TRUSTED_SESSION';
         }
         if ($x['mode'] === 'READING') {
             if ($env['message_type'] !== 'CONTROL' || $env['reading'] === null || $env['item'] !== null) {
@@ -207,18 +210,21 @@ final class TutorCoordinator
             $errors[] = 'student_message must not be empty when no problem is posed';
         }
         $problem = null;
+        $move = $env['proposed_transition'];
+        $helpMove = $move !== null && in_array($move['to_mode'], ['HELP', 'HINT'], true);
         if ($item !== null) {
-            if (!($x['allow_item'] ?? true)) {
-                $errors[] = 'no problem may be posed this turn: a check question is still open (ALLOWED.may_pose_problem is false)';
+            $practiceWithHelp = ($x['practice_with_help'] ?? false) && $helpMove && strtolower((string) ($item['purpose'] ?? '')) === 'practice';
+            if (!($x['allow_item'] ?? true) && !$practiceWithHelp) {
+                $errors[] = 'no problem may be posed this turn: a check question is still open (ALLOWED.may_pose_problem is false); during an open check problem only a reply whose to_mode is HELP or HINT may carry an item, with purpose practice';
+            } elseif (strtolower((string) ($item['purpose'] ?? '')) === 'check' && !($x['allow_check'] ?? true)) {
+                $errors[] = 'a check item is valid only when ALLOWED.may_pose_check is true';
             } else {
                 $ctx = [
                     'recipes' => $x['recipes'] ?? [], 'used_fingerprints' => $x['used_fingerprints'] ?? [],
                     'retry_target' => $x['retry_target'] ?? null, 'limits' => $x['limits'] ?? [], 'used_number_sets' => $x['used_number_sets'] ?? [],
+                    'original' => $x['original'] ?? null,
                 ];
                 $v = $this->verifier->verify($item, $ctx);
-                if (!$v['ok'] && ($v['code'] ?? null) === ProblemVerifier::ANSWER_IN_QUESTION && ($x['substitute'] ?? false)) {
-                    $v = $this->substitute($v, $item, $ctx, $x, $out);
-                }
                 if (!$v['ok']) {
                     foreach ($v['errors'] as $e) {
                         $errors[] = 'item: ' . $e;
@@ -230,13 +236,12 @@ final class TutorCoordinator
                 }
             }
         }
-        $move = $env['proposed_transition'];
         if ($move !== null) {
             if ($move['target_skill_id'] !== null && !BetaScope::contains($move['target_skill_id'])) {
                 $errors[] = 'proposed_transition.target_skill_id must be one of the ten skills in CURRICULUM';
             }
             if ($move['to_mode'] === 'SLIP_CHECK' && !($x['slip_allowed'] ?? false)) {
-                $errors[] = 'SLIP_CHECK is only possible right after a slip that code confirmed (SLIP.confirmed is false); code found no slip here';
+                $errors[] = 'SLIP_CHECK is only possible right after an answer that code found eligible for the slip pause (SLIP.eligible_for_pause is false)';
             }
             if ($move['to_mode'] === 'SLIP_CHECK' && $problem !== null && $problem['purpose'] !== 'PRACTICE') {
                 $errors[] = 'a slip check is one short practice question, not a check question';
@@ -263,28 +268,6 @@ final class TutorCoordinator
         $out['issue'] = $env['issue'];
         $out['proposals'] = $this->reviewProposals($env, $x['known_event_ids'] ?? []);
         return $out;
-    }
-
-    /**
-     * Round 8 §3.6: the repaired envelope's check problem still shows its own
-     * answer, so a prepared check problem for the same skill takes its place
-     * instead of holding the turn. The substitution is returned for the log.
-     */
-    private function substitute(array $v, array $item, array $ctx, array $x, array &$out): array
-    {
-        $rejected = $v['rejected'];
-        $sub = $this->verifier->preparedCheck($rejected, $ctx['recipes'], $ctx);
-        if ($sub === null && isset($x['prepare'])) {
-            $sub = $this->verifier->preparedCheck($rejected, ($x['prepare'])($rejected['skill_id']), $ctx);
-        }
-        if ($sub === null) {
-            return $v;
-        }
-        $out['substitution'] = [
-            'reason' => $v['errors'][0], 'skill_id' => $rejected['skill_id'], 'rejected_spec' => $item['spec'] ?? null, 'rejected_recipe_ref' => $item['recipe_ref'] ?? null,
-            'rejected_stated_answer' => $item['stated_answer'] ?? null, 'rejected_text' => $rejected['prompt'], 'prepared_ref' => $sub['ref'],
-        ];
-        return ['ok' => true, 'errors' => [], 'problem' => $sub['problem'], 'dropped_prompt_chars' => mb_strlen(trim((string) ($item['prompt'] ?? '')))];
     }
 
     /** Proposals are recorded as the AI's, never acted on; claims about goals or mastery are rejected. */

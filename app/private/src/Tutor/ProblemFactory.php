@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace AlgebraEngine\Tutor;
 
 use AlgebraEngine\Items\ItemFactory;
+use AlgebraEngine\Items\Fmt;
 use AlgebraEngine\Items\Template;
+use AlgebraEngine\Math\Rational;
 use AlgebraEngine\Math\ScalarParser;
 use AlgebraEngine\Support\Ids;
 
@@ -100,6 +102,40 @@ final class ProblemFactory
             'options' => null,
             'fingerprint' => $match !== null ? ItemFactory::fingerprint($match['template_id'], $match['params']) : hash('sha256', 'spec|' . $computed['kind'] . '|' . $computed['canonical']),
         ]);
+    }
+
+    /**
+     * Round 9 §4.5: an equation_step problem (practice only). Code writes the
+     * wording from the verified spec, in the form the owner chose:
+     * "Subtract 6 from both sides of 3x + 6 = 15. Write the equation you get."
+     *
+     * @param array $computed SpecMath::equationStep() output
+     */
+    public function fromEquationStep(array $computed, string $skillId): array
+    {
+        return $this->record([
+            'purpose' => 'PRACTICE',
+            'skill_id' => $skillId,
+            'source' => 'SPEC',
+            'kind' => 'equation_step',
+            'spec' => $computed['canonical'],
+            'prompt' => self::stepWording($computed['display'], $computed['operation'], $computed['operand']),
+            'response_type' => 'equation',
+            'variables' => ['x'],
+            'answer' => $computed['answer'],
+            'fingerprint' => hash('sha256', 'spec|equation_step|' . $computed['canonical']),
+        ]);
+    }
+
+    public static function stepWording(string $equation, string $operation, Rational $k): string
+    {
+        $n = $k->isInteger() ? Fmt::n($k->num()) : str_replace('-', "\u{2212}", $k->toString());
+        return match ($operation) {
+            'add' => 'Add ' . $n . ' to both sides of ' . $equation . '.',
+            'subtract' => 'Subtract ' . $n . ' from both sides of ' . $equation . '.',
+            'multiply' => 'Multiply both sides of ' . $equation . ' by ' . $n . '.',
+            'divide' => 'Divide both sides of ' . $equation . ' by ' . $n . '.',
+        } . ' Write the equation you get.';
     }
 
     /** §5.5: the slipped check problem shown again for a retry. It never counts. */

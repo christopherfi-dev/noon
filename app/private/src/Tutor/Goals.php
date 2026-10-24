@@ -21,8 +21,10 @@ use AlgebraEngine\Curriculum\BetaScope;
  *   in the same run resets it;
  * - partially correct (right value, not the form asked): neither;
  * - practice and retry attempts, skipped or not-learned problems: neither;
- * - a held attempt (possible help before the check question, or a result
- *   under review; round 7 §5): neither; the run neither advances nor resets.
+ * - a held attempt (a result under review; round 7 §5): neither; the run
+ *   neither advances nor resets, unless help was recorded on it, which
+ *   restarts the run (round 9 §4.3);
+ * - a corrected attempt counts with its corrected values (round 9 §4.7).
  * A goal met in this session stays met in this session. Goals are an
  * in-session criterion only; nothing here is a mastery claim.
  */
@@ -41,13 +43,14 @@ final class Goals
     {
         $state = [];
         foreach ($attempts as $a) {
-            if ($a['purpose'] !== 'CHECK' || ($a['held'] ?? null) !== null) {
+            $helped = $a['help'] !== [];
+            // Round 9 §4.3: help recorded on a held check also restarts the run; a held check without help counts neither way.
+            if ($a['purpose'] !== 'CHECK' || (($a['held'] ?? null) !== null && !$helped)) {
                 continue;
             }
             $s = $a['skill_id'];
             $state[$s] ??= self::fresh($s);
             $g = &$state[$s];
-            $helped = $a['help'] !== [];
             $g['paused'] = false;
             if ($helped && in_array($a['verdict'], ['CORRECT', 'INCORRECT', 'PARTIAL'], true)) {
                 self::reset($g);

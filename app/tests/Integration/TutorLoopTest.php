@@ -140,7 +140,7 @@ final class TutorLoopTest extends TestCase
             $this->assertCount(5, $c['messages'], 'every request is built anew: architecture, output contract, binding exchange, one context block');
             $this->assertStringStartsWith('OUTPUT CONTRACT', $c['messages'][1]['content']);
         }
-        $this->assertStringContainsString('ACE_BOUND: architecture=1.6', $calls[0]['messages'][3]['content']);
+        $this->assertStringContainsString('ACE_BOUND: architecture=1.7', $calls[0]['messages'][3]['content']);
         // A prepared problem is never one already shown in the session.
         foreach ($h->app->store->db->all('SELECT fingerprint FROM items') as $row) {
             $this->assertContains($row['fingerprint'], $shown);
@@ -488,7 +488,7 @@ final class TutorLoopTest extends TestCase
         $h->event('END_SESSION', [], null, null, false);
         $this->assertGreaterThan(8, count($h->mock->log));
 
-        $architecture = (string) file_get_contents(ALGEBRA_APP_ROOT . '/private/resources/architecture/Algebra_Constraint_Architecture_v1.6.md');
+        $architecture = (string) file_get_contents(ALGEBRA_APP_ROOT . '/private/resources/architecture/Algebra_Constraint_Architecture_v1.7.md');
         $received = [];
         foreach ($h->mock->log as $call) {
             $roles = array_column($call['messages'], 'role');
@@ -505,7 +505,7 @@ final class TutorLoopTest extends TestCase
         $flat = fn (string $t) => trim((string) preg_replace('/\s+/u', ' ', $t));
         $haystack = $flat(implode("\n", array_unique($received)));
         $allowed = $flat($architecture);
-        $sources = array_merge([ALGEBRA_REPO_ROOT . '/architecture/HOST_REQUIREMENTS_v1.6.md', ALGEBRA_REPO_ROOT . '/architecture/CHANGELOG.md', ALGEBRA_REPO_ROOT . '/CLAUDE.md'],
+        $sources = array_merge([ALGEBRA_REPO_ROOT . '/architecture/HOST_REQUIREMENTS_v1.7.md', ALGEBRA_REPO_ROOT . '/architecture/HOST_REQUIREMENTS_v1.6.md', ALGEBRA_REPO_ROOT . '/architecture/CHANGELOG.md', ALGEBRA_REPO_ROOT . '/CLAUDE.md'],
             glob(ALGEBRA_REPO_ROOT . '/CONDUCTOR_*.md') ?: []);
         $checked = [];
         foreach ($sources as $file) {
@@ -520,10 +520,10 @@ final class TutorLoopTest extends TestCase
                 $this->assertFalse(str_contains($haystack, $fragment), basename($file) . ' text reached a model request: ' . $fragment);
             }
         }
-        $this->assertGreaterThan(5, $checked['HOST_REQUIREMENTS_v1.6.md'] ?? 0, 'the host requirements were checked');
+        $this->assertGreaterThan(5, $checked['HOST_REQUIREMENTS_v1.7.md'] ?? 0, 'the host requirements were checked');
         $this->assertGreaterThan(5, $checked['CHANGELOG.md'] ?? 0);
         $this->assertGreaterThan(5, $checked['CLAUDE.md'] ?? 0);
-        $this->assertGreaterThan(5, $checked['CONDUCTOR_ROUND_8.md'] ?? 0);
+        $this->assertGreaterThan(5, $checked['CONDUCTOR_ROUND_9.md'] ?? 0);
     }
 
     /** @return list<string> every string value in a decoded JSON block */

@@ -55,7 +55,7 @@ step "Bundle smoke (deploy layout)" 07-bundle-smoke.txt php tools/bundle_smoke.p
 # After the bundle build, so the ZIP just built is scanned. Uses ALGEBRA_CONFIG for the configured key when set.
 step "Key-leak scan (tracked files + ZIP)" 09-key-leak-scan.txt php tools/key_leak_scan.php
 echo "" >> "$SUMMARY"
-echo "Note: the F1 manifest check lists only ruled differences (architecture/CHANGELOG.md, TEACHER_FACILITATOR_GUIDE_DRAFT.md, CLAUDE.md, architecture/Algebra_Constraint_Architecture_v1.3.md, v1.5.md and v1.6.md, and architecture/HOST_REQUIREMENTS_v1.6.md; round 6 §0.6, round 7 §2.5, round 8 §2), and HANDOFF_PREFLIGHT_REPORT.json is restored after the preflight rewrites it; see BUILD_LOG.md." >> "$SUMMARY"
+echo "Note: the F1 manifest check lists only ruled differences (architecture/CHANGELOG.md, TEACHER_FACILITATOR_GUIDE_DRAFT.md, CLAUDE.md, architecture/Algebra_Constraint_Architecture_v1.3.md, v1.5.md, v1.6.md and v1.7.md, and architecture/HOST_REQUIREMENTS_v1.6.md and v1.7.md; round 6 §0.6, round 7 §2.5, rounds 8 and 9 §2), and HANDOFF_PREFLIGHT_REPORT.json is restored after the preflight rewrites it; see BUILD_LOG.md." >> "$SUMMARY"
 echo "" >> "$SUMMARY"
-echo "Every result here is from mock mode (simulated tutor). Live runs need a key and are not part of this runner; the round 7 and round 8 live runs are in \`test-results/live/round7/\` and \`test-results/live/round8/\` (\`app/tools/tutor_sessions.php\` with a live config)." >> "$SUMMARY"
+echo "Every result here is from mock mode (simulated tutor). Live runs need a key and are not part of this runner; the round 7, 8 and 9 live runs are in \`test-results/live/round7/\`, \`round8/\` and \`round9/\` (\`app/tools/tutor_sessions.php\` with a live config)." >> "$SUMMARY"
 exit $overall

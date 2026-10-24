@@ -10,7 +10,7 @@ use AlgebraEngine\Support\Time;
 /** Table access for containers, sessions, the event ledger, items, verdicts, operations and idempotency. */
 final class Store
 {
-    public const ARCHITECTURE_VERSION = '1.6';
+    public const ARCHITECTURE_VERSION = '1.7';
     public const CURRICULUM_VERSION = '1.1.0';
 
     public function __construct(public Database $db)

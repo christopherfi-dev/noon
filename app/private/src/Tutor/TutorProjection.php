@@ -96,7 +96,7 @@ final class TutorProjection
             'prompt' => $prompt,
             'response_type' => $open['response_type'],
             'input_help' => match ($open['response_type']) {
-                'scalar' => 'Type your answer, or a message to the tutor.',
+                'scalar', 'equation' => 'Type your answer, or a message to the tutor.',
                 'expression' => 'Type your expression (for example with x and +), or a message to the tutor.',
                 default => 'Choose every option that applies.',
             },

@@ -3,42 +3,7 @@
   "type": "object",
   "properties": {
     "architecture_version": {
-      "const": "1.6"
-    },
-    "session_id": {
-      "anyOf": [
-        {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 160
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "state_revision": {
-      "anyOf": [
-        {
-          "type": "integer",
-          "minimum": 0
-        },
-        {
-          "type": "null"
-        }
-      ]
-    },
-    "reply_to_event_id": {
-      "anyOf": [
-        {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 160
-        },
-        {
-          "type": "null"
-        }
-      ]
+      "const": "1.7"
     },
     "message_type": {
       "type": "string",
@@ -76,7 +41,8 @@
               "enum": [
                 "recipe",
                 "spec",
-                "retry"
+                "retry",
+                "original"
               ]
             },
             "recipe_ref": {
@@ -102,13 +68,45 @@
                         "linear_equation",
                         "expand",
                         "signed_arithmetic",
-                        "numeric_step"
+                        "numeric_step",
+                        "equation_step"
                       ]
                     },
                     "expression": {
                       "type": "string",
                       "minLength": 1,
                       "maxLength": 120
+                    },
+                    "operation": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "add",
+                            "subtract",
+                            "multiply",
+                            "divide"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "operand": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 20
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
                     }
                   },
                   "required": [
@@ -397,9 +395,6 @@
   },
   "required": [
     "architecture_version",
-    "session_id",
-    "state_revision",
-    "reply_to_event_id",
     "message_type",
     "student_message",
     "item",
@@ -411,5 +406,5 @@
     "reading"
   ],
   "additionalProperties": false,
-  "description": "Round 8 tutor envelope (architecture 1.6): the rounds 3-5 JSON envelope, with item as a problem proposal that code verifies, proposed_transition as the tutor move (HELP added in round 8), teacher_report always null, and reading for entries code asks the AI to read."
+  "description": "Round 9 tutor envelope (architecture 1.7): the rounds 3-5 JSON envelope, with item as a problem proposal that code verifies (source original and the equation_step spec added in round 9), proposed_transition as the tutor move, teacher_report always null, and reading for entries code asks the AI to read. The identity fields are attached by code, not returned by the model (round 9 §4.1)."
 }

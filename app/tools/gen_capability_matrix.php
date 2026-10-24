@@ -60,7 +60,7 @@ $counts = array_count_values(array_column($entries, 'runtime_status'));
 $json = [
     'generated_at' => gmdate('Y-m-d\TH:i:s\Z'),
     'curriculum' => 'ACE-ALGEBRA1 1.1.0',
-    'architecture' => '1.6',
+    'architecture' => '1.7',
     'counts' => $counts,
     'live_provider_smoke_test' => 'Round 6 Stage 1: no live run. The round 6 tutor has been run only against the mock tutor; the live runs come in Stage 2 (conductor §10). Earlier live runs (rounds 3–5: test-results/live/round5/, round4/, round3/) used the retired state machine; they confirmed provider compatibility and host gating of that design, not teaching quality, learning or deployment, and say nothing about the round 6 tutor. Every result in this matrix is from mock mode (simulated tutor).',
     'skills' => $entries,
@@ -73,7 +73,7 @@ file_put_contents($app . '/capability-matrix.json', json_encode($json, JSON_PRET
 
 $md = "# Capability matrix — Algebra Engine AI tutor (round 6, Stage 1)\n\n";
 $md .= "Generated from the tested runtime registry (`app/private/src/Capability/CapabilityRegistry.php`) by `app/tools/gen_capability_matrix.php`. "
-    . "Curriculum ACE-ALGEBRA1 1.1.0 (205 skills, all browsable); architecture 1.6.\n\n";
+    . "Curriculum ACE-ALGEBRA1 1.1.0 (205 skills, all browsable); architecture 1.7.\n\n";
 $md .= "Runtime status counts: AVAILABLE_SCORED " . ($counts['AVAILABLE_SCORED'] ?? 0) . ", PARTIAL_COMPONENTS " . ($counts['PARTIAL_COMPONENTS'] ?? 0)
     . ", UNAVAILABLE " . ($counts['UNAVAILABLE'] ?? 0) . ". No all-skills operational claim is made.\n\n";
 $md .= "**Live provider smoke test:** " . $json['live_provider_smoke_test'] . "\n\n";

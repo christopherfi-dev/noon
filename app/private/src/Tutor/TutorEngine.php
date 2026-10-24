@@ -52,8 +52,10 @@ final class TutorEngine
     public const SKIP_LABEL = 'Skip this question.';
     public const RESULT_WORDS = ['CORRECT' => 'Correct.', 'INCORRECT' => 'Not yet.', 'PARTIAL' => 'Equal, but not in the form asked.'];
     public const HISTORY_LIMIT = 12;
-    /** Round 8 §3.1: moves that count as help when a reply carries one while a check question is open. */
-    public const HELP_MOVES = ['HELP', 'HINT', 'EXPLAIN', 'ANSWER_QUESTION'];
+    /** Round 9 §4.5: the reason code sends the tutor when an entry for an equation_step problem is not an equation. */
+    public const NOT_EQUATION_REASON = 'the entry is not an equation; the open problem asks for the equation after the step';
+    /** Round 9 §3.3: the moves that count as help when a reply carries one while a check question is open. */
+    public const HELP_MOVES = ['HELP', 'HINT'];
     private const MAX_RELEVANT = 4;
 
     private RandomSource $rng;
@@ -230,12 +232,14 @@ final class TutorEngine
             case 'SKIP':
                 $t->line('student', 'message', self::SKIP_LABEL);
                 $this->close($t, 'SKIPPED');
+                $this->dropOriginal($t, 'the student skipped');
                 $this->reply($t, ['kind' => 'SKIP'], $committed);
                 return;
             case 'CHANGE_TOPIC':
                 $topic = $req['payload']['topic_skill_id'];
                 $t->event('TOPIC_CHANGED', ['from' => $t->eng['topic'], 'to' => $topic]);
                 $this->close($t, 'SET_ASIDE');
+                $this->dropOriginal($t, 'the topic changed');
                 $t->eng['slip'] = null;
                 $t->eng['topic'] = $topic;
                 $t->eng['focus'] = $topic;
@@ -267,6 +271,12 @@ final class TutorEngine
                 // Round 7 §6.1 and §6.3: a message reaches the AI, during an open check too; round 8 §3.1–§3.2 decide what the reply records.
                 $this->reply($t, ['kind' => 'MESSAGE', 'text' => $text], $committed);
                 return;
+            case 'NOT_EQUATION':
+                // Round 9 §4.5: not graded; the tutor asks for the equation (no code-written line).
+                $t->event('ENTRY_NOT_AN_EQUATION', ['problem_id' => $t->eng['open']['problem_id'], 'version' => $t->eng['open']['version'], 'entry' => $text,
+                    'note' => 'The open problem asks for an equation; this entry is not one. Not recorded as an attempt.']);
+                $this->reply($t, ['kind' => 'ENTRY_NOT_READ', 'entry' => $text, 'reading' => null, 'reasons' => [self::NOT_EQUATION_REASON]], $committed);
+                return;
             case 'AMBIGUOUS':
             case 'UNREADABLE':
                 // Round 7 §7.4: anything code cannot read goes to the AI for a reading.
@@ -289,6 +299,7 @@ final class TutorEngine
             'note' => 'Recorded before the AI text is generated or shown; an answer to this problem after help does not count toward a goal.']);
         if ($choice === 'NOT_LEARNED') {
             $this->close($t, 'NOT_LEARNED');
+            $this->dropOriginal($t, 'the student chose "I haven\'t learned this yet"');
         } else {
             $t->eng['open']['help'][] = $choice;
         }
@@ -320,6 +331,10 @@ final class TutorEngine
         $t->eng['answered'] = ['attempt_id' => $attemptId, 'problem_id' => $open['problem_id'], 'version' => $open['version'], 'response_sha256' => $sha,
             'purpose' => $open['purpose'], 'skill_id' => $open['skill_id'], 'prompt' => $open['prompt'], 'entry' => $raw, 'read_as' => $readAs, 'verdict' => $r['verdict']];
         $this->close($t, 'ANSWERED');
+        if ($open['purpose'] === 'CHECK' && ($open['help'] ?? []) !== [] && $r['verdict'] !== 'CORRECT') {
+            // Owner's decision on round 9 §4.3: the original waits until it is answered correctly or the tutor moves on.
+            $this->wait($t, $open);
+        }
         $lines = [self::RESULT_WORDS[$r['verdict']]];
         $echo = ProblemText::answerLine($open['prompt'], $open['response_type'], $raw);
         if ($echo !== null) {
@@ -455,9 +470,13 @@ final class TutorEngine
         $slip = $t->eng['slip'];
         $retryTarget = $slip !== null && !$slip['retried'] ? $slip['problem'] : null;
         $slipAllowed = ($info['slip'] ?? null) !== null || ($slip !== null && !$slip['micro_asked']);
-        $allowItem = !($open !== null && $open['purpose'] === 'CHECK');
+        $original = $t->eng['original'] ?? null;
+        $uncheckedOpen = $open !== null && $open['purpose'] === 'CHECK' && ($open['help'] ?? []) === [];
+        // Round 9 §4.3: after help, the helped check is practice for the tutor; it may pose a problem, but no check while it is open or waiting.
+        $allowItem = !$uncheckedOpen;
+        $allowCheck = !($open !== null && $open['purpose'] === 'CHECK') && $original === null;
         try {
-            $context = $this->context($t, $info, $attempts, $goals, $recipes, $skills, $slipAllowed, $retryTarget, $allowItem);
+            $context = $this->context($t, $info, $attempts, $goals, $recipes, $skills, $slipAllowed, $retryTarget, $allowItem, $allowCheck);
         } catch (MissingCurriculum $e) {
             // The API loads canonical records only; a missing one blocks the call instead of inventing a record.
             $this->hold($t, $info, ['type' => 'MISSING_CURRICULUM', 'detail' => 'The curriculum record for ' . $e->skillId . ' is not available.'], 'MISSING_CURRICULUM');
@@ -466,16 +485,17 @@ final class TutorEngine
         if (!$this->ensureBinding($t, $budget, $log, $info)) {
             return;
         }
+        // Round 9 §4.2: the request's identity is captured here; code attaches it to the reply, and the reply is committed only against it.
         $expect = [
             'session_id' => $t->snap['session_id'], 'revision' => $t->snap['revision'], 'event_id' => $t->triggerEventId,
-            'allow_item' => $allowItem,
+            'open_problem' => $open === null ? null : ['problem_id' => $open['problem_id'], 'version' => $open['version']],
+            'allow_item' => $allowItem, 'allow_check' => $allowCheck, 'practice_with_help' => $uncheckedOpen, 'original' => $original === null ? null : self::stripOpen($original),
             'protected' => array_values(array_filter([$open === null ? null : self::stripOpen($open), $retryTarget])),
             'verdict' => $info['verdict'] ?? null, 'slip_allowed' => $slipAllowed, 'retry_target' => $retryTarget,
             'recipes' => $recipes, 'used_fingerprints' => $used, 'used_number_sets' => $usedSets, 'limits' => $this->limits(),
             'known_event_ids' => array_column($events, 'event_id'),
-            // Round 8 §3.5: what a number before a check card may come from; §3.6: fresh prepared problems for a substitution.
+            // Round 8 §3.5: what a number before a check card may come from (logged as a signal since round 9).
             'previous' => $this->previous($t, $info, $open),
-            'prepare' => fn (string $skill) => $this->recipes->pregenerate([$skill], $this->rng, $used, [], $usedSets),
         ];
         $reasoning = ReasoningPolicy::decide($this->config, 'REPLY', $info);
         $res = $this->ai->reply($context, $expect, $reasoning, $budget, $log);
@@ -490,11 +510,14 @@ final class TutorEngine
             $t->event($p['status'] === 'REJECTED' ? 'MODEL_PROPOSAL_REJECTED' : 'MODEL_PROPOSAL', $p);
         }
         $move = $res['move'];
-        $checkOpen = $open !== null && $open['purpose'] === 'CHECK' && ($t->eng['open']['problem_id'] ?? null) === $open['problem_id'];
+        // Round 9 §4.2: a help move binds to the open problem captured with its request.
+        $bound = $res['identity']['open_problem'] ?? null;
+        $checkOpen = $open !== null && $open['purpose'] === 'CHECK' && $bound !== null && $bound['problem_id'] === $open['problem_id']
+            && ($t->eng['open']['problem_id'] ?? null) === $open['problem_id'];
         $helpMove = $checkOpen && $move !== null && in_array($move['to_mode'], self::HELP_MOVES, true);
         if ($move !== null) {
             $t->event('AI_MOVE', ['move' => $move['to_mode'], 'target_skill_id' => $move['target_skill_id'], 'from_focus' => $t->eng['focus'], 'reason' => $move['reason'],
-                'help_on_open_check' => $helpMove]);
+                'help_on_open_check' => $helpMove, 'with_practice_item' => $helpMove && $res['problem'] !== null]);
             if ($move['target_skill_id'] !== null) {
                 $t->eng['focus'] = $move['target_skill_id'];
                 $t->eng['next_focus'] = $move['target_skill_id'];
@@ -506,12 +529,14 @@ final class TutorEngine
                 $t->eng['wrap_up'] = true;
             }
         }
-        $this->logFindings($t, $res['findings'], $res['message'], 'student_message');
+        $findings = $res['findings'];
+        if ($checkOpen && !$helpMove && ($open['help'] ?? []) === []) {
+            $findings = array_merge($findings, $this->duringCheckSignals($open, $res['message'], $move));
+        }
+        $this->logFindings($t, $findings, $res['message'], 'student_message');
         $this->heldAttempts($t, $info, $res, $open);
         if ($helpMove) {
             $this->helpMove($t, $move['to_mode'], $info);
-        } elseif ($checkOpen) {
-            $this->backstop($t, $res['message']);
         }
         $this->counters($t, $info, $res);
         $this->identity($t, $res['message'], 'student_message');
@@ -522,34 +547,24 @@ final class TutorEngine
                 $t->event('MODEL_TEXT_DISCARDED', ['what' => 'problem wording: code renders every problem from its verified spec (round 7 §8.1)',
                     'characters' => $res['dropped_prompt_chars'], 'text' => $res['ai_prompt'], 'problem_id' => $p['problem_id']]);
             }
-            if ($res['substitution'] !== null) {
-                $t->event('CHECK_SUBSTITUTED', $res['substitution'] + ['problem_id' => $p['problem_id'], 'version' => $p['version'], 'text' => $p['prompt'],
-                    'note' => 'Round 8 §3.6: the tutor\'s check problem still showed its own answer after one repair; a prepared check problem for the same skill was shown instead. The turn was not held.']);
-            }
             $this->present($t, $p);
             if ($res['card'] !== null) {
                 $card = $res['card'];
                 $t->event('CHECK_CARD_AUDIT', ['problem_id' => $p['problem_id'], 'version' => $p['version'], 'phrases' => $card['phrases'], 'invitations' => $card['invitations'],
                     'shared_numbers' => $card['shared'], 'answer_in_text' => $card['answer_in_text'], 'answer_source' => $card['answer_source'],
-                    'handover_support_words' => TextGuard::handoverSupportWords($res['message']), 'held' => $card['hold'], 'text' => $res['message'],
-                    'note' => 'Text before a check question: a hint, method, strategy or reminder phrase, or the check\'s answer from neither the previous problem nor the student\'s entry, holds the attempt; invitations, shared numbers and an answer from earlier work are signals only.']);
-                if ($card['hold']) {
-                    $t->event('CHECK_HELD', ['problem_id' => $p['problem_id'], 'version' => $p['version'], 'reason' => 'HELP_BEFORE_CHECK', 'phrases' => $card['phrases'],
-                        'answer_in_text' => $card['answer_in_text'] && $card['answer_source'] === null,
-                        'note' => 'Held: possible help before the check question. The attempt keeps its verdict but counts neither for nor against the goal.']);
-                    $t->eng['open']['held'] = 'HELP_BEFORE_CHECK';
-                }
+                    'handover_support_words' => TextGuard::handoverSupportWords($res['message']), 'text' => $res['message'],
+                    'note' => 'Text before a check question. Signals only (round 9 §3.2): nothing is held and no count changes.']);
             }
         }
     }
 
     /**
-     * Round 8 §3.1: a reply during an open check that carries a help move
-     * (HELP, or HINT, EXPLAIN or ANSWER_QUESTION) records HELP_GIVEN for that
-     * check before the reply is shown. The check becomes practice, and the
-     * goal policy applies: an answer to it does not count and the run starts
-     * again. The reply to "I'm stuck" gives the help already recorded for that
-     * request before the call, so it is not recorded twice.
+     * Round 9 §4.3: a reply during an open check that carries HELP or HINT
+     * records HELP_GIVEN for that check before the reply is shown. The ledger
+     * keeps the problem as a check answered with help, so the goal policy
+     * applies; from then on the tutor sees it as practice and may pose a
+     * problem. The reply to "I'm stuck" gives the help already recorded for
+     * that request before the call, so it is not recorded twice.
      */
     private function helpMove(TutorTurn $t, string $mode, array $info): void
     {
@@ -563,27 +578,26 @@ final class TutorEngine
     }
 
     /**
-     * Round 8 §3.2, the backstop: during an open check, text that contains
-     * the check's expression or a number from it (or its answer), with no help
-     * move, holds the check (HELP_DURING_CHECK), whether or not the student
-     * asked for help. Text with none of these, such as a refusal, records
-     * nothing. A check already held or already answered with help is left as it is.
+     * Round 9 §3.2 and §5.4, signals only: during an open check that has no
+     * help, a reply with no help move whose text uses the check's expression,
+     * a number from it or its answer (the round 8 backstop), and a reply
+     * whose move is ANSWER_QUESTION or EXPLAIN, are logged. Nothing is held.
+     *
+     * @return list<array>
      */
-    private function backstop(TutorTurn $t, string $text): void
+    private function duringCheckSignals(array $open, string $text, ?array $move): array
     {
-        $open = $t->eng['open'];
-        if (($open['help'] ?? []) !== [] || ($open['held'] ?? null) !== null) {
-            return;
-        }
+        $out = [];
         $b = TextGuard::duringCheck($text, $open);
         $causes = array_values(array_filter([$b['expression'] ? 'expression' : null, $b['numbers'] !== [] ? 'numbers' : null, $b['answer'] ? 'answer' : null]));
-        if ($causes === []) {
-            return;
+        $ref = ['problem_id' => $open['problem_id'], 'problem_version' => $open['version']];
+        if ($causes !== []) {
+            $out[] = ['guard' => 'DURING_CHECK', 'detail' => 'uses the open check\'s ' . implode(' and ', $causes) . ' with no help move', 'causes' => $causes, 'numbers' => $b['numbers']] + $ref;
         }
-        $t->event('CHECK_HELD', ['problem_id' => $open['problem_id'], 'version' => $open['version'], 'reason' => 'HELP_DURING_CHECK', 'causes' => $causes,
-            'numbers' => $b['numbers'], 'text' => $text, 'source' => 'BACKSTOP',
-            'note' => 'Held: the tutor\'s text shown while the check question was open uses its ' . implode(' and ', $causes) . ' and carries no help move.']);
-        $t->eng['open']['held'] = 'HELP_DURING_CHECK';
+        if ($move !== null && in_array($move['to_mode'], ['ANSWER_QUESTION', 'EXPLAIN'], true)) {
+            $out[] = ['guard' => 'MOVE_DURING_CHECK', 'detail' => 'to_mode ' . $move['to_mode'] . ' during an open check; not recorded as help', 'move' => $move['to_mode']] + $ref;
+        }
+        return $out;
     }
 
     /** Round 8 §3.7: the two counters. Logged only; they never change anything. */
@@ -653,17 +667,16 @@ final class TutorEngine
             $t->event('GUARD_FINDING', $f + [
                 'field' => $field, 'text' => $text, 'reply_to_event_id' => $t->triggerEventId,
                 'open_problem' => $t->eng['open'] === null ? null : ['problem_id' => $t->eng['open']['problem_id'], 'version' => $t->eng['open']['version']],
-                'answered' => $answered,
-                'note' => 'Logged only; the text was shown unchanged.',
+                'answered' => $answered, 'signal' => true,
+                'note' => 'Logged as a signal only (round 9 §3.2); the text was shown unchanged, nothing is held and no count changes.',
             ]);
         }
     }
 
     /**
      * Round 7 §5: the AI raises a verdict conflict in issue, and the answered
-     * attempt is held ("result under review"). The before-card case is
-     * recorded where the check card is presented, and help during an open
-     * check by helpMove() and backstop() (round 8 §3.1–§3.2).
+     * attempt is held ("result under review"). Since round 9 §3.2 this is the
+     * only hold; every text detector logs a signal only.
      */
     private function heldAttempts(TutorTurn $t, array $info, array $res, ?array $openBefore): void
     {
@@ -703,8 +716,20 @@ final class TutorEngine
 
     private function present(TutorTurn $t, array $p): void
     {
-        if ($t->eng['open'] !== null) {
+        if ($p['source'] === 'ORIGINAL') {
+            $this->returnOriginal($t, $p);
+            return;
+        }
+        $open = $t->eng['open'];
+        if ($open !== null && $open['purpose'] === 'CHECK' && ($open['help'] ?? []) !== []) {
+            // Round 9 §4.3 (owner's decision): the helped check waits as the original while a smaller step is open.
+            $this->wait($t, $open);
+            $t->eng['open'] = null;
+        } elseif ($open !== null) {
             $this->close($t, 'SET_ASIDE');
+        }
+        if (($t->eng['original'] ?? null) !== null && $t->eng['original']['skill_id'] !== $p['skill_id']) {
+            $this->dropOriginal($t, 'a problem on another skill was posed');
         }
         if ($p['purpose'] === 'RETRY' && $t->eng['slip'] !== null) {
             $t->eng['slip']['retried'] = true;
@@ -721,6 +746,47 @@ final class TutorEngine
         ]);
         $t->eng['open'] = $p + ['help' => []];
         $t->line($p['purpose'] === 'CHECK' ? 'app' : 'tutor', $p['purpose'] === 'CHECK' ? 'check' : 'problem', $p['prompt']);
+    }
+
+    /** The helped check waits as the original (owner's decision on round 9 §4.3). */
+    private function wait(TutorTurn $t, array $problem): void
+    {
+        $t->event('PROBLEM_WAITING', ['problem_id' => $problem['problem_id'], 'version' => $problem['version'], 'purpose' => $problem['purpose'], 'help' => $problem['help'] ?? [],
+            'note' => 'A check with help recorded waits as the original problem; the tutor may bring it back (item source original). Not closed.']);
+        $t->eng['original'] = $problem;
+    }
+
+    /**
+     * The original is dropped and closed as set aside: a problem on another
+     * skill, a topic change, a skip or "I haven't learned this yet" (owner's
+     * decision on round 9 §4.3).
+     */
+    private function dropOriginal(TutorTurn $t, string $why): void
+    {
+        $o = $t->eng['original'] ?? null;
+        if ($o === null) {
+            return;
+        }
+        $t->event('PROBLEM_CLOSED', ['problem_id' => $o['problem_id'], 'version' => $o['version'], 'reason' => 'SET_ASIDE', 'purpose' => $o['purpose'], 'original_dropped' => $why]);
+        $t->eng['original'] = null;
+    }
+
+    /** The tutor brings the original back: the same problem, shown again (as practice, since it has help); its help stays recorded. */
+    private function returnOriginal(TutorTurn $t, array $p): void
+    {
+        $original = $t->eng['original'];
+        if ($t->eng['open'] !== null) {
+            $this->close($t, 'SET_ASIDE');
+        }
+        $t->event('PROBLEM_PRESENTED', [
+            'problem_id' => $original['problem_id'], 'version' => $original['version'], 'purpose' => $original['purpose'], 'skill_id' => $original['skill_id'],
+            'source' => $original['source'], 'kind' => $original['kind'], 'template_id' => $original['template_id'], 'variant_id' => $original['variant_id'],
+            'prompt' => $original['prompt'], 'fingerprint' => $original['fingerprint'], 'retry_of' => $original['retry_of'], 'response_type' => $original['response_type'],
+            'number_set' => ProblemFactory::numberSet($original), 'returned_original' => true,
+        ]);
+        $t->eng['open'] = $original;
+        $t->eng['original'] = null;
+        $t->line('tutor', 'problem', $original['prompt']);
     }
 
     private function close(TutorTurn $t, string $reason): void
@@ -849,7 +915,7 @@ final class TutorEngine
         return ['number' => $this->config->int('spec_number_limit'), 'answer' => $this->config->int('spec_answer_limit'), 'denominator' => $this->config->int('spec_denominator_limit')];
     }
 
-    private function context(TutorTurn $t, array $info, array $attempts, array $goals, array $recipes, array $skills, bool $slipAllowed, ?array $retryTarget, bool $allowItem): array
+    private function context(TutorTurn $t, array $info, array $attempts, array $goals, array $recipes, array $skills, bool $slipAllowed, ?array $retryTarget, bool $allowItem, bool $allowCheck): array
     {
         $open = $t->eng['open'];
         $skillBlock = fn (string $id) => ['skill_id' => $id, 'title' => $this->curriculum->title($id)];
@@ -862,8 +928,8 @@ final class TutorEngine
         }
         $slip = $t->eng['slip'];
         $answered = $t->eng['answered'] ?? null;
+        // Round 9 §4.1 (owner's decision): no TRUSTED_SESSION block; code attaches the identity fields to the reply.
         return [
-            'TRUSTED_SESSION' => ['session_id' => $t->snap['session_id'], 'state_revision' => $t->snap['revision'], 'event_id' => $t->triggerEventId],
             'TURN' => ['kind' => ($info['resumed'] ?? false) && $info['kind'] === 'ANSWER' ? 'RESUMED' : $info['kind'], 'entry' => $info['text'] ?? ($info['entry'] ?? null),
                 'choice' => $info['choice'] ?? null]
                 + ($info['kind'] === 'ENTRY_NOT_READ' ? ['reading' => $info['reading'] ?? null, 'other_readings' => $info['other_readings'] ?? [], 'not_read_because' => $info['reasons'] ?? []] : []),
@@ -875,13 +941,15 @@ final class TutorEngine
                 'entry' => $answered['entry'], 'read_as' => $answered['read_as'], 'result' => $answered['verdict'], 'answered_in_this_turn' => $info['kind'] === 'ANSWER',
             ],
             'OPEN_PROBLEM' => $open === null ? null : self::openBlock($open),
+            // Round 9 §4.3: the helped check waiting while a smaller step is open (owner's decision: the tutor brings it back with source original).
+            'ORIGINAL_PROBLEM' => ($t->eng['original'] ?? null) === null ? null : self::openBlock($t->eng['original']) + ['spec' => $t->eng['original']['spec']],
             'SLIP' => [
-                'confirmed' => $slipAllowed,
+                'eligible_for_pause' => $slipAllowed,
                 'skill_id' => ($info['slip'] ?? null) !== null ? $info['problem']['skill_id'] : ($slip['problem']['skill_id'] ?? null),
                 'sub_step' => $info['slip']['sub_step'] ?? null,
                 'retry_available' => $retryTarget !== null && ($slip['micro_asked'] ?? false),
             ],
-            'ALLOWED' => ['may_pose_problem' => $allowItem, 'may_pose_check' => $allowItem],
+            'ALLOWED' => ['may_pose_problem' => $allowItem, 'may_pose_check' => $allowCheck],
             'TOPIC' => $skillBlock($t->eng['topic']),
             'FOCUS' => $skillBlock($t->eng['focus']),
             'GOALS' => array_map(function ($s) use ($goals) {
@@ -908,16 +976,17 @@ final class TutorEngine
     private function readingContext(TutorTurn $t, string $text): array
     {
         return [
-            'TRUSTED_SESSION' => ['session_id' => $t->snap['session_id'], 'state_revision' => $t->snap['revision'], 'event_id' => $t->triggerEventId],
             'TURN' => ['kind' => 'READING', 'entry' => $text, 'choice' => null],
             'OPEN_PROBLEM' => self::openBlock($t->eng['open']),
             'RECENT_CONVERSATION' => array_map(fn ($l) => ['role' => $l['role'], 'text' => mb_substr($l['text'], 0, 600)], array_slice($t->eng['conversation'], -6)),
         ];
     }
 
+    /** Round 9 §4.3: a check with help recorded is presented to the tutor as practice. */
     private static function openBlock(array $open): array
     {
-        return ['problem_id' => $open['problem_id'], 'version' => $open['version'], 'purpose' => strtolower($open['purpose']), 'skill_id' => $open['skill_id'],
+        $purpose = $open['purpose'] === 'CHECK' && ($open['help'] ?? []) !== [] ? 'PRACTICE' : $open['purpose'];
+        return ['problem_id' => $open['problem_id'], 'version' => $open['version'], 'purpose' => strtolower($purpose), 'skill_id' => $open['skill_id'],
             'text' => $open['prompt'], 'response_type' => $open['response_type'],
             'variables' => $open['variables'], 'options' => $open['options'] === null ? null : array_map(fn ($o) => $o['letter'] . ') ' . $o['text'], $open['options']),
             'answer' => is_array($open['answer']['expected']) ? implode(', ', $open['answer']['expected']) : $open['answer']['expected'],
@@ -989,7 +1058,7 @@ final class TutorEngine
             'created_at' => Time::iso($now), 'last_activity_at' => Time::iso($now),
             'expires_at' => Time::iso($now->modify('+' . $this->config->int('session_idle_ttl') . ' seconds')),
         ];
-        $eng = ['status' => 'READY', 'topic' => $topic, 'focus' => $focus, 'next_focus' => null, 'open' => null, 'slip' => null,
+        $eng = ['status' => 'READY', 'topic' => $topic, 'focus' => $focus, 'next_focus' => null, 'open' => null, 'original' => null, 'slip' => null,
             'conversation' => [], 'line_seq' => 0, 'wrap_up' => false, 'pending' => null, 'progress' => null];
         return [$snap, $eng];
     }

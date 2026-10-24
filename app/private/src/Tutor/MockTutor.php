@@ -310,7 +310,7 @@ final class MockTutor implements ProviderAdapter
     {
         $s = $ctx['TRUSTED_SESSION'];
         return [
-            'architecture_version' => '1.6',
+            'architecture_version' => '1.7',
             'session_id' => $s['session_id'],
             'state_revision' => $s['state_revision'],
             'reply_to_event_id' => $s['event_id'],

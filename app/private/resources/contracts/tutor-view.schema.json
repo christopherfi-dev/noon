@@ -162,7 +162,8 @@
               "enum": [
                 "scalar",
                 "expression",
-                "classification"
+                "classification",
+                "equation"
               ]
             },
             "input_help": {

@@ -30,7 +30,7 @@ use AlgebraEngine\Tutor\TutorPrompt;
 /** Builds the object graph from private configuration. */
 final class App
 {
-    public const ARCHITECTURE_FILE = 'Algebra_Constraint_Architecture_v1.6.md';
+    public const ARCHITECTURE_FILE = 'Algebra_Constraint_Architecture_v1.7.md';
 
     public Store $store;
     public CurriculumRepository $curriculum;

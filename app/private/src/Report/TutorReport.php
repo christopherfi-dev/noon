@@ -138,11 +138,11 @@ final class TutorReport
             'per_skill' => array_values($perSkill),
             'provider' => $provider,
             'provider_label' => $provider === 'mock' ? 'MOCK (simulated tutor; no live provider was used)' : 'LIVE PROVIDER',
-            'architecture' => ['version' => '1.6', 'sha256' => $snap['binding']['architecture_sha256'], 'binding_acknowledged' => $snap['binding']['acknowledged'],
+            'architecture' => ['version' => '1.7', 'sha256' => $snap['binding']['architecture_sha256'], 'binding_acknowledged' => $snap['binding']['acknowledged'],
                 'binding_note' => 'An acknowledged binding is not evidence of enforcement; the app enforces the guarantees.'],
             'audit' => array_map(fn ($a) => ['problem_id' => $a['problem_id'], 'phrases' => $a['phrases']], $audit),
             'summary' => ['learner' => $learner + ['earlier' => $this->words->earlier($row['engine']['progress']['earlier'] ?? [], false)], 'teacher' => $teacher],
-            'policy_version' => '1.6',
+            'policy_version' => '1.7',
         ];
     }
 
@@ -408,7 +408,7 @@ final class TutorReport
             'report_id' => Ids::make('rep'),
             'session_id' => $snap['session_id'],
             'state_revision' => $snap['revision'],
-            'architecture_version' => '1.6',
+            'architecture_version' => '1.7',
             'curriculum_version' => CurriculumRepository::CURRICULUM_VERSION,
             'status' => $status,
             'targets_attempted' => $topics,

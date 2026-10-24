@@ -15,7 +15,7 @@ use AlgebraEngine\Support\RandomSource;
 final class Recipes
 {
     public const PER_SKILL = 2;
-    private const TRIES = 60;
+    private const TRIES = 30;
 
     public function __construct(private ProblemFactory $problems)
     {
@@ -64,13 +64,15 @@ final class Recipes
     }
 
     /**
-     * Round 8 §3.6: every prepared problem may be chosen as a check problem,
-     * so each one satisfies the check rule (its single-number answer is not a
-     * number in the question). None is returned rather than one that fails it.
+     * Round 9 §3.1: prefer parameters whose answer is not among the problem's
+     * numbers; after trying other parameters for the same template (the same
+     * kind of question), accept the overlap. A problem is never withheld
+     * because of overlap, only because no fresh one was found.
      */
     private function fresh(string $skill, string $variant, RandomSource $rng, array $seen, array $usedSets): ?array
     {
         $template = $this->problems->items()->templateFor($skill, $variant);
+        $overlap = null;
         for ($i = 0; $i < self::TRIES; $i++) {
             $params = $template->generate($rng);
             $problem = $this->problems->fromRecipe($template->id(), $params, 'PRACTICE');
@@ -80,7 +82,8 @@ final class Recipes
             if (!ProblemFactory::answerShownInProblem($problem)) {
                 return $problem;
             }
+            $overlap ??= $problem;
         }
-        return null;
+        return $overlap;
     }
 }

@@ -160,3 +160,40 @@ Where the tutor needs to know the result, v1.6 states it as one plain fact:
 Run A showed why this matters. Because §5 opened by calling itself "requirements on the
 host application", the tutor treated the check rule written inside §5 as code's
 business.
+
+## 1.7 — 2026-10-24
+
+Governing architecture for the AI tutor; replaces 1.6 at runtime. The handshake is
+`architecture=1.7`.
+
+- **Input.** The student has one input box. An entry is an answer only when it contains
+  an answer the student offers to the open problem. It can come with working, a
+  question or a request for help. When the role of a number is unclear, the tutor asks
+  before anything is graded.
+- **Help on a check.** Any reply that helps with an open check is marked HELP or HINT,
+  even when it answers the student's question. The check then becomes practice, and
+  the tutor may pose a smaller step as a problem.
+- **Smaller steps.**
+  - A smaller step isolates one operation or prerequisite.
+  - The tutor asks for no number, expression or equation in its text.
+  - It returns to the original problem after the steps the student needs.
+  - It never puts the original problem's answer together from parts the student
+    produced.
+- **Goals and help.**
+  - The tutor may report this request's record in plain words: a goal met for this
+    session, for the part of the skill the goal covers; a check that counted; help that
+    was recorded.
+  - It never states that the student had no help, and never uses skill codes.
+  - The No Mastery Claims principle, the §4 exclusions, the §5 guard list and the §14
+    self-check all say this the same way.
+- **Arithmetic-error signatures.** A signature meets code's conditions for one pause.
+  It does not establish why the student erred.
+- **Overlap rule removed.** Removed from §8, and code no longer rejects a problem
+  because its answer appears in it.
+- **New problem type for practice: the equation after one step.** It covers adding or
+  subtracting a number on both sides, or multiplying or dividing both sides by a number
+  other than zero.
+- **Acceptance.** A problem or envelope that still fails after its repair holds the
+  turn. Nothing is replaced.
+- **Session ID fields.** The tutor no longer copies them; code attaches them.
+- **Justification clauses removed.** The reasons added in v1.6 are gone.

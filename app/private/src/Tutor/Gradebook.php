@@ -19,8 +19,15 @@ namespace AlgebraEngine\Tutor;
  *   CHECK_HELD         problem_id, version, reason (HELP_BEFORE_CHECK | HELP_DURING_CHECK, the round 8 backstop): attempts on it are held
  *   ATTEMPT_HELD       attempt_id, problem_id, reason (VERDICT_CONFLICT): that attempt is held
  *
+ *   PROBLEM_WAITING    problem_id, version: a check with help waits as the original problem (round 9 §4.3)
+ *   CORRECTION         attempt_id, field (help | verdict), value, reason: appended by tools/correct_attempt.php (round 9 §4.7)
+ *
  * A held attempt keeps its verdict but counts neither for nor against a goal
- * (round 7 §5).
+ * (round 7 §5). A problem presented again as the original (round 9 §4.3)
+ * keeps the help already recorded on it. The latest correction of each field
+ * of an attempt is applied; the original values stay in the attempt record
+ * and every correction is listed with it. A verdict correction ends a hold
+ * from a verdict conflict (owner's decision on round 9 §4.7).
  */
 final class Gradebook
 {
@@ -35,11 +42,14 @@ final class Gradebook
         $out = [];
         $heldProblems = [];
         $heldAttempts = [];
+        $corrections = [];
         foreach ($events as $e) {
             if ($e['type'] === 'CHECK_HELD') {
                 $heldProblems[$e['data']['problem_id']] ??= $e['data']['reason'];
             } elseif ($e['type'] === 'ATTEMPT_HELD') {
                 $heldAttempts[$e['data']['attempt_id']] ??= $e['data']['reason'];
+            } elseif ($e['type'] === 'CORRECTION') {
+                $corrections[$e['data']['attempt_id']][] = $e['data'] + ['event_id' => $e['event_id'], 'at' => $e['created_at'] ?? null];
             }
         }
         foreach ($events as $e) {
@@ -47,7 +57,7 @@ final class Gradebook
             switch ($e['type']) {
                 case 'PROBLEM_PRESENTED':
                     $problems[$d['problem_id']] = $d;
-                    $help[$d['problem_id']] = [];
+                    $help[$d['problem_id']] ??= [];
                     break;
                 case 'HELP_GIVEN':
                     $help[$d['problem_id']][] = $d['choice'];
@@ -57,7 +67,7 @@ final class Gradebook
                     if ($p === null) {
                         break; // an attempt must belong to a presented problem
                     }
-                    $out[] = [
+                    $attempt = [
                         'attempt_id' => $e['event_id'],
                         'problem_id' => $d['problem_id'],
                         'version' => $d['version'],
@@ -78,10 +88,40 @@ final class Gradebook
                         'held' => $heldAttempts[$e['event_id']] ?? $heldProblems[$d['problem_id']] ?? null,
                         'at' => $e['created_at'] ?? null,
                     ];
+                    $out[] = self::corrected($attempt, $corrections[$e['event_id']] ?? []);
                     break;
             }
         }
         return $out;
+    }
+
+    /**
+     * Round 9 §4.7: apply the latest correction of each field. The original
+     * values are kept in 'original', and every correction in 'corrections'.
+     *
+     * @param list<array> $list corrections for this attempt, in ledger order
+     */
+    private static function corrected(array $a, array $list): array
+    {
+        $a['corrections'] = $list;
+        if ($list === []) {
+            return $a;
+        }
+        $a['original'] = ['verdict' => $a['verdict'], 'help' => $a['help'], 'held' => $a['held']];
+        $latest = [];
+        foreach ($list as $c) {
+            $latest[$c['field']] = $c['value'];
+        }
+        if (isset($latest['help'])) {
+            $a['help'] = $latest['help'] === 'with_help' ? array_values(array_unique(array_merge($a['help'], ['CORRECTION']))) : [];
+        }
+        if (isset($latest['verdict'])) {
+            $a['verdict'] = $latest['verdict'];
+            if ($a['held'] === 'VERDICT_CONFLICT') {
+                $a['held'] = null;
+            }
+        }
+        return $a;
     }
 
     /** @return list<array{problem_id:string,skill_id:string,purpose:string,reason:string}> problems closed without an answer */

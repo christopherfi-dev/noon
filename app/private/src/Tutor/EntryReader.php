@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace AlgebraEngine\Tutor;
 
+use AlgebraEngine\Math\Normalizer;
+
 /**
  * What code does with a typed entry before any AI call (round 6 §3.1, as
  * changed by round 7 §6.3 and §7).
@@ -57,6 +59,10 @@ final class EntryReader
         if (!self::hasMath($raw, $vars)) {
             return self::out('MESSAGE');
         }
+        if ($problem['response_type'] === 'equation' && !str_contains($raw, '=') && self::plainMath($raw, $vars)) {
+            // Round 9 §4.5: an entry that is not an equation is a request to rewrite it, never a wrong answer.
+            return self::out('NOT_EQUATION');
+        }
         if (self::ambiguous($raw, $vars)) {
             return self::out('AMBIGUOUS');
         }
@@ -82,6 +88,14 @@ final class EntryReader
             }
         }
         return self::out('UNREADABLE');
+    }
+
+    /** Only numbers, the variables, operation signs and grouping: a number or an expression standing alone. */
+    private static function plainMath(string $text, array $vars): bool
+    {
+        $t = Normalizer::normalize($text);
+        $letters = implode('', array_map(fn ($v) => preg_quote($v, '/') . preg_quote(strtoupper($v), '/'), $vars));
+        return preg_match('/^[\d\s.+\-*\/^()' . $letters . ']+$/u', $t) === 1;
     }
 
     /** A digit, a number word or a standalone variable letter. */
